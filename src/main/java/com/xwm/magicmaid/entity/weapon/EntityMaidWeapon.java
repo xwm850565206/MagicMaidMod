@@ -31,7 +31,7 @@ public class EntityMaidWeapon extends EntityLiving
             BlockPos standPos = maid.getPosition();
             standPos = standPos.add(maid.weaponStandbyPos.getX(), maid.weaponStandbyPos.getY(), maid.weaponStandbyPos.getZ());
             setPosition(standPos.getX(), standPos.getY(), standPos.getZ());
-            System.out.println(getPosition().toString());
+//            System.out.println(getPosition().toString());
         }
     }
 

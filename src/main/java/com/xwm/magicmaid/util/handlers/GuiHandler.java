@@ -64,7 +64,12 @@ public class GuiHandler implements IGuiHandler
 
         if (ID == Reference.GUI_MAID_WINDOW)
         {
-            return new GuiMaidWindow((Container) getServerGuiElement(ID, player, world, x, y, z), player.inventory);
+            List<EntityMagicMaid> entities = world.getEntitiesWithinAABB(EntityMagicMaid.class, new AxisAlignedBB(x, y, z, x, y, z).grow(0.5));
+            if (entities.size() < 1)
+                return null;
+
+            EntityMagicMaid maid = entities.get(0);
+            return new GuiMaidWindow(new ContainMaidWindow(player.inventory, maid), player.inventory, maid);
         }
         return null;
     }

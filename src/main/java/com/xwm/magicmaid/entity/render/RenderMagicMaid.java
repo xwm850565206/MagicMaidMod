@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class RenderMagicMaid extends RenderLiving<EntityMagicMaid> {
 
-    public static final ResourceLocation TEXTURE_BERRY = new ResourceLocation(Reference.MODID + ":textures/entities/magicmaid.png");
+    public static final ResourceLocation TEXTURE_BERRY = new ResourceLocation(Reference.MODID + ":textures/entities/magicmaidstrawberry.png");
     public static final ResourceLocation TEXTURE_BLUE = new ResourceLocation(Reference.MODID + ":textures/entities/magicmaidblue.png");
     public static final ResourceLocation TEXTURE_YELLOW = new ResourceLocation(Reference.MODID + ":textures/entities/magicmaidyellow.png");
 

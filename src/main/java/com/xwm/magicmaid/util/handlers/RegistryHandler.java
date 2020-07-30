@@ -17,7 +17,7 @@ public class RegistryHandler
     @SubscribeEvent
     public static void onItemRegister(RegistryEvent.Register<Item> event)
     {
-        //event.getRegistry().registerAll(ItemInit.ITEMS.toArray(new Item[0]));
+        event.getRegistry().registerAll(ItemInit.ITEMS.toArray(new Item[0]));
     }
 
     @SubscribeEvent

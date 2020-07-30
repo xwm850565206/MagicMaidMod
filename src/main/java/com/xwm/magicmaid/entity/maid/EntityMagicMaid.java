@@ -1,7 +1,10 @@
 package com.xwm.magicmaid.entity.maid;
 
 
+import com.xwm.magicmaid.Main;
 import com.xwm.magicmaid.entity.weapon.EntityMaidWeapon;
+import com.xwm.magicmaid.object.item.ItemWeapon;
+import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -11,16 +14,21 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import com.google.common.base.Optional;
+
+import java.util.List;
 import java.util.UUID;
 
 public class EntityMagicMaid extends EntityLiving implements IInventory
@@ -31,14 +39,14 @@ public class EntityMagicMaid extends EntityLiving implements IInventory
     private static final DataParameter<Integer> EXP = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
     private static final DataParameter<Boolean> HASWEAPON = EntityDataManager.<Boolean>createKey(EntityMagicMaid.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> HASARMOR = EntityDataManager.<Boolean>createKey(EntityMagicMaid.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> ISATTACKMODE = EntityDataManager.<Boolean>createKey(EntityMagicMaid.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Integer> MODE = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> STATE = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
     private static final DataParameter<Optional<UUID>> WEAPONID = EntityDataManager.<Optional<UUID>>createKey(EntityMagicMaid.class, DataSerializers.OPTIONAL_UNIQUE_ID);
-
+    private static final DataParameter<Integer> RANK = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
 
     public BlockPos weaponStandbyPos = new BlockPos(0, this.height+1, 0);
 
-    public Container inventoryContainer;
+    public final NonNullList<ItemStack> inventory = NonNullList.<ItemStack>withSize(2, ItemStack.EMPTY);
 
     public EntityMagicMaid(World worldIn)
     {
@@ -50,12 +58,13 @@ public class EntityMagicMaid extends EntityLiving implements IInventory
     protected void entityInit()
     {
         super.entityInit();
-        this.dataManager.register(HEALTHBARNUM, 10000);
+        this.dataManager.register(HEALTHBARNUM, 10);
         this.dataManager.register(LEVEL, 1);
-        this.dataManager.register(EXP, 0);
+        this.dataManager.register(EXP, 1000);
+        this.dataManager.register(RANK, 2);
         this.dataManager.register(HASWEAPON, false);
         this.dataManager.register(HASARMOR, false);
-        this.dataManager.register(ISATTACKMODE, false);
+        this.dataManager.register(MODE, 0);
         this.dataManager.register(STATE, 0);
         this.dataManager.register(WEAPONID, Optional.fromNullable(null));
     }
@@ -77,27 +86,27 @@ public class EntityMagicMaid extends EntityLiving implements IInventory
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(1000000000);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30000000298023224D);
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(1024);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(1000);
     }
 
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand)
     {
-        if (!world.isRemote)
-        {
-            System.out.println("interact");
-            createWeapon(0);
-            return true;
-        }
-        //todo
-//        else if (world.isRemote)
+//        if (!world.isRemote)
 //        {
+//            System.out.println("interact");
+//            createWeapon(0);
+//            return true;
+//        }
+        //todo
+        if (world.isRemote)
+        {
 //            createWeapon(0);
 //            this.setState((this.getState() + 1) % 4);
 //            System.out.println(this.getState());
-//            player.openGui(Main.instance, Reference.GUI_MAID_WINDOW, world, (int)this.posX, (int)this.posY, (int)this.posZ);
-//            return true;
-//        }
+            player.openGui(Main.instance, Reference.GUI_MAID_WINDOW, world, (int)this.posX, (int)this.posY, (int)this.posZ);
+            return true;
+        }
 
         return false;
     }
@@ -116,7 +125,7 @@ public class EntityMagicMaid extends EntityLiving implements IInventory
         compound.setInteger("exp", this.getExp());
         compound.setBoolean("hasWeapon", this.hasWeapon());
         compound.setBoolean("hasArmor", this.hasArmor());
-        compound.setBoolean("isAttackMode", this.isAttackMode());
+        compound.setInteger("mode", this.getMode());
         compound.setInteger("state", this.getState());
 
         if (this.getWeaponID() == null)
@@ -133,7 +142,7 @@ public class EntityMagicMaid extends EntityLiving implements IInventory
         this.setExp(compound.getInteger("exp"));
         this.setHasWeapon(compound.getBoolean("hasWeapon"));
         this.setHasArmor(compound.getBoolean("hasArmor"));
-        this.setMode(compound.getBoolean("isAttackMode"));
+        this.setMode(compound.getInteger("mode"));
         this.setState(compound.getInteger("state"));
         if (compound.hasKey("weaponID") && !compound.getString("weaponID").equals("")) {
             this.setWeaponID(UUID.fromString(compound.getString("weaponID")));
@@ -183,12 +192,12 @@ public class EntityMagicMaid extends EntityLiving implements IInventory
         return this.dataManager.get(HASARMOR);
     }
 
-    public void setMode(boolean isAttackMode){
-        this.dataManager.set(ISATTACKMODE, isAttackMode);
+    public void setMode(int mode){
+        this.dataManager.set(MODE, mode);
     }
 
-    public boolean isAttackMode(){
-        return this.dataManager.get(ISATTACKMODE);
+    public int getMode(){
+        return this.dataManager.get(MODE);
     }
 
     public int getState() {
@@ -205,6 +214,25 @@ public class EntityMagicMaid extends EntityLiving implements IInventory
 
     public UUID getWeaponID(){
         return (UUID)((Optional)this.dataManager.get(WEAPONID)).orNull();
+    }
+
+    public void setRank(int rank) {this.dataManager.set(RANK, rank);}
+
+    public int getRank() {return this.dataManager.get(RANK);}
+
+    public void turnToBossMode() {
+        //todo 女仆的boss形态 击败boss形态的女仆 会掉落物品，用于武器合成，女仆召唤。
+    }
+
+    public void getWeapon(ItemWeapon weapon){
+        createWeapon(0);
+        //todo 得到武器后要进行一系列的操作来维护
+    }
+
+    public void loseWeapon(ItemWeapon weapon){
+//        EntityMaidWeapon weapon1 = this.world.getPlayerEntityByUUID(this.getWeaponID());
+//        weapon1.setDead();
+        //todo 失去武器也要修改一系列数据来维护
     }
 
     public void createWeapon(int weaponID)
@@ -237,7 +265,8 @@ public class EntityMagicMaid extends EntityLiving implements IInventory
     @Override
     public ItemStack getStackInSlot(int index) {
 
-        return this.inventoryContainer.inventoryItemStacks.get(index);
+        return this.inventory.size() <= index ? ItemStack.EMPTY :
+                this.inventory.get(index);
     }
 
     /**
@@ -248,7 +277,10 @@ public class EntityMagicMaid extends EntityLiving implements IInventory
      */
     @Override
     public ItemStack decrStackSize(int index, int count) {
-        return this.inventoryContainer.inventoryItemStacks.get(index);
+        List<ItemStack> list = null;
+        if (inventory.size() > index)
+            list = inventory;
+        return list != null && !((ItemStack)list.get(index)).isEmpty() ? ItemStackHelper.getAndSplit(list, index, count) : ItemStack.EMPTY;
     }
 
     /**
@@ -258,7 +290,23 @@ public class EntityMagicMaid extends EntityLiving implements IInventory
      */
     @Override
     public ItemStack removeStackFromSlot(int index) {
-        return this.inventoryContainer.inventoryItemStacks.remove(index);
+        NonNullList<ItemStack> nonnulllist = null;
+        if (inventory.size() > index)
+            nonnulllist = inventory;
+        if (nonnulllist != null && !((ItemStack)nonnulllist.get(index)).isEmpty())
+        {
+            ItemStack itemstack = nonnulllist.get(index);
+            nonnulllist.set(index, ItemStack.EMPTY);
+
+            if (itemstack.getItem() instanceof ItemWeapon)
+                this.loseWeapon((ItemWeapon) itemstack.getItem());
+
+            return itemstack;
+        }
+        else
+        {
+            return ItemStack.EMPTY;
+        }
     }
 
     /**
@@ -269,7 +317,14 @@ public class EntityMagicMaid extends EntityLiving implements IInventory
      */
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
-        this.inventoryContainer.inventoryItemStacks.add(index, stack);
+        NonNullList<ItemStack> nonnulllist = null;
+        if (inventory.size() > index)
+            nonnulllist = inventory;
+        if (nonnulllist != null) {
+            if (stack.getItem() instanceof ItemWeapon)
+                this.getWeapon((ItemWeapon) stack.getItem());
+            nonnulllist.set(index, stack);
+        }
     }
 
     /**
@@ -277,7 +332,7 @@ public class EntityMagicMaid extends EntityLiving implements IInventory
      */
     @Override
     public int getInventoryStackLimit() {
-        return 6;
+        return 2;
     }
 
     /**
@@ -338,6 +393,6 @@ public class EntityMagicMaid extends EntityLiving implements IInventory
 
     @Override
     public void clear() {
-        this.inventoryContainer.inventoryItemStacks.clear();
+        this.inventory.clear();
     }
 }
