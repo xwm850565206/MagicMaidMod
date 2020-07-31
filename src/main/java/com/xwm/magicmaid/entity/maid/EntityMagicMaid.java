@@ -2,16 +2,20 @@ package com.xwm.magicmaid.entity.maid;
 
 
 import com.xwm.magicmaid.Main;
+import com.xwm.magicmaid.entity.ai.EntityAIMaidFollow;
+import com.xwm.magicmaid.entity.ai.EntityAIMaidOwerHurtTarget;
+import com.xwm.magicmaid.entity.ai.EntityAIMaidOwnerHurtByTarget;
 import com.xwm.magicmaid.entity.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.object.item.ItemWeapon;
 import com.xwm.magicmaid.util.Reference;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.ai.*;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -31,7 +35,7 @@ import com.google.common.base.Optional;
 import java.util.List;
 import java.util.UUID;
 
-public class EntityMagicMaid extends EntityLiving implements IInventory
+public class EntityMagicMaid extends EntityCreature implements IInventory
 {
     /** props **/
     private static final DataParameter<Integer> HEALTHBARNUM = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
@@ -43,6 +47,7 @@ public class EntityMagicMaid extends EntityLiving implements IInventory
     private static final DataParameter<Integer> STATE = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
     private static final DataParameter<Optional<UUID>> WEAPONID = EntityDataManager.<Optional<UUID>>createKey(EntityMagicMaid.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     private static final DataParameter<Integer> RANK = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
+    private static final DataParameter<Optional<UUID>> OWNERID = EntityDataManager.<Optional<UUID>>createKey(EntityMagicMaid.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 
     public BlockPos weaponStandbyPos = new BlockPos(0, this.height+1, 0);
 
@@ -67,6 +72,7 @@ public class EntityMagicMaid extends EntityLiving implements IInventory
         this.dataManager.register(MODE, 0);
         this.dataManager.register(STATE, 0);
         this.dataManager.register(WEAPONID, Optional.fromNullable(null));
+        this.dataManager.register(OWNERID, Optional.fromNullable(null));
     }
 
     @Override
@@ -74,9 +80,14 @@ public class EntityMagicMaid extends EntityLiving implements IInventory
     {
         super.initEntityAI();
         this.tasks.addTask(1, new EntityAISwimming(this));
-
+        this.tasks.addTask(3, new EntityAIMaidFollow(this, 1.0, 8, 3));
         this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityLivingBase.class, 8.0F));
         this.tasks.addTask(10, new EntityAILookIdle(this));
+
+        this.targetTasks.addTask(1, new EntityAIMaidOwnerHurtByTarget(this));
+        this.targetTasks.addTask(2, new EntityAIMaidOwerHurtTarget(this));
+        this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, true, new Class[0]));
+
     }
 
     @Override
@@ -99,12 +110,24 @@ public class EntityMagicMaid extends EntityLiving implements IInventory
 //            return true;
 //        }
         //todo
+        if (!world.isRemote){
+//            this.setState((this.getState() + 1) % 4);
+//            System.out.println(this.getState());
+            ItemStack stack = player.getHeldItem(hand);
+//            System.out.println("ownerID: " + this.getOwnerID());
+            if (stack.getItem().equals(Items.DIAMOND) && !this.hasOwner())
+            {
+//                System.out.println("good");
+                stack.shrink(1);
+                this.setOwnerID(player.getUniqueID());
+                return true;
+            }
+        }
+
         if (world.isRemote)
         {
 //            createWeapon(0);
-//            this.setState((this.getState() + 1) % 4);
-//            System.out.println(this.getState());
-            player.openGui(Main.instance, Reference.GUI_MAID_WINDOW, world, (int)this.posX, (int)this.posY, (int)this.posZ);
+//            player.openGui(Main.instance, Reference.GUI_MAID_WINDOW, world, (int)this.posX, (int)this.posY, (int)this.posZ);
             return true;
         }
 
@@ -132,6 +155,12 @@ public class EntityMagicMaid extends EntityLiving implements IInventory
             compound.setString("weaponID", "");
         else
             compound.setString("weaponID", this.getWeaponID().toString());
+
+        if (this.getOwnerID() == null)
+            compound.setString("ownerID", "");
+        else
+            compound.setString("ownerID", this.getOwnerID().toString());
+
     }
 
     public void readEntityFromNBT(NBTTagCompound compound)
@@ -144,11 +173,20 @@ public class EntityMagicMaid extends EntityLiving implements IInventory
         this.setHasArmor(compound.getBoolean("hasArmor"));
         this.setMode(compound.getInteger("mode"));
         this.setState(compound.getInteger("state"));
-        if (compound.hasKey("weaponID") && !compound.getString("weaponID").equals("")) {
+
+        if (compound.hasKey("weaponID") && !compound.getString("weaponID").equals(""))
             this.setWeaponID(UUID.fromString(compound.getString("weaponID")));
-        }
         else
             this.setWeaponID(null);
+
+        if (compound.hasKey("ownerID") && !compound.getString("ownerID").equals(""))
+            this.setOwnerID(UUID.fromString(compound.getString("ownerID")));
+        else
+            this.setOwnerID(null);
+    }
+
+    public boolean isSitting(){
+        return false; //todo 让女仆待命
     }
 
     public void setHealthbarnum(int healthbarnum){
@@ -214,6 +252,18 @@ public class EntityMagicMaid extends EntityLiving implements IInventory
 
     public UUID getWeaponID(){
         return (UUID)((Optional)this.dataManager.get(WEAPONID)).orNull();
+    }
+
+    public void setOwnerID(UUID uuid){
+        this.dataManager.set(OWNERID, Optional.fromNullable(uuid));
+    }
+
+    public UUID getOwnerID(){
+        return (UUID)((Optional)this.dataManager.get(OWNERID)).orNull();
+    }
+
+    public boolean hasOwner(){
+        return this.getOwnerID() != null;
     }
 
     public void setRank(int rank) {this.dataManager.set(RANK, rank);}
