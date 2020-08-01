@@ -15,4 +15,5 @@ public class Reference
     public static final int ENTITY_YELLOW = 302;
 
     public static final int ENTITY_REPENTANCE = 303;
+    public static final int ENTITY_CONVICTION = 304;
 }

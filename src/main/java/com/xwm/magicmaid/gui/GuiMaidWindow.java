@@ -29,8 +29,8 @@ public class GuiMaidWindow extends GuiContainer
     /** The old y position of the mouse pointer */
     private float oldMouseY;
 
-    public GuiMaidWindow(Container inventory, InventoryPlayer player, EntityMagicMaid maid) {
-        super(inventory);
+    public GuiMaidWindow(InventoryPlayer player, EntityMagicMaid maid) {
+        super(new ContainMaidWindow(player, maid));
         this.player = player;
         this.maid = maid;
     }
@@ -119,14 +119,14 @@ public class GuiMaidWindow extends GuiContainer
         GlStateManager.pushMatrix();
         GlStateManager.scale(0.9, 0.9, 0.9);
         GlStateManager.translate(12, 0, 0);
-        String tmp = I18n.format("血条");
-        fontRenderer.drawString(tmp, 77 + 85,  7, 0x404040);
-        tmp = I18n.format("血量");
-        fontRenderer.drawString(tmp, 77 + 85,  23, 0x404040);
-        tmp = I18n.format("品阶");
-        fontRenderer.drawString(tmp, 77 + 85, 40, 0x404040);
-        tmp = I18n.format("经验");
-        fontRenderer.drawString(tmp, 77 + 85, 55, 0x404040);
+        String tmp = I18n.format("container.maid.healthBar");
+        fontRenderer.drawString(tmp, 77 + 85,  7, 0x4210752);
+        tmp = I18n.format("container.maid.health");
+        fontRenderer.drawString(tmp, 77 + 85,  23, 0x4210752);
+        tmp = I18n.format("container.maid.rank");
+        fontRenderer.drawString(tmp, 77 + 85, 40, 0x4210752);
+        tmp = I18n.format("container.maid.exp");
+        fontRenderer.drawString(tmp, 77 + 85, 55, 0x4210752);
         GlStateManager.popMatrix();
     }
 

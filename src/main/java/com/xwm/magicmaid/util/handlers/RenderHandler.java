@@ -7,10 +7,13 @@ import com.xwm.magicmaid.entity.maid.EntityMagicMaidBlue;
 import com.xwm.magicmaid.entity.model.strawberry.ModelMagicMaidStrawberry;
 import com.xwm.magicmaid.entity.model.ModelMagicMaidBlue;
 import com.xwm.magicmaid.entity.model.ModelMagicMaidYellow;
+import com.xwm.magicmaid.entity.model.weapon.ModelConviction;
 import com.xwm.magicmaid.entity.model.weapon.ModelRepentance;
 import com.xwm.magicmaid.entity.render.RenderMagicMaid;
 import com.xwm.magicmaid.entity.render.RenderMaidWeapon;
 import com.xwm.magicmaid.entity.weapon.EntityMaidWeapon;
+import com.xwm.magicmaid.entity.weapon.EntityMaidWeaponConviction;
+import com.xwm.magicmaid.entity.weapon.EntityMaidWeaponRepantence;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
@@ -40,10 +43,17 @@ public class RenderHandler
             }
         });
 
-        RenderingRegistry.registerEntityRenderingHandler(EntityMaidWeapon.class, new IRenderFactory<EntityMaidWeapon>() {
+        RenderingRegistry.registerEntityRenderingHandler(EntityMaidWeaponRepantence.class, new IRenderFactory<EntityMaidWeapon>() {
             @Override
             public Render<? super EntityMaidWeapon> createRenderFor(RenderManager manager) {
                 return new RenderMaidWeapon(manager, new ModelRepentance());
+            }
+        });
+
+        RenderingRegistry.registerEntityRenderingHandler(EntityMaidWeaponConviction.class, new IRenderFactory<EntityMaidWeapon>() {
+            @Override
+            public Render<? super EntityMaidWeapon> createRenderFor(RenderManager manager) {
+                return new RenderMaidWeapon(manager, new ModelConviction());
             }
         });
     }

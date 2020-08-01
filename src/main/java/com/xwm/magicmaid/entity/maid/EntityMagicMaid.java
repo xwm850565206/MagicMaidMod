@@ -6,6 +6,10 @@ import com.xwm.magicmaid.entity.ai.EntityAIMaidFollow;
 import com.xwm.magicmaid.entity.ai.EntityAIMaidOwerHurtTarget;
 import com.xwm.magicmaid.entity.ai.EntityAIMaidOwnerHurtByTarget;
 import com.xwm.magicmaid.entity.weapon.EntityMaidWeapon;
+import com.xwm.magicmaid.entity.weapon.EntityMaidWeaponConviction;
+import com.xwm.magicmaid.entity.weapon.EntityMaidWeaponRepantence;
+import com.xwm.magicmaid.object.item.ItemConviction;
+import com.xwm.magicmaid.object.item.ItemRepantence;
 import com.xwm.magicmaid.object.item.ItemWeapon;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.EntityCreature;
@@ -31,6 +35,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import com.google.common.base.Optional;
+import org.lwjgl.Sys;
 
 import java.util.List;
 import java.util.UUID;
@@ -48,10 +53,11 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
     private static final DataParameter<Optional<UUID>> WEAPONID = EntityDataManager.<Optional<UUID>>createKey(EntityMagicMaid.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     private static final DataParameter<Integer> RANK = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
     private static final DataParameter<Optional<UUID>> OWNERID = EntityDataManager.<Optional<UUID>>createKey(EntityMagicMaid.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+    private static final DataParameter<Integer> WEAPONTYPE = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
 
     public BlockPos weaponStandbyPos = new BlockPos(0, this.height+1, 0);
 
-    public final NonNullList<ItemStack> inventory = NonNullList.<ItemStack>withSize(2, ItemStack.EMPTY);
+    public final NonNullList<ItemStack> inventory = NonNullList.<ItemStack>withSize(2, ItemStack.EMPTY); //todo 保存背包里的信息
 
     public EntityMagicMaid(World worldIn)
     {
@@ -69,10 +75,11 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         this.dataManager.register(RANK, 2);
         this.dataManager.register(HASWEAPON, false);
         this.dataManager.register(HASARMOR, false);
-        this.dataManager.register(MODE, 0);
+        this.dataManager.register(MODE, 1); //todo test
         this.dataManager.register(STATE, 0);
         this.dataManager.register(WEAPONID, Optional.fromNullable(null));
         this.dataManager.register(OWNERID, Optional.fromNullable(null));
+        this.dataManager.register(WEAPONTYPE, 0);
     }
 
     @Override
@@ -126,8 +133,10 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
 
         if (world.isRemote)
         {
-//            createWeapon(0);
-//            player.openGui(Main.instance, Reference.GUI_MAID_WINDOW, world, (int)this.posX, (int)this.posY, (int)this.posZ);
+            ItemStack stack = player.getHeldItem(hand);
+            if (stack.isEmpty())
+                player.openGui(Main.instance, Reference.GUI_MAID_WINDOW, world, (int)this.posX, (int)this.posY, (int)this.posZ);
+            //            createWeapon(0);
             return true;
         }
 
@@ -150,6 +159,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         compound.setBoolean("hasArmor", this.hasArmor());
         compound.setInteger("mode", this.getMode());
         compound.setInteger("state", this.getState());
+        compound.setInteger("weaponType", this.getWeaponType());
 
         if (this.getWeaponID() == null)
             compound.setString("weaponID", "");
@@ -173,6 +183,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         this.setHasArmor(compound.getBoolean("hasArmor"));
         this.setMode(compound.getInteger("mode"));
         this.setState(compound.getInteger("state"));
+        this.setWeaponType(compound.getInteger("weaponType"));
 
         if (compound.hasKey("weaponID") && !compound.getString("weaponID").equals(""))
             this.setWeaponID(UUID.fromString(compound.getString("weaponID")));
@@ -270,12 +281,25 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
 
     public int getRank() {return this.dataManager.get(RANK);}
 
+    public void setWeaponType(int type) {this.dataManager.set(WEAPONTYPE, type);}
+
+    public int getWeaponType() {return this.dataManager.get(WEAPONTYPE);}
+
+    public int getAttackDamage(EnumAttackTypes type){
+        return 10; //todo 随着成长造成的伤害不同，不同女仆也不同
+    }
+
     public void turnToBossMode() {
         //todo 女仆的boss形态 击败boss形态的女仆 会掉落物品，用于武器合成，女仆召唤。
     }
 
     public void getWeapon(ItemWeapon weapon){
-        createWeapon(0);
+        if (weapon instanceof ItemRepantence) {
+            createWeapon(1, new EntityMaidWeaponRepantence(this.world));
+        }
+        else if (weapon instanceof ItemConviction){
+            createWeapon(2, new EntityMaidWeaponConviction(this.world));
+        }
         //todo 得到武器后要进行一系列的操作来维护
     }
 
@@ -285,12 +309,12 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         //todo 失去武器也要修改一系列数据来维护
     }
 
-    public void createWeapon(int weaponID)
+    public void createWeapon(int weaponType, EntityMaidWeapon weapon)
     {
-        EntityMaidWeapon weapon = new EntityMaidWeapon(this.world);
         weapon.setMaid(this);
         weapon.setPosition(this.posX, this.posY, this.posZ);
         this.setWeaponID(weapon.getUniqueID());
+        this.setWeaponType(weaponType);
         this.world.spawnEntity(weapon);
     }
 
@@ -299,12 +323,12 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
      */
     @Override
     public int getSizeInventory() {
-        return 0;
+        return 2;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return this.inventory.isEmpty();
     }
 
     /**
@@ -382,7 +406,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
      */
     @Override
     public int getInventoryStackLimit() {
-        return 2;
+        return 64;
     }
 
     /**

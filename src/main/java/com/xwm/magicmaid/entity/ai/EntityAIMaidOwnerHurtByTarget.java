@@ -3,9 +3,7 @@ package com.xwm.magicmaid.entity.ai;
 import com.xwm.magicmaid.entity.maid.EntityMagicMaid;
 import com.xwm.magicmaid.entity.maid.EnumModes;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAITarget;
-import net.minecraft.entity.passive.EntityTameable;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class EntityAIMaidOwnerHurtByTarget extends EntityAITarget
@@ -30,7 +28,7 @@ public class EntityAIMaidOwnerHurtByTarget extends EntityAITarget
         {
             return false;
         }
-        if (EnumModes.toMode(this.tameable.getMode()) !=  EnumModes.FIGHT)
+        if (EnumModes.valueOf(this.tameable.getMode()) !=  EnumModes.FIGHT)
             return false;
         else
         {

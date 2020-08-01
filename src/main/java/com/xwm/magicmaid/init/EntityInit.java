@@ -5,6 +5,7 @@ import com.xwm.magicmaid.entity.maid.EntityMagicMaidBanana;
 import com.xwm.magicmaid.entity.maid.EntityMagicMaidStrawberry;
 import com.xwm.magicmaid.entity.maid.EntityMagicMaidBlue;
 import com.xwm.magicmaid.entity.weapon.EntityMaidWeapon;
+import com.xwm.magicmaid.entity.weapon.EntityMaidWeaponRepantence;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -21,7 +22,9 @@ public class EntityInit
         registerEntity(event, Reference.MODID + "_maid_blue", EntityMagicMaidBlue.class, Reference.ENTITY_BLUE, 50, 0xFFFF00, 0xFFD700);
         registerEntity(event, Reference.MODID + "_maid_yellow", EntityMagicMaidBanana.class, Reference.ENTITY_YELLOW, 50, 0xFFFF00, 0xFFD700);
 
-        registerEntityWithoutEgg(event, Reference.MODID + "_repentance", EntityMaidWeapon.class, Reference.ENTITY_REPENTANCE, 50);
+        registerEntityWithoutEgg(event, Reference.MODID + "_repentance", EntityMaidWeaponRepantence.class, Reference.ENTITY_REPENTANCE, 50);
+        registerEntityWithoutEgg(event, Reference.MODID + "_conviction", EntityMaidWeapon.class, Reference.ENTITY_CONVICTION, 50);
+
     }
 
     private static void registerEntity(RegistryEvent.Register<EntityEntry> event, String name, Class<? extends Entity> entity, int id, int range, int color1, int color2) {

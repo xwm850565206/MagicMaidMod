@@ -6,7 +6,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class EntityAIStrawberryServe extends EntityAIBase
 {
@@ -28,7 +27,7 @@ public class EntityAIStrawberryServe extends EntityAIBase
 
         if (!this.maid.hasOwner())
             return false;
-        if (EnumModes.toMode(this.maid.getMode()) != EnumModes.SERVE)
+        if (EnumModes.valueOf(this.maid.getMode()) != EnumModes.SERVE)
             return false;
 
         EntityLivingBase entityLivingBase = this.maid.world.getPlayerEntityByUUID(this.maid.getOwnerID());

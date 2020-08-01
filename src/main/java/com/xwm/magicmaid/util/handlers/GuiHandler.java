@@ -69,7 +69,7 @@ public class GuiHandler implements IGuiHandler
                 return null;
 
             EntityMagicMaid maid = entities.get(0);
-            return new GuiMaidWindow(new ContainMaidWindow(player.inventory, maid), player.inventory, maid);
+            return new GuiMaidWindow(player.inventory, maid);
         }
         return null;
     }
