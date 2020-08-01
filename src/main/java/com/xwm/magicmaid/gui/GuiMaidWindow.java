@@ -115,7 +115,6 @@ public class GuiMaidWindow extends GuiContainer
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
-//        Main.logger.info("call foregroundLayer");
         GlStateManager.pushMatrix();
         GlStateManager.scale(0.9, 0.9, 0.9);
         GlStateManager.translate(12, 0, 0);

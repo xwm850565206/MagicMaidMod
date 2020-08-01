@@ -4,5 +4,6 @@ public class ItemWeapon extends ItemBase
 {
     public ItemWeapon(String name) {
         super(name);
+        this.maxStackSize = 1;
     }
 }

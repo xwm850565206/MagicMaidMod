@@ -107,6 +107,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(1000);
     }
 
+    //todo 让女仆切换状态
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand)
     {
@@ -129,15 +130,16 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
                 this.setOwnerID(player.getUniqueID());
                 return true;
             }
-        }
-
-        if (world.isRemote)
-        {
-            ItemStack stack = player.getHeldItem(hand);
+//            ItemStack stack = player.getHeldItem(hand);
             if (stack.isEmpty())
                 player.openGui(Main.instance, Reference.GUI_MAID_WINDOW, world, (int)this.posX, (int)this.posY, (int)this.posZ);
             //            createWeapon(0);
             return true;
+        }
+
+        if (world.isRemote)
+        {
+
         }
 
         return false;

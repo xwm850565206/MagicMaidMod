@@ -19,70 +19,56 @@ public class ContainMaidWindow extends Container
         this.player = inventory;
         this.maid = maid;
 
-
-        for (int i = 0; i < 3; ++i)
-        {
-            for (int j = 0; j < 9; ++j)
-            {
-                this.addSlotToContainer(new Slot(inventory, j + i * 9 + 9, 8 + j * 18, 74 + i * 18));
+        for (int i = 0; i < 2; i++){
+            addSlotToContainer(new Slot(maid, i, 8 + i, 8 + i * 18));
+        }
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 9; j++) {
+                addSlotToContainer(new Slot(inventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
             }
         }
 
-        for (int i = 0; i < 9; ++i)
-        {
-            this.addSlotToContainer(new Slot(inventory, i, 8 + i * 18, 132));
+        for (int k = 0; k < 9; k++) {
+            addSlotToContainer(new Slot(inventory, k, 8 + k * 18, 142));
         }
-
-
-//        for (int i = 0; i < 2; i++){
-//            addSlotToContainer(new Slot(maid, i, 8 + i, 8 + i * 18));
-//        }
-    }
-
-    @Override
-    public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player)
-    {
-        System.out.println("Slot " + slotId + " clicked");
-        return super.slotClick(slotId, dragType, clickTypeIn, player);
     }
 
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int index)
     {
-//        System.out.println("transfer slot: " + index);
-//        ItemStack itemstack = ItemStack.EMPTY;
-//        Slot slot = inventorySlots.get(index);
-//
-//        if (slot != null && slot.getHasStack()) {
-//            ItemStack itemstack1 = slot.getStack();
-//            itemstack = itemstack1.copy();
-//
-//            int containerSlots = inventorySlots.size() - player.inventory.mainInventory.size();
-//
-//            if (index < containerSlots) {
-//                if (!this.mergeItemStack(itemstack1, containerSlots, inventorySlots.size(), true)) {
-//                    return ItemStack.EMPTY;
-//                }
-//            } else if (!this.mergeItemStack(itemstack1, 0, containerSlots, false)) {
-//                return ItemStack.EMPTY;
-//            }
-//
-//            if (itemstack1.getCount() == 0) {
-//                slot.putStack(ItemStack.EMPTY);
-//            } else {
-//                slot.onSlotChanged();
-//            }
-//
-//            if (itemstack1.getCount() == itemstack.getCount()) {
-//                return ItemStack.EMPTY;
-//            }
-//
-//            slot.onTake(player, itemstack1);
-//        }
+        System.out.println("transfer slot: " + index);
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = inventorySlots.get(index);
 
-//        return itemstack;
-        return null;
+        if (slot != null && slot.getHasStack()) {
+            ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
+
+            int containerSlots = inventorySlots.size() - player.inventory.mainInventory.size();
+
+            if (index < containerSlots) {
+                if (!this.mergeItemStack(itemstack1, containerSlots, inventorySlots.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.mergeItemStack(itemstack1, 0, containerSlots, false)) {
+                return ItemStack.EMPTY;
+            }
+
+            if (itemstack1.getCount() == 0) {
+                slot.putStack(ItemStack.EMPTY);
+            } else {
+                slot.onSlotChanged();
+            }
+
+            if (itemstack1.getCount() == itemstack.getCount()) {
+                return ItemStack.EMPTY;
+            }
+
+            slot.onTake(player, itemstack1);
+        }
+
+        return itemstack;
     }
 
     /**
