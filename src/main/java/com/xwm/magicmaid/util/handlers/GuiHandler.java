@@ -1,11 +1,10 @@
 package com.xwm.magicmaid.util.handlers;
 
-import com.xwm.magicmaid.entity.maid.EntityMagicMaid;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.gui.ContainMaidWindow;
 import com.xwm.magicmaid.gui.GuiMaidWindow;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;

@@ -1,9 +1,7 @@
 package com.xwm.magicmaid.entity.model.strawberry;
 
-import com.xwm.magicmaid.entity.maid.EntityMagicMaid;
-import com.xwm.magicmaid.entity.maid.EntityMagicMaidStrawberry;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidStrawberry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.MathHelper;

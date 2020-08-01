@@ -1,9 +1,9 @@
 package com.xwm.magicmaid.entity.render;
 
-import com.xwm.magicmaid.entity.maid.EntityMagicMaid;
-import com.xwm.magicmaid.entity.maid.EntityMagicMaidBanana;
-import com.xwm.magicmaid.entity.maid.EntityMagicMaidStrawberry;
-import com.xwm.magicmaid.entity.maid.EntityMagicMaidBlue;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidBanana;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidStrawberry;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidBlue;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;

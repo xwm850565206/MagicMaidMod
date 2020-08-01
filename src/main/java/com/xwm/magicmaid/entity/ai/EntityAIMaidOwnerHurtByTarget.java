@@ -1,7 +1,7 @@
 package com.xwm.magicmaid.entity.ai;
 
-import com.xwm.magicmaid.entity.maid.EntityMagicMaid;
-import com.xwm.magicmaid.entity.maid.EnumModes;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
+import com.xwm.magicmaid.entity.mob.maid.EnumModes;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITarget;
 import net.minecraftforge.fml.common.FMLCommonHandler;

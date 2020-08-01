@@ -1,9 +1,9 @@
 package com.xwm.magicmaid.util.handlers;
 
-import com.xwm.magicmaid.entity.maid.EntityMagicMaid;
-import com.xwm.magicmaid.entity.maid.EntityMagicMaidBanana;
-import com.xwm.magicmaid.entity.maid.EntityMagicMaidStrawberry;
-import com.xwm.magicmaid.entity.maid.EntityMagicMaidBlue;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidBanana;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidStrawberry;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidBlue;
 import com.xwm.magicmaid.entity.model.strawberry.ModelMagicMaidStrawberry;
 import com.xwm.magicmaid.entity.model.ModelMagicMaidBlue;
 import com.xwm.magicmaid.entity.model.ModelMagicMaidYellow;
@@ -11,9 +11,9 @@ import com.xwm.magicmaid.entity.model.weapon.ModelConviction;
 import com.xwm.magicmaid.entity.model.weapon.ModelRepentance;
 import com.xwm.magicmaid.entity.render.RenderMagicMaid;
 import com.xwm.magicmaid.entity.render.RenderMaidWeapon;
-import com.xwm.magicmaid.entity.weapon.EntityMaidWeapon;
-import com.xwm.magicmaid.entity.weapon.EntityMaidWeaponConviction;
-import com.xwm.magicmaid.entity.weapon.EntityMaidWeaponRepantence;
+import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
+import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponConviction;
+import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponRepantence;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;

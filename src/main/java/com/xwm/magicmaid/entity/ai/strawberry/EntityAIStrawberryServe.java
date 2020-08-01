@@ -1,7 +1,7 @@
 package com.xwm.magicmaid.entity.ai.strawberry;
 
-import com.xwm.magicmaid.entity.maid.EntityMagicMaid;
-import com.xwm.magicmaid.entity.maid.EnumModes;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
+import com.xwm.magicmaid.entity.mob.maid.EnumModes;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.init.MobEffects;

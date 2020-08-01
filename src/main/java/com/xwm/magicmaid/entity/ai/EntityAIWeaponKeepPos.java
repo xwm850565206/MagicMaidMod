@@ -1,8 +1,7 @@
 package com.xwm.magicmaid.entity.ai;
 
-import com.xwm.magicmaid.entity.maid.EntityMagicMaid;
-import com.xwm.magicmaid.entity.weapon.EntityMaidWeapon;
-import jdk.nashorn.internal.ir.Block;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
+import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.math.BlockPos;
 

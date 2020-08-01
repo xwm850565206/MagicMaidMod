@@ -1,18 +1,17 @@
 package com.xwm.magicmaid.init;
 
-import com.xwm.magicmaid.Main;
-import com.xwm.magicmaid.entity.maid.EntityMagicMaidBanana;
-import com.xwm.magicmaid.entity.maid.EntityMagicMaidStrawberry;
-import com.xwm.magicmaid.entity.maid.EntityMagicMaidBlue;
-import com.xwm.magicmaid.entity.weapon.EntityMaidWeapon;
-import com.xwm.magicmaid.entity.weapon.EntityMaidWeaponRepantence;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidBanana;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidStrawberry;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidBlue;
+import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
+import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponConviction;
+import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponRepantence;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 public class EntityInit
 {
@@ -23,7 +22,7 @@ public class EntityInit
         registerEntity(event, Reference.MODID + "_maid_yellow", EntityMagicMaidBanana.class, Reference.ENTITY_YELLOW, 50, 0xFFFF00, 0xFFD700);
 
         registerEntityWithoutEgg(event, Reference.MODID + "_repentance", EntityMaidWeaponRepantence.class, Reference.ENTITY_REPENTANCE, 50);
-        registerEntityWithoutEgg(event, Reference.MODID + "_conviction", EntityMaidWeapon.class, Reference.ENTITY_CONVICTION, 50);
+        registerEntityWithoutEgg(event, Reference.MODID + "_conviction", EntityMaidWeaponConviction.class, Reference.ENTITY_CONVICTION, 50);
 
     }
 

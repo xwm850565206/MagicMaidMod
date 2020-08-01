@@ -1,7 +1,7 @@
-package com.xwm.magicmaid.entity.maid;
+package com.xwm.magicmaid.entity.mob.maid;
 
+import com.xwm.magicmaid.entity.ai.strawberry.EntityAIConviction;
 import com.xwm.magicmaid.entity.ai.strawberry.EntityAIRepantence;
-import com.xwm.magicmaid.entity.ai.strawberry.EntityAIStrawberryServe;
 import net.minecraft.world.World;
 
 public class EntityMagicMaidStrawberry extends EntityMagicMaid
@@ -16,7 +16,8 @@ public class EntityMagicMaidStrawberry extends EntityMagicMaid
     public void initEntityAI(){
         super.initEntityAI();
 //        this.targetTasks.addTask(3, new EntityAIStrawberryServe(this));
-//        this.targetTasks.addTask(3, new EntityAIRepantence(this));
+        this.targetTasks.addTask(3, new EntityAIRepantence(this));
+        this.targetTasks.addTask(3, new EntityAIConviction(this));
     }
 
     @Override

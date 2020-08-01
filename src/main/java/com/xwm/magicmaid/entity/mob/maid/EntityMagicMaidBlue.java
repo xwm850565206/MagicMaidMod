@@ -1,4 +1,4 @@
-package com.xwm.magicmaid.entity.maid;
+package com.xwm.magicmaid.entity.mob.maid;
 
 import net.minecraft.world.World;
 

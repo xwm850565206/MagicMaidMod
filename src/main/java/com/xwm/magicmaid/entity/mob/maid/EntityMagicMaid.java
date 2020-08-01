@@ -1,29 +1,27 @@
-package com.xwm.magicmaid.entity.maid;
+package com.xwm.magicmaid.entity.mob.maid;
 
 
+import com.google.common.base.Predicate;
 import com.xwm.magicmaid.Main;
 import com.xwm.magicmaid.entity.ai.EntityAIMaidFollow;
 import com.xwm.magicmaid.entity.ai.EntityAIMaidOwerHurtTarget;
 import com.xwm.magicmaid.entity.ai.EntityAIMaidOwnerHurtByTarget;
-import com.xwm.magicmaid.entity.weapon.EntityMaidWeapon;
-import com.xwm.magicmaid.entity.weapon.EntityMaidWeaponConviction;
-import com.xwm.magicmaid.entity.weapon.EntityMaidWeaponRepantence;
+import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
+import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponConviction;
+import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponRepantence;
+import com.xwm.magicmaid.entity.mob.weapon.EnumWeapons;
 import com.xwm.magicmaid.object.item.ItemConviction;
 import com.xwm.magicmaid.object.item.ItemRepantence;
 import com.xwm.magicmaid.object.item.ItemWeapon;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -35,8 +33,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import com.google.common.base.Optional;
-import org.lwjgl.Sys;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
@@ -123,7 +121,10 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
 //            System.out.println(this.getState());
             ItemStack stack = player.getHeldItem(hand);
 //            System.out.println("ownerID: " + this.getOwnerID());
-            if (stack.getItem().equals(Items.DIAMOND) && !this.hasOwner())
+            if (stack.isEmpty())
+                player.openGui(Main.instance, Reference.GUI_MAID_WINDOW, world, (int)this.posX, (int)this.posY, (int)this.posZ);
+            //            createWeapon(0);
+            else if (stack.getItem().equals(Items.DIAMOND) && !this.hasOwner())
             {
 //                System.out.println("good");
                 stack.shrink(1);
@@ -131,9 +132,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
                 return true;
             }
 //            ItemStack stack = player.getHeldItem(hand);
-            if (stack.isEmpty())
-                player.openGui(Main.instance, Reference.GUI_MAID_WINDOW, world, (int)this.posX, (int)this.posY, (int)this.posZ);
-            //            createWeapon(0);
+
             return true;
         }
 
@@ -173,6 +172,15 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         else
             compound.setString("ownerID", this.getOwnerID().toString());
 
+        for (int i = 0; i < this.inventory.size(); i++){
+            ItemStack stack = inventory.get(i);
+            if (stack.isEmpty())
+                compound.setInteger("inventory" + i, -1);
+            else {
+                EnumWeapons j = ((ItemWeapon) (stack.getItem())).enumWeapon;
+                compound.setInteger("inventory" + i, EnumWeapons.toInt(j));
+            }
+        }
     }
 
     public void readEntityFromNBT(NBTTagCompound compound)
@@ -196,6 +204,17 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
             this.setOwnerID(UUID.fromString(compound.getString("ownerID")));
         else
             this.setOwnerID(null);
+
+        for (int i = 0; i < this.inventory.size(); i++){
+            int j = compound.getInteger("inventory" + i);
+            if (j == -1){
+                this.inventory.set(i, ItemStack.EMPTY);
+            }
+            else {
+                EnumWeapons j1 = EnumWeapons.valueOf(j);
+                this.inventory.set(i, new ItemStack(ItemWeapon.valueOf(j1)));
+            }
+        }
     }
 
     public boolean isSitting(){
@@ -296,6 +315,10 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
     }
 
     public void getWeapon(ItemWeapon weapon){
+
+        if (this.world.isRemote)
+            return;
+
         if (weapon instanceof ItemRepantence) {
             createWeapon(1, new EntityMaidWeaponRepantence(this.world));
         }
@@ -306,8 +329,14 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
     }
 
     public void loseWeapon(ItemWeapon weapon){
-//        EntityMaidWeapon weapon1 = this.world.getPlayerEntityByUUID(this.getWeaponID());
-//        weapon1.setDead();
+        try {
+            setWeaponID(null);
+            setWeaponType(0);
+            EntityMaidWeapon weapon1 = EntityMaidWeapon.getWeaponFromUUID(world, getWeaponID());
+            weapon1.setDead();
+        } catch (Exception e){
+            ; //可能武器被其他模组杀死了
+        }
         //todo 失去武器也要修改一系列数据来维护
     }
 
@@ -470,5 +499,23 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
     @Override
     public void clear() {
         this.inventory.clear();
+    }
+
+
+    public static EntityMagicMaid getMaidFromUUID(World world, UUID uuid)
+    {
+        List<EntityMagicMaid> maids = world.getEntities(EntityMagicMaid.class, new Predicate<EntityMagicMaid>() {
+            @Override
+            public boolean apply(@Nullable EntityMagicMaid input) {
+                return input.getUniqueID().equals(uuid);
+            }
+        });
+        for (EntityMagicMaid maid : maids)
+        {
+            if (maid.getUniqueID().equals(uuid))
+                return maid;
+        }
+
+        return null;
     }
 }

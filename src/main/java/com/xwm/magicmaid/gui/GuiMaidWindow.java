@@ -1,7 +1,6 @@
 package com.xwm.magicmaid.gui;
 
-import com.xwm.magicmaid.Main;
-import com.xwm.magicmaid.entity.maid.EntityMagicMaid;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -12,11 +11,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
-
-import java.io.IOException;
-import java.util.Random;
 
 public class GuiMaidWindow extends GuiContainer
 {

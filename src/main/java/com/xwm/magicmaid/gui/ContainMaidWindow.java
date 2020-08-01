@@ -1,17 +1,21 @@
 package com.xwm.magicmaid.gui;
 
-import com.xwm.magicmaid.entity.maid.EntityMagicMaid;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
+import com.xwm.magicmaid.object.item.ItemWeapon;
+import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 
 public class ContainMaidWindow extends Container
 {
+    private static final ResourceLocation WEAPONSLOT = new ResourceLocation(Reference.MODID + ":textures/gui/weapon_icon.png");
+    private static final ResourceLocation ARMORSLOT = new ResourceLocation(Reference.MODID + ":textures/gui/armor_icon.png");
+
     private InventoryPlayer player;
     private EntityMagicMaid maid;
 
@@ -19,9 +23,27 @@ public class ContainMaidWindow extends Container
         this.player = inventory;
         this.maid = maid;
 
-        for (int i = 0; i < 2; i++){
-            addSlotToContainer(new Slot(maid, i, 8 + i, 8 + i * 18));
-        }
+        //武器槽
+        Slot weaponSlot = new Slot(maid, 0, 8, 8){
+            @Override
+            public boolean isItemValid(ItemStack stack) {
+                return stack != null && !stack.isEmpty() && stack.getItem() instanceof ItemWeapon;
+            }
+        };
+        weaponSlot.setBackgroundLocation(WEAPONSLOT);
+        //盔甲槽 todo 盔甲还没做
+        Slot armorSlot = new Slot(maid, 1, 9, 8 + 18){
+            @Override
+            public boolean isItemValid(ItemStack stack) {
+                return stack != null && !stack.isEmpty() && stack.getItem() instanceof ItemWeapon;
+            }
+        };
+        armorSlot.setBackgroundLocation(ARMORSLOT);
+
+
+        addSlotToContainer(weaponSlot);
+        addSlotToContainer(armorSlot);
+
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
                 addSlotToContainer(new Slot(inventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
