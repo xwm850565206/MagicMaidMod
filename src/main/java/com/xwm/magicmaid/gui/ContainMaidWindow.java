@@ -1,6 +1,7 @@
 package com.xwm.magicmaid.gui;
 
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
+import com.xwm.magicmaid.object.item.ItemArmor;
 import com.xwm.magicmaid.object.item.ItemWeapon;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,7 +36,7 @@ public class ContainMaidWindow extends Container
         Slot armorSlot = new Slot(maid, 1, 9, 8 + 18){
             @Override
             public boolean isItemValid(ItemStack stack) {
-                return stack != null && !stack.isEmpty() && stack.getItem() instanceof ItemWeapon;
+                return stack != null && !stack.isEmpty() && stack.getItem() instanceof ItemArmor;
             }
         };
         armorSlot.setBackgroundLocation(ARMORSLOT);

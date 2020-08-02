@@ -13,8 +13,13 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 
+import java.util.List;
+import java.util.Vector;
+
 public class EntityInit
 {
+    public static List<Class> entityClass = new Vector<>();
+
     public static void registerEntities(RegistryEvent.Register<EntityEntry> event)
     {
         registerEntity(event, Reference.MODID + "_maid_strawberry", EntityMagicMaidStrawberry.class, Reference.ENTITY_STRAWBERRY, 50, 0xFFFF00, 0xFFD700);
@@ -36,6 +41,8 @@ public class EntityInit
                         .egg(color1, color2)
                         .build()
         );
+
+        entityClass.add(entity);
     }
 
     private static void registerEntityWithoutEgg(RegistryEvent.Register<EntityEntry> event, String name, Class<? extends Entity> entity, int id, int range)
@@ -48,5 +55,7 @@ public class EntityInit
                         .tracker(range, 1, true)
                         .build()
         );
+
+        entityClass.add(entity);
     }
 }

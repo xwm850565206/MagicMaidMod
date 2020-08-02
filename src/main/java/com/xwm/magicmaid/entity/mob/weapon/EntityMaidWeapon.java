@@ -3,8 +3,6 @@ package com.xwm.magicmaid.entity.mob.weapon;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -17,7 +15,6 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import scala.collection.LinearSeq;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -26,7 +23,7 @@ import java.util.UUID;
 
 public class EntityMaidWeapon extends EntityLivingBase
 {
-    public static EnumWeapons enumWeapon;
+    public static EnumEquipments enumEquipment;
 
     private static final DataParameter<com.google.common.base.Optional<UUID>> OWNERID = EntityDataManager.<Optional<UUID>>createKey(EntityMagicMaid.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 

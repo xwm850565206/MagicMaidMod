@@ -1,9 +1,8 @@
 package com.xwm.magicmaid.entity.ai.strawberry;
 
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
-import com.xwm.magicmaid.entity.mob.maid.EnumAttackTypes;
 import com.xwm.magicmaid.entity.mob.maid.EnumModes;
-import com.xwm.magicmaid.entity.mob.weapon.EnumWeapons;
+import com.xwm.magicmaid.entity.mob.weapon.EnumEquipments;
 import com.xwm.magicmaid.event.NetworkLoader;
 import com.xwm.magicmaid.util.ParticlePacket;
 import net.minecraft.entity.EntityLiving;
@@ -43,7 +42,7 @@ public class EntityAIConviction extends EntityAIBase
 
         if (!maid.hasOwner() && EnumModes.valueOf(maid.getMode()) != EnumModes.BOSS)
             return false;
-        if (EnumWeapons.valueOf(maid.getWeaponType()) != EnumWeapons.CONVICTION)
+        if (EnumEquipments.valueOf(maid.getWeaponType()) != EnumEquipments.CONVICTION)
             return false;
         if (EnumModes.valueOf(maid.getMode()) != EnumModes.FIGHT)
             return false;

@@ -9,7 +9,7 @@ import com.xwm.magicmaid.entity.ai.EntityAIMaidOwnerHurtByTarget;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponConviction;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponRepantence;
-import com.xwm.magicmaid.entity.mob.weapon.EnumWeapons;
+import com.xwm.magicmaid.entity.mob.weapon.EnumEquipments;
 import com.xwm.magicmaid.object.item.ItemConviction;
 import com.xwm.magicmaid.object.item.ItemRepantence;
 import com.xwm.magicmaid.object.item.ItemWeapon;
@@ -177,8 +177,8 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
             if (stack.isEmpty())
                 compound.setInteger("inventory" + i, -1);
             else {
-                EnumWeapons j = ((ItemWeapon) (stack.getItem())).enumWeapon;
-                compound.setInteger("inventory" + i, EnumWeapons.toInt(j));
+                EnumEquipments j = ((ItemWeapon) (stack.getItem())).enumEquipment;
+                compound.setInteger("inventory" + i, EnumEquipments.toInt(j));
             }
         }
     }
@@ -211,7 +211,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
                 this.inventory.set(i, ItemStack.EMPTY);
             }
             else {
-                EnumWeapons j1 = EnumWeapons.valueOf(j);
+                EnumEquipments j1 = EnumEquipments.valueOf(j);
                 this.inventory.set(i, new ItemStack(ItemWeapon.valueOf(j1)));
             }
         }
@@ -319,12 +319,9 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         if (this.world.isRemote)
             return;
 
-        if (weapon instanceof ItemRepantence) {
-            createWeapon(1, new EntityMaidWeaponRepantence(this.world));
-        }
-        else if (weapon instanceof ItemConviction){
-            createWeapon(2, new EntityMaidWeaponConviction(this.world));
-        }
+        createWeapon(EnumEquipments.toInt(weapon.enumEquipment),
+                EnumEquipments.toEntityMaidWeapon(weapon.enumEquipment, world));
+
         //todo 得到武器后要进行一系列的操作来维护
     }
 
@@ -342,6 +339,8 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
 
     public void createWeapon(int weaponType, EntityMaidWeapon weapon)
     {
+        if (weapon == null)
+            return;
         weapon.setMaid(this);
         weapon.setPosition(this.posX, this.posY, this.posZ);
         this.setWeaponID(weapon.getUniqueID());

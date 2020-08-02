@@ -3,7 +3,7 @@ package com.xwm.magicmaid.entity.ai.strawberry;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.entity.mob.maid.EnumAttackTypes;
 import com.xwm.magicmaid.entity.mob.maid.EnumModes;
-import com.xwm.magicmaid.entity.mob.weapon.EnumWeapons;
+import com.xwm.magicmaid.entity.mob.weapon.EnumEquipments;
 import com.xwm.magicmaid.event.NetworkLoader;
 import com.xwm.magicmaid.util.ParticlePacket;
 import net.minecraft.entity.EntityLivingBase;
@@ -41,7 +41,7 @@ public class EntityAIRepantence extends EntityAIBase
 
         if (!maid.hasOwner() && EnumModes.valueOf(maid.getMode()) != EnumModes.BOSS) //如果没有主人又不是boss就不放技能
             return false;
-        if (EnumWeapons.valueOf(maid.getWeaponType()) != EnumWeapons.REPATENCE)
+        if (EnumEquipments.valueOf(maid.getWeaponType()) != EnumEquipments.REPATENCE)
             return false;
         if (EnumModes.valueOf(maid.getMode()) != EnumModes.FIGHT)
             return false;
