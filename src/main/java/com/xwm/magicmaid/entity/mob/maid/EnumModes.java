@@ -2,7 +2,7 @@ package com.xwm.magicmaid.entity.mob.maid;
 
 public enum  EnumModes
 {
-    SERVE, FIGHT, BOSS;
+    SERVE, FIGHT, SITTING, BOSS;
 
     public static EnumModes valueOf(int mode) {
         return EnumModes.values()[mode];

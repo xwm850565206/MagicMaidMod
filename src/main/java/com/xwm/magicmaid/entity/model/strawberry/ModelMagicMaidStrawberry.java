@@ -22,7 +22,6 @@ public class ModelMagicMaidStrawberry extends ModelMagicMaidStrawberryBone
         this.leftSleeve = model.leftSleeve;
         this.rightSleeve = model.rightSleeve;
         this.dress = model.dress;
-//        System.out.println("select");
     }
 
     private void selectModelByEntityState(int state)
@@ -64,6 +63,17 @@ public class ModelMagicMaidStrawberry extends ModelMagicMaidStrawberryBone
             this.leftSleeve.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
             this.rightSleeve.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
         }
+        else if (state == 1){
+            this.leftLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+            this.rightLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
+            this.leftSleeve.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 0.6F * limbSwingAmount;
+            this.rightSleeve.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 0.6F * limbSwingAmount;
+        }
+        else if (state == 2){
+            this.leftLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+            this.rightLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
+        }
+
         this.hairMain.rotateAngleY = netHeadYaw * 0.017453292F;
         this.hairMain.rotateAngleX = headPitch * 0.017453292F;
     }

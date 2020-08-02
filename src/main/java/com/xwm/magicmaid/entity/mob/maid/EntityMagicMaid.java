@@ -54,6 +54,8 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
     private static final DataParameter<Optional<UUID>> OWNERID = EntityDataManager.<Optional<UUID>>createKey(EntityMagicMaid.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     private static final DataParameter<Integer> WEAPONTYPE = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
 
+    private EnumModes oldMode = null;
+
     public BlockPos weaponStandbyPos = new BlockPos(0, this.height+1, 0);
 
     public final NonNullList<ItemStack> inventory = NonNullList.<ItemStack>withSize(2, ItemStack.EMPTY); //todo 保存背包里的信息
@@ -75,7 +77,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         this.dataManager.register(HASWEAPON, false);
         this.dataManager.register(HASARMOR, false);
         this.dataManager.register(MODE, 1); //todo test
-        this.dataManager.register(STATE, 0);
+        this.dataManager.register(STATE, 0); //0-standard
         this.dataManager.register(WEAPONID, Optional.fromNullable(null));
         this.dataManager.register(OWNERID, Optional.fromNullable(null));
         this.dataManager.register(WEAPONTYPE, 0);
@@ -86,7 +88,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
     {
         super.initEntityAI();
         this.tasks.addTask(1, new EntityAISwimming(this));
-        this.tasks.addTask(3, new EntityAIMaidFollow(this, 1.0, 8, 3));
+        this.tasks.addTask(3, new EntityAIMaidFollow(this, 1.5, 8, 3));
         this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityLivingBase.class, 8.0F));
         this.tasks.addTask(10, new EntityAILookIdle(this));
 
@@ -103,43 +105,42 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(1000000000);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30000000298023224D);
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(1000);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20);
     }
 
     //todo 让女仆切换状态
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand)
     {
-//        if (!world.isRemote)
-//        {
-//            System.out.println("interact");
-//            createWeapon(0);
-//            return true;
-//        }
         //todo
-        if (!world.isRemote){
+        if (EnumModes.valueOf(this.getMode()) == EnumModes.BOSS)
+            return false;
+
+        if (!world.isRemote && hand == EnumHand.MAIN_HAND){
 //            this.setState((this.getState() + 1) % 4);
 //            System.out.println(this.getState());
             ItemStack stack = player.getHeldItem(hand);
-//            System.out.println("ownerID: " + this.getOwnerID());
-            if (stack.isEmpty())
-                player.openGui(Main.instance, Reference.GUI_MAID_WINDOW, world, (int)this.posX, (int)this.posY, (int)this.posZ);
-            //            createWeapon(0);
+            if (stack.isEmpty() && this.hasOwner() && this.getOwnerID().equals(player.getUniqueID())) {
+                if (player.isSneaking()) {
+                    player.openGui(Main.instance, Reference.GUI_MAID_WINDOW, world, (int) this.posX, (int) this.posY, (int) this.posZ);
+                }
+                else if(EnumModes.valueOf(getMode()) == EnumModes.SITTING){
+                    this.setMode(EnumModes.toInt(oldMode));
+                }
+                else {
+                    this.oldMode = EnumModes.valueOf(getMode());
+                    this.setMode(EnumModes.toInt(EnumModes.SITTING));
+                }
+                return true;
+            }
             else if (stack.getItem().equals(Items.DIAMOND) && !this.hasOwner())
             {
-//                System.out.println("good");
-                stack.shrink(1);
+                if(!player.isCreative())
+                    stack.shrink(1);
                 this.setOwnerID(player.getUniqueID());
                 return true;
             }
 //            ItemStack stack = player.getHeldItem(hand);
-
-            return true;
-        }
-
-        if (world.isRemote)
-        {
-
         }
 
         return false;
@@ -216,10 +217,12 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
                 this.inventory.set(i, new ItemStack(ItemEquipment.valueOf(j1)));
             }
         }
+
+        this.oldMode = EnumModes.valueOf(getMode());
     }
 
     public boolean isSitting(){
-        return false; //todo 让女仆待命
+        return EnumModes.valueOf(getMode()) == EnumModes.SITTING; //todo 让女仆待命
     }
 
     public void setHealthbarnum(int healthbarnum){

@@ -55,9 +55,14 @@ public class MaidModePacket implements IMessage
             World world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(message.dimension);
             EntityMagicMaid maid = (EntityMagicMaid) world.getEntityByID(message.maidId);
 
-            if (EnumModes.valueOf(maid.getMode()) != EnumModes.BOSS){
-                maid.setMode(1 - maid.getMode());
-            }
+//            if (EnumModes.valueOf(maid.getMode()) == EnumModes.SERVE){
+//                maid.setMode(EnumModes.toInt(EnumModes.FIGHT));
+//            }
+//            else if (EnumModes.valueOf(maid.getMode()) == EnumModes.FIGHT){
+//                maid.setMode(EnumModes.toInt(EnumModes.SERVE));
+//            }
+            if (maid != null)
+                maid.setMode((maid.getMode() + 1) % 3); //todo 这里可能有更兼容的写法
         }
     }
 }
