@@ -54,11 +54,19 @@ public class EntityMaidWeapon extends EntityLivingBase
     @Override
     public void onUpdate()
     {
+        if (!world.isRemote)
+        {
+            if (maid == null && this.getOwnerID() != null){
+                maid = EntityMagicMaid.getMaidFromUUID(world, this.getOwnerID());
+                if (maid == null)
+                    this.setDead();
+            }
 
-        if (!world.isRemote && maid != null) {
-            BlockPos standPos = maid.getPosition();
-            standPos = standPos.add(maid.weaponStandbyPos.getX(), maid.weaponStandbyPos.getY(), maid.weaponStandbyPos.getZ());
-            setPosition(standPos.getX(), standPos.getY(), standPos.getZ());
+            if (maid != null) {
+                BlockPos standPos = maid.getPosition();
+                standPos = standPos.add(maid.weaponStandbyPos.getX(), maid.weaponStandbyPos.getY(), maid.weaponStandbyPos.getZ());
+                setPosition(standPos.getX(), standPos.getY(), standPos.getZ());
+            }
         }
 
         super.onUpdate();
@@ -101,9 +109,7 @@ public class EntityMaidWeapon extends EntityLivingBase
         else
             this.setOwnerID(null);
 
-        if (this.getOwnerID() != null){
-            maid = EntityMagicMaid.getMaidFromUUID(world, this.getOwnerID());
-        }
+
     }
 
 
