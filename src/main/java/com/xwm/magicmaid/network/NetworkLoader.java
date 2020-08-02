@@ -1,7 +1,6 @@
-package com.xwm.magicmaid.event;
+package com.xwm.magicmaid.network;
 
 import com.xwm.magicmaid.Main;
-import com.xwm.magicmaid.util.ParticlePacket;
 import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.handlers.GuiHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -21,6 +20,7 @@ public class NetworkLoader
     public NetworkLoader(FMLPreInitializationEvent event)
     {
         registerMessage(ParticlePacket.Handler.class, ParticlePacket.class, Side.CLIENT);
+        registerMessage(CustomerParticlePacket.Handler.class, CustomerParticlePacket.class, Side.CLIENT);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, GuiHandler.maidWindowHandler);
     }

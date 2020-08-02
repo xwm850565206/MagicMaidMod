@@ -4,8 +4,10 @@ import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.entity.mob.maid.EnumAttackTypes;
 import com.xwm.magicmaid.entity.mob.maid.EnumModes;
 import com.xwm.magicmaid.entity.mob.weapon.EnumEquipments;
-import com.xwm.magicmaid.event.NetworkLoader;
-import com.xwm.magicmaid.util.ParticlePacket;
+import com.xwm.magicmaid.network.CustomerParticlePacket;
+import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.network.ParticlePacket;
+import com.xwm.magicmaid.particle.EnumCustomParticles;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.EntityDamageSource;
@@ -15,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.util.List;
+import java.util.Random;
 
 //todo
 public class EntityAIRepantence extends EntityAIBase
@@ -25,6 +28,7 @@ public class EntityAIRepantence extends EntityAIBase
     private EntityLivingBase owner;
     private int tick = 0;
     private int performTick = 0;
+    private Random random = new Random();
 
     public EntityAIRepantence(EntityMagicMaid maid){
         this.maid = maid;
@@ -114,6 +118,17 @@ public class EntityAIRepantence extends EntityAIBase
     }
 
     private void playDeathParticle(AxisAlignedBB bb){
-        //todo 灵魂抽离效果
+        double d0 = (bb.minX + bb.maxX) / 2.0;
+        double d1 = (bb.maxY);
+        double d2 = (bb.minZ + bb.maxZ) / 2.0;
+        for (int j = 0; j < 2; j++)
+        {
+            CustomerParticlePacket particlePacket = new CustomerParticlePacket(
+                    d0 + random.nextDouble(),
+                    d1 + random.nextDouble(),
+                    d2 + random.nextDouble(), EnumCustomParticles.SOUL);
+            NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(maid.getEntityWorld().provider.getDimension(), d0, d1, d2, 40.0D);
+            NetworkLoader.instance.sendToAllAround(particlePacket, target);
+        }
     }
 }

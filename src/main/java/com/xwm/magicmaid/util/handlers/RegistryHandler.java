@@ -3,13 +3,17 @@ package com.xwm.magicmaid.util.handlers;
 import com.xwm.magicmaid.init.BlockInit;
 import com.xwm.magicmaid.init.EntityInit;
 import com.xwm.magicmaid.init.ItemInit;
+import com.xwm.magicmaid.init.TextureInit;
 import com.xwm.magicmaid.util.IHasModel;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod.EventBusSubscriber
 public class RegistryHandler
@@ -44,6 +48,14 @@ public class RegistryHandler
             }
         }
     }
+
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public static void onTextureRegister(TextureStitchEvent.Pre event)
+    {
+        TextureInit.register(event.getMap());
+    }
+
 
     public static void initRegisteries()
     {

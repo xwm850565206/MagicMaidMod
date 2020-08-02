@@ -1,7 +1,7 @@
 package com.xwm.magicmaid.proxy;
 
 import com.xwm.magicmaid.event.EventLoader;
-import com.xwm.magicmaid.event.NetworkLoader;
+import com.xwm.magicmaid.network.NetworkLoader;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;

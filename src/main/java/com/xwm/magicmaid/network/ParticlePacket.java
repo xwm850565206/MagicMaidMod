@@ -1,4 +1,4 @@
-package com.xwm.magicmaid.util;
+package com.xwm.magicmaid.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
