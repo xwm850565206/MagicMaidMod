@@ -11,7 +11,7 @@ public class SoulParticle extends MoveUpParticle
 {
 
     protected SoulParticle(World worldIn, double posXIn, double posYIn, double posZIn) {
-        super(worldIn, posXIn, posYIn, posZIn, 0, 0, 0);
+        super(worldIn, posXIn, posYIn, posZIn);
     }
 
     public SoulParticle(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn) {

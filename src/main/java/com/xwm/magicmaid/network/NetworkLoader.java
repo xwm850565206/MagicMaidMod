@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 
 public class NetworkLoader
@@ -21,6 +22,7 @@ public class NetworkLoader
     {
         registerMessage(ParticlePacket.Handler.class, ParticlePacket.class, Side.CLIENT);
         registerMessage(CustomerParticlePacket.Handler.class, CustomerParticlePacket.class, Side.CLIENT);
+        registerMessage(MaidModePacket.Handler.class, MaidModePacket.class, Side.SERVER);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, GuiHandler.maidWindowHandler);
     }

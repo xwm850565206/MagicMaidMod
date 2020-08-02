@@ -1,8 +1,12 @@
 package com.xwm.magicmaid.gui;
 
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
+import com.xwm.magicmaid.entity.mob.maid.EnumModes;
+import com.xwm.magicmaid.network.MaidModePacket;
+import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -13,8 +17,11 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 
+import java.io.IOException;
+
 public class GuiMaidWindow extends GuiContainer
 {
+    private static final int BUTTON_MODE_SWITH = 0;
     private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.MODID + ":textures/gui/maidwindow.png");
     private InventoryPlayer player;
     private EntityMagicMaid maid;
@@ -120,10 +127,38 @@ public class GuiMaidWindow extends GuiContainer
         tmp = I18n.format("container.maid.rank");
         fontRenderer.drawString(tmp, 77 + 85, 40, 0x4210752);
         tmp = I18n.format("container.maid.exp");
-        fontRenderer.drawString(tmp, 77 + 85, 55, 0x4210752);
+        fontRenderer.drawString(tmp, 77 + 85, 55, 0x000000);
         GlStateManager.popMatrix();
     }
 
+
+    @Override
+    public void initGui()
+    {
+        super.initGui();
+        this.buttonList.add(new GuiButton(BUTTON_MODE_SWITH, this.guiLeft + 130, this.guiTop + 64, 40, 15,I18n.format("container.button.mode_switch"))
+        {
+            @Override
+            public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)
+            {
+                super.drawButton(mc, mouseX, mouseY, partialTicks); //todo
+            }
+        });
+    }
+
+    @Override
+    protected void actionPerformed(GuiButton button) throws IOException {
+        switch (button.id){
+            case BUTTON_MODE_SWITH: if (EnumModes.valueOf(this.maid.getMode()) != EnumModes.BOSS) swithMode();break;
+            default: super.actionPerformed(button);
+        }
+    }
+
+    private void swithMode()
+    {
+        MaidModePacket packet = new MaidModePacket(maid.getEntityId(), maid.getEntityWorld().provider.getDimension());
+        NetworkLoader.instance.sendToServer(packet);
+    }
 
     private void drawHealthBarNumLayer(int x, int y){
         for (int i = 0; i < maid.getHealthBarNum(); i++)
