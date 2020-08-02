@@ -47,18 +47,21 @@ public class EntityMaidWeapon extends EntityLivingBase
 
     public void setHealth(float health)
     {
-        return;
+        return; //防止被误杀
     }
+
 
     @Override
     public void onUpdate()
     {
-        super.onUpdate();
-        if (maid != null) {
+
+        if (!world.isRemote && maid != null) {
             BlockPos standPos = maid.getPosition();
             standPos = standPos.add(maid.weaponStandbyPos.getX(), maid.weaponStandbyPos.getY(), maid.weaponStandbyPos.getZ());
             setPosition(standPos.getX(), standPos.getY(), standPos.getZ());
         }
+
+        super.onUpdate();
     }
 
 
@@ -98,7 +101,7 @@ public class EntityMaidWeapon extends EntityLivingBase
         else
             this.setOwnerID(null);
 
-        if (this.getUniqueID() != null){
+        if (this.getOwnerID() != null){
             maid = EntityMagicMaid.getMaidFromUUID(world, this.getOwnerID());
         }
     }
@@ -141,12 +144,9 @@ public class EntityMaidWeapon extends EntityLivingBase
                 return input.getUniqueID().equals(uuid);
             }
         });
-        for (EntityMaidWeapon weapon : weapons)
-        {
-            if (weapon.getUniqueID().equals(uuid))
-                return weapon;
-        }
-
-        return null;
+        if (weapons.size() != 0)
+            return weapons.get(0);
+        else
+            return null;
     }
 }

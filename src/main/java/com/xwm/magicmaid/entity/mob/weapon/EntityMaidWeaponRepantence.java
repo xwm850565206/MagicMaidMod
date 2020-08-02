@@ -16,6 +16,7 @@ public class EntityMaidWeaponRepantence extends EntityMaidWeapon
 
     public EntityMaidWeaponRepantence(World worldIn) {
         super(worldIn);
+        enumEquipment = EnumEquipments.REPATENCE;
     }
 
     @Override

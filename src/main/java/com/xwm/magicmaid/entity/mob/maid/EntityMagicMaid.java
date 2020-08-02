@@ -11,6 +11,7 @@ import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponConviction;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponRepantence;
 import com.xwm.magicmaid.entity.mob.weapon.EnumEquipments;
 import com.xwm.magicmaid.object.item.ItemConviction;
+import com.xwm.magicmaid.object.item.ItemEquipment;
 import com.xwm.magicmaid.object.item.ItemRepantence;
 import com.xwm.magicmaid.object.item.ItemWeapon;
 import com.xwm.magicmaid.util.Reference;
@@ -212,7 +213,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
             }
             else {
                 EnumEquipments j1 = EnumEquipments.valueOf(j);
-                this.inventory.set(i, new ItemStack(ItemWeapon.valueOf(j1)));
+                this.inventory.set(i, new ItemStack(ItemEquipment.valueOf(j1)));
             }
         }
     }
@@ -326,11 +327,15 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
     }
 
     public void loseWeapon(ItemWeapon weapon){
+
+        if (this.world.isRemote)
+            return;
+
         try {
-            setWeaponID(null);
-            setWeaponType(0);
             EntityMaidWeapon weapon1 = EntityMaidWeapon.getWeaponFromUUID(world, getWeaponID());
             weapon1.setDead();
+            setWeaponID(null);
+            setWeaponType(0);
         } catch (Exception e){
             ; //可能武器被其他模组杀死了
         }
@@ -384,7 +389,14 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         List<ItemStack> list = null;
         if (inventory.size() > index)
             list = inventory;
-        return list != null && !((ItemStack)list.get(index)).isEmpty() ? ItemStackHelper.getAndSplit(list, index, count) : ItemStack.EMPTY;
+        if (list != null && !((ItemStack)list.get(index)).isEmpty() )
+        {
+            ItemStack itemStack = ItemStackHelper.getAndSplit(list, index, count);
+            if (itemStack.getItem() instanceof ItemWeapon)
+                this.loseWeapon((ItemWeapon) itemStack.getItem());
+            return itemStack;
+        }
+        else return ItemStack.EMPTY;
     }
 
     /**
@@ -400,10 +412,10 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         if (nonnulllist != null && !((ItemStack)nonnulllist.get(index)).isEmpty())
         {
             ItemStack itemstack = nonnulllist.get(index);
-            nonnulllist.set(index, ItemStack.EMPTY);
-
             if (itemstack.getItem() instanceof ItemWeapon)
                 this.loseWeapon((ItemWeapon) itemstack.getItem());
+
+            nonnulllist.set(index, ItemStack.EMPTY);
 
             return itemstack;
         }
@@ -509,12 +521,9 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
                 return input.getUniqueID().equals(uuid);
             }
         });
-        for (EntityMagicMaid maid : maids)
-        {
-            if (maid.getUniqueID().equals(uuid))
-                return maid;
-        }
-
-        return null;
+        if (maids.size() != 0)
+            return maids.get(0);
+        else
+            return null;
     }
 }

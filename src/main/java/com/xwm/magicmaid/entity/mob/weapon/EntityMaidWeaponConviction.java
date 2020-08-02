@@ -7,5 +7,6 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
 
     public EntityMaidWeaponConviction(World worldIn) {
         super(worldIn);
+        enumEquipment = EnumEquipments.CONVICTION;
     }
 }

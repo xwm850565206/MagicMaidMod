@@ -12,12 +12,8 @@ public class ItemEquipment extends ItemBase
         super(name);
     }
 
-    public static ItemEquipment valueOf(EnumEquipments weapon)
+    public static ItemEquipment valueOf(EnumEquipments equipment)
     {
-        if (weapon == EnumEquipments.CONVICTION)
-            return (ItemEquipment) ItemInit.ItemConviction;
-        else if (weapon == EnumEquipments.REPATENCE)
-            return (ItemEquipment)ItemInit.ItemRepantence;
-        return null;
+        return EnumEquipments.toItemEquipment(equipment);
     }
 }
