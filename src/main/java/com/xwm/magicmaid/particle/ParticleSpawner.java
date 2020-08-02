@@ -48,6 +48,10 @@ public class ParticleSpawner
         switch (type) {
             case SOUL:
                 return new SoulParticle(mc.world, d0, d1, d2);
+            case CROSS:
+                return new CrossParticle(mc.world, d0, d1, d2);
+            case CONVICTION:
+                return new ConvictionParticle(mc.world, d0, d1, d2);
 //            case RED_STRIP: return new SuperHimAttackParticle(mc.world, d0, d1, d2, 0xDC143C);
 //            case ORANGE_STRIP: return new SuperHimAttackParticle(mc.world, d0, d1, d2, 0xFFA500);
 //            case PURPLE_STRIP: return new SuperHimAttackParticle(mc.world, d0, d1, d2, 0xD15FEE);

@@ -9,7 +9,10 @@ import java.util.Set;
 
 public enum EnumCustomParticles
 {
-    SOUL("soul", 0, false);
+    SOUL("soul", 0, false),
+    CROSS("cross", 1, false),
+    CONVICTION("conviction", 2, false);
+
 
     private final String particleName;
     private final int particleID;
