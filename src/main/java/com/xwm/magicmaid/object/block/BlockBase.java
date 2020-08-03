@@ -3,7 +3,7 @@ package com.xwm.magicmaid.object.block;
 import com.xwm.magicmaid.Main;
 import com.xwm.magicmaid.init.BlockInit;
 import com.xwm.magicmaid.init.ItemInit;
-import com.xwm.magicmaid.util.IHasModel;
+import com.xwm.magicmaid.util.interfaces.IHasModel;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;

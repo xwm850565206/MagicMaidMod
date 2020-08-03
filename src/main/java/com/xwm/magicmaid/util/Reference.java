@@ -13,7 +13,8 @@ public class Reference
     public static final int ENTITY_STRAWBERRY = 300;
     public static final int ENTITY_BLUE = 301;
     public static final int ENTITY_YELLOW = 302;
-
     public static final int ENTITY_REPENTANCE = 303;
     public static final int ENTITY_CONVICTION = 304;
+
+    public static final int DIMENSION_CHURCH = 2;
 }

@@ -1,10 +1,7 @@
 package com.xwm.magicmaid.util.handlers;
 
-import com.xwm.magicmaid.init.BlockInit;
-import com.xwm.magicmaid.init.EntityInit;
-import com.xwm.magicmaid.init.ItemInit;
-import com.xwm.magicmaid.init.TextureInit;
-import com.xwm.magicmaid.util.IHasModel;
+import com.xwm.magicmaid.init.*;
+import com.xwm.magicmaid.util.interfaces.IHasModel;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -65,5 +62,8 @@ public class RegistryHandler
     public static void preInitRegistries()
     {
 //        EntityInit.registerEntities();
+        BiomeInit.registerBiomes();
+
+        DimensionInit.registerDimensions();
     }
 }

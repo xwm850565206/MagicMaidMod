@@ -1,4 +1,4 @@
-package com.xwm.magicmaid.util;
+package com.xwm.magicmaid.util.interfaces;
 
 public interface IHasModel
 {
