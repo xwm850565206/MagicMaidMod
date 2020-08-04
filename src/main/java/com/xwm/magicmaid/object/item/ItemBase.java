@@ -42,7 +42,12 @@ public class ItemBase extends Item implements IHasModel
         {
             if (playerIn instanceof EntityPlayerMP)
             {
-                playerIn.changeDimension(2);
+                try {
+                    playerIn.changeDimension(2);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+
             }
         }
         return super.onItemRightClick(worldIn, playerIn, handIn);

@@ -1,5 +1,9 @@
 package com.xwm.magicmaid.world.dimension;
 
+import java.util.List;
+import java.util.Random;
+import javax.annotation.Nullable;
+
 import com.xwm.magicmaid.world.gen.WorldGenStructure;
 import net.minecraft.block.BlockChorusFlower;
 import net.minecraft.block.BlockFalling;
@@ -22,16 +26,13 @@ import net.minecraft.world.gen.NoiseGeneratorSimplex;
 import net.minecraft.world.gen.feature.WorldGenEndGateway;
 import net.minecraft.world.gen.feature.WorldGenEndIsland;
 import net.minecraft.world.gen.structure.MapGenEndCity;
+import org.lwjgl.Sys;
 
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Random;
-
-public class ChunkGeneratorChurch implements IChunkGenerator {
-
+public class ChunkGeneratorChurch implements IChunkGenerator
+{
     /** RNG. */
     private final Random rand;
-    protected static final IBlockState END_STONE = Blocks.STONE.getDefaultState();
+    protected static final IBlockState END_STONE = Blocks.END_STONE.getDefaultState();
     protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
     private NoiseGeneratorOctaves lperlinNoise1;
     private NoiseGeneratorOctaves lperlinNoise2;
@@ -42,8 +43,10 @@ public class ChunkGeneratorChurch implements IChunkGenerator {
     public NoiseGeneratorOctaves noiseGen6;
     /** Reference to the World object. */
     private final World world;
+    /** are map structures going to be generated (e.g. strongholds) */
+    private final boolean mapFeaturesEnabled;
     private final BlockPos spawnPoint;
-    private final WorldGenStructure churchGen = new WorldGenStructure("church"); //todo 这里应该要有4个左右才够大
+//    private MapGenEndCity endCityGen = new MapGenEndCity(this);
     private NoiseGeneratorSimplex islandNoise;
     private double[] buffer;
     /** The biomes that are used to generate the chunk */
@@ -56,11 +59,14 @@ public class ChunkGeneratorChurch implements IChunkGenerator {
     private int chunkX = 0;
     private int chunkZ = 0;
 
-    public ChunkGeneratorChurch(World world, long seed, BlockPos spawnPoint)
+    private boolean hasBuildChurch = false;
+
+    public ChunkGeneratorChurch(World p_i47241_1_, boolean p_i47241_2_, long p_i47241_3_, BlockPos p_i47241_5_)
     {
-        this.world = world;
-        this.spawnPoint = spawnPoint;
-        this.rand = new Random(seed);
+        this.world = p_i47241_1_;
+        this.mapFeaturesEnabled = p_i47241_2_;
+        this.spawnPoint = p_i47241_5_;
+        this.rand = new Random(p_i47241_3_);
         this.lperlinNoise1 = new NoiseGeneratorOctaves(this.rand, 16);
         this.lperlinNoise2 = new NoiseGeneratorOctaves(this.rand, 16);
         this.perlinNoise1 = new NoiseGeneratorOctaves(this.rand, 8);
@@ -70,15 +76,14 @@ public class ChunkGeneratorChurch implements IChunkGenerator {
 
         net.minecraftforge.event.terraingen.InitNoiseGensEvent.ContextEnd ctx =
                 new net.minecraftforge.event.terraingen.InitNoiseGensEvent.ContextEnd(lperlinNoise1, lperlinNoise2, perlinNoise1, noiseGen5, noiseGen6, islandNoise);
-        ctx = net.minecraftforge.event.terraingen.TerrainGen.getModdedNoiseGenerators(world, this.rand, ctx);
+        ctx = net.minecraftforge.event.terraingen.TerrainGen.getModdedNoiseGenerators(p_i47241_1_, this.rand, ctx);
         this.lperlinNoise1 = ctx.getLPerlin1();
         this.lperlinNoise2 = ctx.getLPerlin2();
         this.perlinNoise1 = ctx.getPerlin();
         this.noiseGen5 = ctx.getDepth();
         this.noiseGen6 = ctx.getScale();
         this.islandNoise = ctx.getIsland();
-
-
+//        this.endCityGen = (MapGenEndCity) net.minecraftforge.event.terraingen.TerrainGen.getModdedMapGen(this.endCityGen, net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.END_CITY);
     }
 
     /**
@@ -150,6 +155,14 @@ public class ChunkGeneratorChurch implements IChunkGenerator {
                 }
             }
         }
+
+        System.out.println(x + " " + z);
+//        if (!hasBuildChurch) {
+//            WorldGenStructure church = new WorldGenStructure("church");
+//            church.generate(world, rand, new BlockPos(100, 60, 50));
+//            hasBuildChurch = true;
+//            System.out.println("build church");
+//        }
     }
 
     public void buildSurfaces(ChunkPrimer primer)
@@ -163,37 +176,37 @@ public class ChunkGeneratorChurch implements IChunkGenerator {
                 int l = -1;
                 IBlockState iblockstate = END_STONE;
                 IBlockState iblockstate1 = END_STONE;
-
-                for (int i1 = 127; i1 >= 0; --i1)
-                {
-                    IBlockState iblockstate2 = primer.getBlockState(i, i1, j);
-
-                    if (iblockstate2.getMaterial() == Material.AIR)
-                    {
-                        l = -1;
-                    }
-                    else if (iblockstate2.getBlock() == Blocks.STONE)
-                    {
-                        if (l == -1)
-                        {
-                            l = 1;
-
-                            if (i1 >= 0)
-                            {
-                                primer.setBlockState(i, i1, j, iblockstate);
-                            }
-                            else
-                            {
-                                primer.setBlockState(i, i1, j, iblockstate1);
-                            }
-                        }
-                        else if (l > 0)
-                        {
-                            --l;
-                            primer.setBlockState(i, i1, j, iblockstate1);
-                        }
-                    }
-                }
+                primer.setBlockState(i, 50, j, iblockstate);
+//                for (int i1 = 127; i1 >= 0; --i1)
+//                {
+//                    IBlockState iblockstate2 = primer.getBlockState(i, i1, j);
+//
+//                    if (iblockstate2.getMaterial() == Material.AIR)
+//                    {
+//                        l = -1;
+//                    }
+//                    else if (iblockstate2.getBlock() == Blocks.STONE)
+//                    {
+//                        if (l == -1)
+//                        {
+//                            l = 1;
+//
+//                            if (i1 >= 0)
+//                            {
+//                                primer.setBlockState(i, i1, j, iblockstate);
+//                            }
+//                            else
+//                            {
+//                                primer.setBlockState(i, i1, j, iblockstate1);
+//                            }
+//                        }
+//                        else if (l > 0)
+//                        {
+//                            --l;
+//                            primer.setBlockState(i, i1, j, iblockstate1);
+//                        }
+//                    }
+//                }
             }
         }
     }
@@ -203,15 +216,20 @@ public class ChunkGeneratorChurch implements IChunkGenerator {
      */
     public Chunk generateChunk(int x, int z)
     {
+
         this.chunkX = x; this.chunkZ = z;
         this.rand.setSeed((long)x * 341873128712L + (long)z * 132897987541L);
         ChunkPrimer chunkprimer = new ChunkPrimer();
         this.biomesForGeneration = this.world.getBiomeProvider().getBiomes(this.biomesForGeneration, x * 16, z * 16, 16, 16);
-        this.setBlocksInChunk(x, z, chunkprimer);
-        this.buildSurfaces(chunkprimer);
+        if (Math.abs(x-10) < 10  && Math.abs(z-10) < 10) {
+            this.setBlocksInChunk(x, z, chunkprimer);
+            this.buildSurfaces(chunkprimer);
+        }
 
-
-        this.churchGen.generate(this.world, this.rand, new BlockPos(x, 50, z));
+        if (this.mapFeaturesEnabled)
+        {
+//            this.endCityGen.generate(this.world, x, z, chunkprimer);
+        }
 
         Chunk chunk = new Chunk(this.world, chunkprimer, x, z);
         byte[] abyte = chunk.getBiomeArray();
@@ -365,7 +383,10 @@ public class ChunkGeneratorChurch implements IChunkGenerator {
         net.minecraftforge.event.ForgeEventFactory.onChunkPopulate(true, this, this.world, this.rand, x, z, false);
         BlockPos blockpos = new BlockPos(x * 16, 0, z * 16);
 
-        this.churchGen.generate(this.world, this.rand, new BlockPos(x, 50, z));
+        if (this.mapFeaturesEnabled)
+        {
+//            this.endCityGen.generateStructure(this.world, this.rand, new ChunkPos(x, z));
+        }
 
         this.world.getBiome(blockpos.add(16, 0, 16)).decorate(this.world, this.world.rand, blockpos);
         long i = (long)x * (long)x + (long)z * (long)z;
@@ -437,6 +458,7 @@ public class ChunkGeneratorChurch implements IChunkGenerator {
      */
     public boolean generateStructures(Chunk chunkIn, int x, int z)
     {
+
         return false;
     }
 
@@ -449,13 +471,11 @@ public class ChunkGeneratorChurch implements IChunkGenerator {
     public BlockPos getNearestStructurePos(World worldIn, String structureName, BlockPos position, boolean findUnexplored)
     {
         return null;
-//        return "EndCity".equals(structureName) && this.endCityGen != null ? this.endCityGen.getNearestStructurePos(worldIn, position, findUnexplored) : null;
     }
 
     public boolean isInsideStructure(World worldIn, String structureName, BlockPos pos)
     {
         return false;
-//        return "EndCity".equals(structureName) && this.endCityGen != null ? this.endCityGen.isInsideStructure(pos) : false;
     }
 
     /**

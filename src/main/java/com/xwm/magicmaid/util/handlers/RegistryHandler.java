@@ -2,6 +2,7 @@ package com.xwm.magicmaid.util.handlers;
 
 import com.xwm.magicmaid.init.*;
 import com.xwm.magicmaid.util.interfaces.IHasModel;
+import com.xwm.magicmaid.world.gen.StructureChurchPieces;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -11,6 +12,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
 
 @Mod.EventBusSubscriber
 public class RegistryHandler
@@ -57,6 +59,8 @@ public class RegistryHandler
     public static void initRegisteries()
     {
         SoundsHandler.registerSounds();
+        StructureChurchPieces.registerPieces();
+
     }
 
     public static void preInitRegistries()

@@ -41,7 +41,8 @@ public class WorldGenStructure extends WorldGenerator
             IBlockState state = world.getBlockState(pos);
             world.notifyBlockUpdate(pos, state, state, 3);
 
-            PlacementSettings settings = new PlacementSettings().setMirror(Mirror.NONE);
+            PlacementSettings settings = new PlacementSettings().setMirror(Mirror.NONE).
+                    setChunk(world.getChunkFromBlockCoords(pos).getPos());
             template.addBlocksToWorldChunk(world, pos, settings);
         }
 

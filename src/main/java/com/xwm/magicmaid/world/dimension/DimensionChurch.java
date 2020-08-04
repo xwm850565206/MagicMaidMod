@@ -20,8 +20,9 @@ public class DimensionChurch extends WorldProvider
 
     public BlockPos getSpawnCoordinate()
     {
-        return new BlockPos(0, 50, 0);
+        return new BlockPos(0, 55, 0);
     }
+
 
     public int getAverageGroundLevel()
     {
@@ -34,11 +35,11 @@ public class DimensionChurch extends WorldProvider
         return this.world.getGroundAboveSeaLevel(new BlockPos(x, 0, z)).getMaterial().blocksMovement();
     }
 
-    @SideOnly(Side.CLIENT)
-    public float getCloudHeight()
-    {
-        return 8.0F;
-    }
+//    @SideOnly(Side.CLIENT)
+//    public float getCloudHeight()
+//    {
+//        return 8.0F;
+//    }
 
     @Override
     public DimensionType getDimensionType() {
@@ -48,7 +49,7 @@ public class DimensionChurch extends WorldProvider
     @Override
     public IChunkGenerator createChunkGenerator()
     {
-        return new ChunkGeneratorChurch(world, this.world.getSeed(), getSpawnCoordinate());
+        return new ChunkGeneratorChurch(world, false, this.world.getSeed(), getSpawnCoordinate());
     }
 
     @Override
@@ -60,6 +61,18 @@ public class DimensionChurch extends WorldProvider
     @Override
     public boolean isSurfaceWorld()
     {
-        return true;
+        return false;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public float getCloudHeight()
+    {
+        return 8.0F;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public boolean doesXZShowFog(int x, int z)
+    {
+        return false;
     }
 }
