@@ -49,7 +49,7 @@ public class DimensionChurch extends WorldProvider
     @Override
     public IChunkGenerator createChunkGenerator()
     {
-        return new ChunkGeneratorChurch(world, false, this.world.getSeed(), getSpawnCoordinate());
+        return new ChunkGeneratorChurch(world, true, this.world.getSeed(), getSpawnCoordinate());
     }
 
     @Override

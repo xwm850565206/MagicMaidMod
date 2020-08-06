@@ -1,5 +1,7 @@
 package com.xwm.magicmaid.world.gen;
 
+import com.google.common.collect.Lists;
+import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.monster.EntityShulker;
 import net.minecraft.init.Blocks;
@@ -10,16 +12,20 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.gen.structure.*;
 import net.minecraft.world.gen.structure.template.PlacementSettings;
 import net.minecraft.world.gen.structure.template.Template;
 import net.minecraft.world.gen.structure.template.TemplateManager;
 import net.minecraft.world.storage.loot.LootTableList;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -28,21 +34,48 @@ public class StructureChurchPieces
     private static final PlacementSettings OVERWRITE = (new PlacementSettings()).setIgnoreEntities(true);
     private static final PlacementSettings INSERT = (new PlacementSettings()).setIgnoreEntities(true).setReplacedBlock(Blocks.AIR);
 
+
     public static void registerPieces()
     {
-        MapGenStructureIO.registerStructureComponent(StructureChurchPieces.ChurchTemplate.class, "RuinChurch");
+        MapGenStructureIO.registerStructureComponent(StructureChurchPieces.ChurchTemplate.class, "RuinChurchComponent");
+        MapGenStructureIO.registerStructure(MapGenChurch.Start.class, "RuinChurch");
     }
 
     public static void startChurch(TemplateManager templateManager, BlockPos pos, Rotation rotation, List<StructureComponent> componentList, Random random)
     {
+        StructureChurchPieces.ChurchTemplate structurechurchpieces$churchtemplate = addHelper(componentList, new StructureChurchPieces.ChurchTemplate(templateManager, "churchlf", pos, Rotation.NONE, Mirror.NONE, true));
+        structurechurchpieces$churchtemplate =
+                StructureChurchPieces.addHelper(componentList, StructureChurchPieces.addPiece(templateManager, structurechurchpieces$churchtemplate, new BlockPos(-12, 0, 0), "churchmf", Rotation.NONE, Mirror.NONE, true));
+        structurechurchpieces$churchtemplate =
+                StructureChurchPieces.addHelper(componentList, StructureChurchPieces.addPiece(templateManager, structurechurchpieces$churchtemplate, new BlockPos(0, 32, 0), "churchmt", Rotation.NONE, Mirror.NONE, true));
+        structurechurchpieces$churchtemplate =
+                        StructureChurchPieces.addHelper(componentList, StructureChurchPieces.addPiece(templateManager, structurechurchpieces$churchtemplate, new BlockPos(-10, -32, 0), "churchrf", Rotation.NONE, Mirror.NONE, true));
+        structurechurchpieces$churchtemplate =
+                StructureChurchPieces.addHelper(componentList, StructureChurchPieces.addPiece(templateManager, structurechurchpieces$churchtemplate, new BlockPos(0, 0, 16), "churchrm", Rotation.NONE, Mirror.NONE, true));
+        structurechurchpieces$churchtemplate =
+                StructureChurchPieces.addHelper(componentList, StructureChurchPieces.addPiece(templateManager, structurechurchpieces$churchtemplate, new BlockPos(10, 0, 0), "churchmm", Rotation.NONE, Mirror.NONE, true));
+        structurechurchpieces$churchtemplate =
+                StructureChurchPieces.addHelper(componentList, StructureChurchPieces.addPiece(templateManager, structurechurchpieces$churchtemplate, new BlockPos(11, 0, 0), "churchlm", Rotation.NONE, Mirror.NONE, true));
+        structurechurchpieces$churchtemplate =
+                StructureChurchPieces.addHelper(componentList, StructureChurchPieces.addPiece(templateManager, structurechurchpieces$churchtemplate, new BlockPos(0, 0, 11), "churchlr", Rotation.NONE, Mirror.NONE, true));
+        structurechurchpieces$churchtemplate =
+                StructureChurchPieces.addHelper(componentList, StructureChurchPieces.addPiece(templateManager, structurechurchpieces$churchtemplate, new BlockPos(-11, 0, 0), "churchmr", Rotation.NONE, Mirror.NONE, true));
+        structurechurchpieces$churchtemplate =
+                StructureChurchPieces.addHelper(componentList, StructureChurchPieces.addPiece(templateManager, structurechurchpieces$churchtemplate, new BlockPos(-10, 0, 0), "churchrr", Rotation.NONE, Mirror.NONE, true));
 
     }
 
-    private static boolean recursiveChildren(TemplateManager templateManager, StructureChurchPieces.IGenerator generator, int prePiece, StructureChurchPieces.ChurchTemplate churchTemplate, BlockPos pos, List<StructureComponent> componentList, Random random)
-    {
-        return false;
+    private static StructureChurchPieces.ChurchTemplate addHelper(List<StructureComponent> componentList, StructureChurchPieces.ChurchTemplate template) {
+        componentList.add(template);
+        return template;
     }
 
+    private static StructureChurchPieces.ChurchTemplate addPiece(TemplateManager templateManager, StructureChurchPieces.ChurchTemplate template, BlockPos pos, String name, Rotation rotation, Mirror mirror, boolean owerwrite) {
+        StructureChurchPieces.ChurchTemplate structureechurchcitypieces$churchtemplate = new StructureChurchPieces.ChurchTemplate(templateManager, name, template.getTemplatePos(), rotation, mirror, owerwrite);
+//        BlockPos blockpos = template.getTemplate().calculateConnectedPos(template.getPlacementSettings(), pos, structureechurchcitypieces$churchtemplate.getPlacementSettings(), BlockPos.ORIGIN);
+        structureechurchcitypieces$churchtemplate.offset(pos.getX(), pos.getY(), pos.getZ());
+        return structureechurchcitypieces$churchtemplate;
+    }
 
 
     public static class ChurchTemplate extends StructureComponentTemplate
@@ -52,26 +85,31 @@ public class StructureChurchPieces
         private Rotation rotation;
         /** Whether this template should overwrite existing blocks. Replaces only air if false. */
         private boolean overwrite;
+        private Mirror mirror;
 
         public ChurchTemplate()
         {
         }
 
-        public ChurchTemplate(TemplateManager templateManager, String pieceName, BlockPos blockPos, Rotation rotation, boolean overwriteIn)
+        public ChurchTemplate(TemplateManager templateManager, String pieceName, BlockPos blockPos, Rotation rotation, Mirror mirror, boolean overwriteIn)
         {
             super(0);
             this.pieceName = pieceName;
             this.templatePosition = blockPos;
             this.rotation = rotation;
             this.overwrite = overwriteIn;
+            this.mirror = mirror;
             this.loadTemplate(templateManager);
         }
 
         private void loadTemplate(TemplateManager templateManager)
         {
-            Template template = templateManager.getTemplate((MinecraftServer)null, new ResourceLocation("church/" + this.pieceName));
-            PlacementSettings placementsettings = (this.overwrite ? StructureChurchPieces.OVERWRITE : StructureChurchPieces.INSERT).copy().setRotation(this.rotation);
-            this.setup(template, this.templatePosition, placementsettings);
+            World world = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld();
+            if (!world.isRemote) {
+                Template template = templateManager.getTemplate(world.getMinecraftServer(), new ResourceLocation(Reference.MODID, "church/" + this.pieceName));
+                PlacementSettings placementsettings = (this.overwrite ? StructureChurchPieces.OVERWRITE : StructureChurchPieces.INSERT).copy().setRotation(this.rotation).setMirror(this.mirror);
+                this.setup(template, this.templatePosition, placementsettings);
+            }
         }
 
         protected void writeStructureToNBT(NBTTagCompound tagCompound)
@@ -124,12 +162,25 @@ public class StructureChurchPieces
                 worldIn.spawnEntity(entityitemframe);
             }
         }
-    }
 
-    interface IGenerator
-    {
-        void init();
+        public Template getTemplate(){
+            return this.template;
+        }
 
-        boolean generate(TemplateManager templateManager, int prePiece, StructureChurchPieces.ChurchTemplate churchTemplate, BlockPos pos, List<StructureComponent> componentList, Random random);
+        public PlacementSettings getPlacementSettings() {
+            return this.placeSettings;
+        }
+
+        public BlockPos getTemplatePos(){
+            return this.templatePosition;
+        }
+
+        public void setComponentType(int componentType){
+            this.componentType = componentType;
+        }
+
+        public int getComponentType(){
+            return this.componentType;
+        }
     }
 }

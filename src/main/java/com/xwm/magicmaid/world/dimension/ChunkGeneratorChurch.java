@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 import javax.annotation.Nullable;
 
+import com.xwm.magicmaid.world.gen.MapGenChurch;
 import com.xwm.magicmaid.world.gen.WorldGenStructure;
 import net.minecraft.block.BlockChorusFlower;
 import net.minecraft.block.BlockFalling;
@@ -28,6 +29,7 @@ import net.minecraft.world.gen.feature.WorldGenEndIsland;
 import net.minecraft.world.gen.structure.MapGenEndCity;
 import org.lwjgl.Sys;
 
+// todo 美化和添加矿石
 public class ChunkGeneratorChurch implements IChunkGenerator
 {
     /** RNG. */
@@ -47,6 +49,7 @@ public class ChunkGeneratorChurch implements IChunkGenerator
     private final boolean mapFeaturesEnabled;
     private final BlockPos spawnPoint;
 //    private MapGenEndCity endCityGen = new MapGenEndCity(this);
+    private MapGenChurch church = new MapGenChurch(this);
     private NoiseGeneratorSimplex islandNoise;
     private double[] buffer;
     /** The biomes that are used to generate the chunk */
@@ -177,36 +180,15 @@ public class ChunkGeneratorChurch implements IChunkGenerator
                 IBlockState iblockstate = END_STONE;
                 IBlockState iblockstate1 = END_STONE;
                 primer.setBlockState(i, 50, j, iblockstate);
-//                for (int i1 = 127; i1 >= 0; --i1)
-//                {
-//                    IBlockState iblockstate2 = primer.getBlockState(i, i1, j);
-//
-//                    if (iblockstate2.getMaterial() == Material.AIR)
-//                    {
-//                        l = -1;
-//                    }
-//                    else if (iblockstate2.getBlock() == Blocks.STONE)
-//                    {
-//                        if (l == -1)
-//                        {
-//                            l = 1;
-//
-//                            if (i1 >= 0)
-//                            {
-//                                primer.setBlockState(i, i1, j, iblockstate);
-//                            }
-//                            else
-//                            {
-//                                primer.setBlockState(i, i1, j, iblockstate1);
-//                            }
-//                        }
-//                        else if (l > 0)
-//                        {
-//                            --l;
-//                            primer.setBlockState(i, i1, j, iblockstate1);
-//                        }
-//                    }
-//                }
+                primer.setBlockState(i, 49, j, iblockstate);
+                primer.setBlockState(i, 48, j, iblockstate);
+                if (chunkX == 2 && chunkZ == 2){
+                    primer.setBlockState(i, 51, j, iblockstate);
+                    primer.setBlockState(i, 52, j, iblockstate);
+                    primer.setBlockState(i, 53, j, iblockstate);
+                    primer.setBlockState(i, 54, j, iblockstate);
+                    primer.setBlockState(i, 55, j, iblockstate);
+                }
             }
         }
     }
@@ -221,15 +203,21 @@ public class ChunkGeneratorChurch implements IChunkGenerator
         this.rand.setSeed((long)x * 341873128712L + (long)z * 132897987541L);
         ChunkPrimer chunkprimer = new ChunkPrimer();
         this.biomesForGeneration = this.world.getBiomeProvider().getBiomes(this.biomesForGeneration, x * 16, z * 16, 16, 16);
-        if (Math.abs(x-10) < 10  && Math.abs(z-10) < 10) {
+        if (Math.abs(x-5) < 10  && Math.abs(z-5) < 10) {
             this.setBlocksInChunk(x, z, chunkprimer);
             this.buildSurfaces(chunkprimer);
+
+            if (this.mapFeaturesEnabled)
+            {
+                this.church.generate(this.world, x, z, chunkprimer);
+            }
+
+            if (x == 2 && z == 2){
+                chunkprimer.setBlockState(3, 100, 11, Blocks.DIAMOND_BLOCK.getDefaultState()); //todo test 一个召唤boss的东西
+            }
         }
 
-        if (this.mapFeaturesEnabled)
-        {
-//            this.endCityGen.generate(this.world, x, z, chunkprimer);
-        }
+
 
         Chunk chunk = new Chunk(this.world, chunkprimer, x, z);
         byte[] abyte = chunk.getBiomeArray();
@@ -294,10 +282,6 @@ public class ChunkGeneratorChurch implements IChunkGenerator
         return f2;
     }
 
-    public boolean isIslandChunk(int p_185961_1_, int p_185961_2_)
-    {
-        return (long)p_185961_1_ * (long)p_185961_1_ + (long)p_185961_2_ * (long)p_185961_2_ > 4096L && this.getIslandHeightValue(p_185961_1_, p_185961_2_, 1, 1) >= 0.0F;
-    }
 
     private double[] getHeights(double[] p_185963_1_, int p_185963_2_, int p_185963_3_, int p_185963_4_, int p_185963_5_, int p_185963_6_, int p_185963_7_)
     {
@@ -379,78 +363,81 @@ public class ChunkGeneratorChurch implements IChunkGenerator
      */
     public void populate(int x, int z)
     {
-        BlockFalling.fallInstantly = true;
-        net.minecraftforge.event.ForgeEventFactory.onChunkPopulate(true, this, this.world, this.rand, x, z, false);
-        BlockPos blockpos = new BlockPos(x * 16, 0, z * 16);
+        if (Math.abs(x-5) < 10  && Math.abs(z-5) < 10) {
+            BlockFalling.fallInstantly = true;
+            net.minecraftforge.event.ForgeEventFactory.onChunkPopulate(true, this, this.world, this.rand, x, z, false);
+            BlockPos blockpos = new BlockPos(x * 16, 0, z * 16);
 
-        if (this.mapFeaturesEnabled)
-        {
-//            this.endCityGen.generateStructure(this.world, this.rand, new ChunkPos(x, z));
-        }
-
-        this.world.getBiome(blockpos.add(16, 0, 16)).decorate(this.world, this.world.rand, blockpos);
-        long i = (long)x * (long)x + (long)z * (long)z;
-
-        if (i > 4096L)
-        {
-            float f = this.getIslandHeightValue(x, z, 1, 1);
-
-            if (f < -20.0F && this.rand.nextInt(14) == 0)
+            if (this.mapFeaturesEnabled)
             {
-                this.endIslands.generate(this.world, this.rand, blockpos.add(this.rand.nextInt(16) + 8, 55 + this.rand.nextInt(16), this.rand.nextInt(16) + 8));
+                this.church.generateStructure(this.world, this.rand, new ChunkPos(x, z));
+            }
 
-                if (this.rand.nextInt(4) == 0)
+            this.world.getBiome(blockpos.add(16, 0, 16)).decorate(this.world, this.world.rand, blockpos);
+            long i = (long)x * (long)x + (long)z * (long)z;
+
+            if (i > 4096L)
+            {
+                float f = this.getIslandHeightValue(x, z, 1, 1);
+
+                if (f < -20.0F && this.rand.nextInt(14) == 0)
                 {
                     this.endIslands.generate(this.world, this.rand, blockpos.add(this.rand.nextInt(16) + 8, 55 + this.rand.nextInt(16), this.rand.nextInt(16) + 8));
-                }
-            }
 
-            if (this.getIslandHeightValue(x, z, 1, 1) > 40.0F)
-            {
-                int j = this.rand.nextInt(5);
-
-                for (int k = 0; k < j; ++k)
-                {
-                    int l = this.rand.nextInt(16) + 8;
-                    int i1 = this.rand.nextInt(16) + 8;
-                    int j1 = this.world.getHeight(blockpos.add(l, 0, i1)).getY();
-
-                    if (j1 > 0)
+                    if (this.rand.nextInt(4) == 0)
                     {
-                        int k1 = j1 - 1;
-
-                        if (this.world.isAirBlock(blockpos.add(l, k1 + 1, i1)) && this.world.getBlockState(blockpos.add(l, k1, i1)).getBlock() == Blocks.END_STONE)
-                        {
-                            BlockChorusFlower.generatePlant(this.world, blockpos.add(l, k1 + 1, i1), this.rand, 8);
-                        }
+                        this.endIslands.generate(this.world, this.rand, blockpos.add(this.rand.nextInt(16) + 8, 55 + this.rand.nextInt(16), this.rand.nextInt(16) + 8));
                     }
                 }
 
-                if (this.rand.nextInt(700) == 0)
+                if (this.getIslandHeightValue(x, z, 1, 1) > 40.0F)
                 {
-                    int l1 = this.rand.nextInt(16) + 8;
-                    int i2 = this.rand.nextInt(16) + 8;
-                    int j2 = this.world.getHeight(blockpos.add(l1, 0, i2)).getY();
+                    int j = this.rand.nextInt(5);
 
-                    if (j2 > 0)
+                    for (int k = 0; k < j; ++k)
                     {
-                        int k2 = j2 + 3 + this.rand.nextInt(7);
-                        BlockPos blockpos1 = blockpos.add(l1, k2, i2);
-                        (new WorldGenEndGateway()).generate(this.world, this.rand, blockpos1);
-                        TileEntity tileentity = this.world.getTileEntity(blockpos1);
+                        int l = this.rand.nextInt(16) + 8;
+                        int i1 = this.rand.nextInt(16) + 8;
+                        int j1 = this.world.getHeight(blockpos.add(l, 0, i1)).getY();
 
-                        if (tileentity instanceof TileEntityEndGateway)
+                        if (j1 > 0)
                         {
-                            TileEntityEndGateway tileentityendgateway = (TileEntityEndGateway)tileentity;
-                            tileentityendgateway.setExactPosition(this.spawnPoint);
+                            int k1 = j1 - 1;
+
+                            if (this.world.isAirBlock(blockpos.add(l, k1 + 1, i1)) && this.world.getBlockState(blockpos.add(l, k1, i1)).getBlock() == Blocks.END_STONE)
+                            {
+                                BlockChorusFlower.generatePlant(this.world, blockpos.add(l, k1 + 1, i1), this.rand, 8);
+                            }
+                        }
+                    }
+
+                    if (this.rand.nextInt(700) == 0)
+                    {
+                        int l1 = this.rand.nextInt(16) + 8;
+                        int i2 = this.rand.nextInt(16) + 8;
+                        int j2 = this.world.getHeight(blockpos.add(l1, 0, i2)).getY();
+
+                        if (j2 > 0)
+                        {
+                            int k2 = j2 + 3 + this.rand.nextInt(7);
+                            BlockPos blockpos1 = blockpos.add(l1, k2, i2);
+                            (new WorldGenEndGateway()).generate(this.world, this.rand, blockpos1);
+                            TileEntity tileentity = this.world.getTileEntity(blockpos1);
+
+                            if (tileentity instanceof TileEntityEndGateway)
+                            {
+                                TileEntityEndGateway tileentityendgateway = (TileEntityEndGateway)tileentity;
+                                tileentityendgateway.setExactPosition(this.spawnPoint);
+                            }
                         }
                     }
                 }
             }
+
+            net.minecraftforge.event.ForgeEventFactory.onChunkPopulate(false, this, this.world, this.rand, x, z, false);
+            BlockFalling.fallInstantly = false;
         }
 
-        net.minecraftforge.event.ForgeEventFactory.onChunkPopulate(false, this, this.world, this.rand, x, z, false);
-        BlockFalling.fallInstantly = false;
     }
 
     /**

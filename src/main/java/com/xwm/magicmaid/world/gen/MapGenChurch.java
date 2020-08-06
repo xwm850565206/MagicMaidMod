@@ -1,9 +1,11 @@
 package com.xwm.magicmaid.world.gen;
 
 import com.xwm.magicmaid.world.dimension.ChunkGeneratorChurch;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkGeneratorEnd;
 import net.minecraft.world.gen.structure.MapGenEndCity;
 import net.minecraft.world.gen.structure.MapGenStructure;
@@ -23,18 +25,23 @@ public class MapGenChurch extends MapGenStructure
 
     public String getStructureName()
     {
-        return "Church";
+        return "RuinChurch";
     }
 
     @Nullable
     @Override
     public BlockPos getNearestStructurePos(World worldIn, BlockPos pos, boolean findUnexplored) {
-        return null;
+        this.world = worldIn;
+        return findNearestStructurePosBySpacing(worldIn, this, pos, 6, 5, 10387313, true, 100, findUnexplored);
+        //todo
     }
 
     protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ)
     {
-        return true;
+        if (chunkX == 2 && chunkZ == 2)
+            return true;
+        else
+            return false;
     }
 
     protected StructureStart getStructureStart(int chunkX, int chunkZ)
@@ -59,9 +66,9 @@ public class MapGenChurch extends MapGenStructure
         private void create(World worldIn, ChunkGeneratorChurch chunkProvider, Random rnd, int chunkX, int chunkZ)
         {
             Random random = new Random((long)(chunkX + chunkZ * 10387313));
-            Rotation rotation = Rotation.values()[random.nextInt(Rotation.values().length)];
+            Rotation rotation = Rotation.NONE;
 
-            BlockPos blockpos = new BlockPos(chunkX * 16 + 8, 60, chunkZ * 16 + 8);
+            BlockPos blockpos = new BlockPos(chunkX * 16 + 8, 55, chunkZ * 16 + 8);
             StructureChurchPieces.startChurch(worldIn.getSaveHandler().getStructureTemplateManager(), blockpos, rotation, this.components, rnd);
             this.updateBoundingBox();
             this.isSizeable = true;
