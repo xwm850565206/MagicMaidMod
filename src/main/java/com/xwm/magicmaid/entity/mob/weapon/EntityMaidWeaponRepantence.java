@@ -1,10 +1,9 @@
 package com.xwm.magicmaid.entity.mob.weapon;
 
+import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.network.CustomerParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
-import com.xwm.magicmaid.network.ParticlePacket;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -18,7 +17,7 @@ public class EntityMaidWeaponRepantence extends EntityMaidWeapon
 
     public EntityMaidWeaponRepantence(World worldIn) {
         super(worldIn);
-        enumEquipment = EnumEquipments.REPATENCE;
+        enumEquipment = EnumEquipment.REPATENCE;
     }
 
     @Override

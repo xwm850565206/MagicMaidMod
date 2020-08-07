@@ -1,11 +1,11 @@
 package com.xwm.magicmaid.object.item;
 
-import com.xwm.magicmaid.entity.mob.weapon.EnumEquipments;
+import com.xwm.magicmaid.enumstorage.EnumEquipment;
 
 public class ItemRepantence extends ItemWeapon
 {
     public ItemRepantence(String name) {
         super(name);
-        enumEquipment = EnumEquipments.REPATENCE;
+        enumEquipment = EnumEquipment.REPATENCE;
     }
 }

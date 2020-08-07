@@ -5,7 +5,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
 /**
- * ModelMagicMaidStrawberryStandard-blue - xwm
+ * ModelMagicMaidMarthaStandard-blue - xwm
  * Created using Tabula 7.1.0
  */
 public class ModelMagicMaidBlue extends ModelBase {

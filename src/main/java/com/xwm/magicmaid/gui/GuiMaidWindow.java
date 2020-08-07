@@ -1,7 +1,7 @@
 package com.xwm.magicmaid.gui;
 
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
-import com.xwm.magicmaid.entity.mob.maid.EnumModes;
+import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.network.MaidModePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.util.Reference;
@@ -149,7 +149,7 @@ public class GuiMaidWindow extends GuiContainer
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
         switch (button.id){
-            case BUTTON_MODE_SWITH: if (EnumModes.valueOf(this.maid.getMode()) != EnumModes.BOSS) swithMode();break;
+            case BUTTON_MODE_SWITH: if (EnumMode.valueOf(this.maid.getMode()) != EnumMode.BOSS) swithMode();break;
             default: super.actionPerformed(button);
         }
     }

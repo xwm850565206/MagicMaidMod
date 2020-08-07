@@ -3,6 +3,7 @@ package com.xwm.magicmaid.entity.mob.weapon;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
+import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -23,7 +24,7 @@ import java.util.UUID;
 
 public class EntityMaidWeapon extends EntityLivingBase
 {
-    public static EnumEquipments enumEquipment;
+    public static EnumEquipment enumEquipment;
 
     private static final DataParameter<com.google.common.base.Optional<UUID>> OWNERID = EntityDataManager.<Optional<UUID>>createKey(EntityMagicMaid.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 

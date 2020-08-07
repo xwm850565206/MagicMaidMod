@@ -7,12 +7,10 @@ import com.xwm.magicmaid.entity.ai.EntityAIMaidFollow;
 import com.xwm.magicmaid.entity.ai.EntityAIMaidOwerHurtTarget;
 import com.xwm.magicmaid.entity.ai.EntityAIMaidOwnerHurtByTarget;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
-import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponConviction;
-import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponRepantence;
-import com.xwm.magicmaid.entity.mob.weapon.EnumEquipments;
-import com.xwm.magicmaid.object.item.ItemConviction;
+import com.xwm.magicmaid.enumstorage.EnumEquipment;
+import com.xwm.magicmaid.enumstorage.EnumAttackType;
+import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.object.item.ItemEquipment;
-import com.xwm.magicmaid.object.item.ItemRepantence;
 import com.xwm.magicmaid.object.item.ItemWeapon;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.EntityCreature;
@@ -54,7 +52,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
     private static final DataParameter<Optional<UUID>> OWNERID = EntityDataManager.<Optional<UUID>>createKey(EntityMagicMaid.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     private static final DataParameter<Integer> WEAPONTYPE = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
 
-    private EnumModes oldMode = null;
+    private EnumMode oldMode = null;
 
     public BlockPos weaponStandbyPos = new BlockPos(0, this.height+1, 0);
 
@@ -70,17 +68,17 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
     protected void entityInit()
     {
         super.entityInit();
-        this.dataManager.register(HEALTHBARNUM, 10);
+        this.dataManager.register(HEALTHBARNUM, 0);
         this.dataManager.register(LEVEL, 1);
-        this.dataManager.register(EXP, 1000);
-        this.dataManager.register(RANK, 2);
+        this.dataManager.register(EXP, 0);
+        this.dataManager.register(RANK, 0);
         this.dataManager.register(HASWEAPON, false);
         this.dataManager.register(HASARMOR, false);
-        this.dataManager.register(MODE, 1); //todo test
+        this.dataManager.register(MODE, EnumMode.toInt(EnumMode.FIGHT)); //todo test
         this.dataManager.register(STATE, 0); //0-standard
         this.dataManager.register(WEAPONID, Optional.fromNullable(null));
         this.dataManager.register(OWNERID, Optional.fromNullable(null));
-        this.dataManager.register(WEAPONTYPE, 0);
+        this.dataManager.register(WEAPONTYPE, EnumEquipment.toInt(EnumEquipment.DEMONKILLINGSWORD));
     }
 
     @Override
@@ -113,7 +111,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
     public boolean processInteract(EntityPlayer player, EnumHand hand)
     {
         //todo
-        if (EnumModes.valueOf(this.getMode()) == EnumModes.BOSS)
+        if (EnumMode.valueOf(this.getMode()) == EnumMode.BOSS)
             return false;
 
         if (!world.isRemote && hand == EnumHand.MAIN_HAND){
@@ -124,12 +122,12 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
                 if (player.isSneaking()) {
                     player.openGui(Main.instance, Reference.GUI_MAID_WINDOW, world, (int) this.posX, (int) this.posY, (int) this.posZ);
                 }
-                else if(EnumModes.valueOf(getMode()) == EnumModes.SITTING){
-                    this.setMode(EnumModes.toInt(oldMode));
+                else if(EnumMode.valueOf(getMode()) == EnumMode.SITTING){
+                    this.setMode(EnumMode.toInt(oldMode));
                 }
                 else {
-                    this.oldMode = EnumModes.valueOf(getMode());
-                    this.setMode(EnumModes.toInt(EnumModes.SITTING));
+                    this.oldMode = EnumMode.valueOf(getMode());
+                    this.setMode(EnumMode.toInt(EnumMode.SITTING));
                 }
                 return true;
             }
@@ -179,8 +177,8 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
             if (stack.isEmpty())
                 compound.setInteger("inventory" + i, -1);
             else {
-                EnumEquipments j = ((ItemWeapon) (stack.getItem())).enumEquipment;
-                compound.setInteger("inventory" + i, EnumEquipments.toInt(j));
+                EnumEquipment j = ((ItemWeapon) (stack.getItem())).enumEquipment;
+                compound.setInteger("inventory" + i, EnumEquipment.toInt(j));
             }
         }
     }
@@ -213,16 +211,16 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
                 this.inventory.set(i, ItemStack.EMPTY);
             }
             else {
-                EnumEquipments j1 = EnumEquipments.valueOf(j);
+                EnumEquipment j1 = EnumEquipment.valueOf(j);
                 this.inventory.set(i, new ItemStack(ItemEquipment.valueOf(j1)));
             }
         }
 
-        this.oldMode = EnumModes.valueOf(getMode());
+        this.oldMode = EnumMode.valueOf(getMode());
     }
 
     public boolean isSitting(){
-        return EnumModes.valueOf(getMode()) == EnumModes.SITTING; //todo 让女仆待命
+        return EnumMode.valueOf(getMode()) == EnumMode.SITTING; //todo 让女仆待命
     }
 
     public void setHealthbarnum(int healthbarnum){
@@ -310,7 +308,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
 
     public int getWeaponType() {return this.dataManager.get(WEAPONTYPE);}
 
-    public int getAttackDamage(EnumAttackTypes type){
+    public int getAttackDamage(EnumAttackType type){
         return 10; //todo 随着成长造成的伤害不同，不同女仆也不同
     }
 
@@ -320,41 +318,17 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
 
     public void getWeapon(ItemWeapon weapon){
 
-        if (this.world.isRemote)
-            return;
-
-        createWeapon(EnumEquipments.toInt(weapon.enumEquipment),
-                EnumEquipments.toEntityMaidWeapon(weapon.enumEquipment, world));
-
-        //todo 得到武器后要进行一系列的操作来维护
     }
 
     public void loseWeapon(ItemWeapon weapon){
 
-        if (this.world.isRemote)
-            return;
-
-        try {
-            EntityMaidWeapon weapon1 = EntityMaidWeapon.getWeaponFromUUID(world, getWeaponID());
-            weapon1.setDead();
-            setWeaponID(null);
-            setWeaponType(0);
-        } catch (Exception e){
-            ; //可能武器被其他模组杀死了
-        }
-        //todo 失去武器也要修改一系列数据来维护
     }
 
-    public void createWeapon(int weaponType, EntityMaidWeapon weapon)
-    {
-        if (weapon == null)
-            return;
-        weapon.setMaid(this);
-        weapon.setPosition(this.posX, this.posY, this.posZ);
-        this.setWeaponID(weapon.getUniqueID());
-        this.setWeaponType(weaponType);
-        this.world.spawnEntity(weapon);
+    public void switchMode(){
+
     }
+
+
 
     /**
      * Returns the number of slots in the inventory.

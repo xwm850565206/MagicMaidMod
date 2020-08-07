@@ -1,19 +1,18 @@
 package com.xwm.magicmaid.object.item;
 
-import com.xwm.magicmaid.entity.mob.weapon.EnumEquipments;
-import com.xwm.magicmaid.init.ItemInit;
+import com.xwm.magicmaid.enumstorage.EnumEquipment;
 
 public class ItemEquipment extends ItemBase
 {
 
-    public EnumEquipments enumEquipment;
+    public EnumEquipment enumEquipment;
 
     public ItemEquipment(String name) {
         super(name);
     }
 
-    public static ItemEquipment valueOf(EnumEquipments equipment)
+    public static ItemEquipment valueOf(EnumEquipment equipment)
     {
-        return EnumEquipments.toItemEquipment(equipment);
+        return EnumEquipment.toItemEquipment(equipment);
     }
 }

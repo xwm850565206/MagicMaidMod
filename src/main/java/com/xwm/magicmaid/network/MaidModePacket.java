@@ -1,10 +1,7 @@
 package com.xwm.magicmaid.network;
 
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
-import com.xwm.magicmaid.entity.mob.maid.EnumModes;
-import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -55,14 +52,14 @@ public class MaidModePacket implements IMessage
             World world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(message.dimension);
             EntityMagicMaid maid = (EntityMagicMaid) world.getEntityByID(message.maidId);
 
-//            if (EnumModes.valueOf(maid.getMode()) == EnumModes.SERVE){
-//                maid.setMode(EnumModes.toInt(EnumModes.FIGHT));
+//            if (EnumMode.valueOf(maid.getMode()) == EnumMode.SERVE){
+//                maid.setMode(EnumMode.toInt(EnumMode.FIGHT));
 //            }
-//            else if (EnumModes.valueOf(maid.getMode()) == EnumModes.FIGHT){
-//                maid.setMode(EnumModes.toInt(EnumModes.SERVE));
+//            else if (EnumMode.valueOf(maid.getMode()) == EnumMode.FIGHT){
+//                maid.setMode(EnumMode.toInt(EnumMode.SERVE));
 //            }
             if (maid != null)
-                maid.setMode((maid.getMode() + 1) % 3); //todo 这里可能有更兼容的写法
+                maid.switchMode();
         }
     }
 }

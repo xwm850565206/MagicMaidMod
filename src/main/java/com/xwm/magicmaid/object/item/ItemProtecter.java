@@ -1,11 +1,11 @@
 package com.xwm.magicmaid.object.item;
 
-import com.xwm.magicmaid.entity.mob.weapon.EnumEquipments;
+import com.xwm.magicmaid.enumstorage.EnumEquipment;
 
 public class ItemProtecter extends ItemArmor {
 
     public ItemProtecter(String name) {
         super(name);
-        enumEquipment = EnumEquipments.PROTECTOR;
+        enumEquipment = EnumEquipment.PROTECTOR;
     }
 }

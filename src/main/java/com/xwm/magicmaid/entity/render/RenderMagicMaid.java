@@ -1,8 +1,8 @@
 package com.xwm.magicmaid.entity.render;
 
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidBanana;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidStrawberry;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidRett;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidMartha;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidBlue;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.model.ModelBase;
@@ -14,7 +14,9 @@ public class RenderMagicMaid extends RenderLiving<EntityMagicMaid> {
 
     public static final ResourceLocation TEXTURE_BERRY = new ResourceLocation(Reference.MODID + ":textures/entities/magicmaidstrawberry.png");
     public static final ResourceLocation TEXTURE_BLUE = new ResourceLocation(Reference.MODID + ":textures/entities/magicmaidblue.png");
+
     public static final ResourceLocation TEXTURE_YELLOW = new ResourceLocation(Reference.MODID + ":textures/entities/magicmaidyellow.png");
+    public static final ResourceLocation TEXTURE_RETT_DEMONKILLER = new ResourceLocation(Reference.MODID + ":textures/entities/magic_maid_rett_demonkiller.png");
 
     public RenderMagicMaid(RenderManager manager, ModelBase base) {
         super(manager, base, 0.5F);
@@ -28,12 +30,12 @@ public class RenderMagicMaid extends RenderLiving<EntityMagicMaid> {
     @Override
     protected ResourceLocation getEntityTexture(EntityMagicMaid entity)
     {
-        if (entity instanceof EntityMagicMaidStrawberry)
+        if (entity instanceof EntityMagicMaidMartha)
             return TEXTURE_BERRY;
         else if (entity instanceof EntityMagicMaidBlue)
             return TEXTURE_BLUE;
-        else if (entity instanceof EntityMagicMaidBanana)
-            return TEXTURE_YELLOW;
+        else if (entity instanceof EntityMagicMaidRett)
+            return TEXTURE_RETT_DEMONKILLER;
         return null;
     }
 

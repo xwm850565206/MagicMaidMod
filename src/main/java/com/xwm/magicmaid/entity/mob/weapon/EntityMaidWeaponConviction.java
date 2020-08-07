@@ -1,5 +1,6 @@
 package com.xwm.magicmaid.entity.mob.weapon;
 
+import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.network.CustomerParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
@@ -16,7 +17,7 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
 
     public EntityMaidWeaponConviction(World worldIn) {
         super(worldIn);
-        enumEquipment = EnumEquipments.CONVICTION;
+        enumEquipment = EnumEquipment.CONVICTION;
     }
 
     @Override

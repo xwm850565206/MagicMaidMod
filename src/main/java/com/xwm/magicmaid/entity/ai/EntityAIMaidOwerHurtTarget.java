@@ -1,7 +1,7 @@
 package com.xwm.magicmaid.entity.ai;
 
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
-import com.xwm.magicmaid.entity.mob.maid.EnumModes;
+import com.xwm.magicmaid.enumstorage.EnumMode;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITarget;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -28,7 +28,7 @@ public class EntityAIMaidOwerHurtTarget extends EntityAITarget
         {
             return false;
         }
-        if (EnumModes.valueOf(this.tameable.getMode()) !=  EnumModes.FIGHT)
+        if (EnumMode.valueOf(this.tameable.getMode()) !=  EnumMode.FIGHT)
             return false;
 
         else

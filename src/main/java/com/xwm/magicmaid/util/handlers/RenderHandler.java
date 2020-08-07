@@ -1,12 +1,13 @@
 package com.xwm.magicmaid.util.handlers;
 
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidBanana;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidStrawberry;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidRett;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidMartha;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidBlue;
-import com.xwm.magicmaid.entity.model.strawberry.ModelMagicMaidStrawberry;
+import com.xwm.magicmaid.entity.model.Rett.ModelMagicMaidRett;
+import com.xwm.magicmaid.entity.model.martha.ModelMagicMaidMartha;
 import com.xwm.magicmaid.entity.model.ModelMagicMaidBlue;
-import com.xwm.magicmaid.entity.model.ModelMagicMaidYellow;
+import com.xwm.magicmaid.entity.model.Rett.ModelMagicMaidRettStandard;
 import com.xwm.magicmaid.entity.model.weapon.ModelConviction;
 import com.xwm.magicmaid.entity.model.weapon.ModelRepentance;
 import com.xwm.magicmaid.entity.render.RenderMagicMaid;
@@ -22,10 +23,10 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 public class RenderHandler
 {
     public static void registerEntityRenders() {
-        RenderingRegistry.registerEntityRenderingHandler(EntityMagicMaidStrawberry.class, new IRenderFactory<EntityMagicMaid>() {
+        RenderingRegistry.registerEntityRenderingHandler(EntityMagicMaidMartha.class, new IRenderFactory<EntityMagicMaid>() {
             @Override
             public Render<? super EntityMagicMaid> createRenderFor(RenderManager manager) {
-                return new RenderMagicMaid(manager, new ModelMagicMaidStrawberry());
+                return new RenderMagicMaid(manager, new ModelMagicMaidMartha());
             }
         });
 
@@ -36,10 +37,10 @@ public class RenderHandler
             }
         });
 
-        RenderingRegistry.registerEntityRenderingHandler(EntityMagicMaidBanana.class, new IRenderFactory<EntityMagicMaid>() {
+        RenderingRegistry.registerEntityRenderingHandler(EntityMagicMaidRett.class, new IRenderFactory<EntityMagicMaid>() {
             @Override
             public Render<? super EntityMagicMaid> createRenderFor(RenderManager manager) {
-                return new RenderMagicMaid(manager, new ModelMagicMaidYellow());
+                return new RenderMagicMaid(manager, new ModelMagicMaidRett());
             }
         });
 
