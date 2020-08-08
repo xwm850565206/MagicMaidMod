@@ -14,19 +14,19 @@ import java.util.Random;
 public class EntityAIDemonKillerAttack extends EntityAIBase
 {
     private static final int COLDTIME = 100;
-    private static final int PERFORMTIME = 40;
-    private EntityMagicMaid maid;
+    private static final int PERFORMTIME = 45;
+    private EntityMagicMaidRett maid;
     private int tick = 0;
     private int performTick = 0;
     private Random random = new Random();
 
-    public EntityAIDemonKillerAttack(EntityMagicMaid maid)
+    public EntityAIDemonKillerAttack(EntityMagicMaidRett maid)
     {
         this.maid = maid;
     }
 
     public  boolean shouldExecute(){
-        ((EntityMagicMaidRett)this.maid).debug();
+        this.maid.debug();
         System.out.println("tick : " + tick);
 //        if (!maid.hasOwner() && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS) //如果没有主人又不是boss就不放技能
 //            return false;
@@ -54,23 +54,33 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
 
     public void updateTask()
     {
+        this.maid.setPerformtick(performTick);
+
         if (performTick == 5){
-            this.maid.setState(EnumRettState.toInt(EnumRettState.DEMON_KILLER_ATTACK1));
+            System.out.println("attack1");
+//            this.maid.setState(EnumRettState.toInt(EnumRettState.DEMON_KILLER_ATTACK1));
         }
-        else if (performTick == 15) {
-            this.maid.setState(EnumRettState.toInt(EnumRettState.DEMON_KILLER_ATTACK2));
+        else if (performTick == 10) {
+            System.out.println("attack2");
+//            this.maid.setState(EnumRettState.toInt(EnumRettState.DEMON_KILLER_ATTACK2));
         }
-        else if (performTick == 25) {
-            this.maid.setState(EnumRettState.toInt(EnumRettState.DEMON_KILLER_ATTACK3));
+        else if (performTick == 20) {
+            System.out.println("attack3");
+//            this.maid.setState(EnumRettState.toInt(EnumRettState.DEMON_KILLER_ATTACK3));
         }
-        else if (performTick == 35) {
-            this.maid.setState(EnumRettState.toInt(EnumRettState.DEMON_KILLER_ATTACK4));
+        else if (performTick == 30) {
+            System.out.println("attack4");
+//            this.maid.setState(EnumRettState.toInt(EnumRettState.DEMON_KILLER_ATTACK4));
         }
+
+
+//        maid
         performTick++;
     }
 
     public void resetTask(){
         this.maid.setState(EnumRettState.toInt(EnumRettState.DEMON_KILLER_STANDARD));
         this.performTick = 0;
+        this.maid.setPerformtick(performTick);
     }
 }

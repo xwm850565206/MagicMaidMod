@@ -11,6 +11,7 @@ import net.minecraft.entity.Entity;
 public class ModelMagicMaidRettDemonKillerStand extends ModelMagicMaidRettBone {
 
     public ModelMagicMaidRettDemonKillerStand() {
+        super();
         this.textureWidth = 128;
         this.textureHeight = 128;
         this.hairpin = new ModelRenderer(this, 110, 100);

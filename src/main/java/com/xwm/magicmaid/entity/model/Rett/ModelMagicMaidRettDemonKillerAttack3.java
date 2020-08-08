@@ -11,6 +11,7 @@ import net.minecraft.entity.Entity;
 public class ModelMagicMaidRettDemonKillerAttack3 extends ModelMagicMaidRettBone {
 
     public ModelMagicMaidRettDemonKillerAttack3() {
+        super();
         this.textureWidth = 128;
         this.textureHeight = 128;
         this.connect1 = new ModelRenderer(this, 85, 100);
@@ -143,39 +144,39 @@ public class ModelMagicMaidRettDemonKillerAttack3 extends ModelMagicMaidRettBone
         this.hairLeftBraid.setRotationPoint(4.0F, 2.5F, 0.0F);
         this.hairLeftBraid.addBox(-1.0F, -1.0F, -1.0F, 2, 2, 2, 0.0F);
         this.setRotateAngle(hairLeftBraid, -0.8726646259971648F, -1.5707963267948966F, 0.6981317007977318F);
-        this.hairMain.addChild(this.connect1);
+        this.hairMain.addChild(this.hairpin);
+        this.body.addChild(this.leftSleeve);
+        this.body.addChild(this.rightSleeve);
+        this.connect1.addChild(this.connect3);
+        this.head.addChild(this.earLeft);
         this.hairpin.addChild(this.cubeRight);
         this.hairRightBraid.addChild(this.partTop_1);
+        this.earRight.addChild(this.earRight2);
         this.handle.addChild(this.handlepart);
         this.hairLeftBraid.addChild(this.partTop);
-        this.connect1.addChild(this.connect2);
+        this.rightSleeve.addChild(this.rightArm);
+        this.handle.addChild(this.sword5);
+        this.hairMain.addChild(this.head);
+        this.hairRightBraid.addChild(this.partRight_1);
+        this.hairpin.addChild(this.cubeLeft);
         this.head.addChild(this.earRight);
-        this.connect1.addChild(this.hairRightBraid);
+        this.leftSleeve.addChild(this.leftArm);
         this.hairRightBraid.addChild(this.partBottom_1);
+        this.earLeft.addChild(this.earLeft2);
+        this.connect1.addChild(this.hairRightBraid);
+        this.hairMain.addChild(this.connect1);
+        this.connect1.addChild(this.hairLeftBraid);
+        this.hairLeftBraid.addChild(this.partLeft);
+        this.handle.addChild(this.sword4);
+        this.handle.addChild(this.sword3);
+        this.hairLeftBraid.addChild(this.partRight);
         this.hairRightBraid.addChild(this.partLeft_1);
         this.rightArm.addChild(this.handle);
-        this.hairMain.addChild(this.hairpin);
-        this.handle.addChild(this.sword5);
-        this.handle.addChild(this.sword3);
-        this.handle.addChild(this.sword6);
-        this.hairMain.addChild(this.head);
-        this.head.addChild(this.earLeft);
-        this.body.addChild(this.rightSleeve);
-        this.leftSleeve.addChild(this.leftArm);
-        this.earRight.addChild(this.earRight2);
         this.handle.addChild(this.sword2);
-        this.handle.addChild(this.sword4);
-        this.hairpin.addChild(this.cubeLeft);
-        this.hairLeftBraid.addChild(this.partLeft);
-        this.body.addChild(this.leftSleeve);
-        this.rightSleeve.addChild(this.rightArm);
-        this.hairLeftBraid.addChild(this.partBottom);
-        this.hairLeftBraid.addChild(this.partRight);
-        this.earLeft.addChild(this.earLeft2);
         this.handle.addChild(this.sword1);
-        this.connect1.addChild(this.connect3);
-        this.hairRightBraid.addChild(this.partRight_1);
-        this.connect1.addChild(this.hairLeftBraid);
+        this.handle.addChild(this.sword6);
+        this.hairLeftBraid.addChild(this.partBottom);
+        this.connect1.addChild(this.connect2);
     }
 
     @Override

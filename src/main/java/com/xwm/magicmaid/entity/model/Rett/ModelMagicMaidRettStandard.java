@@ -11,6 +11,7 @@ import net.minecraft.entity.Entity;
 public class ModelMagicMaidRettStandard extends ModelMagicMaidRettBone {
 
     public ModelMagicMaidRettStandard() {
+        super();
         this.textureWidth = 128;
         this.textureHeight = 128;
         this.earRight2 = new ModelRenderer(this, 110, 30);

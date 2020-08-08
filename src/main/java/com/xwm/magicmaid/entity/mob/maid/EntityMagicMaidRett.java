@@ -6,10 +6,14 @@ import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumRettState;
 import com.xwm.magicmaid.object.item.ItemWeapon;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 
 public class EntityMagicMaidRett extends EntityMagicMaid
 {
+    private static final DataParameter<Integer> PERFORMTICK = EntityDataManager.<Integer>createKey(EntityMagicMaidRett.class, DataSerializers.VARINT);
 
     public EntityMagicMaidRett(World worldIn) {
         super(worldIn);
@@ -19,6 +23,7 @@ public class EntityMagicMaidRett extends EntityMagicMaid
     @Override
     protected void entityInit(){
         super.entityInit();
+        this.dataManager.register(PERFORMTICK, 0);
     }
 
     @Override
@@ -71,6 +76,14 @@ public class EntityMagicMaidRett extends EntityMagicMaid
                 || state == EnumRettState.DEMON_KILLER_ATTACK2
                 || state == EnumRettState.DEMON_KILLER_ATTACK3
                 || state == EnumRettState.DEMON_KILLER_ATTACK4;
+    }
+
+    public int getPerformTick(){
+        return this.dataManager.get(PERFORMTICK);
+    }
+
+    public void setPerformtick(int performtick){
+        this.dataManager.set(PERFORMTICK, performtick);
     }
 
     public void debug(){
