@@ -11,10 +11,11 @@ public class Reference
     public static final int GUI_MAID_WINDOW = 1;
 
     public static final int ENTITY_MARTHA = 300;
-    public static final int ENTITY_BLUE = 301;
+    public static final int ENTITY_SELINA = 301;
     public static final int ENTITY_RETT = 302;
     public static final int ENTITY_REPENTANCE = 303;
     public static final int ENTITY_CONVICTION = 304;
+    public static final int ENTITY_PANDORA = 305;
 
     public static final int DIMENSION_CHURCH = 2;
 }

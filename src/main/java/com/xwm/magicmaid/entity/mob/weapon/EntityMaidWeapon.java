@@ -64,9 +64,9 @@ public class EntityMaidWeapon extends EntityLivingBase
             }
 
             if (maid != null) {
-                BlockPos standPos = maid.getPosition();
-                standPos = standPos.add(maid.weaponStandbyPos.getX(), maid.weaponStandbyPos.getY(), maid.weaponStandbyPos.getZ());
-                setPosition(standPos.getX(), standPos.getY(), standPos.getZ());
+                //跟随主人
+                BlockPos pos = this.maid.weaponStandbyPos.add(this.maid.posX, this.maid.posY, this.maid.posZ);
+                this.moveToBlockPosAndAngles(pos, this.rotationYaw, this.rotationPitch);
             }
         }
 

@@ -3,12 +3,13 @@ package com.xwm.magicmaid.util.handlers;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidRett;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidMartha;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidBlue;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidSelina;
+import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponPandorasBox;
 import com.xwm.magicmaid.entity.model.Rett.ModelMagicMaidRett;
+import com.xwm.magicmaid.entity.model.Selina.ModelMagicMaidSeline;
 import com.xwm.magicmaid.entity.model.martha.ModelMagicMaidMartha;
-import com.xwm.magicmaid.entity.model.ModelMagicMaidBlue;
-import com.xwm.magicmaid.entity.model.Rett.ModelMagicMaidRettStandard;
 import com.xwm.magicmaid.entity.model.weapon.ModelConviction;
+import com.xwm.magicmaid.entity.model.weapon.ModelPandorasBox;
 import com.xwm.magicmaid.entity.model.weapon.ModelRepentance;
 import com.xwm.magicmaid.entity.render.RenderMagicMaid;
 import com.xwm.magicmaid.entity.render.RenderMaidWeapon;
@@ -30,10 +31,10 @@ public class RenderHandler
             }
         });
 
-        RenderingRegistry.registerEntityRenderingHandler(EntityMagicMaidBlue.class, new IRenderFactory<EntityMagicMaid>() {
+        RenderingRegistry.registerEntityRenderingHandler(EntityMagicMaidSelina.class, new IRenderFactory<EntityMagicMaid>() {
             @Override
             public Render<? super EntityMagicMaid> createRenderFor(RenderManager manager) {
-                return new RenderMagicMaid(manager, new ModelMagicMaidBlue());
+                return new RenderMagicMaid(manager, new ModelMagicMaidSeline());
             }
         });
 
@@ -51,10 +52,18 @@ public class RenderHandler
             }
         });
 
+
         RenderingRegistry.registerEntityRenderingHandler(EntityMaidWeaponConviction.class, new IRenderFactory<EntityMaidWeapon>() {
             @Override
             public Render<? super EntityMaidWeapon> createRenderFor(RenderManager manager) {
                 return new RenderMaidWeapon(manager, new ModelConviction());
+            }
+        });
+
+        RenderingRegistry.registerEntityRenderingHandler(EntityMaidWeaponPandorasBox.class, new IRenderFactory<EntityMaidWeapon>() {
+            @Override
+            public Render<? super EntityMaidWeapon> createRenderFor(RenderManager manager) {
+                return new RenderMaidWeapon(manager, new ModelPandorasBox());
             }
         });
     }

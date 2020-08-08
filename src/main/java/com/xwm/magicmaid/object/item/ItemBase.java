@@ -37,19 +37,19 @@ public class ItemBase extends Item implements IHasModel
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
     {
-        Side side = FMLCommonHandler.instance().getEffectiveSide();
-        if (side == Side.SERVER)
-        {
-            if (playerIn instanceof EntityPlayerMP)
-            {
-                try {
-                    playerIn.changeDimension(2);
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-
-            }
-        }
+//        Side side = FMLCommonHandler.instance().getEffectiveSide();
+//        if (side == Side.SERVER)
+//        {
+//            if (playerIn instanceof EntityPlayerMP)
+//            {
+//                try {
+//                    playerIn.changeDimension(2);
+//                } catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        }
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 }

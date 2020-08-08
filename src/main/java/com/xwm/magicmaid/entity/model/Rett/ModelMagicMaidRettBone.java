@@ -49,40 +49,40 @@ public class ModelMagicMaidRettBone extends ModelBase
     public ModelRenderer sword5;
     public ModelRenderer sword6;
 
-    public List<ModelRenderer> rendererList = new ArrayList<ModelRenderer>();
+//    public List<ModelRenderer> rendererList = new ArrayList<ModelRenderer>();
 
     public ModelMagicMaidRettBone(){
 
-        rendererList.add(hairMain);
-        rendererList.add(rightLeg);
-        rendererList.add(body);
-        rendererList.add(leftLeg);
-        rendererList.add(dress);
-        rendererList.add(head);
-        rendererList.add(hairpin);
-        rendererList.add(connect1);
-        rendererList.add(earLeft);
-        rendererList.add(earRight);
-        rendererList.add(earLeft2);
-        rendererList.add(earRight2);
-        rendererList.add(cubeLeft);
-        rendererList.add(cubeRight);
-        rendererList.add(hairLeftBraid);
-        rendererList.add(hairRightBraid);
-        rendererList.add(connect2);
-        rendererList.add(connect3);
-        rendererList.add(partTop);
-        rendererList.add(partBottom);
-        rendererList.add(partLeft);
-        rendererList.add(partRight);
-        rendererList.add(partTop_1);
-        rendererList.add(partBottom_1);
-        rendererList.add(partLeft_1);
-        rendererList.add(partRight_1);
-        rendererList.add(leftSleeve);
-        rendererList.add(rightSleeve);
-        rendererList.add(leftArm);
-        rendererList.add(rightArm);
+//        rendererList.add(hairMain);
+//        rendererList.add(rightLeg);
+//        rendererList.add(body);
+//        rendererList.add(leftLeg);
+//        rendererList.add(dress);
+//        rendererList.add(head);
+//        rendererList.add(hairpin);
+//        rendererList.add(connect1);
+//        rendererList.add(earLeft);
+//        rendererList.add(earRight);
+//        rendererList.add(earLeft2);
+//        rendererList.add(earRight2);
+//        rendererList.add(cubeLeft);
+//        rendererList.add(cubeRight);
+//        rendererList.add(hairLeftBraid);
+//        rendererList.add(hairRightBraid);
+//        rendererList.add(connect2);
+//        rendererList.add(connect3);
+//        rendererList.add(partTop);
+//        rendererList.add(partBottom);
+//        rendererList.add(partLeft);
+//        rendererList.add(partRight);
+//        rendererList.add(partTop_1);
+//        rendererList.add(partBottom_1);
+//        rendererList.add(partLeft_1);
+//        rendererList.add(partRight_1);
+//        rendererList.add(leftSleeve);
+//        rendererList.add(rightSleeve);
+//        rendererList.add(leftArm);
+//        rendererList.add(rightArm);
     }
 
     public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {

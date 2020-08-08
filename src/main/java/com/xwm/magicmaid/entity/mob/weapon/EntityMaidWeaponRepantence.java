@@ -4,6 +4,7 @@ import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.network.CustomerParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -24,6 +25,9 @@ public class EntityMaidWeaponRepantence extends EntityMaidWeapon
     public void onUpdate()
     {
         super.onUpdate();
+
+        if (world.isRemote)
+            return;
 
         gap = !gap;
         if (gap)

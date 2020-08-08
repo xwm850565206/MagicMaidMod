@@ -15,17 +15,17 @@ public class ModelMagicMaidRett extends ModelMagicMaidRettBone
 
     /** 拿着灭魔大剑时候的样子 **/
     private ModelMagicMaidRettDemonKillerStand demonKillerBone = new ModelMagicMaidRettDemonKillerStand();
-    private ModelMagicMaidRettDemonKillerStand demonKillerStand = new ModelMagicMaidRettDemonKillerStand();
-    private ModelMagicMaidRettDemonKillerAttack1 demonKillerAttack1 = new ModelMagicMaidRettDemonKillerAttack1();
-    private ModelMagicMaidRettDemonKillerAttack2 demonKillerAttack2 = new ModelMagicMaidRettDemonKillerAttack2();
-    private ModelMagicMaidRettDemonKillerAttack3 demonKillerAttack3 = new ModelMagicMaidRettDemonKillerAttack3();
-    private ModelMagicMaidRettDemonKillerAttack4 demonKillerAttack4 = new ModelMagicMaidRettDemonKillerAttack4();
+    private static ModelMagicMaidRettDemonKillerStand demonKillerStand = new ModelMagicMaidRettDemonKillerStand();
+    private static ModelMagicMaidRettDemonKillerAttack1 demonKillerAttack1 = new ModelMagicMaidRettDemonKillerAttack1();
+    private static ModelMagicMaidRettDemonKillerAttack2 demonKillerAttack2 = new ModelMagicMaidRettDemonKillerAttack2();
+    private static ModelMagicMaidRettDemonKillerAttack3 demonKillerAttack3 = new ModelMagicMaidRettDemonKillerAttack3();
+    private static ModelMagicMaidRettDemonKillerAttack4 demonKillerAttack4 = new ModelMagicMaidRettDemonKillerAttack4();
 
     /** 服侍 **/
-    private ModelMagicMaidRettServe serve = new ModelMagicMaidRettServe();
+    private static ModelMagicMaidRettServe serve = new ModelMagicMaidRettServe();
 
     /** 待命 **/
-    private ModelMagicMaidRettSitting sitting = new ModelMagicMaidRettSitting();
+    private static ModelMagicMaidRettSitting sitting = new ModelMagicMaidRettSitting();
 
     private void selectModel(ModelMagicMaidRettBone model)
     {

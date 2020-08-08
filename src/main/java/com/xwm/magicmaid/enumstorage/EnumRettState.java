@@ -9,8 +9,8 @@ public enum  EnumRettState
     return EnumRettState.values()[state];
 }
 
-    public static int toInt(EnumRettState mode){
-        for (int i = 0; i < EnumRettState.values().length; i++) if (mode == EnumRettState.values()[i]) return i;
+    public static int toInt(EnumRettState state){
+        for (int i = 0; i < EnumRettState.values().length; i++) if (state == EnumRettState.values()[i]) return i;
         return 0;
     }
 }

@@ -8,10 +8,10 @@ import net.minecraft.util.math.MathHelper;
 
 public class ModelMagicMaidMartha extends ModelMagicMaidMarthaBone
 {
-    private ModelMagicMaidMarthaStandard standard = new ModelMagicMaidMarthaStandard();
-    private ModelMagicMaidMarthaWalk walk = new ModelMagicMaidMarthaWalk();
-    private ModelMagicMaidMarthaNormalStand normalStand = new ModelMagicMaidMarthaNormalStand();
-    private ModelMagicMaidMarthaAttack attack = new ModelMagicMaidMarthaAttack();
+    private static ModelMagicMaidMarthaStandard standard = new ModelMagicMaidMarthaStandard();
+    private static ModelMagicMaidMarthaWalk walk = new ModelMagicMaidMarthaWalk();
+    private static ModelMagicMaidMarthaNormalStand normalStand = new ModelMagicMaidMarthaNormalStand();
+    private static ModelMagicMaidMarthaAttack attack = new ModelMagicMaidMarthaAttack();
 
     private void selectModel(ModelMagicMaidMarthaBone model)
     {
@@ -45,7 +45,6 @@ public class ModelMagicMaidMartha extends ModelMagicMaidMarthaBone
         this.dress.render(f5);
         this.rightLeg.render(f5);
         this.body.render(f5);
-
     }
 
     public void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTickTime)

@@ -4,5 +4,6 @@ public enum EnumAttackType
 {
     NORMAL,
     REPANTENCE, CONVICTION,
-    DEMONKILLER;
+    DEMONKILLER,
+    PANDORA;
 }

@@ -71,10 +71,14 @@ public class EntityMagicMaidRett extends EntityMagicMaid
     }
 
     public void getWeapon(ItemWeapon weapon){
+        if (this.world.isRemote)
+            return;
         this.setWeaponType(EnumEquipment.toInt(weapon.enumEquipment));
     }
 
     public void loseWeapon(ItemWeapon weapon){
+        if (this.world.isRemote)
+            return;
         this.setWeaponType(EnumEquipment.toInt(EnumEquipment.NONE));
     }
 

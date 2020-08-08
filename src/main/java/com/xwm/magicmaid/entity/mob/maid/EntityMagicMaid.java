@@ -341,6 +341,8 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
             return false;
         if (entityLivingBase instanceof EntityTameable && this.getOwnerID() == ((EntityTameable) entityLivingBase).getOwnerId())
             return false;
+        if (entityLivingBase instanceof EntityMaidWeapon)
+            return false;
         return true;
     }
 

@@ -4,6 +4,7 @@ import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.network.CustomerParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -25,6 +26,9 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
     {
         super.onUpdate();
 
+        if (world.isRemote)
+            return;
+
         gap = !gap;
         if (gap)
             return;
@@ -42,5 +46,7 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
                 d2 + radius * Math.cos(Math.toRadians(t * perAngle)), EnumCustomParticles.CROSS);
         NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(this.getEntityWorld().provider.getDimension(), d0, d1, d2, 40.0D);
         NetworkLoader.instance.sendToAllAround(particlePacket, target);
+
+
     }
 }
