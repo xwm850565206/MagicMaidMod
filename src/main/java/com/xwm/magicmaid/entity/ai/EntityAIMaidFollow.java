@@ -85,6 +85,10 @@ public class EntityAIMaidFollow extends EntityAIBase
 
     public void startExecuting()
     {
+        if (this.owner.world.provider.getDimension() != this.tameable.world.provider.getDimension()) {
+            this.tameable.changeDimension(this.owner.world.provider.getDimension()); //todo
+        }
+
         this.timeToRecalcPath = 0;
         this.oldWaterCost = this.tameable.getPathPriority(PathNodeType.WATER);
         this.tameable.setPathPriority(PathNodeType.WATER, 0.0F);

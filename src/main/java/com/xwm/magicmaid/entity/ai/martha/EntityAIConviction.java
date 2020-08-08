@@ -78,7 +78,7 @@ public class EntityAIConviction extends EntityAIBase
         for (EntityLiving entityLiving : entityLivings)
         {
             try {
-                if (entityLiving.equals(maid) || (owner != null && entityLiving.equals(owner)))
+                if (!maid.isEnemy(entityLiving))
                     continue;
 
                 entityLiving.setHealth(1);

@@ -17,6 +17,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
+import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
@@ -74,11 +75,11 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         this.dataManager.register(RANK, 0);
         this.dataManager.register(HASWEAPON, false);
         this.dataManager.register(HASARMOR, false);
-        this.dataManager.register(MODE, EnumMode.toInt(EnumMode.FIGHT)); //todo test
+        this.dataManager.register(MODE, EnumMode.toInt(EnumMode.SITTING)); //todo test
         this.dataManager.register(STATE, 0); //0-standard
         this.dataManager.register(WEAPONID, Optional.fromNullable(null));
         this.dataManager.register(OWNERID, Optional.fromNullable(null));
-        this.dataManager.register(WEAPONTYPE, EnumEquipment.toInt(EnumEquipment.DEMONKILLINGSWORD));
+        this.dataManager.register(WEAPONTYPE, EnumEquipment.toInt(EnumEquipment.NONE));
     }
 
     @Override
@@ -326,6 +327,21 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
 
     public void switchMode(){
 
+    }
+
+    public boolean isEnemy(EntityLivingBase entityLivingBase)
+    {
+        if (entityLivingBase == null)
+            return false;
+        if (this == entityLivingBase)
+            return false;
+        if (this.getOwnerID() == entityLivingBase.getUniqueID())
+            return false;
+        if (entityLivingBase instanceof EntityMagicMaid && this.getOwnerID() == ((EntityMagicMaid) entityLivingBase).getOwnerID())
+            return false;
+        if (entityLivingBase instanceof EntityTameable && this.getOwnerID() == ((EntityTameable) entityLivingBase).getOwnerId())
+            return false;
+        return true;
     }
 
 

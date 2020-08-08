@@ -15,8 +15,7 @@ public class RenderMagicMaid extends RenderLiving<EntityMagicMaid> {
     public static final ResourceLocation TEXTURE_BERRY = new ResourceLocation(Reference.MODID + ":textures/entities/magicmaidstrawberry.png");
     public static final ResourceLocation TEXTURE_BLUE = new ResourceLocation(Reference.MODID + ":textures/entities/magicmaidblue.png");
 
-    public static final ResourceLocation TEXTURE_YELLOW = new ResourceLocation(Reference.MODID + ":textures/entities/magicmaidyellow.png");
-    public static final ResourceLocation TEXTURE_RETT_DEMONKILLER = new ResourceLocation(Reference.MODID + ":textures/entities/magic_maid_rett_demonkiller.png");
+    public static final ResourceLocation TEXTURE_RETT_DEMONKILLER = new ResourceLocation(Reference.MODID + ":textures/entities/magicmaidrett.png");
 
     public RenderMagicMaid(RenderManager manager, ModelBase base) {
         super(manager, base, 0.5F);

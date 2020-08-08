@@ -1,0 +1,33 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "magic_maid:items/demonkiller"
+  },
+  "display": {
+    "thirdperson_righthand":{
+      "rotation": [0, 180, 33],
+      "translation": [0, 0, 0],
+      "scale": [2.0, 3.0, 2.0]
+    },
+    "thirdperson_lefthand":{
+      "rotation": [0, 0, 340],
+      "translation": [0, 0, 0],
+      "scale": [2.0, 3.0, 2.0]
+    },
+    "firstperson_righthand": {
+      "rotation": [ 0, 333, 0 ],
+      "translation": [ 0, 1.25, 0],
+      "scale": [ 1.0, 1.0, 1.0 ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [ 0, 156, 0 ],
+      "translation": [ 0, 1.0, 0],
+      "scale": [ 1.0, 1.0, 1.0 ]
+    },
+    "gui":{
+      "rotation": [0, 0, 0],
+      "translation": [0.00, 0.00, 0.00],
+      "scale": [2.00, 3.00, 2.00]
+    }
+  }
+}

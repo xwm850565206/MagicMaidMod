@@ -1,11 +1,19 @@
 package com.xwm.magicmaid.entity.mob.maid;
 
+import com.xwm.magicmaid.entity.ai.EntityAIMaidAttackMelee;
 import com.xwm.magicmaid.entity.ai.rett.EntityAIDemonKillerAttack;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumRettState;
 import com.xwm.magicmaid.object.item.ItemWeapon;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
+import net.minecraft.entity.ai.EntityAIHurtByTarget;
+import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.monster.EntityPigZombie;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -29,6 +37,10 @@ public class EntityMagicMaidRett extends EntityMagicMaid
     @Override
     public void initEntityAI(){
         super.initEntityAI();
+
+        this.tasks.addTask(2, new EntityAIMaidAttackMelee(this, 1.3D, false));
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityLiving.class, true));
         this.targetTasks.addTask(3, new EntityAIDemonKillerAttack(this));
     }
 

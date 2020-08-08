@@ -78,7 +78,7 @@ public class EntityAIRepantence extends EntityAIBase
         for (EntityLivingBase entityLivingBase : entityLivingBases)
         {
             try{
-                if (entityLivingBase.equals(this.maid) || (owner != null && entityLivingBase.equals(owner)))
+                if (!maid.isEnemy(entityLivingBase))
                     continue;
                 entityLivingBase.attackEntityFrom(new EntityDamageSource("repantence_attack", maid),
                         maid.getAttackDamage(EnumAttackType.REPANTENCE));
