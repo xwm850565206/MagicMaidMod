@@ -7,7 +7,7 @@ import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
-import com.xwm.magicmaid.object.item.ItemWeapon;
+import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import net.minecraft.world.World;
 
 public class EntityMagicMaidMartha extends EntityMagicMaid

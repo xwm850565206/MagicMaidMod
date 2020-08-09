@@ -4,7 +4,7 @@ import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponConviction;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponRepantence;
 import com.xwm.magicmaid.init.ItemInit;
-import com.xwm.magicmaid.object.item.ItemEquipment;
+import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 

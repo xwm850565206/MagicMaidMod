@@ -1,6 +1,5 @@
 package com.xwm.magicmaid.entity.mob.maid;
 
-import com.xwm.magicmaid.entity.ai.EntityAIMaidAttackMelee;
 import com.xwm.magicmaid.entity.ai.selina.EntityAIPandora;
 import com.xwm.magicmaid.entity.ai.selina.EntityAIWhisper;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
@@ -10,7 +9,7 @@ import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumSelineState;
-import com.xwm.magicmaid.object.item.ItemWeapon;
+import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.util.math.BlockPos;

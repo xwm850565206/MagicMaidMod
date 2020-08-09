@@ -1,8 +1,8 @@
 package com.xwm.magicmaid.gui;
 
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
-import com.xwm.magicmaid.object.item.ItemArmor;
-import com.xwm.magicmaid.object.item.ItemWeapon;
+import com.xwm.magicmaid.object.item.equipment.ItemArmor;
+import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
