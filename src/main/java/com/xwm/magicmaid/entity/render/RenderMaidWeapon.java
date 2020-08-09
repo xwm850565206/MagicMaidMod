@@ -1,9 +1,6 @@
 package com.xwm.magicmaid.entity.render;
 
-import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponPandorasBox;
-import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
-import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponConviction;
-import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponRepantence;
+import com.xwm.magicmaid.entity.mob.weapon.*;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -15,6 +12,7 @@ public class RenderMaidWeapon extends RenderLivingBase<EntityMaidWeapon>
     public static final ResourceLocation TEXTURE_REPENTANCE = new ResourceLocation(Reference.MODID + ":textures/entities/repentance.png");
     public static final ResourceLocation TEXTURE_CONVICTION = new ResourceLocation(Reference.MODID + ":textures/entities/conviction.png");
     public static final ResourceLocation TEXTURE_PANDORASBOX = new ResourceLocation(Reference.MODID + ":textures/entities/pandorasbox.png");
+    public static final ResourceLocation TEXTURE_WHISPER = new ResourceLocation(Reference.MODID + ":textures/entities/whisper.png");
 
     public RenderMaidWeapon(RenderManager manager, ModelBase base) {
         super(manager, base, 0.5F);
@@ -34,6 +32,8 @@ public class RenderMaidWeapon extends RenderLivingBase<EntityMaidWeapon>
             return TEXTURE_CONVICTION;
         else if (entity instanceof EntityMaidWeaponPandorasBox)
             return TEXTURE_PANDORASBOX;
+        else if (entity instanceof EntityMaidWeaponWhisper)
+            return TEXTURE_WHISPER;
         else
             return null;
     }

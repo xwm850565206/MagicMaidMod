@@ -1,9 +1,6 @@
 package com.xwm.magicmaid.init;
 
-import com.xwm.magicmaid.object.item.ItemConviction;
-import com.xwm.magicmaid.object.item.ItemDemonKillerSword;
-import com.xwm.magicmaid.object.item.ItemPandora;
-import com.xwm.magicmaid.object.item.ItemRepantence;
+import com.xwm.magicmaid.object.item.*;
 import net.minecraft.item.Item;
 
 import java.util.ArrayList;
@@ -17,5 +14,6 @@ public class ItemInit
     public static final Item ItemConviction = new ItemConviction("conviction");
     public static final Item ItemDemonKillerSowrd = new ItemDemonKillerSword("demonkiller");
     public static final Item ItemPandorasBox = new ItemPandora("pandorasbox");
+    public static final Item ItemWhisper = new ItemWhisper("whisper");
 
 }

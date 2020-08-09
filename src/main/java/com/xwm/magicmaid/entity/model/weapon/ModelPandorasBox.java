@@ -5,6 +5,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 
@@ -15,6 +16,7 @@ import org.lwjgl.opengl.GL11;
 public class ModelPandorasBox extends ModelBase {
 
     private static float FLOAT_HEIGHT = 0.25f;
+    private boolean flag = false; //控制盒子开关动画
 
     public ModelRenderer core;
     public ModelRenderer frontside;
@@ -96,6 +98,30 @@ public class ModelPandorasBox extends ModelBase {
         modelRenderer.rotateAngleX = x;
         modelRenderer.rotateAngleY = y;
         modelRenderer.rotateAngleZ = z;
+    }
+
+    public void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTickTime)
+    {
+        EntityMaidWeaponPandorasBox pandorasBox = (EntityMaidWeaponPandorasBox) entitylivingbaseIn;
+        if (pandorasBox.isOpen() && !flag)
+        {
+            this.frontside.offsetZ -= 1;
+            this.backside.offsetZ += 1;
+            this.leftside.offsetX -= 1;
+            this.rightside.offsetX += 1;
+            this.topside.offsetY -= 1;
+            this.buttonside.offsetY += 1;
+            this.flag = true;
+        }
+        else if (!pandorasBox.isOpen() && flag){
+            this.frontside.offsetZ += 1;
+            this.backside.offsetZ -= 1;
+            this.leftside.offsetX += 1;
+            this.rightside.offsetX -= 1;
+            this.topside.offsetY += 1;
+            this.buttonside.offsetY -= 1;
+            this.flag = false;
+        }
     }
 
     public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)

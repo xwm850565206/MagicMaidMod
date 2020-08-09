@@ -6,6 +6,7 @@ import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidSelina;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponConviction;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponPandorasBox;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponRepantence;
+import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponWhisper;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -29,6 +30,7 @@ public class EntityInit
         registerEntityWithoutEgg(event, Reference.MODID + "_repentance", EntityMaidWeaponRepantence.class, Reference.ENTITY_REPENTANCE, 50);
         registerEntityWithoutEgg(event, Reference.MODID + "_conviction", EntityMaidWeaponConviction.class, Reference.ENTITY_CONVICTION, 50);
         registerEntityWithoutEgg(event, Reference.MODID + "_pandora", EntityMaidWeaponPandorasBox.class, Reference.ENTITY_PANDORA, 50);
+        registerEntityWithoutEgg(event, Reference.MODID + "_whisper", EntityMaidWeaponWhisper.class, Reference.ENTITY_WHISPER, 50);
 
     }
 

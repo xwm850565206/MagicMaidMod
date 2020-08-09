@@ -5,5 +5,5 @@ public enum EnumAttackType
     NORMAL,
     REPANTENCE, CONVICTION,
     DEMONKILLER,
-    PANDORA;
+    PANDORA, WHISPER;
 }

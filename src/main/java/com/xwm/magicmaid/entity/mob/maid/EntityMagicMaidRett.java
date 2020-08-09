@@ -102,9 +102,4 @@ public class EntityMagicMaidRett extends EntityMagicMaid
         this.dataManager.set(PERFORMTICK, performtick);
     }
 
-    public void debug(){
-        System.out.println("state: " + EnumRettState.valueOf(this.getState())
-                + " mode: " + EnumMode.valueOf(this.getMode())
-                + " owner: " + this.hasOwner() + " Equipment: " + EnumEquipment.valueOf(this.getWeaponType()));
-    }
 }

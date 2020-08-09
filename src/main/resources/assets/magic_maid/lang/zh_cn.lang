@@ -3,3 +3,6 @@ container.maid.health=血量
 container.maid.rank=品阶
 container.maid.exp=经验
 container.button.mode_switch=模式切换
+container.maid.sitting=待命模式
+container.maid.serve=服侍模式
+container.maid.fight=战斗模式

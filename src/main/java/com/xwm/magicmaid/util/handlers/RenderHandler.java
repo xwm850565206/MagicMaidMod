@@ -4,18 +4,16 @@ import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidRett;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidMartha;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidSelina;
-import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponPandorasBox;
+import com.xwm.magicmaid.entity.mob.weapon.*;
 import com.xwm.magicmaid.entity.model.Rett.ModelMagicMaidRett;
 import com.xwm.magicmaid.entity.model.Selina.ModelMagicMaidSeline;
 import com.xwm.magicmaid.entity.model.martha.ModelMagicMaidMartha;
 import com.xwm.magicmaid.entity.model.weapon.ModelConviction;
 import com.xwm.magicmaid.entity.model.weapon.ModelPandorasBox;
 import com.xwm.magicmaid.entity.model.weapon.ModelRepentance;
+import com.xwm.magicmaid.entity.model.weapon.ModelWhisper;
 import com.xwm.magicmaid.entity.render.RenderMagicMaid;
 import com.xwm.magicmaid.entity.render.RenderMaidWeapon;
-import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
-import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponConviction;
-import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponRepantence;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
@@ -64,6 +62,13 @@ public class RenderHandler
             @Override
             public Render<? super EntityMaidWeapon> createRenderFor(RenderManager manager) {
                 return new RenderMaidWeapon(manager, new ModelPandorasBox());
+            }
+        });
+
+        RenderingRegistry.registerEntityRenderingHandler(EntityMaidWeaponWhisper.class, new IRenderFactory<EntityMaidWeapon>() {
+            @Override
+            public Render<? super EntityMaidWeapon> createRenderFor(RenderManager manager) {
+                return new RenderMaidWeapon(manager, new ModelWhisper());
             }
         });
     }

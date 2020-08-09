@@ -21,6 +21,6 @@ public class DimensionInit
 
     public static void registerDimensions()
     {
-        DimensionManager.registerDimension(Reference.DIMENSION_CHURCH, CHURCH);
+        DimensionManager.registerDimension(DIMENSION_CHURCH, CHURCH); //todo test 还没测试
     }
 }

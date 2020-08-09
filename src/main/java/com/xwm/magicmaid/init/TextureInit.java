@@ -11,6 +11,7 @@ public class TextureInit
     public static TextureAtlasSprite CROSS;
     public static TextureAtlasSprite CONVICTION;
     public static TextureAtlasSprite STAR;
+    public static TextureAtlasSprite ATOM;
 
     public static void register(TextureMap map)
     {
@@ -18,5 +19,6 @@ public class TextureInit
         CROSS = map.registerSprite(new ResourceLocation(Reference.MODID, "particle/cross"));
         CONVICTION = map.registerSprite(new ResourceLocation(Reference.MODID, "particle/conviction"));
         STAR = map.registerSprite(new ResourceLocation(Reference.MODID, "particle/star"));
+        ATOM = map.registerSprite(new ResourceLocation(Reference.MODID, "particle/atom"));
     }
 }

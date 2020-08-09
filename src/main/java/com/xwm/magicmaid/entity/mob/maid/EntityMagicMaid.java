@@ -10,6 +10,7 @@ import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumMode;
+import com.xwm.magicmaid.enumstorage.EnumRettState;
 import com.xwm.magicmaid.object.item.ItemEquipment;
 import com.xwm.magicmaid.object.item.ItemWeapon;
 import com.xwm.magicmaid.util.Reference;
@@ -71,7 +72,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         super.entityInit();
         this.dataManager.register(HEALTHBARNUM, 0);
         this.dataManager.register(LEVEL, 1);
-        this.dataManager.register(EXP, 0);
+        this.dataManager.register(EXP, 100);
         this.dataManager.register(RANK, 0);
         this.dataManager.register(HASWEAPON, false);
         this.dataManager.register(HASARMOR, false);
@@ -104,7 +105,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(1000000000);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30000000298023224D);
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(100);
     }
 
     //todo 让女仆切换状态
@@ -149,6 +150,8 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
     public void onUpdate()
     {
         super.onUpdate();
+        if (this.getAttackTarget() != null && !this.isEnemy(this.getAttackTarget()))
+            this.setAttackTarget(null);
     }
 
     public void writeEntityToNBT(NBTTagCompound compound)
@@ -510,15 +513,26 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
 
     public static EntityMagicMaid getMaidFromUUID(World world, UUID uuid)
     {
-        List<EntityMagicMaid> maids = world.getEntities(EntityMagicMaid.class, new Predicate<EntityMagicMaid>() {
-            @Override
-            public boolean apply(@Nullable EntityMagicMaid input) {
-                return input.getUniqueID().equals(uuid);
-            }
-        });
-        if (maids.size() != 0)
-            return maids.get(0);
-        else
+        try{
+            List<EntityMagicMaid> maids = world.getEntities(EntityMagicMaid.class, new Predicate<EntityMagicMaid>() {
+                @Override
+                public boolean apply(@Nullable EntityMagicMaid input) {
+                    return input.getUniqueID().equals(uuid);
+                }
+            });
+            if (maids.size() != 0)
+                return maids.get(0);
+            else
+                return null;
+        } catch (NullPointerException e){
             return null;
+        }
+
+    }
+
+    public void debug(){
+        System.out.println("state: " + EnumRettState.valueOf(this.getState())
+                + " mode: " + EnumMode.valueOf(this.getMode())
+                + " owner: " + this.hasOwner() + " Equipment: " + EnumEquipment.valueOf(this.getWeaponType()));
     }
 }

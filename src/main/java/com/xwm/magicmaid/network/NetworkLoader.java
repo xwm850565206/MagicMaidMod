@@ -22,6 +22,7 @@ public class NetworkLoader
     {
         registerMessage(ParticlePacket.Handler.class, ParticlePacket.class, Side.CLIENT);
         registerMessage(CustomerParticlePacket.Handler.class, CustomerParticlePacket.class, Side.CLIENT);
+        registerMessage(DistinationParticlePacket.Handler.class, DistinationParticlePacket.class, Side.CLIENT);
         registerMessage(MaidModePacket.Handler.class, MaidModePacket.class, Side.SERVER);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, GuiHandler.maidWindowHandler);

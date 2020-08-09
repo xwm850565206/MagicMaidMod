@@ -145,15 +145,21 @@ public class EntityMaidWeapon extends EntityLivingBase
 
     public static EntityMaidWeapon getWeaponFromUUID(World world, UUID uuid)
     {
-        List<EntityMaidWeapon> weapons = world.getEntities(EntityMaidWeapon.class, new Predicate<EntityMaidWeapon>() {
-            @Override
-            public boolean apply(@Nullable EntityMaidWeapon input) {
-                return input.getUniqueID().equals(uuid);
-            }
-        });
-        if (weapons.size() != 0)
-            return weapons.get(0);
-        else
+        try{
+            List<EntityMaidWeapon> weapons = world.getEntities(EntityMaidWeapon.class, new Predicate<EntityMaidWeapon>() {
+                @Override
+                public boolean apply(@Nullable EntityMaidWeapon input) {
+                    return input.getUniqueID().equals(uuid);
+                }
+            });
+            if (weapons.size() != 0)
+                return weapons.get(0);
+            else
+                return null;
+        } catch (NullPointerException e)
+        {
             return null;
+        }
+
     }
 }

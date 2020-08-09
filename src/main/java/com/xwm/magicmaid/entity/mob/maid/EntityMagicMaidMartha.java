@@ -83,7 +83,7 @@ public class EntityMagicMaidMartha extends EntityMagicMaid
         if (weapon == null)
             return;
         weapon.setMaid(this);
-        weapon.setPosition(this.posX, this.posY + height, this.posZ);
+        weapon.setPosition(this.posX, this.posY + height + 1, this.posZ);
         this.setWeaponID(weapon.getUniqueID());
         this.setWeaponType(weaponType);
         this.world.spawnEntity(weapon);

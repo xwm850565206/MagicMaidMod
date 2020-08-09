@@ -12,7 +12,9 @@ public enum EnumCustomParticles
     SOUL("soul", 0, false),
     CROSS("cross", 1, false),
     CONVICTION("conviction", 2, false),
-    STAR("star", 3, false);
+    STAR("star", 3, false),
+    PANDORA("pandora", 4, false),
+    WHISPER("whisper", 5, false);
 
     private final String particleName;
     private final int particleID;

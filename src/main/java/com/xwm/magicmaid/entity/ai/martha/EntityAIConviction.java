@@ -40,8 +40,8 @@ public class EntityAIConviction extends EntityAIBase
     @Override
     public boolean shouldExecute() {
 
-        System.out.println("ower: " + maid.hasOwner() + " weaponType: "
-                + maid.getWeaponType() + " mode: " + EnumMode.valueOf(maid.getMode()) + " state: " + maid.getState());
+//        System.out.println("ower: " + maid.hasOwner() + " weaponType: "
+//                + maid.getWeaponType() + " mode: " + EnumMode.valueOf(maid.getMode()) + " state: " + maid.getState());
 
         if (!maid.hasOwner() && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS)
             return false;

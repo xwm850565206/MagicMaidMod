@@ -2,3 +2,7 @@ container.maid.healthBar=HealthBar
 container.maid.health=Health
 container.maid.rank=Rank
 container.maid.exp=Exp
+container.button.mode_switch=switch mode
+container.maid.sitting=waiting mode
+container.maid.serve=serve mode
+container.maid.fight=fight mode

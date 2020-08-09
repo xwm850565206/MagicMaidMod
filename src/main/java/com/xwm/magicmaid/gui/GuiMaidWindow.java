@@ -120,15 +120,19 @@ public class GuiMaidWindow extends GuiContainer
         GlStateManager.pushMatrix();
         GlStateManager.scale(0.9, 0.9, 0.9);
         GlStateManager.translate(12, 0, 0);
-        String tmp = I18n.format("container.maid.healthBar");
-        fontRenderer.drawString(tmp, 77 + 85,  7, 0x4210752);
-        tmp = I18n.format("container.maid.health");
-        fontRenderer.drawString(tmp, 77 + 85,  23, 0x4210752);
-        tmp = I18n.format("container.maid.rank");
-        fontRenderer.drawString(tmp, 77 + 85, 40, 0x4210752);
+        String tmp = I18n.format("container.maid.health");
+        fontRenderer.drawString(tmp, 77 + 85,  7, 0x000000);
         tmp = I18n.format("container.maid.exp");
-        fontRenderer.drawString(tmp, 77 + 85, 55, 0x000000);
+        fontRenderer.drawString(tmp, 77 + 85,  23, 0x000000);
+        tmp = I18n.format("container.maid.rank");
+        fontRenderer.drawString(tmp, 77 + 85, 37, 0x000000);
         GlStateManager.popMatrix();
+
+        tmp = I18n.format("container.maid.healthBar");
+        fontRenderer.drawString(tmp + ": " + maid.getHealthBarNum(), 77, 50, 0x000000);
+
+        tmp = I18n.format("container.maid." + EnumMode.valueOf(maid.getMode()).toString());
+        fontRenderer.drawString(tmp.toLowerCase(), 77 + 20,  70, 0x000000);
     }
 
 
@@ -161,27 +165,29 @@ public class GuiMaidWindow extends GuiContainer
     }
 
     private void drawHealthBarNumLayer(int x, int y){
-        for (int i = 0; i < maid.getHealthBarNum(); i++)
-            drawTexturedModalRect(x + 77 + i * 8, y + 7, 178, 47, 6, 6);
+//        for (int i = 0; i < maid.getHealthBarNum(); i++)
+//            drawTexturedModalRect(x + 77 + i * 8, y + 7, 178, 47, 6, 6);
     }
 
     private void drawHealthNumLayer(int x, int y){
-        for (int i = 0; i < maid.getHealth() / 100; i++)
-            drawTexturedModalRect(x + 77 + i * 8, y + 23, 178, 38, 7, 7);
+        for (int i = 0; i < maid.getHealth() / 10; i++)
+            drawTexturedModalRect(x + 77 + i * 8, y + 7, 178, 38, 7, 7);
+    }
+
+    private void drawExpLayer(int x, int y){
+        for (int i = 0; i < maid.getExp() / 10; i++)
+            drawTexturedModalRect(x + 77 + i * 5, y + 23, 180, 63,3, 5);
     }
 
     private void drawRankLayer(int x, int y){
         int rank = maid.getRank();
         if (rank >= 0)
-            drawTexturedModalRect(x + 77, y + 40, 193, 56, 5, 5);
+            drawTexturedModalRect(x + 77, y + 35, 193, 56, 5, 5);
         if (rank >= 1)
-            drawTexturedModalRect(x + 77 + 8, y + 40, 186, 56, 5, 5);
+            drawTexturedModalRect(x + 77 + 8, y + 35, 186, 56, 5, 5);
         if (rank >= 2)
-            drawTexturedModalRect(x + 77 + 16, y + 40, 179, 56, 5, 5);
+            drawTexturedModalRect(x + 77 + 16, y + 35, 179, 56, 5, 5);
     }
 
-    private void drawExpLayer(int x, int y){
-        for (int i = 0; i < maid.getExp() / 100; i++)
-            drawTexturedModalRect(x + 77 + i * 5, y + 55, 180, 63,3, 5);
-    }
+
 }
