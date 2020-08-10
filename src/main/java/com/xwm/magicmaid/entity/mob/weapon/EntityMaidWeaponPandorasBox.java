@@ -52,7 +52,6 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
         if (world.isRemote)
             return;
         if (this.maid != null){
-            //todo
             if (isOpen()){
                 List<EntityLivingBase> entityLivingBases = world.getEntitiesWithinAABB(EntityLivingBase.class,
                         this.getEntityBoundingBox().grow(radius + maid.getRank() * 2, radius, radius + maid.getRank() * 2));

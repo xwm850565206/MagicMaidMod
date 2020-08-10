@@ -25,7 +25,6 @@ import java.util.Random;
 
 public class EntityAIWhisper extends EntityAIBase
 {
-    private static final int COLDTIME = 60;
     private static final int PERFORMTIME = 60;
     private static final int perAngle = 10;
     private static final int[] hexameron = new int[]{0, 60, 120, 180, 240, 300};
@@ -67,7 +66,7 @@ public class EntityAIWhisper extends EntityAIBase
         System.out.println("tick: " + tick);
         if (this.maid.getAttackTarget() == null)
             return false;
-        return tick >= COLDTIME;
+        return tick >= maid.getAttackColdTime(EnumAttackType.WHISPER);
     }
 
     public boolean shouldContinueExecuting(){

@@ -46,7 +46,7 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
             return false;
         if (EnumEquipment.valueOf(maid.getWeaponType()) != EnumEquipment.DEMONKILLINGSWORD)
             return false;
-        if (EnumMode.valueOf(maid.getMode()) != EnumMode.FIGHT)
+        if (EnumMode.valueOf(maid.getMode()) != EnumMode.FIGHT && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS)
             return false;
         if (maid.getAttackTarget() == null)
             return false;

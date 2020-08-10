@@ -22,7 +22,6 @@ import java.util.Random;
 //todo
 public class EntityAIRepantence extends EntityAIBase
 {
-    private static final int COLDTIME = 100;
     private static final int PERFORMTIME = 20;
     private EntityMagicMaid maid;
     private EntityLivingBase owner;
@@ -40,17 +39,14 @@ public class EntityAIRepantence extends EntityAIBase
     @Override
     public boolean shouldExecute() {
 
-//        System.out.println("ower: " + maid.hasOwner() + " weaponType: "
-//                + maid.getWeaponType() + " mode: " + EnumMode.valueOf(maid.getMode()));
-
         if (!maid.hasOwner() && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS) //如果没有主人又不是boss就不放技能
             return false;
         if (EnumEquipment.valueOf(maid.getWeaponType()) != EnumEquipment.REPATENCE)
             return false;
-        if (EnumMode.valueOf(maid.getMode()) != EnumMode.FIGHT)
+        if (EnumMode.valueOf(maid.getMode()) != EnumMode.FIGHT && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS)
             return false;
-//        System.out.println("tick: " + tick);
-        return tick++ >= COLDTIME;
+
+        return tick++ >= this.maid.getAttackColdTime(EnumAttackType.CONVICTION);
     }
 
     public boolean shouldContinueExecuting(){
@@ -59,7 +55,6 @@ public class EntityAIRepantence extends EntityAIBase
 
     public void startExecuting()
     {
-        System.out.println("start");
         this.owner = this.maid.getEntityWorld().getPlayerEntityByUUID(this.maid.getOwnerID());
         this.maid.setState(3);
         this.tick = 0;
@@ -74,7 +69,6 @@ public class EntityAIRepantence extends EntityAIBase
         World world = this.maid.getEntityWorld();
         AxisAlignedBB bb = this.maid.getEntityBoundingBox().grow(10, 1, 10);
         List<EntityLivingBase> entityLivingBases = world.getEntitiesWithinAABB(EntityLivingBase.class, bb);
-        System.out.println("entity list size: " + entityLivingBases.size());
         for (EntityLivingBase entityLivingBase : entityLivingBases)
         {
             try{

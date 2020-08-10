@@ -1,19 +1,27 @@
 package com.xwm.magicmaid.entity.mob.maid;
 
 import com.xwm.magicmaid.entity.ai.EntityAIMaidAttackMelee;
+import com.xwm.magicmaid.entity.ai.EntityAINearestAttackableTargetAvoidOwner;
 import com.xwm.magicmaid.entity.ai.rett.EntityAIDemonKillerAttack;
+import com.xwm.magicmaid.entity.ai.rett.EntityAITeleportAttack;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumRettState;
+import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class EntityMagicMaidRett extends EntityMagicMaid
 {
@@ -35,14 +43,16 @@ public class EntityMagicMaidRett extends EntityMagicMaid
         super.initEntityAI();
 
         this.tasks.addTask(2, new EntityAIMaidAttackMelee(this, 1.3D, false));
+        this.tasks.addTask(4, new EntityAITeleportAttack(this));
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityLiving.class, true));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this,  EntityLiving.class, true));
         this.targetTasks.addTask(3, new EntityAIDemonKillerAttack(this));
     }
 
     @Override
     public int getAttackDamage(EnumAttackType type){
-        return 50;
+
+        return 50 + 50 * getRank();
     }
 
     public void onUpdate()
@@ -66,16 +76,38 @@ public class EntityMagicMaidRett extends EntityMagicMaid
         super.onUpdate();
     }
 
-    public void getWeapon(ItemWeapon weapon){
+    public void getEquipment(ItemEquipment equipment){
         if (this.world.isRemote)
             return;
-        this.setWeaponType(EnumEquipment.toInt(weapon.enumEquipment));
+        EnumEquipment equipment1 = equipment.enumEquipment;
+        switch (equipment1){
+            case DEMONKILLINGSWORD:
+                this.setWeaponType(EnumEquipment.toInt(equipment.enumEquipment));
+                this.setHasWeapon(true);
+                break;
+            case IMMORTAL:
+                this.setHasArmor(true);
+                this.setMaxHealthbarnum(1000);
+                break;
+
+        }
+
     }
 
-    public void loseWeapon(ItemWeapon weapon){
+    public void loseEquipment(ItemEquipment equipment){
         if (this.world.isRemote)
             return;
-        this.setWeaponType(EnumEquipment.toInt(EnumEquipment.NONE));
+        EnumEquipment equipment1 = equipment.enumEquipment;
+        switch (equipment1) {
+            case DEMONKILLINGSWORD:
+                this.setWeaponType(EnumEquipment.toInt(EnumEquipment.NONE));
+                this.setHasWeapon(false);
+                break;
+            case IMMORTAL:
+                this.setHasArmor(false);
+                this.setMaxHealthbarnum(20);
+                break;
+        }
     }
 
     public void switchMode(){
@@ -96,6 +128,35 @@ public class EntityMagicMaidRett extends EntityMagicMaid
 
     public void setPerformtick(int performtick){
         this.dataManager.set(PERFORMTICK, performtick);
+    }
+
+    @Override
+    public boolean attackEntityFrom(DamageSource source, float amount) {
+
+        if (source.damageType.equals("drown") || source.damageType.equals("fall"))
+            return false;
+
+        if (getRank() >= 1 && hasArmor()) {
+            if (EnumMode.valueOf(getMode()) != EnumMode.BOSS)
+                return false;
+            else super.attackEntityFrom(source, amount / 10);
+        }
+        if (this.getRank() >= 2 && hasArmor()) { //等级2时候不会受到过高伤害的攻击 这里还不严谨 很容易绕过
+            if (amount > 5) {
+                try {
+                    EntityLivingBase entityLivingBase = (EntityLivingBase) source.getTrueSource();
+                    if (entityLivingBase instanceof EntityPlayer && isEnemy(entityLivingBase)) {
+                        entityLivingBase.sendMessage(new TextComponentString("你的物品 全都消失！"));
+                        FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(this, "clear " + entityLivingBase.getName());
+                        FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(this, "kick " + entityLivingBase.getName());
+                    }
+                    amount = 1;
+                } catch (Exception e) {
+                    ;
+                }
+            }
+        }
+        return super.attackEntityFrom(source, amount);
     }
 
 }

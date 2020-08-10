@@ -9,17 +9,23 @@ import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumSelineState;
+import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class EntityMagicMaidSelina extends EntityMagicMaid
 {
     public EntityMagicMaidSelina(World worldIn) {
         super(worldIn);
-        weaponStandbyPos = new BlockPos(1, 0.5, 0);
+        weaponStandbyPos = new BlockPos(1, 1, 0);
     }
 
     @Override
@@ -44,9 +50,23 @@ public class EntityMagicMaidSelina extends EntityMagicMaid
     @Override
     public int getAttackDamage(EnumAttackType type){
 
-        return 1;
+        switch(type){
+            case NORMAL: return 50;
+            case PANDORA: return 10 + 10 * getRank();
+            case WHISPER: return 100 + 100 * getRank();
+            default: return super.getAttackDamage(type);
+        }
     }
 
+    @Override
+    public int getAttackColdTime(EnumAttackType type){
+        switch(type){
+            case NORMAL: return 20;
+            case PANDORA: return 60 - 5 * this.getRank();
+            case WHISPER: return 100 - 10 * this.getRank();
+            default: return super.getAttackColdTime(type);
+        }
+    }
     @Override
     public void onUpdate() {
 
@@ -65,37 +85,54 @@ public class EntityMagicMaidSelina extends EntityMagicMaid
         super.onUpdate();
     }
 
-    public void getWeapon(ItemWeapon weapon){
+    public void getEquipment(ItemEquipment equipment){
         if (this.world.isRemote)
             return;
 
-        EnumEquipment equipment = weapon.enumEquipment;
-        switch (equipment){
+        EnumEquipment equipment1 = equipment.enumEquipment;
+        switch (equipment1){
             case PANDORA:
                 EntityMaidWeaponPandorasBox pandorasBox = new EntityMaidWeaponPandorasBox(world);
                 pandorasBox.setMaid(this);
                 pandorasBox.setPosition(posX, posY + height + 1, posZ);
                 world.spawnEntity(pandorasBox);
                 this.setWeaponID(pandorasBox.getUniqueID());
+                this.setWeaponType(EnumEquipment.toInt(equipment1));
+                this.setHasWeapon(true);
+                break;
             case WHISPER:
                 EntityMaidWeaponWhisper whisper = new EntityMaidWeaponWhisper(world);
                 whisper.setMaid(this);
                 whisper.setPosition(posX, posY + height + 1, posZ);
                 world.spawnEntity(whisper);
                 this.setWeaponID(whisper.getUniqueID());
+                this.setWeaponType(EnumEquipment.toInt(equipment1));
+                this.setHasWeapon(true);
+                break;
+            case WISE:
+                this.setHasArmor(true);
+                this.setMaxHealthbarnum(200);
+                break;
         }
-        this.setWeaponType(EnumEquipment.toInt(equipment));
+
 
     }
 
-    public void loseWeapon(ItemWeapon weapon){
-        try {
-            EntityMaidWeapon.getWeaponFromUUID(world, this.getWeaponID()).setDead();
-        }catch (Exception e){
-            ;
+    public void loseEquipment(ItemEquipment equipment){
+        if (equipment instanceof  ItemWeapon){
+            try {
+                EntityMaidWeapon.getWeaponFromUUID(world, this.getWeaponID()).setDead();
+            }catch (Exception e){
+                ;
+            }
+            this.setWeaponType(EnumEquipment.toInt(EnumEquipment.NONE));
+            this.setWeaponID(null);
+            this.setHasWeapon(false);
         }
-        this.setWeaponType(EnumEquipment.toInt(EnumEquipment.NONE));
-        this.setWeaponID(null);
+        else {
+            this.setHasArmor(false);
+            this.setMaxHealthbarnum(10);
+        }
     }
 
 
@@ -103,4 +140,24 @@ public class EntityMagicMaidSelina extends EntityMagicMaid
         this.setMode((this.getMode() + 1) % 3);
     }
 
+    @Override
+    public boolean attackEntityFrom(DamageSource source, float amount)
+    {
+        if(this.getRank() >= 2 && hasArmor()){ //等级2时候不会受到过高伤害的攻击 这里还不严谨 很容易绕过
+            if (amount > 5) {
+                try {
+                    EntityLivingBase entityLivingBase = (EntityLivingBase) source.getTrueSource();
+                    if (entityLivingBase instanceof EntityPlayer && isEnemy(entityLivingBase)){
+                        entityLivingBase.sendMessage(new TextComponentString("你的物品 全都消失！"));
+                        FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(this, "clear " + entityLivingBase.getName());
+                        FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(this, "kick " + entityLivingBase.getName());
+                    }
+                    amount = 1;
+                } catch (Exception e){
+                    ;
+                }
+            }
+        }
+        return super.attackEntityFrom(source, amount);
+    }
 }

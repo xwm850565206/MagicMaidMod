@@ -1,13 +1,19 @@
 package com.xwm.magicmaid.entity.ai.selina;
 
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
+import com.xwm.magicmaid.entity.ai.EntityAIAttackMeleeBat;
+import com.xwm.magicmaid.entity.ai.EntityAINearestAttackableTargetAvoidOwner;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidSelina;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponPandorasBox;
+import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumSelineState;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.passive.EntityBat;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -15,7 +21,6 @@ import java.util.Random;
 //todo
 public class EntityAIPandora extends EntityAIBase
 {
-    private static final int COLDTIME = 60;
     private static final int PERFORMTIME = 100;
 
     private EntityMagicMaidSelina maid;
@@ -46,7 +51,7 @@ public class EntityAIPandora extends EntityAIBase
         if (EnumMode.valueOf(maid.getMode()) != EnumMode.FIGHT)
             return false;
         System.out.println("tick: " + tick);
-        return tick++ >= COLDTIME;
+        return tick++ >= maid.getAttackColdTime(EnumAttackType.PANDORA);
     }
 
     public boolean shouldContinueExecuting(){
@@ -62,6 +67,9 @@ public class EntityAIPandora extends EntityAIBase
             pandorasBox = (EntityMaidWeaponPandorasBox) EntityMaidWeapon.getWeaponFromUUID(world, this.maid.getWeaponID());
         if (pandorasBox != null)
             pandorasBox.setOpen(true);
+        if (maid.getRank() >= 1){
+            spawnBats(); //todo
+        }
         this.performTick = 0;
     }
 
@@ -70,5 +78,28 @@ public class EntityAIPandora extends EntityAIBase
         if (pandorasBox != null)
             pandorasBox.setOpen(false);
         this.tick = 0;
+    }
+
+    private void spawnBats(){
+        for (int i = 0; i < 5 + random.nextInt(5); i ++)
+        {
+            EntityBat bat = new EntityBat(world);
+            try {//没有这个属性的生物就赋予这个属性 有的会报错，就catch住
+                bat.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+                bat.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5);
+                bat.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(5);
+                bat.targetTasks.addTask(1, new EntityAINearestAttackableTargetAvoidOwner(bat, maid, EntityLivingBase.class, true));
+                bat.tasks.addTask(2, new EntityAIAttackMeleeBat(bat, 1.2, false));
+                AxisAlignedBB bb = pandorasBox.getEntityBoundingBox();
+                double d0 = (bb.minX + bb.maxX) / 2.0;
+                double d1 = (bb.minY + bb.maxY) / 2.0;
+                double d2 = (bb.minZ + bb.maxZ) / 2.0;
+                bat.setPosition(d0, d1, d2);
+                world.spawnEntity(bat);
+            } catch (IllegalArgumentException e){
+                ;
+            }
+
+        }
     }
 }

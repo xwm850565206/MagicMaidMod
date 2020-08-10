@@ -7,8 +7,15 @@ import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
+import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class EntityMagicMaidMartha extends EntityMagicMaid
 {
@@ -33,7 +40,23 @@ public class EntityMagicMaidMartha extends EntityMagicMaid
 
     @Override
     public int getAttackDamage(EnumAttackType type){
-        return 50;
+
+        switch(type){
+            case NORMAL: return 10;
+            case REPANTENCE: return this.getRank() > 0 ? 50 : 200;
+            case CONVICTION: return this.getRank() > 0 ? 0 : 1;
+            default: return super.getAttackDamage(type);
+        }
+    }
+
+    @Override
+    public int getAttackColdTime(EnumAttackType type){
+        switch(type){
+            case NORMAL: return 20;
+            case REPANTENCE: return 100 - 30 * this.getRank();
+            case CONVICTION: return 100 - 10 * this.getRank();
+            default: return super.getAttackColdTime(type);
+        }
     }
 
     @Override
@@ -50,46 +73,100 @@ public class EntityMagicMaidMartha extends EntityMagicMaid
         super.onUpdate();
     }
 
-    public void getWeapon(ItemWeapon weapon){
+    public void getEquipment(ItemEquipment equipment){
 
         if (this.world.isRemote)
             return;
 
-        createWeapon(EnumEquipment.toInt(weapon.enumEquipment),
-                EnumEquipment.toEntityMaidWeapon(weapon.enumEquipment, world));
-
-        //todo 得到武器后要进行一系列的操作来维护
-    }
-
-    public void loseWeapon(ItemWeapon weapon){
-
-        if (this.world.isRemote)
-            return;
-
-        try {
-            EntityMaidWeapon weapon1 = EntityMaidWeapon.getWeaponFromUUID(world, getWeaponID());
-            weapon1.setDead();
-            setWeaponID(null);
-            setWeaponType(0);
-        } catch (Exception e){
-            ; //可能武器被其他模组杀死了
+        EnumEquipment equipment1 = equipment.enumEquipment;
+        switch (equipment1){
+            case NONE: return;
+            case REPATENCE:
+                EntityMaidWeapon weapon1 = EnumEquipment.toEntityMaidWeapon(equipment1, world);
+                weapon1.setMaid(this);
+                weapon1.setPosition(this.posX, this.posY + height + 1, this.posZ);
+                this.setWeaponID(weapon1.getUniqueID());
+                this.setWeaponType(EnumEquipment.toInt(equipment1));
+                this.setHasWeapon(true);
+                this.world.spawnEntity(weapon1);
+                break;
+            case CONVICTION:
+                EntityMaidWeapon weapon2 = EnumEquipment.toEntityMaidWeapon(equipment1, world);
+                weapon2.setMaid(this);
+                weapon2.setPosition(this.posX, this.posY + height + 1, this.posZ);
+                this.setWeaponID(weapon2.getUniqueID());
+                this.setWeaponType(EnumEquipment.toInt(equipment1));
+                this.setHasWeapon(true);
+                this.world.spawnEntity(weapon2);
+                break;
+            case PROTECTOR:
+                this.setMaxHealthbarnum(200); //提高血量上限
+                break;
         }
-        //todo 失去武器也要修改一系列数据来维护
+
     }
 
+    public void loseEquipment(ItemEquipment equipment){
 
-    public void createWeapon(int weaponType, EntityMaidWeapon weapon)
-    {
-        if (weapon == null)
+        if (this.world.isRemote)
             return;
-        weapon.setMaid(this);
-        weapon.setPosition(this.posX, this.posY + height + 1, this.posZ);
-        this.setWeaponID(weapon.getUniqueID());
-        this.setWeaponType(weaponType);
-        this.world.spawnEntity(weapon);
+
+        if (equipment instanceof ItemWeapon){
+            try {
+                EntityMaidWeapon weapon1 = EntityMaidWeapon.getWeaponFromUUID(world, getWeaponID());
+                weapon1.setDead();
+                setWeaponID(null);
+                setWeaponType(0);
+                setHasWeapon(false);
+            } catch (Exception e){
+                ; //可能武器被其他模组杀死了
+            }
+        }
+        else {
+            this.setHasArmor(false);
+            this.setMaxHealthbarnum(10);
+        }
+
     }
 
     public void switchMode(){
         this.setMode((this.getMode() + 1) % 3);
     }
+
+    @Override
+    public boolean attackEntityFrom(DamageSource source, float amount)
+    {
+        if (this.getRank() >= 1 && hasArmor()) //回敬伤害 要注意有可能产生死循环，所以这里要判断
+        {
+            try{
+                if (!(source.getTrueSource() instanceof EntityMagicMaid)
+                        && this.isEnemy((EntityLivingBase) source.getTrueSource()))
+                    source.getTrueSource().attackEntityFrom(source, amount);
+
+                if (!(source.getImmediateSource() instanceof EntityMagicMaid)
+                        && this.isEnemy((EntityLivingBase) source.getImmediateSource()))
+                    source.getImmediateSource().attackEntityFrom(source, amount);
+            }catch (Exception e){
+                ;//有可能会有空指针
+            }
+        }
+
+        if(this.getRank() >= 2 && hasArmor()){ //等级2时候不会受到过高伤害的攻击 这里还不严谨 很容易绕过
+            if (amount > 5) {
+                try {
+                    EntityLivingBase entityLivingBase = (EntityLivingBase) source.getTrueSource();
+                    if (entityLivingBase instanceof EntityPlayer && isEnemy(entityLivingBase)){
+                        entityLivingBase.sendMessage(new TextComponentString("你的物品 全都消失！"));
+                        FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(this, "clear " + entityLivingBase.getName());
+                        FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(this, "kick " + entityLivingBase.getName());
+                    }
+                    amount = 1;
+                } catch (Exception e){
+                    ;
+                }
+            }
+        }
+        return super.attackEntityFrom(source, amount);
+    }
+
 }

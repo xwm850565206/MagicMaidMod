@@ -1,6 +1,7 @@
 package com.xwm.magicmaid.entity.ai.martha;
 
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
+import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.network.CustomerParticlePacket;
@@ -21,7 +22,6 @@ import java.util.Random;
 //todo 只完成了最基本的逻辑 提供测试用
 public class EntityAIConviction extends EntityAIBase
 {
-    private static final int COLDTIME = 100;
     private static final int PERFORMTIME = 20;
     private EntityMagicMaid maid;
     private EntityLivingBase owner;
@@ -47,10 +47,11 @@ public class EntityAIConviction extends EntityAIBase
             return false;
         if (EnumEquipment.valueOf(maid.getWeaponType()) != EnumEquipment.CONVICTION)
             return false;
-        if (EnumMode.valueOf(maid.getMode()) != EnumMode.FIGHT)
+        if (EnumMode.valueOf(maid.getMode()) != EnumMode.FIGHT && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS)
             return false;
+
         System.out.println("tick: " + tick);
-        return tick++ >= COLDTIME;
+        return tick++ >= this.maid.getAttackColdTime(EnumAttackType.CONVICTION);
     }
 
     public boolean shouldContinueExecuting(){
@@ -81,7 +82,9 @@ public class EntityAIConviction extends EntityAIBase
                 if (!maid.isEnemy(entityLiving))
                     continue;
 
-                entityLiving.setHealth(1);
+                if (maid.getRank() >= 1)
+                    entityLiving.setHealth(1);
+
                 removeTasks(entityLiving);
                 playTipParticle(entityLiving.getEntityBoundingBox());
 

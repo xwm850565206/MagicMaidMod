@@ -18,6 +18,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
+import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -31,9 +32,11 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 import com.google.common.base.Optional;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -42,6 +45,7 @@ import java.util.UUID;
 public class EntityMagicMaid extends EntityCreature implements IInventory
 {
     /** props **/
+    private static final DataParameter<Integer> MAXHEALTHBARNUM = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> HEALTHBARNUM = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> LEVEL = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> EXP = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
@@ -70,10 +74,11 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
     protected void entityInit()
     {
         super.entityInit();
-        this.dataManager.register(HEALTHBARNUM, 0);
+        this.dataManager.register(MAXHEALTHBARNUM, 10); // 100滴血每一条 10条血条
+        this.dataManager.register(HEALTHBARNUM, 10);
         this.dataManager.register(LEVEL, 1);
         this.dataManager.register(EXP, 100);
-        this.dataManager.register(RANK, 0);
+        this.dataManager.register(RANK, 2);
         this.dataManager.register(HASWEAPON, false);
         this.dataManager.register(HASARMOR, false);
         this.dataManager.register(MODE, EnumMode.toInt(EnumMode.SITTING)); //todo test
@@ -105,7 +110,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(1000000000);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30000000298023224D);
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(100);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(5);
     }
 
     //todo 让女仆切换状态
@@ -227,6 +232,14 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         return EnumMode.valueOf(getMode()) == EnumMode.SITTING; //todo 让女仆待命
     }
 
+    public void setMaxHealthbarnum(int maxhealthbarnum){
+        this.dataManager.set(MAXHEALTHBARNUM, maxhealthbarnum);
+    }
+
+    public int getMaxHealthBarnum(){
+        return dataManager.get(MAXHEALTHBARNUM);
+    }
+
     public void setHealthbarnum(int healthbarnum){
         this.dataManager.set(HEALTHBARNUM, healthbarnum);
     }
@@ -316,15 +329,19 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         return 10; //todo 随着成长造成的伤害不同，不同女仆也不同
     }
 
+    public int getAttackColdTime(EnumAttackType type){
+        return 100;
+    }
+
     public void turnToBossMode() {
         //todo 女仆的boss形态 击败boss形态的女仆 会掉落物品，用于武器合成，女仆召唤。
     }
 
-    public void getWeapon(ItemWeapon weapon){
+    public void getEquipment(ItemEquipment equipment){
 
     }
 
-    public void loseWeapon(ItemWeapon weapon){
+    public void loseEquipment(ItemEquipment equipment){
 
     }
 
@@ -345,6 +362,8 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         if (entityLivingBase instanceof EntityTameable && this.getOwnerID() == ((EntityTameable) entityLivingBase).getOwnerId())
             return false;
         if (entityLivingBase instanceof EntityMaidWeapon)
+            return false;
+        if (entityLivingBase instanceof EntityBat)
             return false;
         return true;
     }
@@ -390,8 +409,8 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         if (list != null && !((ItemStack)list.get(index)).isEmpty() )
         {
             ItemStack itemStack = ItemStackHelper.getAndSplit(list, index, count);
-            if (itemStack.getItem() instanceof ItemWeapon)
-                this.loseWeapon((ItemWeapon) itemStack.getItem());
+            if (itemStack.getItem() instanceof ItemEquipment)
+                this.loseEquipment((ItemEquipment) itemStack.getItem());
             return itemStack;
         }
         else return ItemStack.EMPTY;
@@ -410,8 +429,8 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         if (nonnulllist != null && !((ItemStack)nonnulllist.get(index)).isEmpty())
         {
             ItemStack itemstack = nonnulllist.get(index);
-            if (itemstack.getItem() instanceof ItemWeapon)
-                this.loseWeapon((ItemWeapon) itemstack.getItem());
+            if (itemstack.getItem() instanceof ItemEquipment)
+                this.loseEquipment((ItemEquipment) itemstack.getItem());
 
             nonnulllist.set(index, ItemStack.EMPTY);
 
@@ -436,7 +455,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
             nonnulllist = inventory;
         if (nonnulllist != null) {
             if (stack.getItem() instanceof ItemWeapon)
-                this.getWeapon((ItemWeapon) stack.getItem());
+                this.getEquipment((ItemWeapon) stack.getItem());
             nonnulllist.set(index, stack);
         }
     }
@@ -529,6 +548,63 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         }
 
     }
+
+    @Override
+    public void onDeathUpdate(){
+        if (this.getHealthBarNum() > 0){ //如果血条没掉完 是不会死的
+            this.setHealthbarnum(this.getHealthBarNum()-1);
+            this.setHealth(this.getMaxHealth());
+        }
+        else{
+            super.onDeathUpdate();
+        }
+    }
+
+    @Override
+    public void setDead(){
+        if (getTrueHealth() == 0) { //血条没掉完不允许被杀死 所以指令应该没用
+            super.setDead();
+        }
+    }
+
+    @Override
+    public void setHealth(float health) //todo 这里可能有问题 要测试一下
+    {
+        float curHealth = getHealth();
+        if (curHealth - health > 100){
+            World world = getEntityWorld();
+            if (!world.isRemote) {
+                try {
+                    EntityPlayer player = world.getClosestPlayerToEntity(this, 20);
+                    player.sendMessage(new TextComponentString("消失吧！"));
+                    FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(this, "clear " + player.getName());
+                } catch (Exception e){
+                    ;
+                }
+            }
+            return;
+        }
+        super.setHealth(health);
+    }
+
+    public float getTrueMaxHealth(){
+        return getMaxHealthBarnum() * getMaxHealth();
+    }
+
+    public float getTrueHealth(){
+        return getMaxHealth() * getHealthBarNum() + getHealth();
+    }
+
+    public void heal(float healAmount){
+        if (healAmount < 0)
+            return;
+        float t = healAmount + getHealth();
+        int barHeal = (int)(t / getMaxHealth());
+        float heal = t - barHeal * getMaxHealth();
+        setHealthbarnum(Math.min(getHealthBarNum()+barHeal, getMaxHealthBarnum()));
+        super.heal(heal);
+    }
+
 
     public void debug(){
         System.out.println("state: " + EnumRettState.valueOf(this.getState())
