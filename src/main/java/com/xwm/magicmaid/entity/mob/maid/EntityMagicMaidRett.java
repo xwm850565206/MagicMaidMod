@@ -12,6 +12,7 @@ import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.player.EntityPlayer;
@@ -62,7 +63,7 @@ public class EntityMagicMaidRett extends EntityMagicMaid
             EnumMode mode = EnumMode.valueOf(this.getMode());
             EnumEquipment equipment = EnumEquipment.valueOf(this.getWeaponType());
             if (equipment == EnumEquipment.DEMONKILLINGSWORD
-                    && mode == EnumMode.FIGHT && !isAttackState()){
+                    && (mode == EnumMode.FIGHT || mode == EnumMode.BOSS) && !isAttackState()){
                 this.setState(EnumRettState.toInt(EnumRettState.DEMON_KILLER_STANDARD)); // todo 有两把武器不能这么判断
             }
             else if (equipment == EnumEquipment.NONE)
@@ -88,6 +89,7 @@ public class EntityMagicMaidRett extends EntityMagicMaid
             case IMMORTAL:
                 this.setHasArmor(true);
                 this.setMaxHealthbarnum(1000);
+                this.setHealthbarnum(1000);
                 break;
 
         }

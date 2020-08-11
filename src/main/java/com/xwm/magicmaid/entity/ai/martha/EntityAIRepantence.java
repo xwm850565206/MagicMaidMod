@@ -39,6 +39,7 @@ public class EntityAIRepantence extends EntityAIBase
     @Override
     public boolean shouldExecute() {
 
+        maid.debug();
         if (!maid.hasOwner() && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS) //如果没有主人又不是boss就不放技能
             return false;
         if (EnumEquipment.valueOf(maid.getWeaponType()) != EnumEquipment.REPATENCE)
@@ -55,7 +56,8 @@ public class EntityAIRepantence extends EntityAIBase
 
     public void startExecuting()
     {
-        this.owner = this.maid.getEntityWorld().getPlayerEntityByUUID(this.maid.getOwnerID());
+        if (maid.hasOwner())
+            this.owner = this.maid.getEntityWorld().getPlayerEntityByUUID(this.maid.getOwnerID());
         this.maid.setState(3);
         this.tick = 0;
     }
@@ -74,9 +76,13 @@ public class EntityAIRepantence extends EntityAIBase
             try{
                 if (!maid.isEnemy(entityLivingBase))
                     continue;
-                entityLivingBase.attackEntityFrom(new EntityDamageSource("repantence_attack", maid),
+                entityLivingBase.attackEntityFrom(new EntityDamageSource("repantence_attack", maid).setDamageBypassesArmor(),
                         maid.getAttackDamage(EnumAttackType.REPANTENCE));
                 playParticle(entityLivingBase.getEntityBoundingBox());
+
+                if (maid.getRank() >= 2) //2阶造成伤害回血
+                    maid.heal(maid.getAttackDamage(EnumAttackType.REPANTENCE));
+
                 if (entityLivingBase.getHealth() <= 0){
                     playDeathParticle(entityLivingBase.getEntityBoundingBox());
                 }

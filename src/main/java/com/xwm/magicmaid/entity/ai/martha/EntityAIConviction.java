@@ -11,7 +11,9 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAITasks;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.util.ArrayList;
@@ -19,7 +21,6 @@ import java.util.List;
 import java.util.Random;
 
 
-//todo 只完成了最基本的逻辑 提供测试用
 public class EntityAIConviction extends EntityAIBase
 {
     private static final int PERFORMTIME = 20;
@@ -60,8 +61,8 @@ public class EntityAIConviction extends EntityAIBase
 
     public void startExecuting()
     {
-        System.out.println("start");
-        this.owner = this.maid.getEntityWorld().getPlayerEntityByUUID(this.maid.getOwnerID());
+        if (maid.hasOwner())
+            this.owner = this.maid.getEntityWorld().getPlayerEntityByUUID(this.maid.getOwnerID());
         this.maid.setState(3);
         this.tick = 0;
     }
@@ -73,20 +74,29 @@ public class EntityAIConviction extends EntityAIBase
             return;
 
         playParticle(this.maid.getEntityBoundingBox());
-        List<EntityLiving> entityLivings = this.maid.world.getEntitiesWithinAABB(EntityLiving.class,
+        List<EntityLivingBase> entityLivings = this.maid.world.getEntitiesWithinAABB(EntityLivingBase.class,
                 this.maid.getEntityBoundingBox().grow(radius, 0, radius).expand(0, 4, 0));
 
-        for (EntityLiving entityLiving : entityLivings)
+        for (EntityLivingBase entityLivingBase : entityLivings)
         {
             try {
-                if (!maid.isEnemy(entityLiving))
+                if (!maid.isEnemy(entityLivingBase))
                     continue;
 
                 if (maid.getRank() >= 1)
-                    entityLiving.setHealth(1);
+                    entityLivingBase.setHealth(1);
+                if (EnumMode.valueOf(maid.getMode()) == EnumMode.BOSS ) {
+                    if (entityLivingBase instanceof EntityPlayer){
+                        FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(this.maid, "clear " + entityLivingBase.getName());
+                        entityLivingBase.setHealth(0);
+                    }
+                    entityLivingBase.setDead();
+                }
 
-                removeTasks(entityLiving);
-                playTipParticle(entityLiving.getEntityBoundingBox());
+                if (entityLivingBase instanceof  EntityLiving) //失去所有任务
+                    removeTasks((EntityLiving) entityLivingBase);
+
+                playTipParticle(entityLivingBase.getEntityBoundingBox());
 
             } catch (Exception e){
                 ;

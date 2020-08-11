@@ -100,7 +100,9 @@ public class EntityMagicMaidMartha extends EntityMagicMaid
                 this.world.spawnEntity(weapon2);
                 break;
             case PROTECTOR:
+                this.setHasArmor(true);
                 this.setMaxHealthbarnum(200); //提高血量上限
+                this.setHealthbarnum(200);
                 break;
         }
 
@@ -152,7 +154,7 @@ public class EntityMagicMaidMartha extends EntityMagicMaid
         }
 
         if(this.getRank() >= 2 && hasArmor()){ //等级2时候不会受到过高伤害的攻击 这里还不严谨 很容易绕过
-            if (amount > 5) {
+            if (amount > 100) {
                 try {
                     EntityLivingBase entityLivingBase = (EntityLivingBase) source.getTrueSource();
                     if (entityLivingBase instanceof EntityPlayer && isEnemy(entityLivingBase)){

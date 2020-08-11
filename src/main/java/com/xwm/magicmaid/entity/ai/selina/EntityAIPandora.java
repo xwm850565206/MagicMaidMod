@@ -48,7 +48,7 @@ public class EntityAIPandora extends EntityAIBase
             return false;
         if (EnumEquipment.valueOf(maid.getWeaponType()) != EnumEquipment.PANDORA)
             return false;
-        if (EnumMode.valueOf(maid.getMode()) != EnumMode.FIGHT)
+        if (EnumMode.valueOf(maid.getMode()) != EnumMode.FIGHT && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS)
             return false;
         System.out.println("tick: " + tick);
         return tick++ >= maid.getAttackColdTime(EnumAttackType.PANDORA);

@@ -77,8 +77,8 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         this.dataManager.register(MAXHEALTHBARNUM, 10); // 100滴血每一条 10条血条
         this.dataManager.register(HEALTHBARNUM, 10);
         this.dataManager.register(LEVEL, 1);
-        this.dataManager.register(EXP, 100);
-        this.dataManager.register(RANK, 2);
+        this.dataManager.register(EXP, 0);
+        this.dataManager.register(RANK, 0);
         this.dataManager.register(HASWEAPON, false);
         this.dataManager.register(HASARMOR, false);
         this.dataManager.register(MODE, EnumMode.toInt(EnumMode.SITTING)); //todo test
@@ -186,7 +186,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
             if (stack.isEmpty())
                 compound.setInteger("inventory" + i, -1);
             else {
-                EnumEquipment j = ((ItemWeapon) (stack.getItem())).enumEquipment;
+                EnumEquipment j = ((ItemEquipment) (stack.getItem())).enumEquipment;
                 compound.setInteger("inventory" + i, EnumEquipment.toInt(j));
             }
         }
@@ -357,9 +357,9 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
             return false;
         if (this.getOwnerID() == entityLivingBase.getUniqueID())
             return false;
-        if (entityLivingBase instanceof EntityMagicMaid && this.getOwnerID() == ((EntityMagicMaid) entityLivingBase).getOwnerID())
+        if (entityLivingBase instanceof EntityMagicMaid && ((EntityMagicMaid) entityLivingBase).hasOwner() && this.getOwnerID() == ((EntityMagicMaid) entityLivingBase).getOwnerID())
             return false;
-        if (entityLivingBase instanceof EntityTameable && this.getOwnerID() == ((EntityTameable) entityLivingBase).getOwnerId())
+        if (entityLivingBase instanceof EntityTameable && ((EntityTameable) entityLivingBase).getOwnerId() != null && this.getOwnerID() == ((EntityTameable) entityLivingBase).getOwnerId())
             return false;
         if (entityLivingBase instanceof EntityMaidWeapon)
             return false;
@@ -454,8 +454,8 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         if (inventory.size() > index)
             nonnulllist = inventory;
         if (nonnulllist != null) {
-            if (stack.getItem() instanceof ItemWeapon)
-                this.getEquipment((ItemWeapon) stack.getItem());
+            if (stack.getItem() instanceof ItemEquipment)
+                this.getEquipment((ItemEquipment) stack.getItem());
             nonnulllist.set(index, stack);
         }
     }
@@ -605,10 +605,16 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         super.heal(heal);
     }
 
+    @Override
+    public void setNoAI(boolean disabled)
+    {
+        return; //不允许暂停ai
+    }
 
     public void debug(){
         System.out.println("state: " + EnumRettState.valueOf(this.getState())
                 + " mode: " + EnumMode.valueOf(this.getMode())
-                + " owner: " + this.hasOwner() + " Equipment: " + EnumEquipment.valueOf(this.getWeaponType()));
+                + " owner: " + this.hasOwner() + " Equipment: " + EnumEquipment.valueOf(this.getWeaponType())
+                + " rank: " + this.getRank() + " health: " + this.getTrueHealth());
     }
 }

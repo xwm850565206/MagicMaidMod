@@ -17,6 +17,9 @@ public class Reference
     public static final int ENTITY_CONVICTION = 304;
     public static final int ENTITY_PANDORA = 305;
     public static final int ENTITY_WHISPER = 306;
+    public static final int ENTITY_MARTHA_BOSS = 307;
+    public static final int ENTITY_SELINA_BOSS = 308;
+    public static final int ENTITY_RETT_BOSS = 309;
 
     public static final int DIMENSION_CHURCH = 2;
 }

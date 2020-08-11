@@ -60,7 +60,7 @@ public class EntityAIWhisper extends EntityAIBase
             return false;
         if (EnumEquipment.valueOf(maid.getWeaponType()) != EnumEquipment.WHISPER)
             return false;
-        if (EnumMode.valueOf(maid.getMode()) != EnumMode.FIGHT)
+        if (EnumMode.valueOf(maid.getMode()) != EnumMode.FIGHT && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS)
             return false;
         tick++;
         System.out.println("tick: " + tick);

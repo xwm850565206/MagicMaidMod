@@ -14,7 +14,7 @@ public class EntityAIMaidAttackMelee extends EntityAIAttackMelee
     public boolean shouldExecute(){
         EntityMagicMaid maid = (EntityMagicMaid) this.attacker;
         EnumMode mode  = EnumMode.valueOf(maid.getMode());
-        if (mode != EnumMode.FIGHT)
+        if ((mode != EnumMode.FIGHT && mode != EnumMode.BOSS) )
             return false;
         else
             return super.shouldExecute();

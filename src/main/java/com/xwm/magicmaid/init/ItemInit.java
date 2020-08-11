@@ -14,9 +14,12 @@ public class ItemInit
 
     public static final Item itemRepantence = new ItemRepantence("repantence");
     public static final Item itemConviction = new ItemConviction("conviction");
+    public static final Item itemProtector = new ItemProtector("protector");
     public static final Item itemDemonKillerSowrd = new ItemDemonKillerSword("demonkiller");
+    public static final Item itemImmortal = new ItemImmortal("immortal");
     public static final Item itemPandorasBox = new ItemPandora("pandorasbox");
     public static final Item itemWhisper = new ItemWhisper("whisper");
+    public static final Item itemWise = new ItemWise("wise");
 
     public static final Item itemHolyStone = new ItemHolyStone("holystone");
 

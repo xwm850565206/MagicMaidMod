@@ -112,6 +112,7 @@ public class EntityMagicMaidSelina extends EntityMagicMaid
             case WISE:
                 this.setHasArmor(true);
                 this.setMaxHealthbarnum(200);
+                this.setHealthbarnum(200);
                 break;
         }
 

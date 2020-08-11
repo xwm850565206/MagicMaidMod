@@ -1,9 +1,6 @@
 package com.xwm.magicmaid.util.handlers;
 
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidRett;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidMartha;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidSelina;
+import com.xwm.magicmaid.entity.mob.maid.*;
 import com.xwm.magicmaid.entity.mob.weapon.*;
 import com.xwm.magicmaid.entity.model.Rett.ModelMagicMaidRett;
 import com.xwm.magicmaid.entity.model.Selina.ModelMagicMaidSeline;
@@ -22,13 +19,22 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 public class RenderHandler
 {
     public static void registerEntityRenders() {
+        //martha
         RenderingRegistry.registerEntityRenderingHandler(EntityMagicMaidMartha.class, new IRenderFactory<EntityMagicMaid>() {
             @Override
             public Render<? super EntityMagicMaid> createRenderFor(RenderManager manager) {
                 return new RenderMagicMaid(manager, new ModelMagicMaidMartha());
             }
         });
+        //martha boss
+        RenderingRegistry.registerEntityRenderingHandler(EntityMagicMaidMarthaBoss.class, new IRenderFactory<EntityMagicMaid>() {
+            @Override
+            public Render<? super EntityMagicMaid> createRenderFor(RenderManager manager) {
+                return new RenderMagicMaid(manager, new ModelMagicMaidMartha());
+            }
+        });
 
+        //selina
         RenderingRegistry.registerEntityRenderingHandler(EntityMagicMaidSelina.class, new IRenderFactory<EntityMagicMaid>() {
             @Override
             public Render<? super EntityMagicMaid> createRenderFor(RenderManager manager) {
@@ -36,7 +42,24 @@ public class RenderHandler
             }
         });
 
+        //selina boss
+        RenderingRegistry.registerEntityRenderingHandler(EntityMagicMaidSelinaBoss.class, new IRenderFactory<EntityMagicMaid>() {
+            @Override
+            public Render<? super EntityMagicMaid> createRenderFor(RenderManager manager) {
+                return new RenderMagicMaid(manager, new ModelMagicMaidSeline());
+            }
+        });
+
+        //rett
         RenderingRegistry.registerEntityRenderingHandler(EntityMagicMaidRett.class, new IRenderFactory<EntityMagicMaid>() {
+            @Override
+            public Render<? super EntityMagicMaid> createRenderFor(RenderManager manager) {
+                return new RenderMagicMaid(manager, new ModelMagicMaidRett());
+            }
+        });
+
+        //rett boss
+        RenderingRegistry.registerEntityRenderingHandler(EntityMagicMaidRettBoss.class, new IRenderFactory<EntityMagicMaid>() {
             @Override
             public Render<? super EntityMagicMaid> createRenderFor(RenderManager manager) {
                 return new RenderMagicMaid(manager, new ModelMagicMaidRett());
