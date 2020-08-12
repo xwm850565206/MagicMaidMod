@@ -1,6 +1,7 @@
 package com.xwm.magicmaid.world.gen;
 
 import com.google.common.collect.Lists;
+import com.xwm.magicmaid.init.BlockInit;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.monster.EntityShulker;
@@ -160,6 +161,11 @@ public class StructureChurchPieces
                 EntityItemFrame entityitemframe = new EntityItemFrame(worldIn, pos, this.rotation.rotate(EnumFacing.SOUTH));
                 entityitemframe.setDisplayedItem(new ItemStack(Items.ELYTRA));
                 worldIn.spawnEntity(entityitemframe);
+            }
+            else if (function.startsWith("memoryclock"))
+            {
+                BlockPos blockpos = pos.down();
+                worldIn.setBlockState(blockpos, BlockInit.blockMemoryClock.getDefaultState(), 3);
             }
         }
 

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Random;
 import javax.annotation.Nullable;
 
+import com.xwm.magicmaid.init.BiomeInit;
+import com.xwm.magicmaid.init.BlockInit;
 import com.xwm.magicmaid.world.gen.MapGenChurch;
 import com.xwm.magicmaid.world.gen.WorldGenStructure;
 import net.minecraft.block.BlockChorusFlower;
@@ -211,12 +213,11 @@ public class ChunkGeneratorChurch implements IChunkGenerator
             {
                 this.church.generate(this.world, x, z, chunkprimer);
             }
-
-            if (x == 2 && z == 2){
-                chunkprimer.setBlockState(3, 100, 11, Blocks.DIAMOND_BLOCK.getDefaultState()); //todo test 一个召唤boss的东西
-            }
         }
 
+        if (chunkX == 2 && chunkZ == 2){
+            chunkprimer.setBlockState(3, 101, 11, BlockInit.blockMemoryClock.getDefaultState());
+        }
 
 
         Chunk chunk = new Chunk(this.world, chunkprimer, x, z);
@@ -224,10 +225,11 @@ public class ChunkGeneratorChurch implements IChunkGenerator
 
         for (int i = 0; i < abyte.length; ++i)
         {
-            abyte[i] = (byte)Biome.getIdForBiome(this.biomesForGeneration[i]);
+            abyte[i] = (byte) Biome.getIdForBiome(BiomeInit.RUINS);
         }
 
         chunk.generateSkylightMap();
+
         return chunk;
     }
 
@@ -410,34 +412,12 @@ public class ChunkGeneratorChurch implements IChunkGenerator
                             }
                         }
                     }
-
-                    if (this.rand.nextInt(700) == 0)
-                    {
-                        int l1 = this.rand.nextInt(16) + 8;
-                        int i2 = this.rand.nextInt(16) + 8;
-                        int j2 = this.world.getHeight(blockpos.add(l1, 0, i2)).getY();
-
-                        if (j2 > 0)
-                        {
-                            int k2 = j2 + 3 + this.rand.nextInt(7);
-                            BlockPos blockpos1 = blockpos.add(l1, k2, i2);
-                            (new WorldGenEndGateway()).generate(this.world, this.rand, blockpos1);
-                            TileEntity tileentity = this.world.getTileEntity(blockpos1);
-
-                            if (tileentity instanceof TileEntityEndGateway)
-                            {
-                                TileEntityEndGateway tileentityendgateway = (TileEntityEndGateway)tileentity;
-                                tileentityendgateway.setExactPosition(this.spawnPoint);
-                            }
-                        }
-                    }
                 }
             }
 
             net.minecraftforge.event.ForgeEventFactory.onChunkPopulate(false, this, this.world, this.rand, x, z, false);
             BlockFalling.fallInstantly = false;
         }
-
     }
 
     /**
