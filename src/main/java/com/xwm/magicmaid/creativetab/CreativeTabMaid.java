@@ -1,5 +1,6 @@
 package com.xwm.magicmaid.creativetab;
 
+import com.xwm.magicmaid.init.ItemInit;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -14,6 +15,6 @@ public class CreativeTabMaid extends CreativeTabs {
 
     @Override
     public ItemStack getTabIconItem() {
-        return new ItemStack(Items.DIAMOND);
+        return new ItemStack(ItemInit.itemLostKey);
     }
 }

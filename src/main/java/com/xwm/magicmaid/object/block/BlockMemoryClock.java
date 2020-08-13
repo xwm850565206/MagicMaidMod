@@ -55,6 +55,9 @@ public class BlockMemoryClock extends BlockBase
         if (worldIn.isRemote)
             return false;
 
+        if (hand != EnumHand.MAIN_HAND)
+            return false;
+
         EntityMagicMaid bossMaid;
         int f = random.nextInt(3);
         switch (f){

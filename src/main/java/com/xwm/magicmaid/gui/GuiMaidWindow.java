@@ -131,8 +131,8 @@ public class GuiMaidWindow extends GuiContainer
         tmp = I18n.format("container.maid.healthBar");
         fontRenderer.drawString(tmp + ": " + maid.getHealthBarNum(), 77, 50, 0x000000);
 
-        tmp = I18n.format("container.maid." + EnumMode.valueOf(maid.getMode()).toString());
-        fontRenderer.drawString(tmp.toLowerCase(), 77 + 20,  70, 0x000000);
+        tmp = I18n.format("container.maid." + EnumMode.valueOf(maid.getMode()).toString().toLowerCase());
+        fontRenderer.drawString(tmp, 77,  70, 0x000000);
     }
 
 

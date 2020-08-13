@@ -1,4 +1,6 @@
-package com.xwm.magicmaid.object.item;
+package com.xwm.magicmaid.object.item.piece;
+
+import com.xwm.magicmaid.object.item.ItemBase;
 
 public class ItemMemoryPieceMartha extends ItemBase
 {
