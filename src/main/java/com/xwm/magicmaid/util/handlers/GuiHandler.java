@@ -1,19 +1,25 @@
 package com.xwm.magicmaid.util.handlers;
 
+import com.xwm.magicmaid.entity.ai.EntityAINearestAttackableTargetAvoidOwner;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.gui.ContainMaidWindow;
 import com.xwm.magicmaid.gui.GuiMaidWindow;
 import com.xwm.magicmaid.util.Reference;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class GuiHandler implements IGuiHandler
 {
+
     public static GuiHandler maidWindowHandler = new GuiHandler();
 
     /**
@@ -36,7 +42,7 @@ public class GuiHandler implements IGuiHandler
             List<EntityMagicMaid> entities = world.getEntitiesWithinAABB(EntityMagicMaid.class, new AxisAlignedBB(x, y, z, x, y, z).grow(1));
             if (entities.size() < 1)
                 return null;
-
+            Collections.sort(entities, new Sorter(player));
             EntityMagicMaid maid = entities.get(0);
             return new ContainMaidWindow(player.inventory, maid);
         }
@@ -67,9 +73,35 @@ public class GuiHandler implements IGuiHandler
             if (entities.size() < 1)
                 return null;
 
+            Collections.sort(entities, new Sorter(player));
             EntityMagicMaid maid = entities.get(0);
             return new GuiMaidWindow(player.inventory, maid);
         }
         return null;
+    }
+
+    public static class Sorter implements Comparator<Entity>
+    {
+        private final Entity entity;
+
+        public Sorter(Entity entityIn)
+        {
+            this.entity = entityIn;
+        }
+
+        public int compare(Entity p_compare_1_, Entity p_compare_2_)
+        {
+            double d0 = this.entity.getDistanceSq(p_compare_1_);
+            double d1 = this.entity.getDistanceSq(p_compare_2_);
+
+            if (d0 < d1)
+            {
+                return -1;
+            }
+            else
+            {
+                return d0 > d1 ? 1 : 0;
+            }
+        }
     }
 }
