@@ -19,7 +19,7 @@ public class EntityAITeleportAttack extends EntityAIBase
     public boolean shouldExecute() {
         if (maid.getAttackTarget() == null)
             return false;
-        if (maid.getAttackTarget().getDistanceSq(maid) < 10.0D)
+        if (maid.getAttackTarget().getDistanceSq(maid) < 20.0D)
             return false;
         if (maid.getRank() < 2) //满阶解锁瞬移攻击
             return false;

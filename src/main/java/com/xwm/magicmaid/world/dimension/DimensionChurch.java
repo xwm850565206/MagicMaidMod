@@ -39,11 +39,6 @@ public class DimensionChurch extends WorldProvider
         return this.world.getGroundAboveSeaLevel(new BlockPos(x, 0, z)).getMaterial().blocksMovement();
     }
 
-//    @SideOnly(Side.CLIENT)
-//    public float getCloudHeight()
-//    {
-//        return 8.0F;
-//    }
 
     public float calculateCelestialAngle(long worldTime, float partialTicks)
     {

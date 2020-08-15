@@ -61,6 +61,7 @@ public class EntityAIPandora extends EntityAIBase
     {
         world = this.maid.world;
         this.maid.setState(EnumSelineState.toInt(EnumSelineState.CHANT));
+        this.maid.setIsPerformAttack(true);
 
         if (pandorasBox == null)
             pandorasBox = (EntityMaidWeaponPandorasBox) EntityMaidWeapon.getWeaponFromUUID(world, this.maid.getWeaponID());
@@ -74,6 +75,7 @@ public class EntityAIPandora extends EntityAIBase
 
     public void resetTask(){
         this.maid.setState(EnumSelineState.toInt(EnumSelineState.STANDARD));
+        this.maid.setIsPerformAttack(false);
         if (pandorasBox != null)
             pandorasBox.setOpen(false);
         this.tick = 0;

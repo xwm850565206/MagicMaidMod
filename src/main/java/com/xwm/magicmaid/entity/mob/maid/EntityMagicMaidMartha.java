@@ -1,5 +1,7 @@
 package com.xwm.magicmaid.entity.mob.maid;
 
+import com.xwm.magicmaid.entity.ai.EntityAIMaidAttackMelee;
+import com.xwm.magicmaid.entity.ai.EntityAIMaidAttackRanged;
 import com.xwm.magicmaid.entity.ai.martha.EntityAIConviction;
 import com.xwm.magicmaid.entity.ai.martha.EntityAIRepantence;
 import com.xwm.magicmaid.entity.ai.martha.EntityAIMarthaServe;
@@ -10,6 +12,7 @@ import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.DamageSource;
@@ -17,7 +20,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
-public class EntityMagicMaidMartha extends EntityMagicMaid
+public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAttackMob
 {
     //state: 0-草莓标准站立 1-草莓服侍站立 2-草莓待命站立 3-草莓攻击
 
@@ -33,6 +36,8 @@ public class EntityMagicMaidMartha extends EntityMagicMaid
 
     public void initEntityAI(){
         super.initEntityAI();
+
+        this.tasks.addTask(2, new EntityAIMaidAttackRanged(this, 1.3D, 40, 10));
         this.targetTasks.addTask(3, new EntityAIMarthaServe(this));
         this.targetTasks.addTask(3, new EntityAIRepantence(this));
         this.targetTasks.addTask(3, new EntityAIConviction(this));
@@ -68,6 +73,8 @@ public class EntityMagicMaidMartha extends EntityMagicMaid
                 this.setState(1);
             else if (mode == EnumMode.SITTING && this.getState() != 2)
                 this.setState(2);
+            else if ((mode == EnumMode.FIGHT || mode == EnumMode.BOSS) && !this.isPerformAttack() && this.getState() != 0)
+                this.setState(0);
         }
 
         super.onUpdate();
@@ -171,4 +178,23 @@ public class EntityMagicMaidMartha extends EntityMagicMaid
         return super.attackEntityFrom(source, amount);
     }
 
+    /**
+     * Attack the specified entity using a ranged attack.
+     *
+     * @param target
+     * @param distanceFactor
+     */
+    @Override
+    public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) {
+        setSwingingArms(true);
+        target.attackEntityFrom(DamageSource.causeMobDamage(this), this.getAttackDamage(EnumAttackType.NORMAL));
+    }
+
+    @Override
+    public void setSwingingArms(boolean swingingArms) {
+        if (swingingArms)
+            this.setState(3);
+        else
+            this.setState(1);
+    }
 }

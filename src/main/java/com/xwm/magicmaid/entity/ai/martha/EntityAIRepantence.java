@@ -59,6 +59,7 @@ public class EntityAIRepantence extends EntityAIBase
         if (maid.hasOwner())
             this.owner = this.maid.getEntityWorld().getPlayerEntityByUUID(this.maid.getOwnerID());
         this.maid.setState(3);
+        this.maid.setIsPerformAttack(true);
         this.tick = 0;
     }
 
@@ -94,6 +95,7 @@ public class EntityAIRepantence extends EntityAIBase
 
     public void resetTask(){
         this.maid.setState(0);
+        this.maid.setIsPerformAttack(false);
         this.performTick = 0;
     }
 

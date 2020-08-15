@@ -1,11 +1,14 @@
 package com.xwm.magicmaid.world.dimension;
 
+import com.google.common.base.Predicate;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.init.BlockInit;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.block.BlockPortal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -13,6 +16,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
 
+import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Random;
 
 public class ChurchTeleporter extends Teleporter

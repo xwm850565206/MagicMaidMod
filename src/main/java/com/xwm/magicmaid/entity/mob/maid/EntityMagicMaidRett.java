@@ -11,6 +11,7 @@ import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumRettState;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
@@ -44,6 +45,7 @@ public class EntityMagicMaidRett extends EntityMagicMaid
     public void initEntityAI(){
         super.initEntityAI();
 
+        this.tasks.addTask(2, new EntityAIMaidAttackMelee(this, 1.3D, false));
         this.tasks.addTask(4, new EntityAIRettServe(this));
         this.tasks.addTask(4, new EntityAITeleportAttack(this));
         this.targetTasks.addTask(3, new EntityAIDemonKillerAttack(this));
@@ -158,6 +160,11 @@ public class EntityMagicMaidRett extends EntityMagicMaid
             }
         }
         return super.attackEntityFrom(source, amount);
+    }
+
+    public boolean attackEntityAsMob(Entity entityIn){
+        this.setLastAttackedEntity(entityIn);
+        return false;
     }
 
 }

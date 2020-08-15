@@ -3,10 +3,7 @@ package com.xwm.magicmaid.entity.mob.maid;
 
 import com.google.common.base.Predicate;
 import com.xwm.magicmaid.Main;
-import com.xwm.magicmaid.entity.ai.EntityAIMaidAttackMelee;
-import com.xwm.magicmaid.entity.ai.EntityAIMaidFollow;
-import com.xwm.magicmaid.entity.ai.EntityAIMaidOwerHurtTarget;
-import com.xwm.magicmaid.entity.ai.EntityAIMaidOwnerHurtByTarget;
+import com.xwm.magicmaid.entity.ai.*;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
@@ -16,6 +13,7 @@ import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.util.Reference;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -31,6 +29,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
@@ -61,6 +60,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
     private static final DataParameter<Integer> WEAPONTYPE = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
 
     private EnumMode oldMode = null;
+    private Boolean isPerformAttack= false;
 
     public BlockPos weaponStandbyPos = new BlockPos(0, this.height+1, 0);
 
@@ -99,8 +99,8 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityLivingBase.class, 8.0F));
         this.tasks.addTask(10, new EntityAILookIdle(this));
 
-        this.tasks.addTask(2, new EntityAIMaidAttackMelee(this, 1.3D, false));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this,  EntityLivingBase.class, true));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTargetAvoidOwner(this, EntityLivingBase.class, true, new EnemySelect(this)));
+
         this.targetTasks.addTask(1, new EntityAIMaidOwnerHurtByTarget(this));
         this.targetTasks.addTask(2, new EntityAIMaidOwerHurtTarget(this));
         this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, true, new Class[0]));
@@ -375,6 +375,14 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         return true;
     }
 
+    public void setIsPerformAttack(boolean isPerformAttack){
+        this.isPerformAttack = isPerformAttack;
+    }
+
+    public boolean isPerformAttack(){
+        return isPerformAttack;
+    }
+
 
 
     /**
@@ -618,10 +626,37 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         return; //不允许暂停ai
     }
 
+    public boolean attackEntityAsMob(Entity entityIn)
+    {
+        super.attackEntityAsMob(entityIn);
+        try{
+            entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), this.getAttackDamage(EnumAttackType.NORMAL));
+        } catch (Exception e){
+            return false;
+        }
+        return true;
+    }
+
     public void debug(){
         System.out.println("state: " + EnumRettState.valueOf(this.getState())
                 + " mode: " + EnumMode.valueOf(this.getMode())
                 + " owner: " + this.hasOwner() + " Equipment: " + EnumEquipment.valueOf(this.getWeaponType())
                 + " rank: " + this.getRank() + " health: " + this.getTrueHealth());
+    }
+
+    public static class EnemySelect implements Predicate<EntityLivingBase> {
+        public final EntityMagicMaid maid;
+        public EnemySelect(EntityMagicMaid maid){
+            this.maid = maid;
+        }
+        @Override
+        public boolean apply(@Nullable EntityLivingBase input) {
+            return maid.isEnemy(input);
+        }
+
+        @Override
+        public boolean equals(@Nullable Object object) {
+            return object instanceof EnemySelect && maid.getUniqueID().equals(((EnemySelect) object).maid.getUniqueID());
+        }
     }
 }

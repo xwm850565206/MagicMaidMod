@@ -76,6 +76,7 @@ public class EntityAIWhisper extends EntityAIBase
     public void startExecuting(){
         world = this.maid.world;
         this.maid.setState(EnumSelineState.toInt(EnumSelineState.STIMULATE));
+        this.maid.setIsPerformAttack(true);
         if (whisper == null)
             whisper = (EntityMaidWeaponWhisper) EntityMaidWeapon.getWeaponFromUUID(world, this.maid.getWeaponID());
         if (whisper != null)
@@ -159,6 +160,7 @@ public class EntityAIWhisper extends EntityAIBase
 
     public void resetTask(){
         this.maid.setState(EnumSelineState.toInt(EnumSelineState.STANDARD));
+        this.maid.setIsPerformAttack(false);
         if (whisper != null)
             whisper.setAttack(false);
         this.tick = 0;

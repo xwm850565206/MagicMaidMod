@@ -1,16 +1,20 @@
 package com.xwm.magicmaid.entity.ai;
 
+import com.google.common.base.Predicate;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+
+import javax.annotation.Nullable;
 
 public class EntityAINearestAttackableTargetAvoidOwner extends EntityAINearestAttackableTarget
 {
     private EntityMagicMaid maid;
 
-    public EntityAINearestAttackableTargetAvoidOwner(EntityMagicMaid maid, Class classTarget, boolean checkSight) {
-        super(maid, classTarget, checkSight);
+    public EntityAINearestAttackableTargetAvoidOwner(EntityMagicMaid maid, Class classTarget, boolean checkSight, @Nullable final Predicate targetSelector) {
+        super(maid, classTarget, 10, checkSight, false, targetSelector);
         this.maid = maid;
     }
 
@@ -21,9 +25,10 @@ public class EntityAINearestAttackableTargetAvoidOwner extends EntityAINearestAt
             return false;
 
         boolean flag = super.shouldExecute();
-        if (flag){
-            return maid.isEnemy(this.targetEntity);
+        if (flag && maid.isEnemy(this.targetEntity)){
+            return true;
         }
+        this.targetEntity = null;
         return false;
     }
 }

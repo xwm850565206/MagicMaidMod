@@ -1,5 +1,6 @@
 package com.xwm.magicmaid.entity.mob.maid;
 
+import com.xwm.magicmaid.entity.ai.EntityAIMaidAttackRanged;
 import com.xwm.magicmaid.entity.ai.selina.EntityAIPandora;
 import com.xwm.magicmaid.entity.ai.selina.EntityAISelinaServe;
 import com.xwm.magicmaid.entity.ai.selina.EntityAIWhisper;
@@ -14,6 +15,7 @@ import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
@@ -22,7 +24,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
-public class EntityMagicMaidSelina extends EntityMagicMaid
+public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAttackMob
 {
     public EntityMagicMaidSelina(World worldIn) {
         super(worldIn);
@@ -41,7 +43,7 @@ public class EntityMagicMaidSelina extends EntityMagicMaid
         this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityLiving.class, true));
 
 
-//        this.tasks.addTask(2, new EntityAIMaidAttackMelee(this, 1.3D, false));
+        this.tasks.addTask(2, new EntityAIMaidAttackRanged(this, 1.3D, 40, 10));
         this.tasks.addTask(3, new EntityAIPandora(this));
         this.tasks.addTask(3, new EntityAIWhisper(this));
         this.tasks.addTask(3, new EntityAISelinaServe(this));
@@ -80,7 +82,9 @@ public class EntityMagicMaidSelina extends EntityMagicMaid
                 this.setState(EnumSelineState.toInt(EnumSelineState.SITTING));
             else if (mode == EnumMode.SERVE && state != EnumSelineState.SERVE)
                 this.setState(EnumSelineState.toInt(EnumSelineState.SERVE));
-            else if (mode== EnumMode.BOSS && (state == EnumSelineState.SITTING || state == EnumSelineState.SERVE))
+            else if (mode == EnumMode.BOSS && (state == EnumSelineState.SITTING || state == EnumSelineState.SERVE))
+                this.setState(EnumSelineState.toInt(EnumSelineState.STANDARD));
+            else if ((mode == EnumMode.FIGHT || mode == EnumMode.BOSS) && !this.isPerformAttack() && EnumSelineState.valueOf(this.getState()) != EnumSelineState.STANDARD)
                 this.setState(EnumSelineState.toInt(EnumSelineState.STANDARD));
         }
 
@@ -162,5 +166,26 @@ public class EntityMagicMaidSelina extends EntityMagicMaid
             }
         }
         return super.attackEntityFrom(source, amount);
+    }
+
+    /**
+     * Attack the specified entity using a ranged attack.
+     *
+     * @param target
+     * @param distanceFactor
+     */
+    @Override
+    public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) {
+        setSwingingArms(true);
+        target.attackEntityFrom(DamageSource.causeMobDamage(this), this.getAttackDamage(EnumAttackType.NORMAL));
+    }
+
+    @Override
+    public void setSwingingArms(boolean swingingArms) {
+        if (swingingArms){
+            this.setState(EnumSelineState.toInt(EnumSelineState.STIMULATE));
+        }
+        else
+            this.setState(EnumSelineState.toInt(EnumSelineState.SERVE));
     }
 }
