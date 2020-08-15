@@ -2,11 +2,15 @@ package com.xwm.magicmaid.object.item.equipment;
 
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponPandorasBox;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class ItemPandora extends ItemWeapon
 {
@@ -16,16 +20,10 @@ public class ItemPandora extends ItemWeapon
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
+    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn)
     {
-        if (worldIn.isRemote)
-            return super.onItemRightClick(worldIn, playerIn, handIn);
-        else {
-            EntityMaidWeaponPandorasBox pandorasBox = new EntityMaidWeaponPandorasBox(worldIn);
-            pandorasBox.setPosition(playerIn.posX, playerIn.posY, playerIn.posZ);
-            worldIn.spawnEntity(pandorasBox);
-            return super.onItemRightClick(worldIn, playerIn, handIn);
-        }
+        tooltip.add(TextFormatting.YELLOW + "充满黑暗力量的魔盒，里面");
+        tooltip.add(TextFormatting.YELLOW + "似乎拥有无尽的力量");
     }
 
 }

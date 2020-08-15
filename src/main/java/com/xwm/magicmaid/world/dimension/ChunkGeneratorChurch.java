@@ -177,8 +177,6 @@ public class ChunkGeneratorChurch implements IChunkGenerator
         {
             for (int j = 0; j < 16; ++j)
             {
-                int k = 1;
-                int l = -1;
                 IBlockState iblockstate = END_STONE;
                 IBlockState iblockstate1 = END_STONE;
                 primer.setBlockState(i, 50, j, iblockstate);
@@ -191,6 +189,9 @@ public class ChunkGeneratorChurch implements IChunkGenerator
                     primer.setBlockState(i, 54, j, iblockstate);
                     primer.setBlockState(i, 55, j, iblockstate);
                 }
+                double p = rand.nextDouble();
+                if (p < 0.1)
+                    primer.setBlockState(i, 49, j, BlockInit.blockHolyStone.getDefaultState());
             }
         }
     }

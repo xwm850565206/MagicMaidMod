@@ -3,6 +3,7 @@ package com.xwm.magicmaid.entity.mob.maid;
 import com.xwm.magicmaid.entity.ai.EntityAIMaidAttackMelee;
 import com.xwm.magicmaid.entity.ai.EntityAINearestAttackableTargetAvoidOwner;
 import com.xwm.magicmaid.entity.ai.rett.EntityAIDemonKillerAttack;
+import com.xwm.magicmaid.entity.ai.rett.EntityAIRettServe;
 import com.xwm.magicmaid.entity.ai.rett.EntityAITeleportAttack;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
@@ -43,10 +44,8 @@ public class EntityMagicMaidRett extends EntityMagicMaid
     public void initEntityAI(){
         super.initEntityAI();
 
-        this.tasks.addTask(2, new EntityAIMaidAttackMelee(this, 1.3D, false));
+        this.tasks.addTask(4, new EntityAIRettServe(this));
         this.tasks.addTask(4, new EntityAITeleportAttack(this));
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this,  EntityLiving.class, true));
         this.targetTasks.addTask(3, new EntityAIDemonKillerAttack(this));
     }
 

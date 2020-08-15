@@ -1,6 +1,7 @@
 package com.xwm.magicmaid.entity.mob.maid;
 
 import com.xwm.magicmaid.entity.ai.selina.EntityAIPandora;
+import com.xwm.magicmaid.entity.ai.selina.EntityAISelinaServe;
 import com.xwm.magicmaid.entity.ai.selina.EntityAIWhisper;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponPandorasBox;
@@ -43,6 +44,7 @@ public class EntityMagicMaidSelina extends EntityMagicMaid
 //        this.tasks.addTask(2, new EntityAIMaidAttackMelee(this, 1.3D, false));
         this.tasks.addTask(3, new EntityAIPandora(this));
         this.tasks.addTask(3, new EntityAIWhisper(this));
+        this.tasks.addTask(3, new EntityAISelinaServe(this));
 
 
     }

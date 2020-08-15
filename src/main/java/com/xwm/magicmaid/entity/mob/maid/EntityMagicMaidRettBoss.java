@@ -3,10 +3,12 @@ package com.xwm.magicmaid.entity.mob.maid;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.init.ItemInit;
+import com.xwm.magicmaid.util.handlers.LootTableHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.World;
@@ -49,6 +51,13 @@ public class EntityMagicMaidRettBoss extends EntityMagicMaidRett
         super.heal(healAmount);
         this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));
     }
+
+    @Override
+    protected ResourceLocation getLootTable()
+    {
+        return LootTableHandler.DEMONKILLER;
+    }
+
 
     @Override
     public void readEntityFromNBT(NBTTagCompound compound){

@@ -33,9 +33,9 @@ public class ItemInit
     public static final Item itemPandoraPiece = new ItemPandoraPiece("pandorapiece");
     public static final Item itemWhisperPiece = new ItemWhisperPiece("whisperpiece");
 
-    public static final Item itemMemoryMartha = new ItemMemoryPieceMartha("memorymartha");
-    public static final Item itemMemorySelina = new ItemMemoryPieceMartha("memoryselina");
-    public static final Item itemMemoryRett = new ItemMemoryPieceMartha("memoryrett");
+    public static final Item itemMemoryMartha = new ItemMemoryMartha("memorymartha");
+    public static final Item itemMemorySelina = new ItemMemoryMartha("memoryselina");
+    public static final Item itemMemoryRett = new ItemMemoryMartha("memoryrett");
 
     public static final Item itemHolyStone = new ItemHolyStone("holystone");
     public static final Item itemLostKey = new ItemLostKey("lostkey");

@@ -3,6 +3,7 @@ package com.xwm.magicmaid.entity.mob.maid;
 
 import com.google.common.base.Predicate;
 import com.xwm.magicmaid.Main;
+import com.xwm.magicmaid.entity.ai.EntityAIMaidAttackMelee;
 import com.xwm.magicmaid.entity.ai.EntityAIMaidFollow;
 import com.xwm.magicmaid.entity.ai.EntityAIMaidOwerHurtTarget;
 import com.xwm.magicmaid.entity.ai.EntityAIMaidOwnerHurtByTarget;
@@ -11,6 +12,7 @@ import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumRettState;
+import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.util.Reference;
@@ -97,6 +99,8 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityLivingBase.class, 8.0F));
         this.tasks.addTask(10, new EntityAILookIdle(this));
 
+        this.tasks.addTask(2, new EntityAIMaidAttackMelee(this, 1.3D, false));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this,  EntityLivingBase.class, true));
         this.targetTasks.addTask(1, new EntityAIMaidOwnerHurtByTarget(this));
         this.targetTasks.addTask(2, new EntityAIMaidOwerHurtTarget(this));
         this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, true, new Class[0]));
@@ -108,9 +112,10 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
     {
         super.applyEntityAttributes();
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(1000000000);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(20);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30000000298023224D);
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(5);
+        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(20);
     }
 
     //todo 让女仆切换状态
@@ -138,7 +143,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
                 }
                 return true;
             }
-            else if (stack.getItem().equals(Items.DIAMOND) && !this.hasOwner())
+            else if (stack.getItem().equals(ItemInit.itemLostKey) && !this.hasOwner())
             {
                 if(!player.isCreative())
                     stack.shrink(1);
@@ -355,16 +360,18 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
             return false;
         if (this == entityLivingBase)
             return false;
+        if (entityLivingBase instanceof EntityMaidWeapon)
+            return false;
+        if (EnumMode.valueOf(this.getMode()) == EnumMode.BOSS)
+            return true;
+
         if (this.getOwnerID() == entityLivingBase.getUniqueID())
             return false;
         if (entityLivingBase instanceof EntityMagicMaid && ((EntityMagicMaid) entityLivingBase).hasOwner() && this.getOwnerID() == ((EntityMagicMaid) entityLivingBase).getOwnerID())
             return false;
         if (entityLivingBase instanceof EntityTameable && ((EntityTameable) entityLivingBase).getOwnerId() != null && this.getOwnerID() == ((EntityTameable) entityLivingBase).getOwnerId())
             return false;
-        if (entityLivingBase instanceof EntityMaidWeapon)
-            return false;
-        if (entityLivingBase instanceof EntityBat)
-            return false;
+
         return true;
     }
 

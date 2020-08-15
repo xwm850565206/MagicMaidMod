@@ -2,15 +2,15 @@ package com.xwm.magicmaid.entity.ai.martha;
 
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumMode;
+import com.xwm.magicmaid.init.PotionInit;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.init.MobEffects;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
 public class EntityAIMarthaServe extends EntityAIBase
 {
-    private static final int COLDTIME = 100;
-
     private EntityMagicMaid maid;
     private int tick = 0;
 
@@ -34,17 +34,23 @@ public class EntityAIMarthaServe extends EntityAIBase
         if (entityLivingBase == null)
             return false;
 
-        return tick++ >= COLDTIME;
+        PotionEffect effect = entityLivingBase.getActivePotionEffect(PotionInit.PROTECT_BLESS_EFFECT);
+        return effect == null;
     }
 
-    //todo 守护者效果
     public void startExecuting()
     {
-        tick = 0;
         EntityLivingBase entityLivingBase = this.maid.world.getPlayerEntityByUUID(this.maid.getOwnerID());
+        if (entityLivingBase == null)
+            return;
+
         entityLivingBase.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 400, 1 + maid.getRank()));
         entityLivingBase.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 6000, maid.getRank()));
         entityLivingBase.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 6000, maid.getRank()));
         entityLivingBase.addPotionEffect(new PotionEffect(MobEffects.ABSORPTION, 2400, 2 + maid.getRank()));
+
+        if (maid.hasArmor()){
+            entityLivingBase.addPotionEffect(new PotionEffect(PotionInit.PROTECT_BLESS_EFFECT, 400 + maid.getRank() * 400, maid.getRank()));
+        }
     }
 }

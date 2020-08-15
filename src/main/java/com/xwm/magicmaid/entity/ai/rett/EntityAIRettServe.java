@@ -2,6 +2,7 @@ package com.xwm.magicmaid.entity.ai.rett;
 
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumMode;
+import com.xwm.magicmaid.init.PotionInit;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.init.MobEffects;
@@ -9,10 +10,7 @@ import net.minecraft.potion.PotionEffect;
 
 public class EntityAIRettServe extends EntityAIBase
 {
-    private static final int COLDTIME = 100;
-
     private EntityMagicMaid maid;
-    private int tick = 0;
 
     public EntityAIRettServe(EntityMagicMaid maid)
     {
@@ -34,14 +32,19 @@ public class EntityAIRettServe extends EntityAIBase
         if (entityLivingBase == null)
             return false;
 
-        return tick++ >= COLDTIME;
+        PotionEffect effect = entityLivingBase.getActivePotionEffect(PotionInit.IMMORTAL_BLESS_EFFECT);
+        return effect == null;
     }
 
-    //todo 不朽者效果
     public void startExecuting()
     {
-        tick = 0;
         EntityLivingBase entityLivingBase = this.maid.world.getPlayerEntityByUUID(this.maid.getOwnerID());
+        if (entityLivingBase == null)
+            return;
+
         entityLivingBase.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 400, 1 + maid.getRank()));
+        if (maid.hasArmor()){
+            entityLivingBase.addPotionEffect(new PotionEffect(PotionInit.IMMORTAL_BLESS_EFFECT, 400 + maid.getRank() * 400, maid.getRank()));
+        }
     }
 }

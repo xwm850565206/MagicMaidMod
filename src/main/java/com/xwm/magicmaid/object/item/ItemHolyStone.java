@@ -15,7 +15,6 @@ public class ItemHolyStone extends ItemBase
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn)
     {
-        tooltip.add("");
-
+        tooltip.add("这块石头里蕴含着非凡的能量");
    }
 }

@@ -67,7 +67,7 @@ public class RegistryHandler
     {
 //        EntityInit.registerEntities();
         BiomeInit.registerBiomes();
-
         DimensionInit.registerDimensions();
+        PotionInit.registerPotions();
     }
 }

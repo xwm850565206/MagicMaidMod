@@ -8,5 +8,7 @@ public class LootTableHandler
 {
     public static final ResourceLocation REPANTENCE = LootTableList.register(new ResourceLocation(Reference.MODID, "repantence"));
     public static final ResourceLocation CONVICTION = LootTableList.register(new ResourceLocation(Reference.MODID, "conviction"));
-
+    public static final ResourceLocation DEMONKILLER = LootTableList.register(new ResourceLocation(Reference.MODID, "demonkiller"));
+    public static final ResourceLocation PANDORA = LootTableList.register(new ResourceLocation(Reference.MODID, "pandora"));
+    public static final ResourceLocation WHISPER = LootTableList.register(new ResourceLocation(Reference.MODID, "whisper"));
 }

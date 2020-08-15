@@ -1,6 +1,5 @@
 package com.xwm.magicmaid.entity.ai.selina;
 
-import com.xwm.magicmaid.entity.ai.EntityAIAttackMeleeBat;
 import com.xwm.magicmaid.entity.ai.EntityAINearestAttackableTargetAvoidOwner;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidSelina;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
@@ -81,25 +80,6 @@ public class EntityAIPandora extends EntityAIBase
     }
 
     private void spawnBats(){
-        for (int i = 0; i < 5 + random.nextInt(5); i ++)
-        {
-            EntityBat bat = new EntityBat(world);
-            try {//没有这个属性的生物就赋予这个属性 有的会报错，就catch住
-                bat.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
-                bat.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5);
-                bat.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(5);
-                bat.targetTasks.addTask(1, new EntityAINearestAttackableTargetAvoidOwner(bat, maid, EntityLivingBase.class, true));
-                bat.tasks.addTask(2, new EntityAIAttackMeleeBat(bat, 1.2, false));
-                AxisAlignedBB bb = pandorasBox.getEntityBoundingBox();
-                double d0 = (bb.minX + bb.maxX) / 2.0;
-                double d1 = (bb.minY + bb.maxY) / 2.0;
-                double d2 = (bb.minZ + bb.maxZ) / 2.0;
-                bat.setPosition(d0, d1, d2);
-                world.spawnEntity(bat);
-            } catch (IllegalArgumentException e){
-                ;
-            }
-
-        }
+       //todo
     }
 }

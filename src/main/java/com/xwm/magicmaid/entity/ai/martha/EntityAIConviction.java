@@ -4,6 +4,7 @@ import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
+import com.xwm.magicmaid.init.PotionInit;
 import com.xwm.magicmaid.network.CustomerParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
@@ -12,6 +13,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -82,6 +84,11 @@ public class EntityAIConviction extends EntityAIBase
             try {
                 if (!maid.isEnemy(entityLivingBase))
                     continue;
+
+                if (entityLivingBase.isPotionActive(PotionInit.PROTECT_BLESS_EFFECT)) {
+                    entityLivingBase.heal(entityLivingBase.getMaxHealth());
+                    continue; //有守护者祝福不会被定罪攻击,而是恢复至满血
+                }
 
                 if (maid.getRank() >= 1)
                     entityLivingBase.setHealth(1);

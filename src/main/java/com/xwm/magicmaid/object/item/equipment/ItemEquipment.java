@@ -10,6 +10,7 @@ public class ItemEquipment extends ItemBase
 
     public ItemEquipment(String name) {
         super(name);
+        setMaxStackSize(1);
     }
 
     public static ItemEquipment valueOf(EnumEquipment equipment)
