@@ -3,6 +3,7 @@ package com.xwm.magicmaid.world.dimension;
 import com.google.common.base.Predicate;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.init.BlockInit;
+import com.xwm.magicmaid.init.DimensionInit;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.block.BlockPortal;
@@ -27,7 +28,7 @@ public class ChurchTeleporter extends Teleporter
     public int dimension;
     private final WorldServer worldServerInstance;
     private final Random random;
-    private double prevY, prevX, prevZ;
+    private double posX, posY, posZ;
 
     public ChurchTeleporter(WorldServer worldIn, int dimension, double x, double y, double z)
     {
@@ -36,9 +37,9 @@ public class ChurchTeleporter extends Teleporter
         this.worldServerInstance = worldIn;
         this.random = new Random(worldIn.getSeed());
         this.dimension = dimension;
-        this.prevX = x;
-        this.prevY = y;
-        this.prevZ = z;
+        this.posX = x;
+        this.posY = y;
+        this.posZ = z;
 
     }
 
@@ -49,13 +50,13 @@ public class ChurchTeleporter extends Teleporter
 
     public boolean placeInExistingPortal(Entity entityIn, float rotationYaw)
     {
-        return false;
-    }
-
-    public boolean makePortal(Entity entityIn)
-    {
-//        entityIn.setLocationAndAngles(aimPos.getX(), aimPos.getY(), aimPos.getZ(), entityIn.rotationYaw, entityIn.rotationPitch);
-
-        return true;
+        if (dimension == DimensionInit.DIMENSION_CHURCH){
+            entityIn.setLocationAndAngles(aimPos.getX(), aimPos.getY(), aimPos.getZ(), entityIn.rotationYaw, entityIn.rotationPitch);
+            return true;
+        }
+        else {
+            entityIn.setLocationAndAngles(posX, posY, posZ, entityIn.rotationYaw, entityIn.rotationPitch);
+            return true;
+        }
     }
 }

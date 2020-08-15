@@ -9,18 +9,23 @@ import com.xwm.magicmaid.init.PotionInit;
 import com.xwm.magicmaid.world.dimension.ChurchTeleporter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerSetSpawnEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -29,6 +34,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Mod.EventBusSubscriber
@@ -118,10 +124,44 @@ public class EventLoader
             }
         });
         for (EntityMagicMaid maid : maidList){
-            if (event.toDim == DimensionInit.DIMENSION_CHURCH)
-                maid.changeDimension(event.toDim, new ChurchTeleporter(oldWorld,event.toDim, player.posX, player.posY, player.posZ));
-            else
-                maid.changeDimension(event.toDim, new Teleporter(oldWorld));
+           maid.changeDimension(event.toDim, new ChurchTeleporter(oldWorld, event.toDim, maid.posX, maid.posY, maid.posZ));
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerSpawnEvent(LivingDeathEvent event){
+
+        EntityLivingBase player = event.getEntityLiving();
+        if (!(player instanceof EntityPlayer))
+            return;
+        World world = player.getEntityWorld();
+        if (world.isRemote)
+            return;
+        if (world.provider.canRespawnHere())
+            return;
+
+
+        BlockPos pos = ((EntityPlayer) player).getBedLocation(0);
+        if (pos == null) return;
+        WorldServer[] worldServers = FMLCommonHandler.instance().getMinecraftServerInstance().worlds;
+        List<EntityMagicMaid> maidList = new ArrayList<>();
+
+        for(WorldServer worldServer : worldServers)
+        {
+            List<EntityMagicMaid> maidList1 = worldServer.getEntities(EntityMagicMaid.class, new Predicate<EntityMagicMaid>() {
+                @Override
+                public boolean apply(@Nullable EntityMagicMaid input) {
+                    if (input != null && input.getOwnerID() != null && input.getOwnerID().equals(player.getUniqueID()))
+                        return true;
+                    return false;
+//                return true;
+                }
+            });
+            maidList.addAll(maidList1);
+        }
+
+        for (EntityMagicMaid maid : maidList) {
+            maid.changeDimension(0, new ChurchTeleporter((WorldServer) worldServers[0], 0, pos.getX(), pos.getY(), pos.getZ()));
         }
     }
 }
