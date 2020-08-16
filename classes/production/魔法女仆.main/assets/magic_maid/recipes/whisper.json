@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "***",
+    "#x#",
+    " x "
+  ],
+  "key":
+  {
+    "#":
+    {
+      "item": "magic_maid:whisperpiece"
+    },
+    "*":
+    {
+      "item": "magic_maid:holystone"
+    },
+    "x":
+    {
+      "item": "minecraft:stick"
+    }
+  },
+
+  "result":
+  {
+    "item": "magic_maid:whisper",
+    "count": 1
+  }
+}

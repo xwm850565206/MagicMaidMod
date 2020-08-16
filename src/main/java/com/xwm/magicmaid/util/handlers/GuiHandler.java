@@ -4,6 +4,7 @@ import com.xwm.magicmaid.entity.ai.EntityAINearestAttackableTargetAvoidOwner;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.gui.ContainMaidWindow;
 import com.xwm.magicmaid.gui.GuiMaidWindow;
+import com.xwm.magicmaid.gui.GuiShowMemory;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -46,6 +47,9 @@ public class GuiHandler implements IGuiHandler
             EntityMagicMaid maid = entities.get(0);
             return new ContainMaidWindow(player.inventory, maid);
         }
+        else if (ID == Reference.GUI_MAID_MEMORY){
+            ;
+        }
 
         return null;
     }
@@ -76,6 +80,10 @@ public class GuiHandler implements IGuiHandler
             Collections.sort(entities, new Sorter(player));
             EntityMagicMaid maid = entities.get(0);
             return new GuiMaidWindow(player.inventory, maid);
+        }
+        else if (ID == Reference.GUI_MAID_MEMORY)
+        {
+            return new GuiShowMemory(true, x);
         }
         return null;
     }

@@ -5,14 +5,18 @@ import com.google.common.base.Predicate;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.init.DimensionInit;
 import com.xwm.magicmaid.init.EntityInit;
+import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.init.PotionInit;
 import com.xwm.magicmaid.world.dimension.ChurchTeleporter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityPigZombie;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -36,10 +40,13 @@ import net.minecraftforge.fml.common.registry.EntityEntry;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Mod.EventBusSubscriber
 public class EventLoader
 {
+    private static final Random rand =  new Random();
+
     @SubscribeEvent
     public static void onEntityRegister(RegistryEvent.Register<EntityEntry> event)
     {
@@ -126,6 +133,38 @@ public class EventLoader
         for (EntityMagicMaid maid : maidList){
            maid.changeDimension(event.toDim, new ChurchTeleporter(oldWorld, event.toDim, maid.posX, maid.posY, maid.posZ));
         }
+    }
+
+    @SubscribeEvent
+    public static void onZombieDieEvent(LivingDeathEvent event)
+    {
+        EntityLivingBase entityLivingBase = event.getEntityLiving();
+        if (entityLivingBase.getEntityWorld().isRemote)
+            return;
+
+        if (entityLivingBase instanceof EntityZombie)
+        {
+            double p = rand.nextDouble();
+            if (p < 0.1){
+                ItemStack stack = new ItemStack(ItemInit.itemTheGospels, 1);
+                EntityItem entityItem = new EntityItem(entityLivingBase.getEntityWorld(), entityLivingBase.posX, entityLivingBase.posY, entityLivingBase.posZ, stack);
+                entityLivingBase.getEntityWorld().spawnEntity(entityItem);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void getExpEvent(LivingDeathEvent event)
+    {
+        try{
+            EntityLivingBase entityLivingBase = (EntityLivingBase) event.getSource().getImmediateSource();
+            if (entityLivingBase instanceof EntityMagicMaid && !entityLivingBase.getEntityWorld().isRemote){
+                ((EntityMagicMaid) entityLivingBase).plusExp();
+            }
+        } catch (Exception e){
+            ;
+        }
+
     }
 
     @SubscribeEvent

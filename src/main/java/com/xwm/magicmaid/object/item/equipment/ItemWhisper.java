@@ -28,15 +28,4 @@ public class ItemWhisper extends ItemWeapon
         tooltip.add(TextFormatting.YELLOW + "传说这把法杖的第一任主人是大法师戴安娜");
         tooltip.add(TextFormatting.YELLOW + "上面的结晶注入了她无穷的魔力");
     }
-
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
-    {
-        if (worldIn.isRemote)
-            return super.onItemRightClick(worldIn, playerIn, handIn);
-        else {
-            playerIn.changeDimension(DimensionInit.DIMENSION_CHURCH, new ChurchTeleporter((WorldServer) worldIn, DimensionInit.DIMENSION_CHURCH, playerIn.posX, playerIn.posY, playerIn.posZ));
-            return super.onItemRightClick(worldIn, playerIn, handIn);
-        }
-    }
 }

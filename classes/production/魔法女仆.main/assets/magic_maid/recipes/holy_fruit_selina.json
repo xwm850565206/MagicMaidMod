@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "magic_maid:memoryselina"
+    },
+    {
+      "item": "minecraft:golden_apple"
+    }
+  ],
+
+  "result":
+  {
+    "item": "magic_maid:holy_fruit_selina",
+    "count": 1
+  }
+}

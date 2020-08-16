@@ -32,6 +32,10 @@ public class EntityAIRettServe extends EntityAIBase
         if (entityLivingBase == null)
             return false;
 
+        if (maid.getDistance(entityLivingBase) > 20)
+            return false;
+
+
         PotionEffect effect = entityLivingBase.getActivePotionEffect(PotionInit.IMMORTAL_BLESS_EFFECT);
         return effect == null;
     }

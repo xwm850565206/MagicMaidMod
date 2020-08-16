@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    " # ",
+    "#*#",
+    " x "
+  ],
+  "key":
+  {
+    "#":
+    {
+      "item": "magic_maid:repantencepiece"
+    },
+    "*":
+    {
+      "item": "magic_maid:holystone"
+    },
+    "x": {
+      "item": "minecraft:stick"
+    }
+  },
+
+  "result":
+  {
+    "item": "magic_maid:repantence",
+    "count": 1
+  }
+}

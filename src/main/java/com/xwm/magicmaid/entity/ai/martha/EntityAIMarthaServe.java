@@ -34,6 +34,9 @@ public class EntityAIMarthaServe extends EntityAIBase
         if (entityLivingBase == null)
             return false;
 
+        if (maid.getDistance(entityLivingBase) > 20)
+            return false;
+
         PotionEffect effect = entityLivingBase.getActivePotionEffect(PotionInit.PROTECT_BLESS_EFFECT);
         return effect == null;
     }

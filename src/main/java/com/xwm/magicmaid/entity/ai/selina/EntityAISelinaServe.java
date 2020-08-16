@@ -29,6 +29,11 @@ public class EntityAISelinaServe extends EntityAIBase
         EntityLivingBase entityLivingBase = this.maid.world.getPlayerEntityByUUID(this.maid.getOwnerID());
         if (entityLivingBase == null)
             return false;
+
+        if (maid.getDistance(entityLivingBase) > 20)
+            return false;
+
+
         PotionEffect effect = entityLivingBase.getActivePotionEffect(PotionInit.WISE_BLESS_EFFECT);
         return effect == null;
     }

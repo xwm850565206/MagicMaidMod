@@ -118,23 +118,20 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(20);
     }
 
-    //todo 让女仆切换状态
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand hand)
     {
-        //todo
         if (EnumMode.valueOf(this.getMode()) == EnumMode.BOSS)
             return false;
 
         if (!world.isRemote && hand == EnumHand.MAIN_HAND){
-//            this.setState((this.getState() + 1) % 4);
-//            System.out.println(this.getState());
             ItemStack stack = player.getHeldItem(hand);
-            if (stack.isEmpty() && this.hasOwner() && this.getOwnerID().equals(player.getUniqueID())) {
-                if (player.isSneaking()) {
-                    player.openGui(Main.instance, Reference.GUI_MAID_WINDOW, world, (int) this.posX, (int) this.posY, (int) this.posZ);
-                }
-                else if(EnumMode.valueOf(getMode()) == EnumMode.SITTING){
+            //打开ui
+            if (player.isSneaking() && this.hasOwner() && this.getOwnerID().equals(player.getUniqueID()))
+                player.openGui(Main.instance, Reference.GUI_MAID_WINDOW, world, (int) this.posX, (int) this.posY, (int) this.posZ);
+            //转换模式
+            else if (stack.isEmpty() && this.hasOwner() && this.getOwnerID().equals(player.getUniqueID())) {
+                if(EnumMode.valueOf(getMode()) == EnumMode.SITTING){
                     this.setMode(EnumMode.toInt(oldMode));
                 }
                 else {
@@ -143,12 +140,22 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
                 }
                 return true;
             }
+            //设置主人
             else if (stack.getItem().equals(ItemInit.itemLostKey) && !this.hasOwner())
             {
                 if(!player.isCreative())
                     stack.shrink(1);
                 this.setOwnerID(player.getUniqueID());
                 return true;
+            }
+            //升阶
+            else if (stack.getItem().equals(ItemInit.itemRemainingSoft)){
+                if (getRank() < 2 && getExp() == 100){
+                    if (!player.isCreative())
+                        stack.shrink(1);
+                    setRank(getRank() + 1);
+                    setExp(0);
+                }
             }
 //            ItemStack stack = player.getHeldItem(hand);
         }
@@ -259,6 +266,10 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
 
     public int getExp(){
         return this.dataManager.get(EXP);
+    }
+
+    public void plusExp(){
+        this.dataManager.set(EXP, Math.min(getExp() + 1, 100));
     }
 
     public void setLevel(int level){

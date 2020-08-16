@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "#x#",
+    " * ",
+    "#x#"
+  ],
+  "key":
+  {
+    "#":
+    {
+      "item": "magic_maid:convictionpiece"
+    },
+    "*":
+    {
+      "item": "magic_maid:holystone"
+    },
+    "x": {
+      "item": "minecraft:stick"
+    }
+  },
+
+  "result":
+  {
+    "item": "magic_maid:conviction",
+    "count": 1
+  }
+}

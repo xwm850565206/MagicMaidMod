@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "###",
+    "###",
+    "###"
+  ],
+  "key":
+  {
+    "#":
+    {
+      "item": "magic_maid:memorypieceselina"
+    }
+  },
+
+  "result":
+  {
+    "item": "magic_maid:memoryselina",
+    "count": 1
+  }
+}

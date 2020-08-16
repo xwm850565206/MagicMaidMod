@@ -34,6 +34,7 @@ item.wisepiece.name=大智者碎片
 
 
 item.lostkey.name=遗失之匙
+item.remaining_soft.name=残存的温柔
 
 tile.oreholystone.name=圣痕矿石
 tile.memoryclock.name=记忆铜钟
@@ -50,6 +51,10 @@ entity.magic_maid_pandora.name=潘多拉魔盒
 entity.magic_maid_whisper.name=低语
 
 death.attack.repantence_attack=忏悔吧
+
+protect_bless=守护者的祝福
+immortal_bless=不朽者的祝福
+wise_bless=大智者的祝福
 
 
 itemGroup.creative_tab_maid=魔法女仆

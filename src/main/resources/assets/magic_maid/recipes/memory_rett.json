@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "###",
+    "###",
+    "###"
+  ],
+  "key":
+  {
+    "#":
+    {
+      "item": "magic_maid:memorypiecerett"
+    }
+  },
+
+  "result":
+  {
+    "item": "magic_maid:memoryrett",
+    "count": 1
+  }
+}

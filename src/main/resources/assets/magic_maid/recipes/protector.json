@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "###",
+    "***",
+    " * "
+  ],
+  "key":
+  {
+    "#":
+    {
+      "item": "magic_maid:protectorpiece"
+    },
+    "*":
+    {
+      "item": "magic_maid:holystone"
+    }
+  },
+
+  "result":
+  {
+    "item": "magic_maid:protector",
+    "count": 1
+  }
+}
