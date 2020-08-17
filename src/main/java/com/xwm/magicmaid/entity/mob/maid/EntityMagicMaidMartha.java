@@ -96,6 +96,7 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
                 this.setWeaponType(EnumEquipment.toInt(equipment1));
                 this.setHasWeapon(true);
                 this.world.spawnEntity(weapon1);
+                this.weapon = weapon1;
                 break;
             case CONVICTION:
                 EntityMaidWeapon weapon2 = EnumEquipment.toEntityMaidWeapon(equipment1, world);
@@ -105,6 +106,7 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
                 this.setWeaponType(EnumEquipment.toInt(equipment1));
                 this.setHasWeapon(true);
                 this.world.spawnEntity(weapon2);
+                this.weapon = weapon2;
                 break;
             case PROTECTOR:
                 this.setHasArmor(true);
@@ -127,6 +129,7 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
                 setWeaponID(null);
                 setWeaponType(0);
                 setHasWeapon(false);
+                this.weapon = null;
             } catch (Exception e){
                 ; //可能武器被其他模组杀死了
             }

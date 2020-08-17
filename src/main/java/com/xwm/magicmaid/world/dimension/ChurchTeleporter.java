@@ -53,13 +53,20 @@ public class ChurchTeleporter extends Teleporter
     {
         if (dimension == DimensionInit.DIMENSION_CHURCH){
             entityIn.setLocationAndAngles(aimPos.getX(), aimPos.getY(), aimPos.getZ(), entityIn.rotationYaw, entityIn.rotationPitch);
-            entityIn.getEntityWorld().updateEntityWithOptionalForce(entityIn, false);
+            entityIn.getEntityWorld().updateEntityWithOptionalForce(entityIn, true);
             return true;
         }
-        else {
+        else if (dimension == 0){
             entityIn.setLocationAndAngles(posX, posY, posZ, entityIn.rotationYaw, entityIn.rotationPitch);
-            entityIn.getEntityWorld().updateEntityWithOptionalForce(entityIn, false);
+            entityIn.getEntityWorld().updateEntityWithOptionalForce(entityIn, true);
             return true;
         }
+        else if (dimension == 1){
+            entityIn.setLocationAndAngles(100, 51, 0, entityIn.rotationYaw, entityIn.rotationPitch);
+            entityIn.getEntityWorld().updateEntityWithOptionalForce(entityIn, true);
+            return true;
+        }
+        else
+            return super.placeInExistingPortal(entityIn, rotationYaw);
     }
 }

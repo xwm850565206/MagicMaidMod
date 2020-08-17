@@ -59,14 +59,20 @@ public class EntityMaidWeapon extends EntityLivingBase
         {
             if (maid == null && this.getOwnerID() != null){
                 maid = EntityMagicMaid.getMaidFromUUID(world, this.getOwnerID());
-                if (maid == null)
+                if (maid == null || maid.isDead) {
                     this.setDead();
+                }
             }
 
             if (maid != null) {
-                //跟随主人
-                BlockPos pos = this.maid.weaponStandbyPos.add(this.maid.posX, this.maid.posY, this.maid.posZ);
-                this.moveToBlockPosAndAngles(pos, this.rotationYaw, this.rotationPitch);
+                if (maid.isDead)
+                    this.setDead();
+                else
+                {
+                    //跟随主人
+                    BlockPos pos = this.maid.weaponStandbyPos.add(this.maid.posX, this.maid.posY, this.maid.posZ);
+                    this.moveToBlockPosAndAngles(pos, this.rotationYaw, this.rotationPitch);
+                }
             }
         }
 

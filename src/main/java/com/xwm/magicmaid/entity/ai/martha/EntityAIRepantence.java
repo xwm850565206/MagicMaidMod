@@ -39,7 +39,6 @@ public class EntityAIRepantence extends EntityAIBase
     @Override
     public boolean shouldExecute() {
 
-        maid.debug();
         if (!maid.hasOwner() && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS) //如果没有主人又不是boss就不放技能
             return false;
         if (EnumEquipment.valueOf(maid.getWeaponType()) != EnumEquipment.REPATENCE)

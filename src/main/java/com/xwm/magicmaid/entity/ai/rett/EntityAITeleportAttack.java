@@ -36,6 +36,7 @@ public class EntityAITeleportAttack extends EntityAIBase
     {
         BlockPos pos = maid.getAttackTarget().getPosition();
         maid.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), maid.rotationYaw, maid.rotationPitch);
+        maid.world.updateEntityWithOptionalForce(maid, true);
     }
 
 }

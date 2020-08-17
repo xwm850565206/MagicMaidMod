@@ -16,6 +16,7 @@ import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
@@ -50,6 +51,13 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
 
 
     }
+    @Override
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(40);
+    }
+
 
     @Override
     public int getAttackDamage(EnumAttackType type){
@@ -105,6 +113,7 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
                 this.setWeaponID(pandorasBox.getUniqueID());
                 this.setWeaponType(EnumEquipment.toInt(equipment1));
                 this.setHasWeapon(true);
+                this.weapon = pandorasBox;
                 break;
             case WHISPER:
                 EntityMaidWeaponWhisper whisper = new EntityMaidWeaponWhisper(world);
@@ -114,6 +123,7 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
                 this.setWeaponID(whisper.getUniqueID());
                 this.setWeaponType(EnumEquipment.toInt(equipment1));
                 this.setHasWeapon(true);
+                this.weapon = whisper;
                 break;
             case WISE:
                 this.setHasArmor(true);
@@ -135,6 +145,7 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
             this.setWeaponType(EnumEquipment.toInt(EnumEquipment.NONE));
             this.setWeaponID(null);
             this.setHasWeapon(false);
+            this.weapon = null;
         }
         else {
             this.setHasArmor(false);

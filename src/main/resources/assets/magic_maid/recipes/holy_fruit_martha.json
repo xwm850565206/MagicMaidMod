@@ -5,7 +5,8 @@
       "item": "magic_maid:memorymartha"
     },
     {
-      "item": "minecraft:golden_apple"
+      "item": "minecraft:golden_apple",
+      "data": 0
     }
   ],
 

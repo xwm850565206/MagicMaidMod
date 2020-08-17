@@ -130,8 +130,9 @@ public class EventLoader
 //                return true;
             }
         });
+
         for (EntityMagicMaid maid : maidList){
-           maid.changeDimension(event.toDim, new ChurchTeleporter(oldWorld, event.toDim, maid.posX, maid.posY, maid.posZ));
+           maid.changeDimension(event.toDim, new ChurchTeleporter(oldWorld, event.toDim, player.posX, player.posY, player.posZ));
         }
     }
 
@@ -181,8 +182,8 @@ public class EventLoader
 
 
         BlockPos pos = ((EntityPlayer) player).getBedLocation(0);
-        if (pos == null) return;
         WorldServer[] worldServers = FMLCommonHandler.instance().getMinecraftServerInstance().worlds;
+        if (pos == null || pos.equals(worldServers[0].getSpawnPoint())) return;
         List<EntityMagicMaid> maidList = new ArrayList<>();
 
         for(WorldServer worldServer : worldServers)
@@ -200,7 +201,7 @@ public class EventLoader
         }
 
         for (EntityMagicMaid maid : maidList) {
-            maid.changeDimension(0, new ChurchTeleporter((WorldServer) worldServers[0], 0, pos.getX(), pos.getY(), pos.getZ()));
+            maid.changeDimension(0, new ChurchTeleporter((WorldServer) worldServers[0], 0, pos.getX(), pos.getY() + 1, pos.getZ()));
         }
     }
 }

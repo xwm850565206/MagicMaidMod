@@ -12,6 +12,8 @@ import com.xwm.magicmaid.particle.EnumCustomParticles;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.init.MobEffects;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumFacing;
@@ -74,35 +76,44 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
     public void updateTask()
     {
         this.maid.setPerformtick(performTick);
+        try{
+            if (performTick == 5){
+                List<EntityLiving> entityLivingList = world.getEntitiesWithinAABB(EntityLiving.class, target.getEntityBoundingBox().grow(2, 1, 2));
+                for (EntityLiving entityLiving : entityLivingList){
+                    if (!maid.isEnemy(entityLiving))
+                        continue;
 
-        if (performTick == 5){
-            List<EntityLiving> entityLivingList = world.getEntitiesWithinAABB(EntityLiving.class, target.getEntityBoundingBox().grow(2, 1, 2));
-            for (EntityLiving entityLiving : entityLivingList){
-                if (!maid.isEnemy(entityLiving))
-                    continue;
-                entityLiving.attackEntityFrom(DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER));
+                    entityLiving.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 400, 1 + maid.getRank()));
+                    entityLiving.attackEntityFrom(DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER));
+                }
             }
-        }
-        else if (performTick == 10) {
-            List<EntityLiving> entityLivingList = world.getEntitiesWithinAABB(EntityLiving.class, target.getEntityBoundingBox().grow(2, 1, 2));
-            for (EntityLiving entityLiving : entityLivingList){
-                if (!maid.isEnemy(entityLiving))
-                    continue;
-                entityLiving.attackEntityFrom(DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER));
+            else if (performTick == 10) {
+                List<EntityLiving> entityLivingList = world.getEntitiesWithinAABB(EntityLiving.class, target.getEntityBoundingBox().grow(2, 1, 2));
+                for (EntityLiving entityLiving : entityLivingList){
+                    if (!maid.isEnemy(entityLiving))
+                        continue;
+
+                    entityLiving.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 400, 1));
+                    entityLiving.attackEntityFrom(DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER));
+
+                }
             }
-        }
-        else if (performTick >= 20 && performTick < 30) {
-            playHoldPatricle(this.maid.getEntityBoundingBox().grow(0, 1, 0), this.maid.getHorizontalFacing());
-        }
-        else if (performTick == 30) {
-            playBombardmentParticle(this.maid.getEntityBoundingBox());
-            List<EntityLiving> entityLivingList = world.getEntitiesWithinAABB(EntityLiving.class, maid.getEntityBoundingBox().grow(4, 2, 4));
-            for (EntityLiving entityLiving : entityLivingList){
-                if (!maid.isEnemy(entityLiving))
-                    continue;
-                entityLiving.attackEntityFrom(DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER) * 2);
-                entityLiving.setVelocity(random.nextDouble(), random.nextDouble()*3, random.nextDouble());
+            else if (performTick >= 20 && performTick < 30) {
+                playHoldPatricle(this.maid.getEntityBoundingBox().grow(0, 1, 0), this.maid.getHorizontalFacing());
             }
+            else if (performTick == 30) {
+                playBombardmentParticle(this.maid.getEntityBoundingBox());
+                List<EntityLiving> entityLivingList = world.getEntitiesWithinAABB(EntityLiving.class, maid.getEntityBoundingBox().grow(4, 2, 4));
+                for (EntityLiving entityLiving : entityLivingList){
+                    if (!maid.isEnemy(entityLiving))
+                        continue;
+                    entityLiving.attackEntityFrom(DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER) * 2);
+                    entityLiving.setVelocity(random.nextDouble(), random.nextDouble()*3, random.nextDouble());
+                }
+            }
+
+        } catch (Exception e){
+            ;
         }
 
         performTick++;

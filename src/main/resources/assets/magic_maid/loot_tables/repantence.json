@@ -1,11 +1,15 @@
 {
   "pools": [
     {
-      "rolls": 1,
+      "name": "repantence",
+      "rolls": {
+        "min": 1,
+        "max": 5
+      },
       "entries": [
         {
           "type": "item",
-          "weight": 1,
+          "weight": 10,
           "name": "magic_maid:repantencepiece",
           "conditions": [
             {
@@ -24,7 +28,7 @@
         },
         {
           "type": "item",
-          "weight": 1,
+          "weight": 5,
           "name": "magic_maid:protectorpiece",
           "functions": [
             {
@@ -38,7 +42,7 @@
         },
         {
           "type": "item",
-          "weight": 1,
+          "weight": 4,
           "name": "magic_maid:memorypiecemartha",
           "conditions": [
             {
@@ -51,6 +55,20 @@
               "count": {
                 "min": 1,
                 "max": 9
+              }
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "weight": 1,
+          "name": "magic_maid:remaining_soft",
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 0,
+                "max": 1
               }
             }
           ]

@@ -60,8 +60,9 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
     private static final DataParameter<Integer> WEAPONTYPE = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
 
     private EnumMode oldMode = null;
-    private Boolean isPerformAttack= false;
+    private Boolean isPerformAttack = false;
 
+    protected EntityMaidWeapon weapon = null;
     public BlockPos weaponStandbyPos = new BlockPos(0, this.height+1, 0);
 
     public final NonNullList<ItemStack> inventory = NonNullList.<ItemStack>withSize(2, ItemStack.EMPTY); //todo 保存背包里的信息
@@ -114,7 +115,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(20);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30000000298023224D);
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(5);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(100);
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(20);
     }
 
@@ -169,6 +170,13 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         super.onUpdate();
         if (this.getAttackTarget() != null && !this.isEnemy(this.getAttackTarget()))
             this.setAttackTarget(null);
+        if (hasWeapon() && !(this instanceof EntityMagicMaidRett)){
+            if (weapon == null)
+                weapon = EntityMaidWeapon.getWeaponFromUUID(world, getWeaponID());
+            if (weapon == null || weapon.isDead){
+                getEquipment(ItemEquipment.valueOf(EnumEquipment.valueOf(getWeaponType())));
+            }
+        }
     }
 
     public void writeEntityToNBT(NBTTagCompound compound)
@@ -376,7 +384,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         if (EnumMode.valueOf(this.getMode()) == EnumMode.BOSS)
             return true;
 
-        if (this.getOwnerID() == entityLivingBase.getUniqueID())
+        if (this.getOwnerID().equals(entityLivingBase.getUniqueID()))
             return false;
         if (entityLivingBase instanceof EntityMagicMaid && ((EntityMagicMaid) entityLivingBase).hasOwner() && this.getOwnerID() == ((EntityMagicMaid) entityLivingBase).getOwnerID())
             return false;
@@ -573,6 +581,15 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
             return null;
         }
 
+    }
+
+    @Override
+    public void onDeath(DamageSource cause){
+        if (getTrueHealth() > 0){
+            return;
+        }
+        else
+            super.onDeath(cause);
     }
 
     @Override

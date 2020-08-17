@@ -15,6 +15,7 @@ import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -43,9 +44,6 @@ public class EntityAIConviction extends EntityAIBase
     @Override
     public boolean shouldExecute() {
 
-//        System.out.println("ower: " + maid.hasOwner() + " weaponType: "
-//                + maid.getWeaponType() + " mode: " + EnumMode.valueOf(maid.getMode()) + " state: " + maid.getState());
-
         if (!maid.hasOwner() && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS)
             return false;
         if (EnumEquipment.valueOf(maid.getWeaponType()) != EnumEquipment.CONVICTION)
@@ -53,7 +51,6 @@ public class EntityAIConviction extends EntityAIBase
         if (EnumMode.valueOf(maid.getMode()) != EnumMode.FIGHT && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS)
             return false;
 
-        System.out.println("tick: " + tick);
         return tick++ >= this.maid.getAttackColdTime(EnumAttackType.CONVICTION);
     }
 
@@ -95,6 +92,7 @@ public class EntityAIConviction extends EntityAIBase
                     entityLivingBase.setHealth(1);
                 if (EnumMode.valueOf(maid.getMode()) == EnumMode.BOSS ) {
                     if (entityLivingBase instanceof EntityPlayer){
+                        entityLivingBase.sendMessage(new TextComponentString("你有罪！"));
                         FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(this.maid, "clear " + entityLivingBase.getName());
                         entityLivingBase.setHealth(0);
                     }
