@@ -162,11 +162,11 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
     public boolean attackEntityFrom(DamageSource source, float amount)
     {
         if(this.getRank() >= 2 && hasArmor()){ //等级2时候不会受到过高伤害的攻击 这里还不严谨 很容易绕过
-            if (amount > 5) {
+            if (amount > 50) {
                 try {
                     EntityLivingBase entityLivingBase = (EntityLivingBase) source.getTrueSource();
                     if (entityLivingBase instanceof EntityPlayer && isEnemy(entityLivingBase)){
-                        entityLivingBase.sendMessage(new TextComponentString("你的物品 全都消失！"));
+                        entityLivingBase.sendMessage(new TextComponentString("检测到高额攻击伤害，尝试清除玩家物品，踢出玩家"));
                         FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(this, "clear " + entityLivingBase.getName());
                         FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(this, "kick " + entityLivingBase.getName());
                     }

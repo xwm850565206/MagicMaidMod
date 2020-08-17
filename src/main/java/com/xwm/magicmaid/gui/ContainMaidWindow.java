@@ -14,33 +14,29 @@ import net.minecraft.util.ResourceLocation;
 
 public class ContainMaidWindow extends Container
 {
-    private static final ResourceLocation WEAPONSLOT = new ResourceLocation(Reference.MODID + ":textures/gui/weapon_icon.png");
-    private static final ResourceLocation ARMORSLOT = new ResourceLocation(Reference.MODID + ":textures/gui/armor_icon.png");
-
     private InventoryPlayer player;
     private EntityMagicMaid maid;
+
+    public Slot weaponSlot;
+    public Slot armorSlot;
 
     public ContainMaidWindow(InventoryPlayer inventory, EntityMagicMaid maid) {
         this.player = inventory;
         this.maid = maid;
 
-        //武器槽
-        Slot weaponSlot = new Slot(maid, 0, 8, 8){
+        weaponSlot = new Slot(maid, 0, 8, 8){
             @Override
             public boolean isItemValid(ItemStack stack) {
                 return stack != null && !stack.isEmpty() && stack.getItem() instanceof ItemWeapon;
             }
         };
-        weaponSlot.setBackgroundLocation(WEAPONSLOT);
-        //盔甲槽 todo 盔甲还没做
-        Slot armorSlot = new Slot(maid, 1, 9, 8 + 18){
+
+        armorSlot = new Slot(maid, 1, 9, 8 + 18){
             @Override
             public boolean isItemValid(ItemStack stack) {
                 return stack != null && !stack.isEmpty() && stack.getItem() instanceof ItemArmor;
             }
         };
-        armorSlot.setBackgroundLocation(ARMORSLOT);
-
 
         addSlotToContainer(weaponSlot);
         addSlotToContainer(armorSlot);

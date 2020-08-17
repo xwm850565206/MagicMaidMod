@@ -6,16 +6,19 @@ import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.network.CustomerParticlePacket;
 import com.xwm.magicmaid.network.DistinationParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.network.UpdateEntityPacket;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -60,8 +63,17 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
                     {
                         if (!this.maid.isEnemy(entityLivingBase))
                             continue;
+                        float health = entityLivingBase.getHealth();
                         entityLivingBase.attackEntityFrom(DamageSource.causeMobDamage(this.maid),
                                 this.maid.getAttackDamage(EnumAttackType.PANDORA));
+                        if (health == entityLivingBase.getHealth()){
+                            entityLivingBase.setHealth(0);
+                            if (entityLivingBase instanceof EntityPlayerMP) {
+                                entityLivingBase.sendMessage(new TextComponentString("检测到装甲水平过高，尝试直接斩杀"));
+                                UpdateEntityPacket packet = new UpdateEntityPacket();
+                                NetworkLoader.instance.sendTo(packet, (EntityPlayerMP) entityLivingBase);
+                            }
+                        }
                         this.maid.heal(this.maid.getAttackDamage(EnumAttackType.PANDORA)); //吸血给自己
                         playParticle(entityLivingBase);
                     }

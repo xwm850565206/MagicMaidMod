@@ -8,16 +8,21 @@ import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumRettState;
 import com.xwm.magicmaid.network.CustomerParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.network.UpdateEntityPacket;
+import com.xwm.magicmaid.network.VelocityPacket;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import org.lwjgl.Sys;
@@ -42,8 +47,6 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
     }
 
     public  boolean shouldExecute(){
-        this.maid.debug();
-        System.out.println("tick : " + tick);
         if (!maid.hasOwner() && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS) //如果没有主人又不是boss就不放技能
             return false;
         if (EnumEquipment.valueOf(maid.getWeaponType()) != EnumEquipment.DEMONKILLINGSWORD)
@@ -67,7 +70,6 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
 
     public void startExecuting()
     {
-        System.out.println("start");
         this.tick = 0;
         this.world = maid.getEntityWorld();
         this.target = maid.getAttackTarget();
@@ -78,8 +80,8 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
         this.maid.setPerformtick(performTick);
         try{
             if (performTick == 5){
-                List<EntityLiving> entityLivingList = world.getEntitiesWithinAABB(EntityLiving.class, target.getEntityBoundingBox().grow(2, 1, 2));
-                for (EntityLiving entityLiving : entityLivingList){
+                List<EntityLivingBase> entityLivingList = world.getEntitiesWithinAABB(EntityLivingBase.class, target.getEntityBoundingBox().grow(2, 1, 2));
+                for (EntityLivingBase entityLiving : entityLivingList){
                     if (!maid.isEnemy(entityLiving))
                         continue;
 
@@ -88,8 +90,8 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
                 }
             }
             else if (performTick == 10) {
-                List<EntityLiving> entityLivingList = world.getEntitiesWithinAABB(EntityLiving.class, target.getEntityBoundingBox().grow(2, 1, 2));
-                for (EntityLiving entityLiving : entityLivingList){
+                List<EntityLivingBase> entityLivingList = world.getEntitiesWithinAABB(EntityLivingBase.class, target.getEntityBoundingBox().grow(2, 1, 2));
+                for (EntityLivingBase entityLiving : entityLivingList){
                     if (!maid.isEnemy(entityLiving))
                         continue;
 
@@ -103,12 +105,23 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
             }
             else if (performTick == 30) {
                 playBombardmentParticle(this.maid.getEntityBoundingBox());
-                List<EntityLiving> entityLivingList = world.getEntitiesWithinAABB(EntityLiving.class, maid.getEntityBoundingBox().grow(4, 2, 4));
-                for (EntityLiving entityLiving : entityLivingList){
+                List<EntityLivingBase> entityLivingList = world.getEntitiesWithinAABB(EntityLivingBase.class, maid.getEntityBoundingBox().grow(4, 2, 4));
+                for (EntityLivingBase entityLiving : entityLivingList){
                     if (!maid.isEnemy(entityLiving))
                         continue;
+                    float health = entityLiving.getHealth();
                     entityLiving.attackEntityFrom(DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER) * 2);
-                    entityLiving.setVelocity(random.nextDouble(), random.nextDouble()*3, random.nextDouble());
+                    if (health == entityLiving.getHealth()) {
+                       entityLiving.setHealth(0);
+                        if (entityLiving instanceof EntityPlayerMP) {
+                            entityLiving.sendMessage(new TextComponentString("检测到装甲水平过高，尝试直接斩杀"));
+                            UpdateEntityPacket packet = new UpdateEntityPacket();
+                            NetworkLoader.instance.sendTo(packet, (EntityPlayerMP) entityLiving);
+                        }
+                    }
+                    VelocityPacket packet = new VelocityPacket(entityLiving.getEntityId(), random.nextFloat(), random.nextFloat()*3, random.nextFloat());
+                    NetworkLoader.instance.sendToAll(packet);
+                    world.updateEntityWithOptionalForce(entityLiving, false);
                 }
             }
 

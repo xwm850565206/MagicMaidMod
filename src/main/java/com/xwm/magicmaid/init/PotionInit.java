@@ -25,9 +25,17 @@ public class PotionInit
 
     public static void registerPotions()
     {
-        registerPotion(PROTECT_BLESS, LONG_PROTECT_BLESS, PROTECT_BLESS_EFFECT);
-        registerPotion(IMMORTAL_BLESS, LONG_IMMORTAL_BLESS, IMMORTAL_BLESS_EFFECT);
-        registerPotion(WISE_BLESS, LONG_WISE_BLESS, WISE_BLESS_EFFECT);
+        //不添加药水
+//        registerPotion(PROTECT_BLESS, LONG_PROTECT_BLESS, PROTECT_BLESS_EFFECT);
+//        registerPotion(IMMORTAL_BLESS, LONG_IMMORTAL_BLESS, IMMORTAL_BLESS_EFFECT);
+//        registerPotion(WISE_BLESS, LONG_WISE_BLESS, WISE_BLESS_EFFECT);
+        registerPotionWithoutBottle(PROTECT_BLESS_EFFECT);
+        registerPotionWithoutBottle(IMMORTAL_BLESS_EFFECT);
+        registerPotionWithoutBottle(WISE_BLESS_EFFECT);
+    }
+
+    private static void registerPotionWithoutBottle(Potion effect){
+        ForgeRegistries.POTIONS.register(effect);
     }
 
     private static void registerPotion(PotionType defaultPotion, PotionType longPotion, Potion effect)

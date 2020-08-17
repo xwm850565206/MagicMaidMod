@@ -1,0 +1,14 @@
+{
+  "bell":
+  {
+    "category": "block",
+    "subtitle": "bell",
+    "sounds": [{"name": "magic_maid:bell", "stream":  true}]
+  },
+  "maid_ambient":
+  {
+    "category": "voice",
+    "subtitle": "maid_ambient",
+    "sounds": [{"name": "magic_maid:maid_ambient", "stream":  true}]
+  }
+}

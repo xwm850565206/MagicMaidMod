@@ -2,6 +2,7 @@ package com.xwm.magicmaid.gui;
 
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumMode;
+import com.xwm.magicmaid.init.TextureInit;
 import com.xwm.magicmaid.network.MaidModePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.util.Reference;
@@ -21,6 +22,9 @@ import java.io.IOException;
 
 public class GuiMaidWindow extends GuiContainer
 {
+    private static final ResourceLocation WEAPONSLOT = new ResourceLocation(Reference.MODID + ":textures/gui/weapon_icon.png");
+    private static final ResourceLocation ARMORSLOT = new ResourceLocation(Reference.MODID + ":/gui/armor_icon.png");
+
     private static final int BUTTON_MODE_SWITH = 0;
     private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.MODID + ":textures/gui/maidwindow.png");
     private InventoryPlayer player;
@@ -31,8 +35,12 @@ public class GuiMaidWindow extends GuiContainer
     /** The old y position of the mouse pointer */
     private float oldMouseY;
 
-    public GuiMaidWindow(InventoryPlayer player, EntityMagicMaid maid) {
-        super(new ContainMaidWindow(player, maid));
+    private ContainMaidWindow maidWindow;
+
+
+    public GuiMaidWindow(ContainMaidWindow maidWindow, InventoryPlayer player, EntityMagicMaid maid) {
+        super(maidWindow);
+        this.maidWindow = maidWindow;
         this.player = player;
         this.maid = maid;
     }

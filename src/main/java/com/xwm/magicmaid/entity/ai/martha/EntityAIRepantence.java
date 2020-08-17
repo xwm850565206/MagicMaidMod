@@ -7,12 +7,17 @@ import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.network.CustomerParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.ParticlePacket;
+import com.xwm.magicmaid.network.UpdateEntityPacket;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -76,8 +81,17 @@ public class EntityAIRepantence extends EntityAIBase
             try{
                 if (!maid.isEnemy(entityLivingBase))
                     continue;
+                float health = entityLivingBase.getHealth();
                 entityLivingBase.attackEntityFrom(new EntityDamageSource("repantence_attack", maid).setDamageBypassesArmor(),
                         maid.getAttackDamage(EnumAttackType.REPANTENCE));
+                if (health == entityLivingBase.getHealth()){
+                    entityLivingBase.setHealth(0);
+                    if (entityLivingBase instanceof EntityPlayerMP) {
+                        entityLivingBase.sendMessage(new TextComponentString("检测到装甲水平过高，尝试直接斩杀"));
+                        UpdateEntityPacket packet = new UpdateEntityPacket();
+                        NetworkLoader.instance.sendTo(packet, (EntityPlayerMP) entityLivingBase);
+                    }
+                }
                 playParticle(entityLivingBase.getEntityBoundingBox());
 
                 if (maid.getRank() >= 2) //2阶造成伤害回血

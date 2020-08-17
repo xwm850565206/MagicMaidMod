@@ -21,12 +21,12 @@ public class EntityInit
 
     public static void registerEntities(RegistryEvent.Register<EntityEntry> event)
     {
-        registerEntity(event, Reference.MODID + "_maid_martha", EntityMagicMaidMartha.class, Reference.ENTITY_MARTHA, 50, 0xFFFF00, 0xFFD700);
-        registerEntity(event, Reference.MODID + "_maid_martha_boss", EntityMagicMaidMarthaBoss.class, Reference.ENTITY_MARTHA_BOSS, 50, 0xFFFF00, 0xFFD700);
-        registerEntity(event, Reference.MODID + "_maid_rett", EntityMagicMaidRett.class, Reference.ENTITY_RETT, 50, 0xFFFF00, 0xFFD700);
-        registerEntity(event, Reference.MODID + "_maid_rett_boss", EntityMagicMaidRettBoss.class, Reference.ENTITY_RETT_BOSS, 50, 0xFFFF00, 0xFFD700);
-        registerEntity(event, Reference.MODID + "_maid_selina", EntityMagicMaidSelina.class, Reference.ENTITY_SELINA, 50, 0xFFFF00, 0xFFD700);
-        registerEntity(event, Reference.MODID + "_maid_selina_boss", EntityMagicMaidSelinaBoss.class, Reference.ENTITY_SELINA_BOSS, 50, 0xFFFF00, 0xFFD700);
+        registerEntityWithoutEgg(event, Reference.MODID + "_maid_martha", EntityMagicMaidMartha.class, Reference.ENTITY_MARTHA, 50);
+        registerEntityWithoutEgg(event, Reference.MODID + "_maid_martha_boss", EntityMagicMaidMarthaBoss.class, Reference.ENTITY_MARTHA_BOSS, 50);
+        registerEntityWithoutEgg(event, Reference.MODID + "_maid_rett", EntityMagicMaidRett.class, Reference.ENTITY_RETT, 50);
+        registerEntityWithoutEgg(event, Reference.MODID + "_maid_rett_boss", EntityMagicMaidRettBoss.class, Reference.ENTITY_RETT_BOSS, 50);
+        registerEntityWithoutEgg(event, Reference.MODID + "_maid_selina", EntityMagicMaidSelina.class, Reference.ENTITY_SELINA, 50);
+        registerEntityWithoutEgg(event, Reference.MODID + "_maid_selina_boss", EntityMagicMaidSelinaBoss.class, Reference.ENTITY_SELINA_BOSS, 50);
 
         registerEntityWithoutEgg(event, Reference.MODID + "_repentance", EntityMaidWeaponRepantence.class, Reference.ENTITY_REPENTANCE, 50);
         registerEntityWithoutEgg(event, Reference.MODID + "_conviction", EntityMaidWeaponConviction.class, Reference.ENTITY_CONVICTION, 50);

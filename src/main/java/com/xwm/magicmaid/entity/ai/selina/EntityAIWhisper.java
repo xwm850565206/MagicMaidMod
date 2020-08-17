@@ -54,7 +54,6 @@ public class EntityAIWhisper extends EntityAIBase
      */
     @Override
     public boolean shouldExecute() {
-        maid.debug();
 
         if (!maid.hasOwner() && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS)
             return false;
@@ -62,8 +61,7 @@ public class EntityAIWhisper extends EntityAIBase
             return false;
         if (EnumMode.valueOf(maid.getMode()) != EnumMode.FIGHT && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS)
             return false;
-        tick++;
-        System.out.println("tick: " + tick);
+
         if (this.maid.getAttackTarget() == null)
             return false;
         return tick >= maid.getAttackColdTime(EnumAttackType.WHISPER);

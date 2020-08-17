@@ -32,8 +32,12 @@ item.protectorpiece.name=保护者碎片
 item.immortalpiece.name=不朽者碎片
 item.wisepiece.name=大智者碎片
 
+item.holy_fruit_martha.name=圣果(玛莎)
+item.holy_fruit_rett.name=圣果(蕾特)
+item.holy_fruit_selina.name=圣果(莎莉娜)
 
 item.lostkey.name=遗失之匙
+item.the_gospels.name=福音书
 item.remaining_soft.name=残存的温柔
 
 tile.oreholystone.name=圣痕矿石

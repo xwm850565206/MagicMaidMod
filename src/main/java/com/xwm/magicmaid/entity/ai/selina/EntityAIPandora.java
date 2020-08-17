@@ -17,7 +17,6 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-//todo
 public class EntityAIPandora extends EntityAIBase
 {
     private static final int PERFORMTIME = 100;
@@ -41,15 +40,13 @@ public class EntityAIPandora extends EntityAIBase
     @Override
     public boolean shouldExecute() {
 
-//        maid.debug();
-
         if (!maid.hasOwner() && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS)
             return false;
         if (EnumEquipment.valueOf(maid.getWeaponType()) != EnumEquipment.PANDORA)
             return false;
         if (EnumMode.valueOf(maid.getMode()) != EnumMode.FIGHT && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS)
             return false;
-        System.out.println("tick: " + tick);
+
         return tick++ >= maid.getAttackColdTime(EnumAttackType.PANDORA);
     }
 

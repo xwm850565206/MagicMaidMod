@@ -7,18 +7,13 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class SoundsHandler
 {
-    public static SoundEvent ENTITY_RIDERHERO_AMBIENT, ENTITY_RIDERHERO_HURT;
-    public static SoundEvent ENTITY_SHADOWHERO_AMBIENT;//, ENTITY_SHADOWHERO_HURT, ENTITY_SHADOWHERO_DEATH;
-    public static SoundEvent ENTITY_MAGICIAN_AMBIENT, ENTITY_MAGICIAN_DEATH;
-
-    public static SoundEvent ENTITY_BERSERKER_AMBIENT, ENTITY_BERSERKER_HURT, ENTITY_BERSERKER_DEATH;
-    public static SoundEvent ENTITY_EMPEROR_AMBIENT;
-
-    public static SoundEvent ON_GAME;
+    public static SoundEvent BELL;
+    public static SoundEvent MAID_AMBIENT;
 
     public static void registerSounds()
     {
-        ON_GAME = registerSound("fighting");
+        BELL = registerSound("bell");
+        MAID_AMBIENT = registerSound("maid_ambient");
     }
 
     private static SoundEvent registerSound(String name)

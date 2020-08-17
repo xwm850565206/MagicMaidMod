@@ -10,9 +10,12 @@ import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumRettState;
 import com.xwm.magicmaid.init.ItemInit;
+import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.network.SoundPacket;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.util.Reference;
+import com.xwm.magicmaid.util.handlers.SoundsHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -32,12 +35,14 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 import com.google.common.base.Optional;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -112,8 +117,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(20);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(20);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30000000298023224D);
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(100);
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(20);
@@ -128,9 +132,12 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         if (!world.isRemote && hand == EnumHand.MAIN_HAND){
             ItemStack stack = player.getHeldItem(hand);
             //打开ui
-            if (player.isSneaking() && this.hasOwner() && this.getOwnerID().equals(player.getUniqueID()))
+            if (player.isSneaking() && this.hasOwner() && this.getOwnerID().equals(player.getUniqueID())){
                 player.openGui(Main.instance, Reference.GUI_MAID_WINDOW, world, (int) this.posX, (int) this.posY, (int) this.posZ);
-            //转换模式
+                SoundPacket packet = new SoundPacket(1, getPosition());
+                NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(world.provider.getDimension(), posX, posY, posZ, 40.0D);
+                NetworkLoader.instance.sendToAllAround(packet, target);
+            } //转换模式
             else if (stack.isEmpty() && this.hasOwner() && this.getOwnerID().equals(player.getUniqueID())) {
                 if(EnumMode.valueOf(getMode()) == EnumMode.SITTING){
                     this.setMode(EnumMode.toInt(oldMode));
@@ -350,15 +357,11 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
     public int getWeaponType() {return this.dataManager.get(WEAPONTYPE);}
 
     public int getAttackDamage(EnumAttackType type){
-        return 10; //todo 随着成长造成的伤害不同，不同女仆也不同
+        return 10;
     }
 
     public int getAttackColdTime(EnumAttackType type){
         return 100;
-    }
-
-    public void turnToBossMode() {
-        //todo 女仆的boss形态 击败boss形态的女仆 会掉落物品，用于武器合成，女仆召唤。
     }
 
     public void getEquipment(ItemEquipment equipment){
@@ -384,7 +387,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         if (EnumMode.valueOf(this.getMode()) == EnumMode.BOSS)
             return true;
 
-        if (this.getOwnerID().equals(entityLivingBase.getUniqueID()))
+        if (this.getOwnerID() != null && this.getOwnerID().equals(entityLivingBase.getUniqueID()))
             return false;
         if (entityLivingBase instanceof EntityMagicMaid && ((EntityMagicMaid) entityLivingBase).hasOwner() && this.getOwnerID() == ((EntityMagicMaid) entityLivingBase).getOwnerID())
             return false;
@@ -611,7 +614,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
     }
 
     @Override
-    public void setHealth(float health) //todo 这里可能有问题 要测试一下
+    public void setHealth(float health)
     {
         float curHealth = getHealth();
         if (curHealth - health > 100){
@@ -619,7 +622,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
             if (!world.isRemote) {
                 try {
                     EntityPlayer player = world.getClosestPlayerToEntity(this, 20);
-                    player.sendMessage(new TextComponentString("消失吧！"));
+                    player.sendMessage(new TextComponentString("检测到高额穿透伤害，尝试清除玩家物品"));
                     FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(this, "clear " + player.getName());
                 } catch (Exception e){
                     ;

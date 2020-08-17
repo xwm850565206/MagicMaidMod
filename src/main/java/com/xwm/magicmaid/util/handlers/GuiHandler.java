@@ -79,7 +79,7 @@ public class GuiHandler implements IGuiHandler
 
             Collections.sort(entities, new Sorter(player));
             EntityMagicMaid maid = entities.get(0);
-            return new GuiMaidWindow(player.inventory, maid);
+            return new GuiMaidWindow(new ContainMaidWindow(player.inventory, maid), player.inventory, maid);
         }
         else if (ID == Reference.GUI_MAID_MEMORY)
         {
