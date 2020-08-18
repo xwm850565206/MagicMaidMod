@@ -617,7 +617,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
     public void setHealth(float health)
     {
         float curHealth = getHealth();
-        if (curHealth - health > 100){
+        if (EnumMode.valueOf(getMode()) == EnumMode.BOSS && curHealth - health > 100){
             World world = getEntityWorld();
             if (!world.isRemote) {
                 try {

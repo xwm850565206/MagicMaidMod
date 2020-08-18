@@ -31,10 +31,11 @@ public class ItemTheGospels extends ItemBase
     {
         if (worldIn.isRemote)
             return super.onItemRightClick(worldIn, playerIn, handIn);
-        else {
+        else if (worldIn.provider.getDimension() != DimensionInit.DIMENSION_CHURCH){
             playerIn.changeDimension(DimensionInit.DIMENSION_CHURCH, new ChurchTeleporter((WorldServer) worldIn, DimensionInit.DIMENSION_CHURCH, playerIn.posX, playerIn.posY, playerIn.posZ));
             return super.onItemRightClick(worldIn, playerIn, handIn);
         }
+        return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 
 }

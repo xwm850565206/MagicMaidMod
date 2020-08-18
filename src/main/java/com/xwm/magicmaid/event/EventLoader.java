@@ -146,12 +146,25 @@ public class EventLoader
         if (entityLivingBase instanceof EntityZombie)
         {
             double p = rand.nextDouble();
-            if (p < 0.1){
-                ItemStack stack = new ItemStack(ItemInit.itemTheGospels, 1);
-                EntityItem entityItem = new EntityItem(entityLivingBase.getEntityWorld(), entityLivingBase.posX, entityLivingBase.posY, entityLivingBase.posZ, stack);
-                entityLivingBase.getEntityWorld().spawnEntity(entityItem);
+            if (entityLivingBase instanceof  EntityPigZombie){
+                if (entityLivingBase.getEntityWorld().provider.getDimension() == DimensionInit.DIMENSION_CHURCH){
+                    if (p < 1){
+                        ItemStack stack = new ItemStack(ItemInit.itemLostKey, 1);
+                        EntityItem entityItem = new EntityItem(entityLivingBase.getEntityWorld(), entityLivingBase.posX, entityLivingBase.posY, entityLivingBase.posZ, stack);
+                        entityLivingBase.getEntityWorld().spawnEntity(entityItem);
+                    }
+                }
+            }
+            else
+            {
+                if (p < 0.1){
+                    ItemStack stack = new ItemStack(ItemInit.itemTheGospels, 1);
+                    EntityItem entityItem = new EntityItem(entityLivingBase.getEntityWorld(), entityLivingBase.posX, entityLivingBase.posY, entityLivingBase.posZ, stack);
+                    entityLivingBase.getEntityWorld().spawnEntity(entityItem);
+                }
             }
         }
+
     }
 
     @SubscribeEvent

@@ -42,8 +42,6 @@ public class EntityAIWhisper extends EntityAIBase
     private List<EntityLivingBase> entityLivingBaseList;
 
 
-
-
     public EntityAIWhisper(EntityMagicMaidSelina maid)
     {
         this.maid = maid;
@@ -61,7 +59,7 @@ public class EntityAIWhisper extends EntityAIBase
             return false;
         if (EnumMode.valueOf(maid.getMode()) != EnumMode.FIGHT && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS)
             return false;
-
+        tick++;
         if (this.maid.getAttackTarget() == null)
             return false;
         return tick >= maid.getAttackColdTime(EnumAttackType.WHISPER);
