@@ -706,4 +706,15 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
             return object instanceof EnemySelect && maid.getUniqueID().equals(((EnemySelect) object).maid.getUniqueID());
         }
     }
+
+    public boolean killItself(EntityPlayer player)
+    {
+        if (player.getEntityWorld().isRemote)
+            return true;
+        this.setHealthbarnum(0);
+        while (this.getTrueHealth() > 0) this.setHealth(this.getHealth() - 49);
+        this.setHealth(1); //留下1滴血进入玩家击杀逻辑
+        return super.attackEntityFrom(DamageSource.
+                causePlayerDamage(player), 49);
+    }
 }

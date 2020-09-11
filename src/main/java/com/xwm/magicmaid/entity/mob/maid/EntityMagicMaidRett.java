@@ -139,8 +139,11 @@ public class EntityMagicMaidRett extends EntityMagicMaid
     public boolean attackEntityFrom(DamageSource source, float amount) {
 
         if (source.damageType.equals("killed_rett")) {
-            this.setHealthbarnum(0);
-            while (this.getHealth() > 0) this.setHealth(this.getHealth() - 49);
+            try{
+                return this.killItself((EntityPlayer) source.getTrueSource());
+            } catch (Exception e){
+                return false;
+            }
         }
 
         if (source.damageType.equals("drown") || source.damageType.equals("fall"))

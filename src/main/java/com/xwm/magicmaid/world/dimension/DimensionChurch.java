@@ -2,9 +2,12 @@ package com.xwm.magicmaid.world.dimension;
 
 import com.xwm.magicmaid.init.BiomeInit;
 import com.xwm.magicmaid.init.DimensionInit;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.BiomeProvider;
@@ -115,5 +118,20 @@ public class DimensionChurch extends WorldProvider
     public boolean doesXZShowFog(int x, int z)
     {
         return false;
+    }
+
+    /**
+     * Called when a Player is added to the provider's world.
+     */
+    public void onPlayerAdded(EntityPlayerMP player)
+    {
+        player.sendMessage(new TextComponentString(
+                TextFormatting.YELLOW + "注意！boss比较强大，击杀难度较大，但是目前依然有很多方法击杀！\n\n" +
+                        TextFormatting.YELLOW  + "鉴于难度对新手不友好，本模组可以与苦力怕工作室的" +
+                        TextFormatting.RED + "【HSC】上古神器-石头利用" +
+                        TextFormatting.YELLOW + "联动！\n\n" +
+                        TextFormatting.YELLOW +"使用其中的终极武器" +
+                        TextFormatting.RED + "至密金刚剑" +
+                        TextFormatting.YELLOW + "可以轻松击杀boss，有需要的可以在网易组件中心找到"));
     }
 }

@@ -150,8 +150,11 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
     public boolean attackEntityFrom(DamageSource source, float amount)
     {
         if (source.getDamageType().equals("killed_martha")) {
-            this.setHealthbarnum(0);
-            while (this.getTrueHealth() > 0) this.setHealth(this.getHealth() - 49);
+            try{
+                return this.killItself((EntityPlayer) source.getTrueSource());
+            } catch (Exception e){
+                return false;
+            }
         }
 
         if (this.getRank() >= 1 && hasArmor()) //回敬伤害 要注意有可能产生死循环，所以这里要判断

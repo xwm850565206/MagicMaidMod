@@ -164,8 +164,11 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
     public boolean attackEntityFrom(DamageSource source, float amount)
     {
         if (source.damageType.equals("killed_selina")) {
-            this.setHealthbarnum(0);
-            while (this.getHealth() > 0) this.setHealth(this.getHealth() - 49);
+            try{
+                return this.killItself((EntityPlayer) source.getTrueSource());
+            } catch (Exception e){
+                return false;
+            }
         }
 
         if(this.getRank() >= 2 && hasArmor()){ //等级2时候不会受到过高伤害的攻击 这里还不严谨 很容易绕过

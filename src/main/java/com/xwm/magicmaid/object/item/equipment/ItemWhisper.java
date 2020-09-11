@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -33,16 +34,17 @@ public class ItemWhisper extends ItemWeapon
         tooltip.add(TextFormatting.YELLOW + "上面的结晶注入了她无穷的魔力");
     }
 
+    /*
     public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
     {
         if (target instanceof EntityMagicMaidMartha)
-            target.attackEntityFrom(new DamageSource("killed_martha"), 0);
+            target.attackEntityFrom(new EntityDamageSource("killed_martha", attacker), 0);
         else if (target instanceof EntityMagicMaidRett)
-            target.attackEntityFrom(new DamageSource("killed_rett"), 0);
+            target.attackEntityFrom(new EntityDamageSource("killed_rett", attacker), 0);
         else
-            target.attackEntityFrom(new DamageSource("killed_selina"), 0);
+            target.attackEntityFrom(new EntityDamageSource("killed_selina", attacker), 0);
 
         return true;
-    }
+    }*/
 
 }
