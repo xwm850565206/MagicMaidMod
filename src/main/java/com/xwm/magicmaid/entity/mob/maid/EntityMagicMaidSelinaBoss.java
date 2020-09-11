@@ -62,6 +62,7 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina
     @Override
     protected ResourceLocation getLootTable()
     {
+        if (getTrueHealth() > 0) return null;
         EnumEquipment equipment = EnumEquipment.valueOf(getWeaponType());
         return equipment == EnumEquipment.PANDORA ? LootTableHandler.PANDORA : LootTableHandler.WHISPER;
     }

@@ -28,6 +28,7 @@ public class NetworkLoader
         registerMessage(SoundPacket.Handler.class, SoundPacket.class, Side.CLIENT);
         registerMessage(VelocityPacket.Handler.class, VelocityPacket.class, Side.CLIENT);
         registerMessage(UpdateEntityPacket.Handler.class, UpdateEntityPacket.class, Side.CLIENT);
+        registerMessage(PunishPacket.Handler.class, PunishPacket.class, Side.CLIENT);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, GuiHandler.maidWindowHandler);
     }

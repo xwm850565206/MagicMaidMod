@@ -3,6 +3,7 @@ package com.xwm.magicmaid.event;
 
 import com.google.common.base.Predicate;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
+import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.init.DimensionInit;
 import com.xwm.magicmaid.init.EntityInit;
 import com.xwm.magicmaid.init.ItemInit;
@@ -26,10 +27,12 @@ import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerSetSpawnEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -97,7 +100,8 @@ public class EventLoader
     public static void onPlayerTick(TickEvent.PlayerTickEvent event)
     {
         EntityPlayer player = event.player;
-        if (player.isPotionActive(PotionInit.WISE_BLESS_EFFECT))
+        PotionEffect effect = player.getActivePotionEffect(PotionInit.WISE_BLESS_EFFECT);
+        if (effect != null && effect.getDuration() > 1)
         {
             if (!player.capabilities.isFlying) {
                 player.capabilities.allowFlying = true;
@@ -105,7 +109,7 @@ public class EventLoader
                 player.capabilities.isFlying = true;
             }
         }
-        else if (!player.isCreative()){
+        else if (effect != null && effect.getDuration() == 1){
             player.capabilities.allowFlying = false;
             player.capabilities.isFlying = false;
         }
@@ -124,7 +128,7 @@ public class EventLoader
         List<EntityMagicMaid> maidList = oldWorld.getEntities(EntityMagicMaid.class, new Predicate<EntityMagicMaid>() {
             @Override
             public boolean apply(@Nullable EntityMagicMaid input) {
-                if (input != null && input.getOwnerID() != null && input.getOwnerID().equals(player.getUniqueID()))
+                if (input != null && input.getOwnerID() != null && input.getOwnerID().equals(player.getUniqueID()) && EnumMode.valueOf(input.getMode()) != EnumMode.SITTING)
                     return true;
                 return false;
 //                return true;

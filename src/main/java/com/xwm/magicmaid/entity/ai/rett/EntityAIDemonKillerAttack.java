@@ -65,7 +65,7 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     public boolean shouldContinueExecuting(){
-        return this.performTick < PERFORMTIME && this.target != null;
+        return this.performTick < PERFORMTIME && this.maid.getAttackTarget() != null;
     }
 
     public void startExecuting()

@@ -15,6 +15,7 @@ import com.xwm.magicmaid.network.SoundPacket;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.util.Reference;
+import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
 import com.xwm.magicmaid.util.handlers.SoundsHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -24,6 +25,7 @@ import net.minecraft.entity.ai.*;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -134,9 +136,9 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
             //打开ui
             if (player.isSneaking() && this.hasOwner() && this.getOwnerID().equals(player.getUniqueID())){
                 player.openGui(Main.instance, Reference.GUI_MAID_WINDOW, world, (int) this.posX, (int) this.posY, (int) this.posZ);
-                SoundPacket packet = new SoundPacket(1, getPosition());
+                /*SoundPacket packet = new SoundPacket(1, getPosition());
                 NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(world.provider.getDimension(), posX, posY, posZ, 40.0D);
-                NetworkLoader.instance.sendToAllAround(packet, target);
+                NetworkLoader.instance.sendToAllAround(packet, target);*/
             } //转换模式
             else if (stack.isEmpty() && this.hasOwner() && this.getOwnerID().equals(player.getUniqueID())) {
                 if(EnumMode.valueOf(getMode()) == EnumMode.SITTING){
@@ -389,9 +391,9 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
 
         if (this.getOwnerID() != null && this.getOwnerID().equals(entityLivingBase.getUniqueID()))
             return false;
-        if (entityLivingBase instanceof EntityMagicMaid && ((EntityMagicMaid) entityLivingBase).hasOwner() && this.getOwnerID() == ((EntityMagicMaid) entityLivingBase).getOwnerID())
+        if (entityLivingBase instanceof EntityMagicMaid && ((EntityMagicMaid) entityLivingBase).hasOwner() && this.getOwnerID().equals(((EntityMagicMaid) entityLivingBase).getOwnerID()))
             return false;
-        if (entityLivingBase instanceof EntityTameable && ((EntityTameable) entityLivingBase).getOwnerId() != null && this.getOwnerID() == ((EntityTameable) entityLivingBase).getOwnerId())
+        if (entityLivingBase instanceof EntityTameable && ((EntityTameable) entityLivingBase).getOwnerId() != null && this.getOwnerID().equals(((EntityTameable) entityLivingBase).getOwnerId()))
             return false;
 
         return true;
@@ -613,6 +615,19 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         }
     }
 
+    public void onEntityUpdate()
+    {
+        if (this.getTrueHealth() > 0){
+            if (this.isDead) this.isDead = false;
+            if (this.deathTime > 0) this.deathTime = 0;
+        }
+        super.onEntityUpdate();
+    }
+
+    public boolean isEntityAlive(){
+        return this.getTrueHealth() > 0;
+    }
+
     @Override
     public void setHealth(float health)
     {
@@ -620,17 +635,18 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         if (EnumMode.valueOf(getMode()) == EnumMode.BOSS && curHealth - health > 100){
             World world = getEntityWorld();
             if (!world.isRemote) {
+                EntityPlayer player = world.getClosestPlayerToEntity(this, 20);
                 try {
-                    EntityPlayer player = world.getClosestPlayerToEntity(this, 20);
                     player.sendMessage(new TextComponentString("检测到高额穿透伤害，尝试清除玩家物品"));
-                    FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(this, "clear " + player.getName());
                 } catch (Exception e){
-                    ;
+                    e.printStackTrace();
                 }
+                if (player != null)
+                    PunishOperationHandler.punishPlayer((EntityPlayerMP) player, 3);
             }
-            return;
         }
-        super.setHealth(health);
+        else
+            super.setHealth(health);
     }
 
     public float getTrueMaxHealth(){
@@ -638,7 +654,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
     }
 
     public float getTrueHealth(){
-        return getMaxHealth() * getHealthBarNum() + getHealth();
+        return getMaxHealth() * getHealthBarNum() + Math.max(getHealth(), 0);
     }
 
     public void heal(float healAmount){

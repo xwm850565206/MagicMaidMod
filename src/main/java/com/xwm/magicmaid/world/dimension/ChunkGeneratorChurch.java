@@ -216,11 +216,6 @@ public class ChunkGeneratorChurch implements IChunkGenerator
             }
         }
 
-        if (chunkX == 2 && chunkZ == 2){
-            chunkprimer.setBlockState(3, 101, 11, BlockInit.blockMemoryClock.getDefaultState());
-        }
-
-
         Chunk chunk = new Chunk(this.world, chunkprimer, x, z);
         byte[] abyte = chunk.getBiomeArray();
 

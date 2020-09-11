@@ -59,7 +59,6 @@ public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha
     @Override
     protected ResourceLocation getLootTable()
     {
-        System.out.println(getTrueHealth());
         if (getTrueHealth() > 0) return null;
         EnumEquipment equipment = EnumEquipment.valueOf(getWeaponType());
         return equipment == EnumEquipment.REPATENCE ? LootTableHandler.REPANTENCE : LootTableHandler.CONVICTION;

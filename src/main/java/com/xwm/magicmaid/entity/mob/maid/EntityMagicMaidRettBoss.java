@@ -55,6 +55,7 @@ public class EntityMagicMaidRettBoss extends EntityMagicMaidRett
     @Override
     protected ResourceLocation getLootTable()
     {
+        if (getTrueHealth() > 0) return null;
         return LootTableHandler.DEMONKILLER;
     }
 

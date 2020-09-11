@@ -11,6 +11,7 @@ import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumRettState;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
+import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,6 +19,7 @@ import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -136,6 +138,11 @@ public class EntityMagicMaidRett extends EntityMagicMaid
     @Override
     public boolean attackEntityFrom(DamageSource source, float amount) {
 
+        if (source.damageType.equals("killed_rett")) {
+            this.setHealthbarnum(0);
+            while (this.getHealth() > 0) this.setHealth(this.getHealth() - 49);
+        }
+
         if (source.damageType.equals("drown") || source.damageType.equals("fall"))
             return false;
 
@@ -146,16 +153,15 @@ public class EntityMagicMaidRett extends EntityMagicMaid
         }
         if (this.getRank() >= 2 && hasArmor()) { //等级2时候不会受到过高伤害的攻击 这里还不严谨 很容易绕过
             if (amount > 50) {
-                try {
-                    EntityLivingBase entityLivingBase = (EntityLivingBase) source.getTrueSource();
-                    if (entityLivingBase instanceof EntityPlayer && isEnemy(entityLivingBase)) {
-                        entityLivingBase.sendMessage(new TextComponentString("检测到高额攻击伤害，尝试清除玩家物品，踢出玩家"));
-                        FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(this, "clear " + entityLivingBase.getName());
-                        FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(this, "kick " + entityLivingBase.getName());
+                EntityLivingBase entityLivingBase = (EntityLivingBase) source.getTrueSource();
+                if (entityLivingBase instanceof EntityPlayerMP && isEnemy(entityLivingBase)) {
+                    try {
+                        entityLivingBase.sendMessage(new TextComponentString("检测到高额攻击伤害，尝试清除玩家物品"));
+                    } catch (Exception e) {
+                        ;
                     }
+                    PunishOperationHandler.punishPlayer((EntityPlayerMP) entityLivingBase, 1);
                     amount = 1;
-                } catch (Exception e) {
-                    ;
                 }
             }
         }
