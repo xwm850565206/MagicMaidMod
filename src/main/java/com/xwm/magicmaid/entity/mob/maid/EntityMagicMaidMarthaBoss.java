@@ -42,6 +42,14 @@ public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha
     }
 
     @Override
+    public void onLivingUpdate()
+    {
+        this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));
+        this.bossInfo.setPercent(getHealth() / getMaxHealth());
+        super.onLivingUpdate();
+    }
+
+    @Override
     public void onDeathUpdate()
     {
         super.onDeathUpdate();

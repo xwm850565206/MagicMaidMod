@@ -3,6 +3,7 @@ package com.xwm.magicmaid.world.dimension;
 import com.xwm.magicmaid.init.BiomeInit;
 import com.xwm.magicmaid.init.DimensionInit;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -10,8 +11,10 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.biome.BiomeProviderSingle;
+import net.minecraft.world.end.DragonFightManager;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -20,9 +23,13 @@ import javax.annotation.Nullable;
 
 public class DimensionChurch extends WorldProvider
 {
-    public DimensionChurch()
+    private MagicMaidFightManager fightManager;
+
+    public void init()
     {
         this.biomeProvider = new BiomeProviderSingle(BiomeInit.RUINS);
+        NBTTagCompound nbttagcompound = this.world.getWorldInfo().getDimensionData(this.world.provider.getDimension());
+        this.fightManager = this.world instanceof WorldServer ? new MagicMaidFightManager((WorldServer)this.world, nbttagcompound.getCompoundTag("MaidFight")) : null;
     }
 
     public BlockPos getSpawnCoordinate()
@@ -45,7 +52,7 @@ public class DimensionChurch extends WorldProvider
 
     public float calculateCelestialAngle(long worldTime, float partialTicks)
     {
-        return 0.0F;
+        return super.calculateCelestialAngle(worldTime, partialTicks);
     }
 
     /**
@@ -55,7 +62,8 @@ public class DimensionChurch extends WorldProvider
     @SideOnly(Side.CLIENT)
     public float[] calcSunriseSunsetColors(float celestialAngle, float partialTicks)
     {
-        return null;
+        float[] colorsSunriseSunset =  super.calcSunriseSunsetColors(celestialAngle, partialTicks);
+        return colorsSunriseSunset;
     }
 
     @SideOnly(Side.CLIENT)
@@ -67,7 +75,7 @@ public class DimensionChurch extends WorldProvider
     @SideOnly(Side.CLIENT)
     public boolean isSkyColored()
     {
-        return false;
+        return true;
     }
 
     @SideOnly(Side.CLIENT)
@@ -133,5 +141,48 @@ public class DimensionChurch extends WorldProvider
                         TextFormatting.YELLOW +"使用其中的终极武器" +
                         TextFormatting.RED + "至密金刚剑" +
                         TextFormatting.YELLOW + "可以轻松击杀boss，有需要的可以在网易组件中心找到"));
+
+        if (fightManager != null) {
+            fightManager.playerList.add(player);
+        }
+    }
+
+    @Override
+    public void onPlayerRemoved(net.minecraft.entity.player.EntityPlayerMP player)
+    {
+        if (this.fightManager != null)
+        {
+            this.fightManager.playerList.remove(player);
+        }
+    }
+
+    public void onWorldUpdateEntities()
+    {
+        if (this.fightManager != null)
+        {
+            this.fightManager.tick();
+        }
+
+        super.onWorldUpdateEntities();
+    }
+
+    public void onWorldSave()
+    {
+        if (fightManager != null) {
+            NBTTagCompound nbttagcompound = new NBTTagCompound();
+
+            nbttagcompound.setTag("MaidFight", this.fightManager.getCompound());
+
+            this.world.getWorldInfo().setDimensionData(this.world.provider.getDimension(), nbttagcompound);
+        }
+        super.onWorldSave();
+    }
+
+    public MagicMaidFightManager getFightManager() {
+        return this.fightManager;
+    }
+
+    public void setFightManager(MagicMaidFightManager fightManager) {
+        this.fightManager = fightManager;
     }
 }

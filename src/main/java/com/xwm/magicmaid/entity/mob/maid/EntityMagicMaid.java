@@ -17,6 +17,8 @@ import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
 import com.xwm.magicmaid.util.handlers.SoundsHandler;
+import com.xwm.magicmaid.world.dimension.DimensionChurch;
+import com.xwm.magicmaid.world.dimension.MagicMaidFightManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -43,6 +45,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 import com.google.common.base.Optional;
+import net.minecraft.world.WorldProviderEnd;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -69,6 +72,8 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
     private EnumMode oldMode = null;
     private Boolean isPerformAttack = false;
 
+    protected MagicMaidFightManager fightManager = null;
+
     protected EntityMaidWeapon weapon = null;
     public BlockPos weaponStandbyPos = new BlockPos(0, this.height+1, 0);
 
@@ -78,6 +83,15 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
     {
         super(worldIn);
         this.setSize(0.6F, 1.2F);
+
+        if (!worldIn.isRemote && worldIn.provider instanceof DimensionChurch)
+        {
+            this.fightManager = ((DimensionChurch)worldIn.provider).getFightManager();
+        }
+        else
+        {
+            this.fightManager = null;
+        }
     }
 
     @Override
@@ -186,6 +200,15 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
                 getEquipment(ItemEquipment.valueOf(EnumEquipment.valueOf(getWeaponType())));
             }
         }
+    }
+
+    @Override
+    public void onLivingUpdate()
+    {
+        if (fightManager != null)
+            fightManager.onBossUpdate(this);
+
+        super.onLivingUpdate();
     }
 
     public void writeEntityToNBT(NBTTagCompound compound)
@@ -593,8 +616,10 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
         if (getTrueHealth() > 0){
             return;
         }
-        else
+        else {
+            fightManager.bossAlive = false; //boss真实死亡
             super.onDeath(cause);
+        }
     }
 
     @Override
@@ -642,7 +667,7 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
                     e.printStackTrace();
                 }
                 if (player != null)
-                    PunishOperationHandler.punishPlayer((EntityPlayerMP) player, 3);
+                    PunishOperationHandler.punishPlayer((EntityPlayerMP) player, 3, "");
             }
         }
         else

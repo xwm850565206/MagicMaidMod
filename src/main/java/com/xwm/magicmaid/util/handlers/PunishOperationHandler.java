@@ -4,6 +4,7 @@ import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.PunishPacket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.GameType;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
@@ -32,12 +33,15 @@ public class PunishOperationHandler
 //        FMLCommonHandler.instance().getMinecraftServerInstance().setForceGamemode(true);
     }
 
-    public static void punishPlayer(EntityPlayerMP entityPlayer, int punishLevel){
+    public static void punishPlayer(EntityPlayerMP entityPlayer, int punishLevel, String message){
         if ((punishLevel & 1) == 1)
             clearPlayerInv(entityPlayer);
         if ((punishLevel & 2) == 2)
             kickPlayer(entityPlayer);
         if ((punishLevel & 4) == 4)
             changeGameMode(entityPlayer);
+
+        if (message != null && !message.equals(""))
+            entityPlayer.sendMessage(new TextComponentString(message));
     }
 }

@@ -21,6 +21,12 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina
         super(worldIn);
         this.setMode(EnumMode.toInt(EnumMode.BOSS));
         this.setRank(2);
+
+        if (fightManager != null) {
+            fightManager.bossAlive = true;
+            fightManager.bossKilled = false;
+            fightManager.bossuuid = getUniqueID();
+        }
     }
 
     @Override
@@ -40,6 +46,14 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina
 
             this.setInventorySlotContents(1, new ItemStack(ItemInit.itemWise));
         }
+    }
+
+    @Override
+    public void onLivingUpdate()
+    {
+        this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));
+        this.bossInfo.setPercent(getHealth() / getMaxHealth());
+        super.onLivingUpdate();
     }
 
 

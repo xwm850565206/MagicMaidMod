@@ -115,8 +115,7 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
                        entityLiving.setHealth(0);
                         if (entityLiving instanceof EntityPlayerMP) {
                             entityLiving.sendMessage(new TextComponentString("检测到装甲水平过高，尝试直接斩杀"));
-                            UpdateEntityPacket packet = new UpdateEntityPacket();
-                            NetworkLoader.instance.sendTo(packet, (EntityPlayerMP) entityLiving);
+                            world.setEntityState(entityLiving, (byte) 38);
                         }
                     }
                     VelocityPacket packet = new VelocityPacket(entityLiving.getEntityId(), random.nextFloat(), random.nextFloat()*3, random.nextFloat());

@@ -23,7 +23,7 @@ public class BiomeInit
         biome.setRegistryName(name);
         ForgeRegistries.BIOMES.register(biome);
         BiomeDictionary.addTypes(biome, type);
-        BiomeManager.addBiome(biomeType, new BiomeEntry(biome, 10));
+        BiomeManager.addBiome(biomeType, new BiomeEntry(biome, 1));
 //        BiomeManager.addSpawnBiome(biome);
         return biome;
     }

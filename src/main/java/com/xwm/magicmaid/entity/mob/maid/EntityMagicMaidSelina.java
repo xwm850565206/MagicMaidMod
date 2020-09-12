@@ -180,7 +180,7 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
                     } catch (Exception e) {
                         ;
                     }
-                    PunishOperationHandler.punishPlayer((EntityPlayerMP) entityLivingBase, 1);
+                    PunishOperationHandler.punishPlayer((EntityPlayerMP) entityLivingBase, 1, null);
                     amount = 1;
                 }
             }

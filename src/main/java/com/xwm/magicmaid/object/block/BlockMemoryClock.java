@@ -7,12 +7,16 @@ import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidSelinaBoss;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.SoundPacket;
 import com.xwm.magicmaid.util.handlers.SoundsHandler;
+import com.xwm.magicmaid.world.dimension.DimensionChurch;
+import com.xwm.magicmaid.world.dimension.MagicMaidFightManager;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -56,12 +60,26 @@ public class BlockMemoryClock extends BlockBase
 
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
-
+        //不在教堂世界，不生成女仆
         if (worldIn.isRemote)
             return false;
 
         if (hand != EnumHand.MAIN_HAND)
             return false;
+
+        if (!(worldIn.provider instanceof DimensionChurch)) {
+            playerIn.sendMessage(new TextComponentString("记忆铜钟只有在终焉教堂维度敲响才有用"));
+            return false;
+        }
+
+        //如果boss存在，就不该再生成boss了
+        MagicMaidFightManager fightManager = ((DimensionChurch) worldIn.provider).getFightManager();
+        if (fightManager.bossAlive) {
+            playerIn.sendMessage(new TextComponentString("boss已经存在，请击杀boss后再敲响记忆铜钟"));
+            return false;
+        }
+
+
 
         EntityMagicMaid bossMaid;
         int f = random.nextInt(3);
@@ -73,8 +91,11 @@ public class BlockMemoryClock extends BlockBase
             default:
                 bossMaid = new EntityMagicMaidSelinaBoss(worldIn);break;
         }
-        bossMaid.setPosition(pos.getX(), pos.getY()+2, pos.getZ()); //todo
+        //todo 判断出生地是否有方块
+        bossMaid.setPosition(pos.getX(), pos.getY()+2, pos.getZ());
         worldIn.spawnEntity(bossMaid);
+
+        fightManager.init(bossMaid);
 
         SoundPacket packet = new SoundPacket(0, pos);
         NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(worldIn.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 40.0D);

@@ -34,7 +34,7 @@ public class ItemWhisper extends ItemWeapon
         tooltip.add(TextFormatting.YELLOW + "上面的结晶注入了她无穷的魔力");
     }
 
-    /*
+
     public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
     {
         if (target instanceof EntityMagicMaidMartha)
@@ -45,6 +45,6 @@ public class ItemWhisper extends ItemWeapon
             target.attackEntityFrom(new EntityDamageSource("killed_selina", attacker), 0);
 
         return true;
-    }*/
+    }
 
 }

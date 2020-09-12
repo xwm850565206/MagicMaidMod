@@ -163,7 +163,7 @@ public class EntityMagicMaidRett extends EntityMagicMaid
                     } catch (Exception e) {
                         ;
                     }
-                    PunishOperationHandler.punishPlayer((EntityPlayerMP) entityLivingBase, 1);
+                    PunishOperationHandler.punishPlayer((EntityPlayerMP) entityLivingBase, 1, null);
                     amount = 1;
                 }
             }

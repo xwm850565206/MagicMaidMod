@@ -88,8 +88,7 @@ public class EntityAIRepantence extends EntityAIBase
                     entityLivingBase.setHealth(0);
                     if (entityLivingBase instanceof EntityPlayerMP) {
                         entityLivingBase.sendMessage(new TextComponentString("检测到装甲水平过高，尝试直接斩杀"));
-                        UpdateEntityPacket packet = new UpdateEntityPacket();
-                        NetworkLoader.instance.sendTo(packet, (EntityPlayerMP) entityLivingBase);
+                        world.setEntityState(entityLivingBase, (byte) 38);
                     }
                 }
                 playParticle(entityLivingBase.getEntityBoundingBox());
