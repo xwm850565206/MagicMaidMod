@@ -10,13 +10,9 @@ import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumRettState;
 import com.xwm.magicmaid.init.ItemInit;
-import com.xwm.magicmaid.network.NetworkLoader;
-import com.xwm.magicmaid.network.SoundPacket;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
-import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
-import com.xwm.magicmaid.util.handlers.SoundsHandler;
 import com.xwm.magicmaid.world.dimension.DimensionChurch;
 import com.xwm.magicmaid.world.dimension.MagicMaidFightManager;
 import net.minecraft.entity.Entity;
@@ -24,11 +20,9 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
-import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
@@ -39,15 +33,11 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 import com.google.common.base.Optional;
-import net.minecraft.world.WorldProviderEnd;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -123,8 +113,8 @@ public class EntityMagicMaid extends EntityCreature implements IInventory
 
         this.targetTasks.addTask(2, new EntityAINearestAttackableTargetAvoidOwner(this, EntityLivingBase.class, true, new EnemySelect(this)));
 
-        this.targetTasks.addTask(1, new EntityAIMaidOwnerHurtByTarget(this));
-        this.targetTasks.addTask(2, new EntityAIMaidOwerHurtTarget(this));
+        this.targetTasks.addTask(1, new EntityAIMagicCreatureOwnerHurtByTarget(this));
+        this.targetTasks.addTask(2, new EntityAIMagicCreatureOwerHurtTarget(this));
         this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, true, new Class[0]));
 
     }
