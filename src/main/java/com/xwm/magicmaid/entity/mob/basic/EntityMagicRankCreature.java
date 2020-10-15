@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 
 public class EntityMagicRankCreature extends EntityMagicModeCreature implements IEntityRankCreature
 {
-    protected int max_rank = 2; //默认只有3阶 0,1,2
+    protected static int max_rank = 2; //默认只有3阶 0,1,2
     private static final DataParameter<Integer> LEVEL = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> EXP = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> RANK = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);

@@ -3,6 +3,7 @@ package com.xwm.magicmaid.entity.mob.basic;
 import com.google.common.base.Optional;
 import com.xwm.magicmaid.entity.ai.EntityAIMagicCreatureOwerHurtTarget;
 import com.xwm.magicmaid.entity.ai.EntityAIMagicCreatureOwnerHurtByTarget;
+import com.xwm.magicmaid.entity.ai.EntityAIMaidFollow;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityTameableCreature;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumMode;
@@ -50,7 +51,7 @@ public class EntityTameableCreature extends EntityMagicRankCreature implements I
         super.initEntityAI();
         this.targetTasks.addTask(1, new EntityAIMagicCreatureOwnerHurtByTarget(this));
         this.targetTasks.addTask(2, new EntityAIMagicCreatureOwerHurtTarget(this));
-
+        this.tasks.addTask(3, new EntityAIMaidFollow(this, 1.5, 8, 3));
     }
 
     @Override
@@ -63,9 +64,6 @@ public class EntityTameableCreature extends EntityMagicRankCreature implements I
     public void writeEntityToNBT(NBTTagCompound compound)
     {
         super.writeEntityToNBT(compound);
-        compound.setInteger("level", this.getLevel());
-        compound.setInteger("exp", this.getExp());
-        compound.setInteger("rank", this.getRank());
 
         if (this.getOwnerID() == null)
             compound.setString("ownerID", "");

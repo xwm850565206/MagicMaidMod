@@ -21,7 +21,7 @@ import java.util.UUID;
 
 public abstract class EntityEquipmentCreature extends EntityMagicRankCreature implements IEntityEquipmentCreature
 {
-    protected int max_inventory_size = 2;
+    protected static int max_inventory_size = 2;
     public final NonNullList<ItemStack> inventory = NonNullList.<ItemStack>withSize(max_inventory_size, ItemStack.EMPTY); //保存背包里的信息
 
     private static final DataParameter<Boolean> HAS_WEAPON = EntityDataManager.<Boolean>createKey(EntityMagicMaid.class, DataSerializers.BOOLEAN);

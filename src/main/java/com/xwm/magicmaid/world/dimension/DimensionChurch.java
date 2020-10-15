@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 
 public class DimensionChurch extends WorldProvider
 {
-    private MagicMaidFightManager fightManager;
+    private MagicCreatureFightManager fightManager;
 
     public void init()
     {
@@ -143,7 +143,7 @@ public class DimensionChurch extends WorldProvider
                         TextFormatting.YELLOW + "可以轻松击杀boss，有需要的可以在网易组件中心找到"));
 
         if (fightManager != null) {
-            fightManager.playerList.add(player);
+            fightManager.addPlayer(player);
         }
     }
 
@@ -152,7 +152,7 @@ public class DimensionChurch extends WorldProvider
     {
         if (this.fightManager != null)
         {
-            this.fightManager.playerList.remove(player);
+            this.fightManager.removePlayer(player);
         }
     }
 
@@ -178,11 +178,11 @@ public class DimensionChurch extends WorldProvider
         super.onWorldSave();
     }
 
-    public MagicMaidFightManager getFightManager() {
+    public MagicCreatureFightManager getFightManager() {
         return this.fightManager;
     }
 
-    public void setFightManager(MagicMaidFightManager fightManager) {
+    public void setFightManager(MagicCreatureFightManager fightManager) {
         this.fightManager = fightManager;
     }
 }

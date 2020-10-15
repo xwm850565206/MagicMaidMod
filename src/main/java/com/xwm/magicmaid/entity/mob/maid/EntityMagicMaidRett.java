@@ -34,7 +34,6 @@ public class EntityMagicMaidRett extends EntityMagicMaid
 
     public EntityMagicMaidRett(World worldIn) {
         super(worldIn);
-
     }
 
     @Override
@@ -53,10 +52,12 @@ public class EntityMagicMaidRett extends EntityMagicMaid
         this.targetTasks.addTask(3, new EntityAIDemonKillerAttack(this));
     }
 
+
+
     @Override
     public int getAttackDamage(EnumAttackType type){
 
-        return 50 + 50 * getRank();
+        return 5 + 5 * getRank();
     }
 
     public void onUpdate()
@@ -138,14 +139,6 @@ public class EntityMagicMaidRett extends EntityMagicMaid
     @Override
     public boolean attackEntityFrom(DamageSource source, float amount) {
 
-        if (source.damageType.equals("killed_rett")) {
-            try{
-                return this.killItself((EntityPlayer) source.getTrueSource());
-            } catch (Exception e){
-                return false;
-            }
-        }
-
         if (source.damageType.equals("drown") || source.damageType.equals("fall"))
             return false;
 
@@ -154,21 +147,33 @@ public class EntityMagicMaidRett extends EntityMagicMaid
                 return false;
             else super.attackEntityFrom(source, amount / 10);
         }
-        if (this.getRank() >= 2 && hasArmor()) { //等级2时候不会受到过高伤害的攻击 这里还不严谨 很容易绕过
-            if (amount > 50) {
-                EntityLivingBase entityLivingBase = (EntityLivingBase) source.getTrueSource();
-                if (entityLivingBase instanceof EntityPlayerMP && isEnemy(entityLivingBase)) {
-                    try {
-                        entityLivingBase.sendMessage(new TextComponentString("检测到高额攻击伤害，尝试清除玩家物品"));
-                    } catch (Exception e) {
-                        ;
-                    }
-                    PunishOperationHandler.punishPlayer((EntityPlayerMP) entityLivingBase, 1, null);
-                    amount = 1;
+
+        if(shouldAvoidDamage((int) amount, source)) {
+            EntityLivingBase entityLivingBase = (EntityLivingBase) source.getTrueSource();
+            if (entityLivingBase instanceof EntityPlayerMP && isEnemy(entityLivingBase)) {
+                try {
+                    entityLivingBase.sendMessage(new TextComponentString("检测到高额攻击伤害，尝试清除玩家物品"));
+                } catch (Exception e) {
+                    ;
                 }
+                PunishOperationHandler.punishPlayer((EntityPlayerMP) entityLivingBase, 1, null);
+                amount = 1;
             }
         }
+
         return super.attackEntityFrom(source, amount);
+    }
+
+    @Override
+    public boolean shouldAvoidDamage(int damage, DamageSource source)
+    {
+        //等级2时候不会受到过高伤害的攻击
+        if (!hasArmor())
+            return false;
+        if (getRank() < 2)
+            return false;
+
+        return super.shouldAvoidDamage(damage, source);
     }
 
     public boolean attackEntityAsMob(Entity entityIn){

@@ -8,6 +8,7 @@ import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.SoundPacket;
 import com.xwm.magicmaid.util.handlers.SoundsHandler;
 import com.xwm.magicmaid.world.dimension.DimensionChurch;
+import com.xwm.magicmaid.world.dimension.MagicCreatureFightManager;
 import com.xwm.magicmaid.world.dimension.MagicMaidFightManager;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
@@ -60,26 +61,24 @@ public class BlockMemoryClock extends BlockBase
 
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
-        //不在教堂世界，不生成女仆
         if (worldIn.isRemote)
             return false;
 
         if (hand != EnumHand.MAIN_HAND)
             return false;
 
+        //不在教堂世界，不生成女仆
         if (!(worldIn.provider instanceof DimensionChurch)) {
             playerIn.sendMessage(new TextComponentString("记忆铜钟只有在终焉教堂维度敲响才有用"));
             return false;
         }
 
         //如果boss存在，就不该再生成boss了
-        MagicMaidFightManager fightManager = ((DimensionChurch) worldIn.provider).getFightManager();
-        if (fightManager.bossAlive) {
+        MagicCreatureFightManager fightManager = ((DimensionChurch) worldIn.provider).getFightManager();
+        if (fightManager.getBossAlive()) {
             playerIn.sendMessage(new TextComponentString("boss已经存在，请击杀boss后再敲响记忆铜钟"));
             return false;
         }
-
-
 
         EntityMagicMaid bossMaid;
         int f = random.nextInt(3);
@@ -91,6 +90,7 @@ public class BlockMemoryClock extends BlockBase
             default:
                 bossMaid = new EntityMagicMaidSelinaBoss(worldIn);break;
         }
+
         //todo 判断出生地是否有方块
         bossMaid.setPosition(pos.getX(), pos.getY()+2, pos.getZ());
         worldIn.spawnEntity(bossMaid);

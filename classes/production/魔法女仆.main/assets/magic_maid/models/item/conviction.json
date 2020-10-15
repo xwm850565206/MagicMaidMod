@@ -4,30 +4,45 @@
     "layer0": "magic_maid:items/conviction"
   },
   "display": {
-    "thirdperson_righthand":{
-      "rotation": [0, 180, 33],
-      "translation": [-1.00, 3.25, 1.00],
-      "scale": [1.2, 1.2, 1.2]
+    "thirdperson_righthand": {
+      "rotation": [ 0, 298, 0 ],
+      "translation": [ -0.50, 3.25, -1.50 ],
+      "scale": [ 1.40, 1.10, 0.55 ]
     },
-    "thirdperson_lefthand":{
-      "rotation": [0, 0, 340],
-      "translation": [-1.75, 3.25, 1.00],
-      "scale": [0.7, 0.7, 1.0]
+    "thirdperson_lefthand": {
+      "rotation": [ 0, 290, 0 ],
+      "translation": [ -0.75, 2.50, -1.00 ],
+      "scale": [ 1.40, 1.10, 0.55 ]
     },
     "firstperson_righthand": {
-      "rotation": [ 0, 333, 0 ],
-      "translation": [ 0, 1.25, 0],
-      "scale": [ 1.0, 1.0, 1.0 ]
+      "rotation": [ 359, 86, 0 ],
+      "translation": [ 2.38, 5.45, -0.37 ],
+      "scale": [ 1.10, 1.50, 0.68 ]
     },
     "firstperson_lefthand": {
-      "rotation": [ 0, 156, 0 ],
-      "translation": [ 0, 1.0, 0],
-      "scale": [ 1.0, 1.0, 1.0 ]
+      "rotation": [ 1, 272, 0 ],
+      "translation": [ 2.13, 5.20, -0.62 ],
+      "scale": [ 1.10, 1.50, 0.68 ]
     },
-    "gui":{
-      "rotation": [0, 0, 0],
-      "translation": [0.00, 0.00, 0.00],
-      "scale": [1.50, 1.50, 1.50]
+    "gui": {
+      "rotation": [ 0, 0, 0 ],
+      "translation": [ 0.00, 0.75, 0.00 ],
+      "scale": [ 1.50, 1.20, 1.00 ]
+    },
+    "head": {
+      "rotation": [ -180, -0, -180 ],
+      "translation": [ -0.00, 13.00, 7.00 ],
+      "scale": [ 1.00, 1.00, 1.00 ]
+    },
+    "fixed": {
+      "rotation": [ -180, -0, -180 ],
+      "translation": [ -0.00, 0.00, 0.00 ],
+      "scale": [ 1.40, 1.40, 1.00 ]
+    },
+    "ground": {
+      "rotation": [ 0, 0, 0 ],
+      "translation": [ 0.00, 2.00, 0.00 ],
+      "scale": [ 1.50, 1.20, 0.50 ]
     }
   }
 }

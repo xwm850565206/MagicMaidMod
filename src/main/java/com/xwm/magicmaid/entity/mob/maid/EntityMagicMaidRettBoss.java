@@ -1,20 +1,26 @@
 package com.xwm.magicmaid.entity.mob.maid;
 
+import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.util.handlers.LootTableHandler;
+import com.xwm.magicmaid.world.dimension.DimensionChurch;
+import com.xwm.magicmaid.world.dimension.MagicCreatureFightManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.World;
 
-public class EntityMagicMaidRettBoss extends EntityMagicMaidRett
+public class EntityMagicMaidRettBoss extends EntityMagicMaidRett implements IEntityBossCreature
 {
+    protected MagicCreatureFightManager fightManager = null;
 
     private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenSky(false);
 
@@ -24,11 +30,21 @@ public class EntityMagicMaidRettBoss extends EntityMagicMaidRett
         this.setMode(EnumMode.toInt(EnumMode.BOSS));
         this.setRank(2);
 
-        if (fightManager != null) {
-            fightManager.bossAlive = true;
-            fightManager.bossKilled = false;
-            fightManager.bossuuid = getUniqueID();
+        this.initFightManager(worldIn);
+    }
+
+    @Override
+    public boolean attackEntityFrom(DamageSource source, float amount) {
+
+        if (source.damageType.equals("killed_rett")) {
+            try{
+                return this.killItSelfByPlayerDamage((EntityPlayer) source.getTrueSource());
+            } catch (Exception e){
+                return false;
+            }
         }
+
+        return super.attackEntityFrom(source, amount);
     }
 
     @Override
@@ -51,6 +67,17 @@ public class EntityMagicMaidRettBoss extends EntityMagicMaidRett
         super.onLivingUpdate();
     }
 
+    @Override
+    public void onDeath(DamageSource cause)
+    {
+        if (getTrueHealth() > 0){
+            return;
+        }
+        else {
+            fightManager.setBossAlive(false); //boss真实死亡
+            super.onDeath(cause);
+        }
+    }
 
     @Override
     public void onDeathUpdate()
@@ -108,5 +135,49 @@ public class EntityMagicMaidRettBoss extends EntityMagicMaidRett
     {
         super.removeTrackingPlayer(player);
         this.bossInfo.removePlayer(player);
+    }
+
+    /**
+     * 提供斩杀接口
+     *
+     * @param player
+     */
+    @Override
+    public boolean killItSelfByPlayerDamage(EntityPlayer player) {
+        if (player.getEntityWorld().isRemote)
+            return true;
+        this.setAvoidSetHealth(-1);
+        this.setAvoidDamage(-1);
+        this.setHealthbarnum(0);
+        return super.attackEntityFrom(DamageSource.
+                causePlayerDamage(player), getMaxHealth()+1);
+    }
+
+    /**
+     * 获取战斗管理器
+     *
+     * @return
+     */
+    @Override
+    public MagicCreatureFightManager getFightManager() {
+        return this.fightManager;
+    }
+
+    /**
+     * 初始化战斗管理器
+     *
+     * @param world
+     */
+    @Override
+    public void initFightManager(World world) {
+        if (!world.isRemote && world.provider instanceof DimensionChurch)
+        {
+            this.fightManager = ((DimensionChurch)world.provider).getFightManager();
+            this.fightManager.init(this);
+        }
+        else
+        {
+            this.fightManager = null;
+        }
     }
 }

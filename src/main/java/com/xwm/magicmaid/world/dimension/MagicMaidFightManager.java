@@ -1,5 +1,6 @@
 package com.xwm.magicmaid.world.dimension;
 
+import com.xwm.magicmaid.entity.mob.basic.AbstructEntityMagicCreature;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidMarthaBoss;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidRettBoss;
@@ -18,17 +19,19 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.Vector;
 
-public class MagicMaidFightManager
+public class MagicMaidFightManager implements MagicCreatureFightManager
 {
-    public boolean bossAlive;
-    public boolean bossKilled;
-    public UUID bossuuid;
-    public WorldServer world;
-    public EntityMagicMaid boss;
-    public BlockPos bossPos;
+    private boolean bossAlive;
+    private boolean bossKilled;
+    private UUID bossuuid;
+    private WorldServer world;
+    private EntityMagicMaid boss;
+    private BlockPos bossPos;
+    private int bossType;
+
     public List<EntityPlayerMP> playerList;
 
-    public int bossType;
+
 
     public MagicMaidFightManager(WorldServer worldIn, NBTTagCompound compound)
     {
@@ -59,7 +62,7 @@ public class MagicMaidFightManager
         }
     }
 
-    NBTTagCompound getCompound(){
+    public NBTTagCompound getCompound(){
         NBTTagCompound nbttagcompound = new NBTTagCompound();
 
         if (bossuuid != null) {
@@ -69,13 +72,14 @@ public class MagicMaidFightManager
         nbttagcompound.setBoolean("bossAlive", bossAlive);
         nbttagcompound.setBoolean("maid_killed", bossKilled);
 
-        /*NBTTagCompound players = new NBTTagCompound();
-        for (EntityPlayer player : playerList) {
-            players.setUniqueId(player.getUniqueID().toString(), player.getUniqueID());
-        }
-        nbttagcompound.setTag("playerList", players);*/
-
         return nbttagcompound;
+    }
+
+    @Override
+    public void onBossUpdate(AbstructEntityMagicCreature boss) {
+        bossPos = boss.getPosition();
+        if (bossPos.getY() < world.provider.getAverageGroundLevel())
+            boss.setPosition(bossPos.getX(), 55, bossPos.getZ()); //防止boss掉下虚空
     }
 
 
@@ -91,11 +95,12 @@ public class MagicMaidFightManager
                 bossType = 2;
             else
                 bossType = 3;
+
             return bossType;
         }
     }
 
-    protected EntityMagicMaid getBoss() {
+    public AbstructEntityMagicCreature getBoss() {
 
         switch (bossType) {
             case 0: return null;
@@ -106,23 +111,42 @@ public class MagicMaidFightManager
         }
     }
 
+    @Override
+    public BlockPos getBossPos() {
+        return bossPos;
+    }
+
+    @Override
+    public void addPlayer(EntityPlayerMP player) {
+        this.playerList.add(player);
+    }
+
+    @Override
+    public void removePlayer(EntityPlayerMP player) {
+        this.playerList.remove(player);
+    }
+
     public void onBossUpdate(EntityMagicMaid boss)
     {
         this.boss = boss;
-        bossPos = boss.getPosition();
+        this.bossPos = boss.getPosition();
     }
+
     public void tick()
     {
         if (bossAlive) {
             bossKilled = false;
 
             if (boss == null || boss.isDead || boss.getTrueHealth() <= 0) {
-                boss = getBoss();
+                boss = (EntityMagicMaid) getBoss();
                 if (boss != null) {
                     boss.setUniqueId(bossuuid);
                     boss.setPosition(bossPos.getX(), bossPos.getY(), bossPos.getZ());
                     world.spawnEntity(boss);
                     world.setEntityState(boss, (byte) 38);
+
+                    init(boss);
+
                     for (EntityPlayerMP player : playerList) {
                         PunishOperationHandler.punishPlayer(player, 1, "检测到boss被意外清除，尝试清空玩家背包并重生boss");
                     }
@@ -136,14 +160,63 @@ public class MagicMaidFightManager
         }
     }
 
-    public void init(EntityMagicMaid boss)
-    {
+    @Override
+    public void init(AbstructEntityMagicCreature boss) {
         this.bossAlive = true;
         this.bossKilled = false;
         this.bossuuid = boss.getUniqueID();
-        this.boss = boss;
+        this.boss = (EntityMagicMaid) boss;
         this.bossPos = boss.getPosition();
         this.bossType = this.getBossType();
     }
 
+    @Override
+    public void setBossAlive(boolean bossAlive) {
+        this.bossAlive = bossAlive;
+    }
+
+    @Override
+    public void setBossKilled(boolean bossKilled) {
+        this.bossKilled = bossKilled;
+    }
+
+    @Override
+    public void setBossuuid(UUID uuid) {
+        this.bossuuid = uuid;
+    }
+
+    @Override
+    public void setWorld(WorldServer world) {
+        this.world = world;
+    }
+
+    @Override
+    public void setBoss(AbstructEntityMagicCreature boss) {
+        this.boss = (EntityMagicMaid) boss;
+    }
+
+    @Override
+    public void setBossPos(BlockPos pos) {
+        this.bossPos = pos;
+    }
+
+    @Override
+    public boolean getBossAlive() {
+        return this.bossAlive;
+    }
+
+    @Override
+    public boolean getBossKilled() {
+        return this.bossKilled;
+    }
+
+    @Override
+    public UUID getBossuuid() {
+        return this.bossuuid;
+    }
+
+    @Override
+    public WorldServer getWorld() {
+        return this.world;
+    }
 }

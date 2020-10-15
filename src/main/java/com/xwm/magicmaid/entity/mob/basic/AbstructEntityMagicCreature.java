@@ -23,15 +23,15 @@ public abstract class AbstructEntityMagicCreature extends EntityCreature impleme
     /**
      * multi-health creature
      */
-    protected int max_health_bar_num = 10;
+    protected static int max_health_bar_num = 10;
     private static final DataParameter<Integer> MAX_HEALTH_BAR_NUM = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> HEALTH_BAR_NUM = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
 
     /**
      * avoid thing creature
      */
-    protected int max_set_health = 50;
-    protected int max_damage_health = 50;
+    protected static int max_set_health = 50;
+    protected static int max_damage_health = 50;
     private static final DataParameter<Integer> MAX_SET_HEALTH = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> MAX_DAMAGE_HEALTH = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
 
@@ -48,10 +48,10 @@ public abstract class AbstructEntityMagicCreature extends EntityCreature impleme
     protected void entityInit()
     {
         super.entityInit();
-        this.dataManager.register(MAX_HEALTH_BAR_NUM, max_health_bar_num);
-        this.dataManager.register(HEALTH_BAR_NUM, max_health_bar_num);
-        this.dataManager.register(MAX_SET_HEALTH, max_set_health);
-        this.dataManager.register(MAX_DAMAGE_HEALTH, max_damage_health);
+        this.dataManager.register(MAX_HEALTH_BAR_NUM, 10);
+        this.dataManager.register(HEALTH_BAR_NUM, 10);
+        this.dataManager.register(MAX_SET_HEALTH, 50);
+        this.dataManager.register(MAX_DAMAGE_HEALTH, 50);
     }
 
     @Override
@@ -247,6 +247,13 @@ public abstract class AbstructEntityMagicCreature extends EntityCreature impleme
         }
         else{
             super.onDeathUpdate();
+        }
+    }
+
+    @Override
+    public void setDead(){
+        if (getTrueHealth() == 0) { //血条没掉完不允许被杀死 所以指令应该没用
+            super.setDead();
         }
     }
 

@@ -1,6 +1,10 @@
 package com.xwm.magicmaid.entity.ai;
 
+import com.xwm.magicmaid.entity.mob.basic.AbstructEntityMagicCreature;
+import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityMultiModeCreature;
+import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityTameableCreature;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
+import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.init.DimensionInit;
 import com.xwm.magicmaid.world.dimension.ChurchTeleporter;
 import net.minecraft.block.state.BlockFaceShape;
@@ -21,7 +25,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class EntityAIMaidFollow extends EntityAIBase
 {
-    private final EntityMagicMaid tameable;
+    private final AbstructEntityMagicCreature tameable;
     private EntityLivingBase owner;
     World world;
     private final double followSpeed;
@@ -31,7 +35,7 @@ public class EntityAIMaidFollow extends EntityAIBase
     float minDist;
     private float oldWaterCost;
 
-    public EntityAIMaidFollow(EntityMagicMaid tameableIn, double followSpeedIn, float minDistIn, float maxDistIn)
+    public EntityAIMaidFollow(AbstructEntityMagicCreature tameableIn, double followSpeedIn, float minDistIn, float maxDistIn)
     {
         this.tameable = tameableIn;
         this.world = tameableIn.world;
@@ -45,6 +49,9 @@ public class EntityAIMaidFollow extends EntityAIBase
         {
             throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
         }
+
+        if (!(this.tameable instanceof IEntityTameableCreature))
+            throw new IllegalArgumentException("need IEntityTameableCreature");
     }
 
     /**
@@ -52,11 +59,11 @@ public class EntityAIMaidFollow extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        if (!this.tameable.hasOwner())
+        if (!((IEntityTameableCreature)this.tameable).hasOwner())
             return false;
 
         EntityLivingBase entityLivingBase = (EntityLivingBase) FMLCommonHandler.instance()
-                .getMinecraftServerInstance().getEntityFromUuid(this.tameable.getOwnerID());
+                .getMinecraftServerInstance().getEntityFromUuid(((IEntityTameableCreature)this.tameable).getOwnerID());
 
         if (entityLivingBase == null)
         {
@@ -66,7 +73,7 @@ public class EntityAIMaidFollow extends EntityAIBase
         {
             return false;
         }
-        else if (this.tameable.isSitting())
+        else if (((IEntityTameableCreature)this.tameable).isSitting())
         {
             return false;
         }
@@ -75,6 +82,10 @@ public class EntityAIMaidFollow extends EntityAIBase
             return false;
         }
         else if (this.tameable.isPerformAttack())
+        {
+            return false;
+        }
+        else if (this.tameable instanceof IEntityMultiModeCreature && ((IEntityMultiModeCreature) this.tameable).getMode() == EnumMode.toInt(EnumMode.SITTING))
         {
             return false;
         }
@@ -87,7 +98,7 @@ public class EntityAIMaidFollow extends EntityAIBase
 
     public boolean shouldContinueExecuting()
     {
-        return !this.petPathfinder.noPath() && this.tameable.getDistanceSq(this.owner) > (double)(this.maxDist * this.maxDist) && !this.tameable.isSitting();
+        return !this.petPathfinder.noPath() && this.tameable.getDistanceSq(this.owner) > (double)(this.maxDist * this.maxDist) && !((IEntityTameableCreature)this.tameable).isSitting();
     }
 
     public void startExecuting()
@@ -115,7 +126,7 @@ public class EntityAIMaidFollow extends EntityAIBase
     {
         this.tameable.getLookHelper().setLookPositionWithEntity(this.owner, 10.0F, (float)this.tameable.getVerticalFaceSpeed());
 
-        if (!this.tameable.isSitting())
+        if (!((IEntityTameableCreature)this.tameable).isSitting())
         {
             if (--this.timeToRecalcPath <= 0)
             {

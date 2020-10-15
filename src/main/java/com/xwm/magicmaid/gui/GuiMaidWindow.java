@@ -85,6 +85,7 @@ public class GuiMaidWindow extends GuiContainer
     public static void drawEntityOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, EntityLivingBase ent)
     {
         GlStateManager.enableColorMaterial();
+        GlStateManager.enableDepth();
         GlStateManager.pushMatrix();
         GlStateManager.translate((float)posX, (float)posY, 50.0F);
         GlStateManager.scale((float)(-scale), (float)scale, (float)scale);
