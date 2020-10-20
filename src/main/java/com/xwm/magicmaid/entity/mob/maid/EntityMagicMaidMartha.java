@@ -32,7 +32,6 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
     @Override
     protected void entityInit(){
         super.entityInit();
-
     }
 
     public void initEntityAI(){
@@ -49,7 +48,7 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
 
         switch(type){
             case NORMAL: return 5 + 5 * this.getRank();
-            case REPANTENCE: return this.getRank() > 0 ? 10 : 20;
+            case REPANTENCE: return this.getRank() > 0 ? 10 : 15;
             case CONVICTION: return this.getRank() > 0 ? 0 : 1;
             default: return super.getAttackDamage(type);
         }
@@ -66,8 +65,10 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
     }
 
     @Override
-    public void onUpdate()
+    public void onLivingUpdate()
     {
+        super.onLivingUpdate();
+
         if (!world.isRemote){
             EnumMode mode = EnumMode.valueOf(this.getMode());
             if (mode == EnumMode.SERVE && this.getState() != 1)
@@ -77,8 +78,6 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
             else if ((mode == EnumMode.FIGHT || mode == EnumMode.BOSS) && !this.isPerformAttack() && this.getState() != 0)
                 this.setState(0);
         }
-
-        super.onUpdate();
     }
 
     public void getEquipment(ItemEquipment equipment){
@@ -113,9 +112,9 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
                 this.setHasArmor(true);
                 this.setMaxHealthbarnum(200); //提高血量上限
                 this.setHealthbarnum(200);
+                this.setArmorType(EnumEquipment.toInt(EnumEquipment.PROTECTOR));
                 break;
         }
-
     }
 
     public void loseEquipment(ItemEquipment equipment){
@@ -137,6 +136,7 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
         }
         else {
             this.setHasArmor(false);
+            this.setArmorType(EnumEquipment.toInt(EnumEquipment.NONE));
             this.setMaxHealthbarnum(10);
         }
 

@@ -1,6 +1,7 @@
 package com.xwm.magicmaid.entity.mob.maid;
 
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
+import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.init.ItemInit;
@@ -23,6 +24,7 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
     protected MagicCreatureFightManager fightManager = null;
 
     private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenSky(false);
+    private int factor = 1;
 
     public EntityMagicMaidSelinaBoss(World worldIn) {
         super(worldIn);
@@ -50,9 +52,13 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
     public void onUpdate()
     {
         super.onUpdate();
+    }
 
-        if (world.isRemote)
-            return;
+    @Override
+    public void onLivingUpdate()
+    {
+        this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));
+        this.bossInfo.setPercent(getHealth() / getMaxHealth());
 
         if (EnumEquipment.valueOf(this.getWeaponType()) == EnumEquipment.NONE){
             double f = rand.nextDouble();
@@ -63,13 +69,7 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
 
             this.setInventorySlotContents(1, new ItemStack(ItemInit.itemWise));
         }
-    }
 
-    @Override
-    public void onLivingUpdate()
-    {
-        this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));
-        this.bossInfo.setPercent(getHealth() / getMaxHealth());
         super.onLivingUpdate();
     }
 
@@ -80,7 +80,6 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
             return;
         }
         else {
-            fightManager.setBossAlive(false); //boss真实死亡
             super.onDeath(cause);
         }
     }
@@ -91,6 +90,12 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
         super.onDeathUpdate();
         if (getTrueHealth() > 0)
             this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));
+        else if (this.deathTime == 20) {
+            if (fightManager != null) {
+                fightManager.setBossAlive(false); //boss真实死亡
+                fightManager.setBossKilled(true);
+            }
+        }
     }
 
     @Override
@@ -186,5 +191,30 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
         {
             this.fightManager = null;
         }
+    }
+
+    @Override
+    public int getAttackDamage(EnumAttackType type)
+    {
+        return factor * super.getAttackDamage(type);
+    }
+    /**
+     * 设置攻击倍率
+     *
+     * @param factor
+     */
+    @Override
+    public void setBossDamageFactor(int factor) {
+        this.factor = factor;
+    }
+
+    /**
+     * 得到boss的阵营，用来让对应物品识别boss阵营并操作
+     *
+     * @return
+     */
+    @Override
+    public int getBossCamp() {
+        return 0;
     }
 }

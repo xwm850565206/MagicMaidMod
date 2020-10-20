@@ -1,8 +1,6 @@
 package com.xwm.magicmaid.init;
 
-import com.xwm.magicmaid.potion.PotionImmortalBless;
-import com.xwm.magicmaid.potion.PotionProtectorBless;
-import com.xwm.magicmaid.potion.PotionWiseBless;
+import com.xwm.magicmaid.potion.*;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -23,6 +21,11 @@ public class PotionInit
     public static final PotionType WISE_BLESS = new PotionType("wise_bless", new PotionEffect(PROTECT_BLESS_EFFECT, 12000)).setRegistryName("wise_bless");
     public static final PotionType LONG_WISE_BLESS = new PotionType("wise_bless", new PotionEffect(PROTECT_BLESS_EFFECT, 24000)).setRegistryName("long_wise_bless");
 
+    public static final Potion BOSS_ANGRY_EFFECT = new PotionBossAngry("boss_angry", true, 0xffffff, -1,-1);
+
+    public static final Potion BIAN_FLOWER_EFFECT = new PotionBianFlower("bian_flower", true, 0xffffff, -1,-1);
+
+
     public static void registerPotions()
     {
         //不添加药水
@@ -32,6 +35,8 @@ public class PotionInit
         registerPotionWithoutBottle(PROTECT_BLESS_EFFECT);
         registerPotionWithoutBottle(IMMORTAL_BLESS_EFFECT);
         registerPotionWithoutBottle(WISE_BLESS_EFFECT);
+        registerPotionWithoutBottle(BOSS_ANGRY_EFFECT);
+        registerPotionWithoutBottle(BIAN_FLOWER_EFFECT);
     }
 
     private static void registerPotionWithoutBottle(Potion effect){

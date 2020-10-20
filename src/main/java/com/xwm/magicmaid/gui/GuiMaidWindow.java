@@ -86,6 +86,7 @@ public class GuiMaidWindow extends GuiContainer
     {
         GlStateManager.enableColorMaterial();
         GlStateManager.enableDepth();
+        GlStateManager.enableAlpha();
         GlStateManager.pushMatrix();
         GlStateManager.translate((float)posX, (float)posY, 50.0F);
         GlStateManager.scale((float)(-scale), (float)scale, (float)scale);

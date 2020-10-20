@@ -92,7 +92,7 @@ public class EntityAIConviction extends EntityAIBase
                     entityLivingBase.setHealth(1);
                 if (EnumMode.valueOf(maid.getMode()) == EnumMode.BOSS ) {
                     if (entityLivingBase instanceof EntityPlayer){
-                        entityLivingBase.sendMessage(new TextComponentString("你有罪！"));
+                        entityLivingBase.sendMessage(new TextComponentString("定罪之力，定夺世间一切罪恶"));
                         FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(this.maid, "clear " + entityLivingBase.getName());
                         entityLivingBase.setHealth(0);
                     }

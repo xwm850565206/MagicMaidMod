@@ -56,7 +56,7 @@ public class ContainMaidWindow extends Container
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int index)
     {
-        System.out.println("transfer slot: " + index);
+//        System.out.println("transfer slot: " + index);
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = inventorySlots.get(index);
 

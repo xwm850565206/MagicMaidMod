@@ -94,6 +94,7 @@ public class EntityMagicMaidRett extends EntityMagicMaid
                 this.setHasArmor(true);
                 this.setMaxHealthbarnum(1000);
                 this.setHealthbarnum(1000);
+                this.setArmorType(EnumEquipment.toInt(EnumEquipment.IMMORTAL));
                 break;
 
         }
@@ -111,6 +112,7 @@ public class EntityMagicMaidRett extends EntityMagicMaid
                 break;
             case IMMORTAL:
                 this.setHasArmor(false);
+                this.setArmorType(EnumEquipment.toInt(EnumEquipment.NONE));
                 this.setMaxHealthbarnum(20);
                 break;
         }

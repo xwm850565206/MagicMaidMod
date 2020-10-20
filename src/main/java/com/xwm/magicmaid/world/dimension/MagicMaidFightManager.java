@@ -1,26 +1,43 @@
 package com.xwm.magicmaid.world.dimension;
 
 import com.xwm.magicmaid.entity.mob.basic.AbstructEntityMagicCreature;
+import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidMarthaBoss;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidRettBoss;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidSelinaBoss;
+import com.xwm.magicmaid.init.PotionInit;
+import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.MobEffects;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.Session;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.WorldServer;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.Vector;
+import java.util.*;
 
 public class MagicMaidFightManager implements MagicCreatureFightManager
 {
+    /**
+     * 白名单，使用这些mod，boss不会被强化
+     */
+    public static HashSet<String> whiteDomain = new HashSet<String>(){{
+        add(Reference.MODID);
+        add("stoneage");
+        add("minecraft");
+    }};
+
     private boolean bossAlive;
     private boolean bossKilled;
     private UUID bossuuid;
@@ -28,9 +45,10 @@ public class MagicMaidFightManager implements MagicCreatureFightManager
     private EntityMagicMaid boss;
     private BlockPos bossPos;
     private int bossType;
+    private boolean isOrigin;
+    private Random random;
 
     public List<EntityPlayerMP> playerList;
-
 
 
     public MagicMaidFightManager(WorldServer worldIn, NBTTagCompound compound)
@@ -38,6 +56,8 @@ public class MagicMaidFightManager implements MagicCreatureFightManager
         this.world = worldIn;
         this.playerList = new Vector<>();
         this.bossType = 0;
+        this.isOrigin = true;
+        this.random = new Random();
 
         if (compound.hasKey("bossAlive")) {
             bossAlive = compound.getBoolean("bossAlive");
@@ -78,8 +98,35 @@ public class MagicMaidFightManager implements MagicCreatureFightManager
     @Override
     public void onBossUpdate(AbstructEntityMagicCreature boss) {
         bossPos = boss.getPosition();
+        this.boss = (EntityMagicMaid) boss;
+        if (!isOrigin) {
+            ((IEntityBossCreature) this.boss).setBossDamageFactor(10);
+            //添加boss愤怒标记
+            for (EntityPlayer player : playerList) {
+                PotionEffect effect = player.getActivePotionEffect(PotionInit.BOSS_ANGRY_EFFECT);
+                if (effect == null || effect.getDuration() <= 1)
+                    player.addPotionEffect(new PotionEffect(PotionInit.BOSS_ANGRY_EFFECT, 400, 0));
+            }
+        }
+
         if (bossPos.getY() < world.provider.getAverageGroundLevel())
-            boss.setPosition(bossPos.getX(), 55, bossPos.getZ()); //防止boss掉下虚空
+        {
+            boolean flag = false;
+            for (int i = -5; i <= 5 && !flag; i++)
+                for (int j = -5; j <= 5 && !flag; j++)
+                    for (int k = 1; k <= 5 && !flag; k++) {
+
+                        BlockPos pos = bossPos.add(i, 50, j);
+                        IBlockState state = world.getBlockState(pos);
+                        if (state.getBlock().canCreatureSpawn(state, world, pos, EntityLiving.SpawnPlacementType.ON_GROUND))
+                        {
+                            boss.setPosition(pos.getX(), pos.getY(), pos.getZ()); //防止boss掉下虚空
+                            flag = true;
+                        }
+                    }
+            if (!flag)
+                boss.setPosition(bossPos.getX() + random.nextInt(6) - 3, 55, bossPos.getZ() + random.nextInt(6) - 3); //防止boss掉下虚空
+        }
     }
 
 
@@ -118,32 +165,68 @@ public class MagicMaidFightManager implements MagicCreatureFightManager
 
     @Override
     public void addPlayer(EntityPlayerMP player) {
+
         this.playerList.add(player);
+        if (!isOrigin) {
+            player.sendMessage(new TextComponentString("检测有玩家携带其他模组，boss增强"));
+            player.addPotionEffect(new PotionEffect(PotionInit.BOSS_ANGRY_EFFECT, 400, 0));
+        }
+
+        List<NonNullList<ItemStack>> allInventories = Arrays.<NonNullList<ItemStack>>asList(player.inventory.mainInventory, player.inventory.armorInventory, player.inventory.offHandInventory);
+        for (NonNullList<ItemStack> list : allInventories)
+        {
+            if (!isOrigin)
+                break;
+            for (ItemStack stack : list) {
+                try {
+                    String domain = stack.getItem().getRegistryName().getResourceDomain();
+                    if (whiteDomain.contains(domain))
+                        continue;
+                } catch (NullPointerException e) {
+                    continue;
+                }
+                isOrigin = false;
+                for (EntityPlayer player1 : playerList) {
+                    player1.sendMessage(new TextComponentString("检测有玩家携带其他模组，boss增强"));
+                    player1.addPotionEffect(new PotionEffect(PotionInit.BOSS_ANGRY_EFFECT, 400, 0));
+                }
+                break;
+            }
+        }
     }
 
     @Override
     public void removePlayer(EntityPlayerMP player) {
         this.playerList.remove(player);
+
+        player.removePotionEffect(PotionInit.BOSS_ANGRY_EFFECT);
+        if (this.playerList.isEmpty())
+            isOrigin = true;
     }
 
-    public void onBossUpdate(EntityMagicMaid boss)
-    {
-        this.boss = boss;
-        this.bossPos = boss.getPosition();
+    /**
+     * 是否是原版不带mod物品的
+     *
+     * @return
+     */
+    @Override
+    public boolean isOriginMode() {
+        return isOrigin;
     }
 
     public void tick()
     {
-        if (bossAlive) {
-            bossKilled = false;
+        if (world.isRemote)
+            return;
 
-            if (boss == null || boss.isDead || boss.getTrueHealth() <= 0) {
+        if (boss == null && getBossAlive()) {
+            bossKilled = false;
+            if (getBossAlive()) {
                 boss = (EntityMagicMaid) getBoss();
                 if (boss != null) {
                     boss.setUniqueId(bossuuid);
                     boss.setPosition(bossPos.getX(), bossPos.getY(), bossPos.getZ());
                     world.spawnEntity(boss);
-                    world.setEntityState(boss, (byte) 38);
 
                     init(boss);
 
@@ -151,28 +234,34 @@ public class MagicMaidFightManager implements MagicCreatureFightManager
                         PunishOperationHandler.punishPlayer(player, 1, "检测到boss被意外清除，尝试清空玩家背包并重生boss");
                     }
                 }
+            } else {
+                bossType = 0;
+                bossKilled = true;
+                bossuuid = null;
             }
-        }
-        else {
-            bossType = 0;
-            bossKilled = true;
-            bossuuid = null;
+        } else if (boss != null && world.getEntityByID(boss.getEntityId()) == null) {
+            if (boss.isDead)
+                setBossAlive(false);
+            else
+                world.spawnEntity(boss);
         }
     }
 
     @Override
     public void init(AbstructEntityMagicCreature boss) {
-        this.bossAlive = true;
-        this.bossKilled = false;
         this.bossuuid = boss.getUniqueID();
         this.boss = (EntityMagicMaid) boss;
         this.bossPos = boss.getPosition();
         this.bossType = this.getBossType();
+        setBossAlive(true);
+        setBossKilled(false);
     }
 
     @Override
-    public void setBossAlive(boolean bossAlive) {
+    synchronized public void setBossAlive(boolean bossAlive) {
         this.bossAlive = bossAlive;
+        if (!bossAlive) //boss被杀死 重置参数
+            isOrigin = true;
     }
 
     @Override
@@ -201,7 +290,7 @@ public class MagicMaidFightManager implements MagicCreatureFightManager
     }
 
     @Override
-    public boolean getBossAlive() {
+    synchronized public boolean getBossAlive() {
         return this.bossAlive;
     }
 

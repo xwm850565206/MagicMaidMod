@@ -4,7 +4,9 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
+import com.xwm.magicmaid.init.ItemInit;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,10 +28,13 @@ public class EntityMaidWeapon extends EntityLivingBase
 {
     public static EnumEquipment enumEquipment;
 
-    private static final DataParameter<com.google.common.base.Optional<UUID>> OWNERID = EntityDataManager.<Optional<UUID>>createKey(EntityMagicMaid.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+    private static final DataParameter<com.google.common.base.Optional<UUID>> OWNERID = EntityDataManager.<Optional<UUID>>createKey(EntityMaidWeapon.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+    private static final DataParameter<Boolean> BINARY_MODE = EntityDataManager.createKey(EntityMaidWeapon.class, DataSerializers.BOOLEAN);
 
-    public EntityMagicMaid maid = null;
-    protected AxisAlignedBB boundBox = new AxisAlignedBB(0, 0, 0, 0, 0, 0);;
+    public EntityMagicMaid maid = null; //作为女仆的武器时
+    public EntityLivingBase otherOwner = null; //拥有一个临时的主人，主要是为了玩家可以右键丢出使用
+
+    public AxisAlignedBB boundBox = new AxisAlignedBB(0, 0, 0, 0, 0, 0);;
 
     public EntityMaidWeapon(World worldIn) {
         super(worldIn);
@@ -44,6 +49,7 @@ public class EntityMaidWeapon extends EntityLivingBase
     protected void entityInit() {
         super.entityInit();
         this.dataManager.register(OWNERID, Optional.fromNullable(null));
+        this.dataManager.register(BINARY_MODE, false);
     }
 
     public void setHealth(float health)
@@ -53,7 +59,17 @@ public class EntityMaidWeapon extends EntityLivingBase
 
 
     @Override
-    public void onUpdate()
+    public void onLivingUpdate()
+    {
+       if (!getBinaryMode())
+           doMaidOwnerUpdate();
+       else
+           doOhterOwnerUpdate();
+
+        super.onLivingUpdate();
+    }
+
+    protected void doMaidOwnerUpdate()
     {
         if (!world.isRemote)
         {
@@ -75,10 +91,18 @@ public class EntityMaidWeapon extends EntityLivingBase
                 }
             }
         }
-
-        super.onUpdate();
     }
 
+    /**
+     * 那些可以被玩家使用的武器需要复写这个方法，在onLivingUpdate里被调用
+     */
+    protected void doOhterOwnerUpdate() {
+        if (!world.isRemote && otherOwner == null) {
+            EntityItem item = new EntityItem(world, posX, posY, posZ, new ItemStack(ItemInit.itemPandorasBox));
+            world.spawnEntity(item);
+            this.setDead();
+        }
+    }
 
     public boolean attackEntityFrom(DamageSource source, float amount) {
         return false;
@@ -116,7 +140,7 @@ public class EntityMaidWeapon extends EntityLivingBase
         else
             this.setOwnerID(null);
 
-
+        this.setBinaryMode(compound.getBoolean("binary_mode"));
     }
 
 
@@ -126,6 +150,8 @@ public class EntityMaidWeapon extends EntityLivingBase
             compound.setString("ownerID", "");
         else
             compound.setString("ownerID", this.getOwnerID().toString());
+
+        compound.setBoolean("binary_mode", getBinaryMode());
     }
 
     public void setOwnerID(UUID uuid){
@@ -134,6 +160,14 @@ public class EntityMaidWeapon extends EntityLivingBase
 
     public UUID getOwnerID(){
         return (UUID)((Optional)this.dataManager.get(OWNERID)).orNull();
+    }
+
+    public void setBinaryMode(boolean mode) {
+        this.dataManager.set(BINARY_MODE, mode);
+    }
+
+    public Boolean getBinaryMode() {
+        return this.dataManager.get(BINARY_MODE);
     }
 
 
@@ -146,7 +180,15 @@ public class EntityMaidWeapon extends EntityLivingBase
 
     public void setMaid(EntityMagicMaid maid){
         this.maid = maid;
+        this.setBinaryMode(false);
         this.setOwnerID(maid.getUniqueID());
+    }
+
+    public void setOtherOwner(EntityLivingBase otherOwner) {
+        this.otherOwner = otherOwner;
+        this.noClip = false;
+        this.boundBox = new AxisAlignedBB(0, 0, 0, 0, 0, 0).grow(0.1);
+        this.setBinaryMode(true);
     }
 
     public static EntityMaidWeapon getWeaponFromUUID(World world, UUID uuid)

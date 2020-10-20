@@ -1,6 +1,7 @@
 package com.xwm.magicmaid.entity.mob.maid;
 
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
+import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.init.ItemInit;
@@ -22,6 +23,7 @@ import net.minecraft.world.World;
 public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements IEntityBossCreature
 {
     protected MagicCreatureFightManager fightManager = null;
+    private int factor = 1;
 
     private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenSky(false);
 
@@ -51,19 +53,7 @@ public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements 
     public void onUpdate()
     {
         super.onUpdate();
-        if (world.isRemote)
-            return;
-        if (EnumEquipment.valueOf(this.getWeaponType()) == EnumEquipment.NONE){
-            double f = rand.nextDouble();
-            if (f < 0.5)
-                this.setInventorySlotContents(0, new ItemStack(ItemInit.itemRepantence));
-            else
-                this.setInventorySlotContents(0, new ItemStack(ItemInit.itemConviction));
-
-            this.setInventorySlotContents(1, new ItemStack(ItemInit.itemProtector));
-        }
     }
-
 
 
     @Override
@@ -74,6 +64,18 @@ public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements 
 
         this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));
         this.bossInfo.setPercent(getHealth() / getMaxHealth());
+
+        if (EnumEquipment.valueOf(this.getWeaponType()) == EnumEquipment.NONE) {
+            double f = rand.nextDouble();
+            if (f < 0.5)
+                this.setInventorySlotContents(0, new ItemStack(ItemInit.itemRepantence));
+            else
+                this.setInventorySlotContents(0, new ItemStack(ItemInit.itemConviction));
+        }
+        if (EnumEquipment.valueOf(this.getArmorType()) == EnumEquipment.NONE){
+            this.setInventorySlotContents(1, new ItemStack(ItemInit.itemProtector));
+        }
+
         super.onLivingUpdate();
     }
 
@@ -84,7 +86,6 @@ public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements 
             return;
         }
         else {
-            fightManager.setBossAlive(false); //boss真实死亡
             super.onDeath(cause);
         }
     }
@@ -95,6 +96,12 @@ public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements 
         super.onDeathUpdate();
         if (getTrueHealth() > 0)
             this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));
+        else if (this.deathTime == 20) {
+            if (fightManager != null) {
+                fightManager.setBossAlive(false); //boss真实死亡
+                fightManager.setBossKilled(true);
+            }
+        }
     }
 
     @Override
@@ -187,5 +194,31 @@ public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements 
         {
             this.fightManager = null;
         }
+    }
+
+
+    @Override
+    public int getAttackDamage(EnumAttackType type)
+    {
+        return factor * super.getAttackDamage(type);
+    }
+    /**
+     * 设置攻击倍率
+     *
+     * @param factor
+     */
+    @Override
+    public void setBossDamageFactor(int factor) {
+        this.factor = factor;
+    }
+
+    /**
+     * 得到boss的阵营，用来让对应物品识别boss阵营并操作
+     *
+     * @return
+     */
+    @Override
+    public int getBossCamp() {
+        return 0;
     }
 }

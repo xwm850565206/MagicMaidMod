@@ -3,14 +3,12 @@ package com.xwm.magicmaid.network;
 import com.xwm.magicmaid.Main;
 import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.handlers.GuiHandler;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 
 public class NetworkLoader
@@ -29,6 +27,8 @@ public class NetworkLoader
         registerMessage(VelocityPacket.Handler.class, VelocityPacket.class, Side.CLIENT);
         registerMessage(UpdateEntityPacket.Handler.class, UpdateEntityPacket.class, Side.CLIENT);
         registerMessage(PunishPacket.Handler.class, PunishPacket.class, Side.CLIENT);
+        registerMessage(InfoLogginPacket.Handler.class, InfoLogginPacket.class, Side.CLIENT);
+        registerMessage(AddBookPacket.Handler.class, AddBookPacket.class, Side.SERVER);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, GuiHandler.maidWindowHandler);
     }

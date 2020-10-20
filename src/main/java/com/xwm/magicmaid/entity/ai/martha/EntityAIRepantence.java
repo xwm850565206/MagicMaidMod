@@ -84,11 +84,10 @@ public class EntityAIRepantence extends EntityAIBase
                 float health = entityLivingBase.getHealth();
                 entityLivingBase.attackEntityFrom(new EntityDamageSource("repantence_attack", maid).setDamageBypassesArmor(),
                         maid.getAttackDamage(EnumAttackType.REPANTENCE));
-                if (health == entityLivingBase.getHealth()){
+                if (health == entityLivingBase.getHealth() && health > 0){
                     entityLivingBase.setHealth(0);
                     if (entityLivingBase instanceof EntityPlayerMP) {
-                        entityLivingBase.sendMessage(new TextComponentString("检测到装甲水平过高，尝试直接斩杀"));
-                        world.setEntityState(entityLivingBase, (byte) 38);
+                        entityLivingBase.sendMessage(new TextComponentString("攻击不生效，尝试直接斩杀(原因见说终焉记事)"));
                     }
                 }
                 playParticle(entityLivingBase.getEntityBoundingBox());

@@ -12,6 +12,8 @@ import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumRettState;
 import com.xwm.magicmaid.init.ItemInit;
+import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.network.ParticlePacket;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
@@ -22,6 +24,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -34,12 +37,14 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 import com.google.common.base.Optional;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -75,7 +80,7 @@ public class EntityMagicMaid extends EntityEquipmentCreature implements IEntityT
         super.initEntityAI();
         this.tasks.addTask(3, new EntityAIMaidFollow(this, 1.5, 8, 3));
 
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTargetAvoidOwner(this, EntityLivingBase.class, true, new EnemySelect(this)));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTargetAvoidOwner(this, EntityMob.class, true, new EnemySelect(this)));
         this.targetTasks.addTask(1, new EntityAIMagicCreatureOwnerHurtByTarget(this));
         this.targetTasks.addTask(2, new EntityAIMagicCreatureOwerHurtTarget(this));
     }
@@ -119,9 +124,17 @@ public class EntityMagicMaid extends EntityEquipmentCreature implements IEntityT
                 if(!player.isCreative())
                     stack.shrink(1);
                 this.setOwnerID(player.getUniqueID());
+                for (int i = 0; i < 4; i++) {
+                    ParticlePacket particlePacket = new ParticlePacket(
+                            this.posX + rand.nextDouble() * 0.1,
+                            this.posY + this.height + rand.nextDouble(),
+                            this.posZ + rand.nextDouble() * 0.1, EnumParticleTypes.HEART);
+                    NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(this.getEntityWorld().provider.getDimension(), posX, posY, posZ, 40.0D);
+                    NetworkLoader.instance.sendToAllAround(particlePacket, target);
+                }
                 return true;
             }
-            //升阶
+            //升阶 todo 经验系统被修改过了还没检查
             else if (stack.getItem().equals(ItemInit.itemRemainingSoft)){
                 if (getRank() < 2 && getExp() == 100){
                     if (!player.isCreative())
@@ -321,5 +334,4 @@ public class EntityMagicMaid extends EntityEquipmentCreature implements IEntityT
             setMode(EnumMode.toInt(oldMode));
         }
     }
-
 }

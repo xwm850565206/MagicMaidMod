@@ -111,11 +111,10 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
                         continue;
                     float health = entityLiving.getHealth();
                     entityLiving.attackEntityFrom(DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER) * 2);
-                    if (health == entityLiving.getHealth()) {
+                    if (health == entityLiving.getHealth() && health > 0) {
                        entityLiving.setHealth(0);
                         if (entityLiving instanceof EntityPlayerMP) {
-                            entityLiving.sendMessage(new TextComponentString("检测到装甲水平过高，尝试直接斩杀"));
-                            world.setEntityState(entityLiving, (byte) 38);
+                            entityLiving.sendMessage(new TextComponentString("攻击不生效，尝试直接斩杀(原因见说终焉记事)"));
                         }
                     }
                     VelocityPacket packet = new VelocityPacket(entityLiving.getEntityId(), random.nextFloat(), random.nextFloat()*3, random.nextFloat());

@@ -2,13 +2,13 @@ package com.xwm.magicmaid.util.handlers;
 
 import com.xwm.magicmaid.entity.ai.EntityAINearestAttackableTargetAvoidOwner;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
-import com.xwm.magicmaid.gui.ContainMaidWindow;
-import com.xwm.magicmaid.gui.GuiMaidWindow;
-import com.xwm.magicmaid.gui.GuiShowMemory;
+import com.xwm.magicmaid.gui.*;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
@@ -47,8 +47,11 @@ public class GuiHandler implements IGuiHandler
             EntityMagicMaid maid = entities.get(0);
             return new ContainMaidWindow(player.inventory, maid);
         }
-        else if (ID == Reference.GUI_MAID_MEMORY){
+        else if (ID == Reference.GUI_MAID_MEMORY) {
             ;
+        }
+        else if (ID == Reference.GUI_MAGIC_CIRCLE) {
+            return new ContainMagicCircle(player.inventory, (IInventory) world.getTileEntity(new BlockPos(x, y, z)));
         }
 
         return null;
@@ -84,6 +87,10 @@ public class GuiHandler implements IGuiHandler
         else if (ID == Reference.GUI_MAID_MEMORY)
         {
             return new GuiShowMemory(true, x);
+        }
+        else if (ID == Reference.GUI_MAGIC_CIRCLE)
+        {
+            return new GuiMagicCircle(new ContainMagicCircle(player.inventory, (IInventory) world.getTileEntity(new BlockPos(x, y, z))));
         }
         return null;
     }

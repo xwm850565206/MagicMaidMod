@@ -10,6 +10,7 @@ public class Reference
 
     public static final int GUI_MAID_WINDOW = 1;
     public static final int GUI_MAID_MEMORY = 2;
+    public static final int GUI_MAGIC_CIRCLE = 3;
 
     public static final int ENTITY_MARTHA = 300;
     public static final int ENTITY_SELINA = 301;

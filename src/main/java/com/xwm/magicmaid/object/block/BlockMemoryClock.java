@@ -76,7 +76,7 @@ public class BlockMemoryClock extends BlockBase
         //如果boss存在，就不该再生成boss了
         MagicCreatureFightManager fightManager = ((DimensionChurch) worldIn.provider).getFightManager();
         if (fightManager.getBossAlive()) {
-            playerIn.sendMessage(new TextComponentString("boss已经存在，请击杀boss后再敲响记忆铜钟"));
+            playerIn.sendMessage(new TextComponentString("请击杀boss后再敲响记忆铜钟"));
             return false;
         }
 
@@ -94,7 +94,6 @@ public class BlockMemoryClock extends BlockBase
         //todo 判断出生地是否有方块
         bossMaid.setPosition(pos.getX(), pos.getY()+2, pos.getZ());
         worldIn.spawnEntity(bossMaid);
-
         fightManager.init(bossMaid);
 
         SoundPacket packet = new SoundPacket(0, pos);

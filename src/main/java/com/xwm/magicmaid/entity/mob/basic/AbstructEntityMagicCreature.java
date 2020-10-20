@@ -241,7 +241,7 @@ public abstract class AbstructEntityMagicCreature extends EntityCreature impleme
      */
     @Override
     public void onDeathUpdate() {
-        if (this.getHealthBarNum() > 0){ //如果血条没掉完 是不会死的
+        if (!world.isRemote && this.getHealthBarNum() > 0){ //如果血条没掉完 是不会死的
             this.setHealthbarnum(this.getHealthBarNum()-1);
             this.setHealth(this.getMaxHealth());
         }

@@ -1,9 +1,24 @@
 package com.xwm.magicmaid.world.dimension;
 
+import com.xwm.magicmaid.event.EventLoader;
 import com.xwm.magicmaid.init.BiomeInit;
 import com.xwm.magicmaid.init.DimensionInit;
+import com.xwm.magicmaid.network.InfoLogginPacket;
+import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.util.Reference;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemBook;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemWritableBook;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -16,10 +31,16 @@ import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.biome.BiomeProviderSingle;
 import net.minecraft.world.end.DragonFightManager;
 import net.minecraft.world.gen.IChunkGenerator;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 public class DimensionChurch extends WorldProvider
 {
@@ -133,14 +154,26 @@ public class DimensionChurch extends WorldProvider
      */
     public void onPlayerAdded(EntityPlayerMP player)
     {
-        player.sendMessage(new TextComponentString(
-                TextFormatting.YELLOW + "注意！boss比较强大，击杀难度较大，但是目前依然有很多方法击杀！\n\n" +
-                        TextFormatting.YELLOW  + "鉴于难度对新手不友好，本模组可以与苦力怕工作室的" +
-                        TextFormatting.RED + "【HSC】上古神器-石头利用" +
-                        TextFormatting.YELLOW + "联动！\n\n" +
-                        TextFormatting.YELLOW +"使用其中的终极武器" +
-                        TextFormatting.RED + "至密金刚剑" +
-                        TextFormatting.YELLOW + "可以轻松击杀boss，有需要的可以在网易组件中心找到"));
+//        player.sendMessage(new TextComponentString(
+//                TextFormatting.YELLOW + "注意！boss比较强大，击杀难度较大，但是目前依然有很多方法击杀！\n\n" +
+//                        TextFormatting.YELLOW  + "鉴于难度对新手不友好，本模组可以与苦力怕工作室的" +
+//                        TextFormatting.RED + "【HSC】上古神器-石头利用" +
+//                        TextFormatting.YELLOW + "联动！\n\n" +
+//                        TextFormatting.YELLOW +"使用其中的终极武器" +
+//                        TextFormatting.RED + "至密金刚剑" +
+//                        TextFormatting.YELLOW + "可以轻松击杀boss，有需要的可以在网易组件中心找到"));
+
+
+//        EventLoader.addInfoBookToPlayer(player);
+
+        if (!world.isRemote) {
+            try {
+                InfoLogginPacket packet = new InfoLogginPacket(player.getEntityId());
+                NetworkLoader.instance.sendTo(packet, (EntityPlayerMP) player);
+            } catch (Exception e) {
+                ;
+            }
+        }
 
         if (fightManager != null) {
             fightManager.addPlayer(player);
@@ -158,7 +191,7 @@ public class DimensionChurch extends WorldProvider
 
     public void onWorldUpdateEntities()
     {
-        if (this.fightManager != null)
+        if (this.fightManager != null && !world.isRemote)
         {
             this.fightManager.tick();
         }

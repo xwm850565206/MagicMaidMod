@@ -1,6 +1,7 @@
 package com.xwm.magicmaid.proxy;
 
 import com.xwm.magicmaid.event.EventLoader;
+import com.xwm.magicmaid.event.EventRenderLoader;
 import com.xwm.magicmaid.network.NetworkLoader;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
@@ -18,6 +19,7 @@ public class CommonProxy
 
     public void init(FMLInitializationEvent event){
         MinecraftForge.EVENT_BUS.register(new EventLoader());
+        MinecraftForge.EVENT_BUS.register(new EventRenderLoader());
     }
     public void postInit(FMLPostInitializationEvent event){}
 

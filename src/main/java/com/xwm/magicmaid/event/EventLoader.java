@@ -3,12 +3,24 @@ package com.xwm.magicmaid.event;
 
 import com.google.common.base.Predicate;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
+import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponPandorasBox;
+import com.xwm.magicmaid.entity.render.RenderMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumMode;
-import com.xwm.magicmaid.init.DimensionInit;
-import com.xwm.magicmaid.init.EntityInit;
-import com.xwm.magicmaid.init.ItemInit;
-import com.xwm.magicmaid.init.PotionInit;
+import com.xwm.magicmaid.init.*;
+import com.xwm.magicmaid.network.AddBookPacket;
+import com.xwm.magicmaid.network.InfoLogginPacket;
+import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.world.dimension.ChurchTeleporter;
+import io.netty.buffer.Unpooled;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.IResource;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -16,31 +28,46 @@ import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.client.CPacketCustomPayload;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerSetSpawnEvent;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
+import scala.collection.parallel.ParIterableLike;
 
 import javax.annotation.Nullable;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -48,6 +75,8 @@ import java.util.Random;
 @Mod.EventBusSubscriber
 public class EventLoader
 {
+    private static ResourceLocation SOUL = new ResourceLocation(Reference.MODID + ":textures/items/justice.png");
+
     private static final Random rand =  new Random();
 
     @SubscribeEvent
@@ -185,6 +214,7 @@ public class EventLoader
 
     }
 
+    //todo 维度穿越考虑删除 换成把女仆携带成物品
     @SubscribeEvent
     public static void onPlayerSpawnEvent(LivingDeathEvent event){
 
@@ -219,6 +249,56 @@ public class EventLoader
 
         for (EntityMagicMaid maid : maidList) {
             maid.changeDimension(0, new ChurchTeleporter((WorldServer) worldServers[0], 0, pos.getX(), pos.getY() + 1, pos.getZ()));
+        }
+    }
+
+
+    @SideOnly(Side.CLIENT)
+    public static void addInfoBookToPlayer(EntityPlayer player)
+    {
+        World world = player.getEntityWorld();
+        Minecraft mc = Minecraft.getMinecraft();
+        IResource iresource = null;
+        ItemStack tomeStack = new ItemStack(Items.WRITTEN_BOOK);
+        NBTTagList bookPages = new NBTTagList();
+
+        try {
+            String filename = "texts/instructions.txt";
+            iresource = mc.getResourceManager().getResource(new ResourceLocation(Reference.MODID, filename));
+            InputStream inputstream = iresource.getInputStream();
+            BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(inputstream, StandardCharsets.UTF_8));
+            StringBuilder s = new StringBuilder();
+            String s1;
+            while ((s1 = bufferedreader.readLine()) != null)
+            {
+                if (s1.equals("###")) {
+                    bookPages.appendTag(new NBTTagString("\"" + s.toString() + "\""));
+                    s = new StringBuilder();
+                }
+                else{
+                    s.append(s1);
+                    s.append('\n');
+                }
+            }
+            if (s.length() > 0)
+                bookPages.appendTag(new NBTTagString("\"" + s.toString() + "\""));
+
+        } catch (IOException e) {
+            bookPages.appendTag(new NBTTagString("...读取说明书失败"));
+        }
+
+        tomeStack.setTagInfo("pages", bookPages);
+        tomeStack.setTagInfo("author", new NBTTagString("苦力怕"));
+        tomeStack.setTagInfo("title", new NBTTagString("终焉记事"));
+        try {
+            PacketBuffer packetbuffer = new PacketBuffer(Unpooled.buffer());
+            packetbuffer.writeItemStack(tomeStack);
+            AddBookPacket packet = new AddBookPacket(packetbuffer, player.getEntityId());
+            NetworkLoader.instance.sendToServer(packet);
+        } catch (NullPointerException e) {
+            System.out.println("event loader 连接服务器失败");
+        } catch (ClassCastException e1) {
+            System.out.println("event loader 类变换错误");
         }
     }
 }

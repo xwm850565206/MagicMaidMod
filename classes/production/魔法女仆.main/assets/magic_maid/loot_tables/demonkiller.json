@@ -11,11 +11,6 @@
           "type": "item",
           "weight": 10,
           "name": "magic_maid:demonkillerpiece",
-          "conditions": [
-            {
-              "condition": "killed_by_player"
-            }
-          ],
           "functions": [
             {
               "function": "set_count",

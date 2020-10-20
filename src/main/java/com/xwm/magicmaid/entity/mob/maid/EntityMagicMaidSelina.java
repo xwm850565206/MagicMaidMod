@@ -43,9 +43,6 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
     public void initEntityAI() {
         super.initEntityAI();
 
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityLiving.class, true));
-
-
         this.tasks.addTask(2, new EntityAIMaidAttackRanged(this, 1.3D, 40, 10));
         this.tasks.addTask(3, new EntityAIPandora(this));
         this.tasks.addTask(3, new EntityAIWhisper(this));
@@ -82,7 +79,9 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
         }
     }
     @Override
-    public void onUpdate() {
+    public void onLivingUpdate() {
+
+        super.onLivingUpdate();
 
         if (!world.isRemote)
         {
@@ -97,8 +96,6 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
             else if ((mode == EnumMode.FIGHT || mode == EnumMode.BOSS) && !this.isPerformAttack() && EnumSelineState.valueOf(this.getState()) != EnumSelineState.STANDARD)
                 this.setState(EnumSelineState.toInt(EnumSelineState.STANDARD));
         }
-
-        super.onUpdate();
     }
 
     public void getEquipment(ItemEquipment equipment){
@@ -131,10 +128,9 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
                 this.setHasArmor(true);
                 this.setMaxHealthbarnum(200);
                 this.setHealthbarnum(200);
+                this.setArmorType(EnumEquipment.toInt(EnumEquipment.WISE));
                 break;
         }
-
-
     }
 
     public void loseEquipment(ItemEquipment equipment){
@@ -151,6 +147,7 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
         }
         else {
             this.setHasArmor(false);
+            this.setArmorType(EnumEquipment.toInt(EnumEquipment.NONE));
             this.setMaxHealthbarnum(10);
         }
     }

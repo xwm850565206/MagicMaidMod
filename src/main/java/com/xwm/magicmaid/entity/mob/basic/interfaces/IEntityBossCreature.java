@@ -24,4 +24,16 @@ public interface IEntityBossCreature
      * 初始化战斗管理器
      */
     void initFightManager(World world);
+
+    /**
+     * 设置攻击倍率
+     * @param factor
+     */
+    void setBossDamageFactor(int factor);
+
+    /**
+     * 得到boss的阵营，用来让对应物品识别boss阵营并操作，目前0表示正义阵营
+     * @return
+     */
+    int getBossCamp();
 }

@@ -71,7 +71,7 @@ public class EntityMagicRankCreature extends EntityMagicModeCreature implements 
     }
 
     /**
-     * 增加经验
+     * todo 增加经验，目前等级系统和阶系统有冲突，还要修改
      */
     @Override
     public void plusExp() {
@@ -79,10 +79,10 @@ public class EntityMagicRankCreature extends EntityMagicModeCreature implements 
         if (i <= 100) {
             this.dataManager.set(EXP, i);
         }
-        else {
-            this.dataManager.set(EXP, 0);
-            this.dataManager.set(LEVEL, getLevel() + 1);
-        }
+//        else {
+//            this.dataManager.set(EXP, 0);
+//            this.dataManager.set(LEVEL, getLevel() + 1);
+//        }
     }
 
     /**

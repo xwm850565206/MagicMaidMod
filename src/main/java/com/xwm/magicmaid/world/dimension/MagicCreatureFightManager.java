@@ -48,4 +48,10 @@ public interface MagicCreatureFightManager
     void addPlayer(EntityPlayerMP player);
 
     void removePlayer(EntityPlayerMP player);
+
+    /**
+     * 是否是原版不带mod物品的
+     * @return
+     */
+    boolean isOriginMode();
 }

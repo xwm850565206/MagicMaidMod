@@ -46,4 +46,7 @@ public class ItemInit
     public static final Item itemHolyFruitMartha = new ItemHolyFruitMartha("holy_fruit_martha");
     public static final Item itemHolyFruitRett = new ItemHolyFruitRett("holy_fruit_rett");
     public static final Item itemHolyFruitSelina = new ItemHolyFruitSelina("holy_fruit_selina");
+
+    public static final Item itemJustice = new ItemJustice("justice");
+    public static final Item itemEvil = new ItemEvil("evil");
 }

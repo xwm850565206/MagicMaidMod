@@ -25,8 +25,8 @@ public class BiomeRuins extends Biome
         this.spawnableMonsterList.clear();
         this.spawnableWaterCreatureList.clear();
         //this.spawnableMonsterList.add(new Biome.SpawnListEntry(EntityBat.class, 1, 1, 1));
-        this.spawnableCreatureList.add(new Biome.SpawnListEntry(EntityVillager.class, 10, 4, 4));
-        this.spawnableCreatureList.add(new Biome.SpawnListEntry(EntityPigZombie.class, 10, 1, 1));
+        this.spawnableCreatureList.add(new Biome.SpawnListEntry(EntityVillager.class, 1, 4, 4));
+        this.spawnableCreatureList.add(new Biome.SpawnListEntry(EntityPigZombie.class, 1, 1, 1));
 
 //        this.spawnableMonsterList.add(new SpawnListEntry(EntityWither.class, 10, 1, 5));
     }
