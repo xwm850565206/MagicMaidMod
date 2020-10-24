@@ -19,10 +19,12 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
+import sun.nio.cs.ext.MacArabic;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,15 +32,6 @@ import java.util.Random;
 
 public class TileEntityMagicCircle extends TileEntity implements IInventory, ITickable
 {
-
-    private static HashMap<Item, List<Item>> formula = new HashMap<Item, List<Item>>() {{
-        put(ItemInit.itemLostKey, Lists.newArrayList(ItemInit.itemJustice, ItemInit.itemEvil));
-    }};
-
-    private static HashMap<Item, Integer> cookTimeMap = new HashMap<Item, Integer>() {{
-        put(ItemInit.itemLostKey, 200);
-    }};
-
     private NonNullList<ItemStack> inventory = NonNullList.withSize(8, ItemStack.EMPTY);
     private String customName;
 
@@ -72,7 +65,7 @@ public class TileEntityMagicCircle extends TileEntity implements IInventory, ITi
     @Override
     public int getSizeInventory()
     {
-        return this.inventory.size();
+        return 8;
     }
 
     @Override
@@ -125,8 +118,8 @@ public class TileEntityMagicCircle extends TileEntity implements IInventory, ITi
     public void readFromNBT(NBTTagCompound compound)
     {
         super.readFromNBT(compound);
-        this.inventory = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, this.inventory);
+//        this.inventory = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
         this.cookTime = compound.getInteger("CookTime");
         this.totalCookTime = compound.getInteger("CookTimeTotal");
 
@@ -138,11 +131,12 @@ public class TileEntityMagicCircle extends TileEntity implements IInventory, ITi
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         super.writeToNBT(compound);
+        ItemStackHelper.saveAllItems(compound, this.inventory);
         compound.setInteger("CookTime", this.cookTime);
         compound.setInteger("CookTimeTotal", this.totalCookTime);
-        ItemStackHelper.saveAllItems(compound, this.inventory);
 
-        if (this.hasCustomName()) compound.setString("CustomName", this.customName);
+        if (this.hasCustomName())
+            compound.setString("CustomName", this.customName);
         return compound;
     }
 
@@ -225,28 +219,37 @@ public class TileEntityMagicCircle extends TileEntity implements IInventory, ITi
 
     private int tick = 0; // 控制粒子效果
 
-    //todo 每次打开gui进度条都会从0开始
+    //todo bug 每次打开gui进度条都会从0开始
     public void update()
     {
         boolean flag = checkFormula(this.inventory.subList(0, 4), this.inventory.get(4));
         boolean flag1 = world.getBlockState(pos).getProperties().getOrDefault(BlockMagicCircle.OPEN, false).equals(true);
         boolean flag2 = hasSlotForCook();
+        boolean flag3 = false; // should markDirty
 
-        if (!this.isCooking() && flag && flag2) {
+        if (!this.isCooking() && flag && flag2)
+        {
             cookBegin();
+            flag3 = true;
         }
-        else if (this.isCooking() && flag2) {
-            if (!flag1)
+        else if (this.isCooking() && flag2)
+        {
+            if (!flag1) {
                 BlockMagicCircle.setState(true, world, pos);
-
-            this.cookTime++;
+                flag3 = true;
+            }
             if (this.cookTime >= this.totalCookTime) {
                 cookFinish();
+                flag3 = true;
             }
-
         }
-        else if (!this.isCooking() && flag1){
+        else if (this.isCooking() && flag && flag2) {
+            this.cookTime++;
+        }
+        else if (!this.isCooking() && flag1)
+        {
             BlockMagicCircle.setState(false, world, pos);
+            flag3 = true;
         }
 
         if (this.isCooking() && this.world.isRemote) {
@@ -259,12 +262,14 @@ public class TileEntityMagicCircle extends TileEntity implements IInventory, ITi
                 tick = 0;
             }
         }
-        markDirty();
+
+        if (flag3) {
+            markDirty();
+        }
     }
 
-    public int getCookTime(ItemStack input)
-    {
-        return cookTimeMap.getOrDefault(input.getItem(), -1);
+    public int getCookTime(ItemStack input) {
+        return MagicRegistry.getCookTime(input);
     }
 
     public float getProgress()
@@ -275,13 +280,8 @@ public class TileEntityMagicCircle extends TileEntity implements IInventory, ITi
     }
 
     public void cookBegin() {
-
-        for (ItemStack stack : inventory.subList(0, 4)) {
-            stack.shrink(1);
-        }
-
-        this.totalCookTime = getCookTime(inventory.get(4)); //todo 要随着不同的配方修改
-        this.markDirty();
+        this.cookTime = 0;
+        this.totalCookTime = getCookTime(inventory.get(4));
     }
 
     public void cookFinish()
@@ -289,22 +289,20 @@ public class TileEntityMagicCircle extends TileEntity implements IInventory, ITi
         this.cookTime = 0;
         this.totalCookTime = -1;
 
-        List<Item> items = formula.get(this.inventory.get(4).getItem());
-        if (items != null) {
-            for (int i = 0; i < 3 && i < items.size(); i++) {
-                this.inventory.set(5 + i, new ItemStack(items.get(i)));
+        List<ItemStack> itemstacks = MagicRegistry.getResult(this.inventory.get(4));
+        if (itemstacks != null) {
+            for (int i = 0; i < 3 && i < itemstacks.size(); i++) {
+                this.inventory.set(5 + i, itemstacks.get(i));
             }
-            this.inventory.get(4).shrink(1);
+            for (int i = 0; i < 5; i++)
+                this.inventory.get(i).shrink(1);
         }
-
-        this.markDirty();
-//        System.out.println("cook finish");
     }
 
     @SideOnly(Side.CLIENT)
     public static boolean isCooking(IInventory inventory)
     {
-        return inventory.getField(0) > 0;
+        return inventory.getField(1) >= 0;
     }
 
     public boolean hasSlotForCook() {
@@ -315,11 +313,10 @@ public class TileEntityMagicCircle extends TileEntity implements IInventory, ITi
 
     public static boolean checkFormula(List<ItemStack> raw, ItemStack input) {
 
-        int count = 0;
-        for (ItemStack stack : raw) {
-            if (!stack.isEmpty())
-                count++;
-        }
-        return count == 4 && !input.isEmpty();
+        Formula formula = Formula.create(input, raw);
+        Formula formula1 = MagicRegistry.getFormula(input);
+        if (formula1 == Formula.EMPTY)
+            return false;
+        else return formula.equals(formula1);
     }
 }

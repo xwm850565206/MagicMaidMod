@@ -1,12 +1,11 @@
-container.maid.healthBar=HealthBar
-container.maid.health=Health
-container.maid.rank=Rank
-container.maid.exp=Exp
-container.button.mode_switch=switch mode
-container.maid.sitting=waiting mode
-container.maid.serve=serve mode
-container.maid.fight=fight mode
-
+container.maid.healthBar=血条
+container.maid.health=血量
+container.maid.rank=品阶
+container.maid.exp=经验
+container.button.mode_switch=模式切换
+container.maid.sitting=待命模式
+container.maid.serve=服侍模式
+container.maid.fight=战斗模式
 
 item.repantence.name=忏悔
 item.conviction.name=定罪
@@ -41,8 +40,25 @@ item.lostkey.name=遗失之匙
 item.the_gospels.name=福音书
 item.remaining_soft.name=残存的温柔
 
+item.justice.name=正义
+item.evil.name=邪恶
+item.obsession.name=执念
+item.eliminate_soul_nail.name=消魂钉
+item.bian_flower_pollen.name=彼岸花粉
+item.obsession_sword.name=执念之刃
+item.ghost_obsession_sword.name=渡魂之刃
+item.ghost.name=亡魂
+item.no_soul_ghost.name=无魂之魄
+item.justice_soul_piece.name=正义残魂
+item.evil_soul_piece.name=邪恶残魂
+item.absorb_soul_compass.name=吸魂磁石
+
+
 tile.oreholystone.name=圣痕矿石
 tile.memoryclock.name=记忆铜钟
+tile.magiccircle.name=魔法石板
+tile.bianflower.name=彼岸花
+
 
 entity.magic_maid_maid_martha.name=玛莎
 entity.magic_maid_maid_martha_boss.name=玛莎(Boss)
@@ -55,12 +71,22 @@ entity.magic_maid_conviction.name=定罪
 entity.magic_maid_pandora.name=潘多拉魔盒
 entity.magic_maid_whisper.name=低语
 
-death.attack.repantence_attack=忏悔吧
+death.attack.repantence_attack=在死后的世界忏悔吧
 
 protect_bless=守护者的祝福
 immortal_bless=不朽者的祝福
 wise_bless=大智者的祝福
 boss_angry=boss之怒
+bian_flower=彼岸
+ghost=悲鸣
 
+potion.effect.bian_flower=彼岸水
+splash_potion.effect.bian_flower=喷溅型彼岸水
+lingering_potion.effect.bian_flower=滞留型彼岸水
+tipped_arrow.effect.bian_flower=彼岸之箭
+potion.effect.ghost=亡魂水
+splash_potion.effect.ghost=喷溅型亡魂水
+lingering_potion.effect.ghost=滞留型亡魂水
+tipped_arrow.effect.ghost=亡魂之箭
 
 itemGroup.creative_tab_maid=魔法女仆

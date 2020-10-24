@@ -1,6 +1,7 @@
 package com.xwm.magicmaid.util.handlers;
 
 import com.xwm.magicmaid.init.*;
+import com.xwm.magicmaid.object.tileentity.MagicRegistry;
 import com.xwm.magicmaid.util.interfaces.IHasModel;
 import com.xwm.magicmaid.world.gen.StructureChurchPieces;
 import net.minecraft.block.Block;
@@ -69,6 +70,9 @@ public class RegistryHandler
 //        EntityInit.registerEntities();
         BiomeInit.registerBiomes();
         DimensionInit.registerDimensions();
+        DimensionInit.registerWorldGenerators();
         PotionInit.registerPotions();
+        MagicRegistry.registerAllFormula();
     }
+
 }

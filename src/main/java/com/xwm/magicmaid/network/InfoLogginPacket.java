@@ -47,12 +47,7 @@ public class InfoLogginPacket implements IMessage
 
         private void processMessage(InfoLogginPacket message, MessageContext ctx)
         {
-            try{
-                EntityPlayer player = (EntityPlayer) Minecraft.getMinecraft().world.getEntityByID(message.id);
-                EventLoader.addInfoBookToPlayer(player);
-            } catch (Exception e) {
-                ;
-            }
+
         }
     }
 }

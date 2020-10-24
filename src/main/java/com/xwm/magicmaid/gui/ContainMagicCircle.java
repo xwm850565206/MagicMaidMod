@@ -1,5 +1,6 @@
 package com.xwm.magicmaid.gui;
 
+import com.xwm.magicmaid.object.tileentity.TileEntityMagicCircle;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -8,9 +9,9 @@ import net.minecraft.inventory.Slot;
 
 public class ContainMagicCircle extends Container
 {
-    public IInventory magicCircle;
+    public TileEntityMagicCircle magicCircle;
 
-    public ContainMagicCircle(InventoryPlayer inventory, IInventory magicCircle)
+    public ContainMagicCircle(InventoryPlayer inventory, TileEntityMagicCircle magicCircle)
     {
         this.magicCircle = magicCircle;
 

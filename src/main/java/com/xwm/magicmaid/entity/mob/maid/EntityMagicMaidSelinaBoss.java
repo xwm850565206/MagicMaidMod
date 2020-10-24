@@ -63,11 +63,11 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
         if (EnumEquipment.valueOf(this.getWeaponType()) == EnumEquipment.NONE){
             double f = rand.nextDouble();
             if (f < 0.5)
-                this.setInventorySlotContents(0, new ItemStack(ItemInit.itemPandorasBox));
+                this.setInventorySlotContents(0, new ItemStack(ItemInit.ITEM_PANDORA));
             else
-                this.setInventorySlotContents(0, new ItemStack(ItemInit.itemWhisper));
+                this.setInventorySlotContents(0, new ItemStack(ItemInit.ITEM_WHISPER));
 
-            this.setInventorySlotContents(1, new ItemStack(ItemInit.itemWise));
+            this.setInventorySlotContents(1, new ItemStack(ItemInit.ITEM_WISE));
         }
 
         super.onLivingUpdate();

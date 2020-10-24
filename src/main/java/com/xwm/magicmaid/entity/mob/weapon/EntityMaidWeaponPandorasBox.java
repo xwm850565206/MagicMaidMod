@@ -1,22 +1,15 @@
 package com.xwm.magicmaid.entity.mob.weapon;
 
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.init.ItemInit;
-import com.xwm.magicmaid.network.CustomerParticlePacket;
 import com.xwm.magicmaid.network.DistinationParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
-import com.xwm.magicmaid.network.UpdateEntityPacket;
 import com.xwm.magicmaid.object.item.equipment.PlayerEquipmentUtils;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -24,7 +17,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -106,13 +98,13 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
         else if (tick == 100)
             this.moveToBlockPosAndAngles(otherOwner.getPosition().add(0, otherOwner.height / 2.0, 0), rotationYaw, rotationPitch);
         else if (tick == 120) {
-            EntityItem item = new EntityItem(world, posX, posY, posZ, new ItemStack(ItemInit.itemPandorasBox));
+            EntityItem item = new EntityItem(world, posX, posY, posZ, new ItemStack(ItemInit.ITEM_PANDORA));
             world.spawnEntity(item);
             this.setDead();
         }
         else if (tick > 100 && this.getDistance(otherOwner) < 1){
             if (otherOwner.getHeldItemMainhand().isEmpty()) {
-                otherOwner.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(ItemInit.itemPandorasBox));
+                otherOwner.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(ItemInit.ITEM_PANDORA));
                 this.setDead();
             }
         }

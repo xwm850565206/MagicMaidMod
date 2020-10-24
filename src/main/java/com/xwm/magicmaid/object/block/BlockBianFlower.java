@@ -19,6 +19,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public class BlockBianFlower extends BlockBase
 {
@@ -58,8 +59,9 @@ public class BlockBianFlower extends BlockBase
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state)
     {
-        EntityPlayer player = world.getNearestAttackablePlayer(pos, 10, 4);
-        player.addPotionEffect(new PotionEffect(PotionInit.BIAN_FLOWER_EFFECT, 1000, 2));
+//        EntityPlayer player = world.getNearestAttackablePlayer(pos, 10, 4);
+//        player.addPotionEffect(new PotionEffect(PotionInit.BIAN_FLOWER_EFFECT, 1000, 2));
+        this.dropBlockAsItem(world, pos, state, 0);
         super.breakBlock(world, pos, state);
     }
 

@@ -36,7 +36,7 @@ public class BlockOreHolyStone extends BlockOre implements IHasModel
 
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
-        return ItemInit.itemHolyStone;
+        return ItemInit.ITEM_HOLY_STONE;
     }
 
     @Override

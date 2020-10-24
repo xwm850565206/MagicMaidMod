@@ -3,11 +3,13 @@ package com.xwm.magicmaid.world.dimension;
 import com.xwm.magicmaid.event.EventLoader;
 import com.xwm.magicmaid.init.BiomeInit;
 import com.xwm.magicmaid.init.DimensionInit;
+import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.network.InfoLogginPacket;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
@@ -163,15 +165,14 @@ public class DimensionChurch extends WorldProvider
 //                        TextFormatting.RED + "至密金刚剑" +
 //                        TextFormatting.YELLOW + "可以轻松击杀boss，有需要的可以在网易组件中心找到"));
 
-
-//        EventLoader.addInfoBookToPlayer(player);
-
         if (!world.isRemote) {
-            try {
-                InfoLogginPacket packet = new InfoLogginPacket(player.getEntityId());
-                NetworkLoader.instance.sendTo(packet, (EntityPlayerMP) player);
-            } catch (Exception e) {
-                ;
+            if (player != null) {
+                if (player.getHeldItemOffhand().isEmpty())
+                    player.setHeldItem(EnumHand.OFF_HAND, new ItemStack(ItemInit.ITEME_INSTRUCCTION_BOOK));
+                else {
+                    EntityItem entityItem = new EntityItem(player.getEntityWorld(), player.posX, player.posY, player.posZ, new ItemStack(ItemInit.ITEME_INSTRUCCTION_BOOK));
+                    world.spawnEntity(entityItem);
+                }
             }
         }
 

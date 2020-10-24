@@ -62,8 +62,8 @@ public class EntityMagicMaidRettBoss extends EntityMagicMaidRett implements IEnt
         this.bossInfo.setPercent(getHealth() / getMaxHealth());
 
         if (EnumEquipment.valueOf(this.getWeaponType()) == EnumEquipment.NONE) {
-            this.setInventorySlotContents(0, new ItemStack(ItemInit.itemDemonKillerSowrd));
-            this.setInventorySlotContents(1, new ItemStack(ItemInit.itemImmortal));
+            this.setInventorySlotContents(0, new ItemStack(ItemInit.ITEM_DEMON_KILLER_SWORD));
+            this.setInventorySlotContents(1, new ItemStack(ItemInit.ITEM_IMMORTAL));
         }
 
         super.onLivingUpdate();

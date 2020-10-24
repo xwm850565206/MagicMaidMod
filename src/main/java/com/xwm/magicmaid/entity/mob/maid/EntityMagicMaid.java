@@ -8,7 +8,6 @@ import com.xwm.magicmaid.entity.mob.basic.EntityEquipmentCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityTameableCreature;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
-import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumRettState;
 import com.xwm.magicmaid.init.ItemInit;
@@ -17,28 +16,19 @@ import com.xwm.magicmaid.network.ParticlePacket;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
-import com.xwm.magicmaid.world.dimension.DimensionChurch;
-import com.xwm.magicmaid.world.dimension.MagicMaidFightManager;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
@@ -119,7 +109,7 @@ public class EntityMagicMaid extends EntityEquipmentCreature implements IEntityT
                 return true;
             }
             //设置主人
-            else if (stack.getItem().equals(ItemInit.itemLostKey) && !this.hasOwner())
+            else if (stack.getItem().equals(ItemInit.ITEM_LOST_KEY) && !this.hasOwner())
             {
                 if(!player.isCreative())
                     stack.shrink(1);
@@ -135,7 +125,7 @@ public class EntityMagicMaid extends EntityEquipmentCreature implements IEntityT
                 return true;
             }
             //升阶 todo 经验系统被修改过了还没检查
-            else if (stack.getItem().equals(ItemInit.itemRemainingSoft)){
+            else if (stack.getItem().equals(ItemInit.ITEM_REMAINING_SOFT)){
                 if (getRank() < 2 && getExp() == 100){
                     if (!player.isCreative())
                         stack.shrink(1);

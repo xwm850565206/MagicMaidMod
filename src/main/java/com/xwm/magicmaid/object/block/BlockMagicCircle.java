@@ -12,6 +12,9 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
@@ -24,12 +27,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
+import java.nio.FloatBuffer;
 import java.util.Random;
 
 public class BlockMagicCircle extends BlockBase implements ITileEntityProvider
@@ -53,7 +59,6 @@ public class BlockMagicCircle extends BlockBase implements ITileEntityProvider
             return false;
 
         playerIn.openGui(Main.instance, Reference.GUI_MAGIC_CIRCLE, worldIn, pos.getX(), pos.getY(), pos.getZ());
-
         return true;
     }
 
@@ -153,12 +158,17 @@ public class BlockMagicCircle extends BlockBase implements ITileEntityProvider
             return false;
         return true;
     }
+    @Override
+    public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return state.getValue(OPEN) ? 30 : 0;
+    }
+
 
     public static void setState(boolean active, World worldIn, BlockPos pos)
     {
         TileEntity tileentity = worldIn.getTileEntity(pos);
-
         worldIn.setBlockState(pos, BlockInit.magicCircle.getDefaultState().withProperty(BlockMagicCircle.OPEN, active));
+
         if(tileentity != null)
         {
             tileentity.validate();

@@ -9,8 +9,13 @@ import com.xwm.magicmaid.entity.model.weapon.ModelConviction;
 import com.xwm.magicmaid.entity.model.weapon.ModelPandorasBox;
 import com.xwm.magicmaid.entity.model.weapon.ModelRepentance;
 import com.xwm.magicmaid.entity.model.weapon.ModelWhisper;
+import com.xwm.magicmaid.entity.render.RenderBossBall;
 import com.xwm.magicmaid.entity.render.RenderMagicMaid;
 import com.xwm.magicmaid.entity.render.RenderMaidWeapon;
+import com.xwm.magicmaid.entity.throwable.EntityEvilBall;
+import com.xwm.magicmaid.entity.throwable.EntityJusticeBall;
+import com.xwm.magicmaid.init.ItemInit;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
@@ -92,6 +97,20 @@ public class RenderHandler
             @Override
             public Render<? super EntityMaidWeapon> createRenderFor(RenderManager manager) {
                 return new RenderMaidWeapon(manager, new ModelWhisper());
+            }
+        });
+
+        RenderingRegistry.registerEntityRenderingHandler(EntityJusticeBall.class, new IRenderFactory<EntityJusticeBall>() {
+            @Override
+            public Render<? super EntityJusticeBall> createRenderFor(RenderManager manager) {
+                return new RenderBossBall(manager, ItemInit.ITEM_JUSTICE, Minecraft.getMinecraft().getRenderItem());
+            }
+        });
+
+        RenderingRegistry.registerEntityRenderingHandler(EntityEvilBall.class, new IRenderFactory<EntityEvilBall>() {
+            @Override
+            public Render<? super EntityEvilBall> createRenderFor(RenderManager manager) {
+                return new RenderBossBall(manager, ItemInit.ITEM_EVIL, Minecraft.getMinecraft().getRenderItem());
             }
         });
     }

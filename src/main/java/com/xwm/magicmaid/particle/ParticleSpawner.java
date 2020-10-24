@@ -51,7 +51,7 @@ public class ParticleSpawner
             case CROSS:
                 return new CrossParticle(mc.world, d0, d1, d2);
             case CONVICTION:
-                return new ConvictionParticle(mc.world, d0, d1, d2);
+                return new ConvictionParticle(mc.world, d0, d1, d2, d3, d4, d5);
             case STAR:
                 return new StarParticle(mc.world, d0, d1, d2);
             case PANDORA:

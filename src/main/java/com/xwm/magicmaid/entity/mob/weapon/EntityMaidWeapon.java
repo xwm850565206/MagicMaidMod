@@ -98,7 +98,7 @@ public class EntityMaidWeapon extends EntityLivingBase
      */
     protected void doOhterOwnerUpdate() {
         if (!world.isRemote && otherOwner == null) {
-            EntityItem item = new EntityItem(world, posX, posY, posZ, new ItemStack(ItemInit.itemPandorasBox));
+            EntityItem item = new EntityItem(world, posX, posY, posZ, new ItemStack(ItemInit.ITEM_PANDORA));
             world.spawnEntity(item);
             this.setDead();
         }

@@ -3,10 +3,12 @@ package com.xwm.magicmaid.util.handlers;
 import com.xwm.magicmaid.entity.ai.EntityAINearestAttackableTargetAvoidOwner;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.gui.*;
+import com.xwm.magicmaid.object.tileentity.TileEntityMagicCircle;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -51,7 +53,12 @@ public class GuiHandler implements IGuiHandler
             ;
         }
         else if (ID == Reference.GUI_MAGIC_CIRCLE) {
-            return new ContainMagicCircle(player.inventory, (IInventory) world.getTileEntity(new BlockPos(x, y, z)));
+            TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
+            if (tileEntity instanceof TileEntityMagicCircle)
+                return new ContainMagicCircle(player.inventory, (TileEntityMagicCircle) tileEntity);
+        }
+        else if (ID == Reference.GUI_INSTRUCTION_BOOK) {
+            ;
         }
 
         return null;
@@ -90,8 +97,14 @@ public class GuiHandler implements IGuiHandler
         }
         else if (ID == Reference.GUI_MAGIC_CIRCLE)
         {
-            return new GuiMagicCircle(new ContainMagicCircle(player.inventory, (IInventory) world.getTileEntity(new BlockPos(x, y, z))));
+            TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
+            if (tileEntity instanceof TileEntityMagicCircle)
+                return new GuiMagicCircle(new ContainMagicCircle(player.inventory, (TileEntityMagicCircle) tileEntity));
         }
+        else if (ID == Reference.GUI_INSTRUCTION_BOOK) {
+            return new GuiInstructionBook();
+        }
+
         return null;
     }
 

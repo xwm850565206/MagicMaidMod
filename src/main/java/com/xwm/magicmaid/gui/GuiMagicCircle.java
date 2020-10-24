@@ -15,7 +15,7 @@ public class GuiMagicCircle extends GuiContainer
 
     public GuiMagicCircle(Container inventorySlotsIn) {
         super(inventorySlotsIn);
-        this.magicCircle = (TileEntityMagicCircle) ((ContainMagicCircle)this.inventorySlots).magicCircle;
+        this.magicCircle = ((ContainMagicCircle)this.inventorySlots).magicCircle;
     }
 
     /**

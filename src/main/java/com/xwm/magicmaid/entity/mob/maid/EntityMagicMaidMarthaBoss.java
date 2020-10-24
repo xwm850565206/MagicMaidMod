@@ -8,7 +8,6 @@ import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.util.handlers.LootTableHandler;
 import com.xwm.magicmaid.world.dimension.DimensionChurch;
 import com.xwm.magicmaid.world.dimension.MagicCreatureFightManager;
-import com.xwm.magicmaid.world.dimension.MagicMaidFightManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -68,12 +67,12 @@ public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements 
         if (EnumEquipment.valueOf(this.getWeaponType()) == EnumEquipment.NONE) {
             double f = rand.nextDouble();
             if (f < 0.5)
-                this.setInventorySlotContents(0, new ItemStack(ItemInit.itemRepantence));
+                this.setInventorySlotContents(0, new ItemStack(ItemInit.ITEM_REPANTENCE));
             else
-                this.setInventorySlotContents(0, new ItemStack(ItemInit.itemConviction));
+                this.setInventorySlotContents(0, new ItemStack(ItemInit.ITEM_CONVICTION));
         }
         if (EnumEquipment.valueOf(this.getArmorType()) == EnumEquipment.NONE){
-            this.setInventorySlotContents(1, new ItemStack(ItemInit.itemProtector));
+            this.setInventorySlotContents(1, new ItemStack(ItemInit.ITEM_PROTECTOR));
         }
 
         super.onLivingUpdate();

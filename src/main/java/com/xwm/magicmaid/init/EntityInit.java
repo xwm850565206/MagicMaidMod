@@ -5,6 +5,8 @@ import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponConviction;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponPandorasBox;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponRepantence;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponWhisper;
+import com.xwm.magicmaid.entity.throwable.EntityEvilBall;
+import com.xwm.magicmaid.entity.throwable.EntityJusticeBall;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -33,6 +35,8 @@ public class EntityInit
         registerEntityWithoutEgg(event, Reference.MODID + "_pandora", EntityMaidWeaponPandorasBox.class, Reference.ENTITY_PANDORA, 50);
         registerEntityWithoutEgg(event, Reference.MODID + "_whisper", EntityMaidWeaponWhisper.class, Reference.ENTITY_WHISPER, 50);
 
+        registerEntityWithoutEgg(event, Reference.MODID + "_justice", EntityJusticeBall.class, Reference.ENTITY_JUSTICE_BALL, 50);
+        registerEntityWithoutEgg(event, Reference.MODID + "_evil", EntityEvilBall.class, Reference.ENTITY_EVIL_BALL, 50);
     }
 
     private static void registerEntity(RegistryEvent.Register<EntityEntry> event, String name, Class<? extends Entity> entity, int id, int range, int color1, int color2) {

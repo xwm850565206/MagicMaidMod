@@ -2,8 +2,10 @@ package com.xwm.magicmaid.init;
 
 import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.world.dimension.DimensionChurch;
+import com.xwm.magicmaid.world.gen.WorldGenFlowers;
 import net.minecraft.world.DimensionType;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class DimensionInit
 {
@@ -21,6 +23,11 @@ public class DimensionInit
 
     public static void registerDimensions()
     {
-        DimensionManager.registerDimension(DIMENSION_CHURCH, CHURCH); //todo test 还没测试
+        DimensionManager.registerDimension(DIMENSION_CHURCH, CHURCH);
+    }
+
+    public static void registerWorldGenerators()
+    {
+        GameRegistry.registerWorldGenerator(new WorldGenFlowers(), 10);
     }
 }

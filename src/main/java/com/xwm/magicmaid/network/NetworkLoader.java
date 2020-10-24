@@ -29,6 +29,7 @@ public class NetworkLoader
         registerMessage(PunishPacket.Handler.class, PunishPacket.class, Side.CLIENT);
         registerMessage(InfoLogginPacket.Handler.class, InfoLogginPacket.class, Side.CLIENT);
         registerMessage(AddBookPacket.Handler.class, AddBookPacket.class, Side.SERVER);
+        registerMessage(SyncEntityDataPacket.Handler.class, SyncEntityDataPacket.class, Side.SERVER);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, GuiHandler.maidWindowHandler);
     }
