@@ -2,6 +2,7 @@ package com.xwm.magicmaid.object.item.equipment;
 
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
+import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,16 +38,16 @@ public class ItemDemonKillerSword extends ItemWeapon
             if (attackTime == 0) {
                 target.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 400, 1));
                 target.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker),
-                        PlayerEquipmentUtils.getAttackDamage(attacker, EnumAttackType.DEMONKILLER));
+                        MagicEquipmentUtils.getAttackDamage(attacker, EnumAttackType.DEMONKILLER));
             }
             else if (attackTime == 1) {
                 target.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 400, 1));
                 target.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker),
-                        2 * PlayerEquipmentUtils.getAttackDamage(attacker, EnumAttackType.DEMONKILLER));
+                        2 * MagicEquipmentUtils.getAttackDamage(attacker, EnumAttackType.DEMONKILLER));
             }
             else if (attackTime == 2) {
                 target.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker),
-                        4 * PlayerEquipmentUtils.getAttackDamage(attacker, EnumAttackType.DEMONKILLER));
+                        4 * MagicEquipmentUtils.getAttackDamage(attacker, EnumAttackType.DEMONKILLER));
             }
             else
                 attackTime = 0;

@@ -23,6 +23,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
@@ -287,4 +288,19 @@ public class EventRenderLoader
         GlStateManager.popMatrix();
     }
 
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void cancelAbsorbEntityRender(RenderLivingEvent.Pre event)
+    {
+        EntityLivingBase entity = event.getEntity();
+        try {
+            if (entity.getEntityData().hasKey(Reference.EFFECT_ABSORB)) {
+                if (entity.getEntityData().getBoolean(Reference.EFFECT_ABSORB))
+                    event.setCanceled(true);
+            }
+        } catch (Exception e)
+        {
+            ;
+        }
+    }
 }

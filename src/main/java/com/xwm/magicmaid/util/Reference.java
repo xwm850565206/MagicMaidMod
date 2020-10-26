@@ -10,6 +10,7 @@ public class Reference
 
     public static final String DAMAGE_OBSESSION = MODID + "_obsession";
     public static final String DAMAGE_ELIMINATE = MODID + "_eliminate";
+    public static final String EFFECT_ABSORB = MODID + "_absorb";
 
     public static final int GUI_MAID_WINDOW = 1;
     public static final int GUI_MAID_MEMORY = 2;

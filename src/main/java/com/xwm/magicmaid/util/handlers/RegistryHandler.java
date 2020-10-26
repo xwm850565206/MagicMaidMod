@@ -1,7 +1,8 @@
 package com.xwm.magicmaid.util.handlers;
 
 import com.xwm.magicmaid.init.*;
-import com.xwm.magicmaid.object.tileentity.MagicRegistry;
+import com.xwm.magicmaid.registry.MagicFormulaRegistry;
+import com.xwm.magicmaid.registry.MagicItemRegisty;
 import com.xwm.magicmaid.util.interfaces.IHasModel;
 import com.xwm.magicmaid.world.gen.StructureChurchPieces;
 import net.minecraft.block.Block;
@@ -22,6 +23,7 @@ public class RegistryHandler
     public static void onItemRegister(RegistryEvent.Register<Item> event)
     {
         event.getRegistry().registerAll(ItemInit.ITEMS.toArray(new Item[0]));
+        MagicItemRegisty.registerAllEquipment();
     }
 
     @SubscribeEvent
@@ -62,7 +64,6 @@ public class RegistryHandler
     {
         SoundsHandler.registerSounds();
         StructureChurchPieces.registerPieces();
-
     }
 
     public static void preInitRegistries()
@@ -72,7 +73,7 @@ public class RegistryHandler
         DimensionInit.registerDimensions();
         DimensionInit.registerWorldGenerators();
         PotionInit.registerPotions();
-        MagicRegistry.registerAllFormula();
+        MagicFormulaRegistry.registerAllFormula();
     }
 
 }

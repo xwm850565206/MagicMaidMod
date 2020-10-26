@@ -99,8 +99,6 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
     }
 
     public void getEquipment(ItemEquipment equipment){
-        if (this.world.isRemote)
-            return;
 
         EnumEquipment equipment1 = equipment.enumEquipment;
         switch (equipment1){

@@ -1,11 +1,8 @@
 package com.xwm.magicmaid.enumstorage;
 
-import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
-import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponConviction;
-import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponRepantence;
-import com.xwm.magicmaid.init.ItemInit;
+import com.xwm.magicmaid.entity.mob.weapon.*;
+import com.xwm.magicmaid.registry.MagicItemRegisty;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
-import net.minecraft.item.Item;
 import net.minecraft.world.World;
 
 public enum EnumEquipment
@@ -28,16 +25,7 @@ public enum EnumEquipment
 
     public static ItemEquipment toItemEquipment(EnumEquipment equipment)
     {
-        for (Item item : ItemInit.ITEMS)
-        {
-            if (item instanceof  ItemEquipment)
-            {
-                if (((ItemEquipment) item).enumEquipment.equals(equipment))
-                    return (ItemEquipment) item;
-            }
-        }
-
-        return null;
+        return MagicItemRegisty.getEquipment(equipment);
     }
 
     public static EntityMaidWeapon toEntityMaidWeapon(EnumEquipment equipment, World world)
@@ -47,13 +35,12 @@ public enum EnumEquipment
             case REPATENCE: return new EntityMaidWeaponRepantence(world);
             case CONVICTION: return new EntityMaidWeaponConviction(world);
             case PROTECTOR: return null;//盔甲没有实体
-            case DEMONKILLINGSWORD: return null; //todo 还没写
+            case DEMONKILLINGSWORD: return null; //大剑没有实体
             case IMMORTAL: return null; //盔甲没有实体
-            case PANDORA: return null; //todo 还没写
-            case WHISPER: return null; //todo 还没写
+            case PANDORA: return new EntityMaidWeaponPandorasBox(world);
+            case WHISPER: return new EntityMaidWeaponWhisper(world);
             case WISE: return null; //盔甲没有实体
         }
-
         return null;
     }
 }

@@ -9,7 +9,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-//todo
 public class PotionGhost extends Potion
 {
     public static final ResourceLocation ICON = new ResourceLocation(Reference.MODID + ":textures/gui/potion_effect.png");

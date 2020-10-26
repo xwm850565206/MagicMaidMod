@@ -82,9 +82,6 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
 
     public void getEquipment(ItemEquipment equipment){
 
-        if (this.world.isRemote)
-            return;
-
         EnumEquipment equipment1 = equipment.enumEquipment;
         switch (equipment1){
             case NONE: return;
@@ -118,9 +115,6 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
     }
 
     public void loseEquipment(ItemEquipment equipment){
-
-        if (this.world.isRemote)
-            return;
 
         if (equipment instanceof ItemWeapon){
             try {

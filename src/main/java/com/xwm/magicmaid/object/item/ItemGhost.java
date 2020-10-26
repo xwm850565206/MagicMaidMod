@@ -15,6 +15,6 @@ public class ItemGhost extends ItemBase
 
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn)
     {
-        tooltip.add(TextFormatting.YELLOW + "逝者的灵魂");
+        tooltip.add(TextFormatting.YELLOW + "逝者的灵魂，徘徊在彼岸");
     }
 }

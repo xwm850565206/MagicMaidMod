@@ -15,6 +15,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
@@ -27,6 +28,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -36,6 +38,7 @@ import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 import java.nio.FloatBuffer;
+import java.util.List;
 import java.util.Random;
 
 public class BlockMagicCircle extends BlockBase implements ITileEntityProvider
@@ -59,6 +62,7 @@ public class BlockMagicCircle extends BlockBase implements ITileEntityProvider
             return false;
 
         playerIn.openGui(Main.instance, Reference.GUI_MAGIC_CIRCLE, worldIn, pos.getX(), pos.getY(), pos.getZ());
+
         return true;
     }
 
@@ -167,12 +171,18 @@ public class BlockMagicCircle extends BlockBase implements ITileEntityProvider
     public static void setState(boolean active, World worldIn, BlockPos pos)
     {
         TileEntity tileentity = worldIn.getTileEntity(pos);
-        worldIn.setBlockState(pos, BlockInit.magicCircle.getDefaultState().withProperty(BlockMagicCircle.OPEN, active));
+        worldIn.setBlockState(pos, BlockInit.magicCircle.getDefaultState().withProperty(BlockMagicCircle.OPEN, active), 3);
 
         if(tileentity != null)
         {
             tileentity.validate();
             worldIn.setTileEntity(pos, tileentity);
         }
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn)
+    {
+        tooltip.add(TextFormatting.YELLOW + "雕刻着复杂的魔法纹路的石板，知道它的用法的人起码得是下位魔法师了");
     }
 }

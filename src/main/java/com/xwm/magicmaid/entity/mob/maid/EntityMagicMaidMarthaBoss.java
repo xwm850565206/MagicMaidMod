@@ -61,9 +61,6 @@ public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements 
         if (fightManager != null)
             fightManager.onBossUpdate(this);
 
-        this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));
-        this.bossInfo.setPercent(getHealth() / getMaxHealth());
-
         if (EnumEquipment.valueOf(this.getWeaponType()) == EnumEquipment.NONE) {
             double f = rand.nextDouble();
             if (f < 0.5)
@@ -74,6 +71,9 @@ public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements 
         if (EnumEquipment.valueOf(this.getArmorType()) == EnumEquipment.NONE){
             this.setInventorySlotContents(1, new ItemStack(ItemInit.ITEM_PROTECTOR));
         }
+
+        this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));
+        this.bossInfo.setPercent(getHealth() / getMaxHealth());
 
         super.onLivingUpdate();
     }

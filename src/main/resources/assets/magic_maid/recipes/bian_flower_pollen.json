@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "magic_maid:bianflower"
+    }
+  ],
+
+  "result":
+  {
+    "item": "magic_maid:bian_flower_pollen",
+    "count": 3
+  }
+}

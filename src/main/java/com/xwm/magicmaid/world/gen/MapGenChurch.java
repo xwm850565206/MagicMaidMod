@@ -33,7 +33,6 @@ public class MapGenChurch extends MapGenStructure
     public BlockPos getNearestStructurePos(World worldIn, BlockPos pos, boolean findUnexplored) {
         this.world = worldIn;
         return findNearestStructurePosBySpacing(worldIn, this, pos, 6, 5, 10387313, true, 100, findUnexplored);
-        //todo
     }
 
     protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ)

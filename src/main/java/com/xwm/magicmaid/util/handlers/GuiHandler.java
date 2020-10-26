@@ -7,6 +7,7 @@ import com.xwm.magicmaid.object.tileentity.TileEntityMagicCircle;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -53,9 +54,7 @@ public class GuiHandler implements IGuiHandler
             ;
         }
         else if (ID == Reference.GUI_MAGIC_CIRCLE) {
-            TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
-            if (tileEntity instanceof TileEntityMagicCircle)
-                return new ContainMagicCircle(player.inventory, (TileEntityMagicCircle) tileEntity);
+            return new ContainMagicCircle(player.inventory, (TileEntityMagicCircle) world.getTileEntity(new BlockPos(x, y, z)));
         }
         else if (ID == Reference.GUI_INSTRUCTION_BOOK) {
             ;
@@ -97,9 +96,7 @@ public class GuiHandler implements IGuiHandler
         }
         else if (ID == Reference.GUI_MAGIC_CIRCLE)
         {
-            TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
-            if (tileEntity instanceof TileEntityMagicCircle)
-                return new GuiMagicCircle(new ContainMagicCircle(player.inventory, (TileEntityMagicCircle) tileEntity));
+            return new GuiMagicCircle((Container) getServerGuiElement(ID, player, world, x, y, z), (TileEntityMagicCircle) world.getTileEntity(new BlockPos(x, y, z)));
         }
         else if (ID == Reference.GUI_INSTRUCTION_BOOK) {
             return new GuiInstructionBook();

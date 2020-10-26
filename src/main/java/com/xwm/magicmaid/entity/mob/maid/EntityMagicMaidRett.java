@@ -82,8 +82,7 @@ public class EntityMagicMaidRett extends EntityMagicMaid
     }
 
     public void getEquipment(ItemEquipment equipment){
-        if (this.world.isRemote)
-            return;
+
         EnumEquipment equipment1 = equipment.enumEquipment;
         switch (equipment1){
             case DEMONKILLINGSWORD:
@@ -102,8 +101,7 @@ public class EntityMagicMaidRett extends EntityMagicMaid
     }
 
     public void loseEquipment(ItemEquipment equipment){
-        if (this.world.isRemote)
-            return;
+
         EnumEquipment equipment1 = equipment.enumEquipment;
         switch (equipment1) {
             case DEMONKILLINGSWORD:

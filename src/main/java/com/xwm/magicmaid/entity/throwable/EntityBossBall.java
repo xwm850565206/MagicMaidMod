@@ -1,20 +1,25 @@
 package com.xwm.magicmaid.entity.throwable;
 
-import com.xwm.magicmaid.entity.mob.basic.EntityMagicModeCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAvoidThingCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
+import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityEquipmentCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityMultiHealthCreature;
+import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
+import jdk.nashorn.internal.ir.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 public abstract class EntityBossBall extends EntityThrowable
 {
@@ -53,8 +58,25 @@ public abstract class EntityBossBall extends EntityThrowable
     @Override
     protected void onImpact(RayTraceResult result) {
 
-        Entity entity = result.entityHit;
-        impactEntity(entity);
+        BlockPos pos = null;
+        switch (result.typeOfHit)  {
+            case MISS: return;
+            case ENTITY:
+                pos = result.entityHit.getPosition();
+                break;
+            case BLOCK:
+                pos = result.getBlockPos();
+                break;
+        }
+        List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos).grow(1));
+        for (Entity entity : entities)
+        {
+            try {
+                impactEntity(entity);
+            } catch (Exception e) {
+                ; //遇到攻击失效的就算了
+            }
+        }
 
         if (!world.isRemote) {
             this.world.setEntityState(this, (byte) 3);
@@ -100,7 +122,12 @@ public abstract class EntityBossBall extends EntityThrowable
                     }
                 }
             }
-        }
 
+            if (entity instanceof IEntityEquipmentCreature)
+            {
+                MagicEquipmentUtils.dropEquipment(((IEntityEquipmentCreature) entity).getWeaponType(), 1, world, getPosition());
+                MagicEquipmentUtils.dropEquipment(((IEntityEquipmentCreature) entity).getArmorType(), 1, world, getPosition());
+            }
+        }
     }
 }

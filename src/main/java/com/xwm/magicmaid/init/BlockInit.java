@@ -17,7 +17,7 @@ public class BlockInit
 
     public static final Block blockMemoryClock = new BlockMemoryClock("memoryclock");
 
-    public static final Block magicCircle = new BlockMagicCircle("magiccircle");
+    public static final Block magicCircle = new BlockMagicCircle("magic_circle");
 
     public static final Block bianFlower = new BlockBianFlower("bianflower");
 }

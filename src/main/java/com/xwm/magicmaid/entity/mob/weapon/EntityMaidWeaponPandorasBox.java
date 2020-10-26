@@ -5,7 +5,7 @@ import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.network.DistinationParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
-import com.xwm.magicmaid.object.item.equipment.PlayerEquipmentUtils;
+import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -114,9 +114,9 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
                     this.getEntityBoundingBox().grow(radius + 2, radius, radius + 2));
             try {
                 for (EntityLivingBase entityLivingBase : entityLivingBases) {
-                    if (!PlayerEquipmentUtils.checkEnemy(otherOwner, entityLivingBase))
+                    if (!MagicEquipmentUtils.checkEnemy(otherOwner, entityLivingBase))
                         continue;
-                    int damage = PlayerEquipmentUtils.getAttackDamage(otherOwner, EnumAttackType.PANDORA);
+                    int damage = MagicEquipmentUtils.getAttackDamage(otherOwner, EnumAttackType.PANDORA);
                     entityLivingBase.attackEntityFrom(DamageSource.causeMobDamage(otherOwner),
                             damage);
 

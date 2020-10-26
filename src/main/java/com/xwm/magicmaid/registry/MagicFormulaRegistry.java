@@ -1,8 +1,9 @@
-package com.xwm.magicmaid.object.tileentity;
+package com.xwm.magicmaid.registry;
 
 import com.google.common.collect.Lists;
 import com.xwm.magicmaid.init.BlockInit;
 import com.xwm.magicmaid.init.ItemInit;
+import com.xwm.magicmaid.object.tileentity.Formula;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MagicRegistry
+public class MagicFormulaRegistry
 {
     private static HashMap<ResourceLocation, Formula> FORMULA;
     private static HashMap<ResourceLocation, List<ItemStack>> RESULT;
@@ -41,10 +42,10 @@ public class MagicRegistry
                 Lists.newArrayList(new ItemStack(ItemInit.ITEM_GHOST_OBSESSION_SWORD)), 200);
 
         registerFormula(ItemInit.ITEM_ELIMINATE_SOUL_NAIL.getRegistryName(),Formula.create(ItemInit.ITEM_ELIMINATE_SOUL_NAIL, ItemInit.ITEM_ABSORB_SOUL_COMPASS),
-                Lists.newArrayList(new ItemStack(ItemInit.ITEM_NO_SOUL_GHOST), new ItemStack(ItemInit.ITEM_NO_SOUL_GHOST)), 200);
+                Lists.newArrayList(new ItemStack(ItemInit.ITEM_NO_SOUL_GHOST), new ItemStack(Items.COMPASS)), 200);
 
         registerFormula(ItemInit.ITEM_LOST_KEY.getRegistryName(), Formula.create(ItemInit.ITEM_LOST_KEY, ItemInit.ITEM_NO_SOUL_GHOST, ItemInit.ITEM_NO_SOUL_GHOST),
-                Lists.newArrayList(new ItemStack(ItemInit.ITEM_JUSTICE_SOUL_PIECE), new ItemStack(ItemInit.ITEM_EVIL_SOUL_PIECE), new ItemStack(ItemInit.ITEM_NO_SOUL_GHOST)), 200);
+                Lists.newArrayList(new ItemStack(ItemInit.ITEM_JUSTICE_SOUL_PIECE), new ItemStack(ItemInit.ITEM_EVIL_SOUL_PIECE)), 200);
     }
 
     public static Formula getFormula(ItemStack keyItem)

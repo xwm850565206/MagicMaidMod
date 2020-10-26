@@ -40,6 +40,7 @@ item.lostkey.name=遗失之匙
 item.the_gospels.name=福音书
 item.remaining_soft.name=残存的温柔
 
+item.instuction_book.name=终焉记事
 item.justice.name=正义
 item.evil.name=邪恶
 item.obsession.name=执念
@@ -48,7 +49,8 @@ item.bian_flower_pollen.name=彼岸花粉
 item.obsession_sword.name=执念之刃
 item.ghost_obsession_sword.name=渡魂之刃
 item.ghost.name=亡魂
-item.no_soul_ghost.name=无魂之魄
+item.no_soul_ghost_0.name=无魂之魄
+item.no_soul_ghost_1.name=装满灵魂的魄
 item.justice_soul_piece.name=正义残魂
 item.evil_soul_piece.name=邪恶残魂
 item.absorb_soul_compass.name=吸魂磁石
@@ -56,7 +58,7 @@ item.absorb_soul_compass.name=吸魂磁石
 
 tile.oreholystone.name=圣痕矿石
 tile.memoryclock.name=记忆铜钟
-tile.magiccircle.name=魔法石板
+tile.magic_circle.name=魔法石板
 tile.bianflower.name=彼岸花
 
 
@@ -84,7 +86,7 @@ potion.effect.bian_flower=彼岸水
 splash_potion.effect.bian_flower=喷溅型彼岸水
 lingering_potion.effect.bian_flowewr=滞留型彼岸水
 tipped_arrow.effect.bian_flower=彼岸之箭
-potion.effect.ghost=亡魂
+potion.effect.ghost=亡魂水
 splash_potion.effect.ghost=喷溅型亡魂水
 lingering_potion.effect.ghost=滞留型亡魂水
 tipped_arrow.effect.ghost=亡魂之箭

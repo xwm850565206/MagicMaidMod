@@ -57,9 +57,6 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
     @Override
     public void onLivingUpdate()
     {
-        this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));
-        this.bossInfo.setPercent(getHealth() / getMaxHealth());
-
         if (EnumEquipment.valueOf(this.getWeaponType()) == EnumEquipment.NONE){
             double f = rand.nextDouble();
             if (f < 0.5)
@@ -69,6 +66,10 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
 
             this.setInventorySlotContents(1, new ItemStack(ItemInit.ITEM_WISE));
         }
+
+        this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));
+        this.bossInfo.setPercent(getHealth() / getMaxHealth());
+
 
         super.onLivingUpdate();
     }

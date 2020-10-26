@@ -12,6 +12,7 @@ import net.minecraft.client.resources.IResource;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Biomes;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemBook;
 import net.minecraft.item.ItemStack;
@@ -50,7 +51,9 @@ public class DimensionChurch extends WorldProvider
 
     public void init()
     {
+//        this.biomeProvider = new BiomeProviderSingle(Biomes.DESERT);
         this.biomeProvider = new BiomeProviderSingle(BiomeInit.RUINS);
+        this.hasSkyLight = true;
         NBTTagCompound nbttagcompound = this.world.getWorldInfo().getDimensionData(this.world.provider.getDimension());
         this.fightManager = this.world instanceof WorldServer ? new MagicMaidFightManager((WorldServer)this.world, nbttagcompound.getCompoundTag("MaidFight")) : null;
     }
@@ -104,16 +107,7 @@ public class DimensionChurch extends WorldProvider
     @SideOnly(Side.CLIENT)
     public Vec3d getFogColor(float p_76562_1_, float p_76562_2_)
     {
-        int i = 10518688;
-        float f = MathHelper.cos(p_76562_1_ * ((float)Math.PI * 2F)) * 2.0F + 0.5F;
-        f = MathHelper.clamp(f, 0.0F, 1.0F);
-        float f1 = 0.627451F;
-        float f2 = 0.5019608F;
-        float f3 = 0.627451F;
-        f1 = f1 * (f * 0.0F + 0.15F);
-        f2 = f2 * (f * 0.0F + 0.15F);
-        f3 = f3 * (f * 0.0F + 0.15F);
-        return new Vec3d((double)f1, (double)f2, (double)f3);
+        return super.getFogColor(p_76562_1_, p_76562_2_);
     }
 
     @Override
@@ -136,7 +130,7 @@ public class DimensionChurch extends WorldProvider
     @Override
     public boolean isSurfaceWorld()
     {
-        return false;
+        return true;
     }
 
     @SideOnly(Side.CLIENT)
@@ -151,20 +145,28 @@ public class DimensionChurch extends WorldProvider
         return false;
     }
 
+    @SideOnly(Side.CLIENT)
+    public float getStarBrightness(float par1)
+    {
+        return 1;
+    }
+
+    public boolean shouldClientCheckLighting(){
+        return true;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public float getSunBrightness(float par1)
+    {
+        return world.getSunBrightnessBody(par1);
+    }
+
+
     /**
      * Called when a Player is added to the provider's world.
      */
     public void onPlayerAdded(EntityPlayerMP player)
     {
-//        player.sendMessage(new TextComponentString(
-//                TextFormatting.YELLOW + "注意！boss比较强大，击杀难度较大，但是目前依然有很多方法击杀！\n\n" +
-//                        TextFormatting.YELLOW  + "鉴于难度对新手不友好，本模组可以与苦力怕工作室的" +
-//                        TextFormatting.RED + "【HSC】上古神器-石头利用" +
-//                        TextFormatting.YELLOW + "联动！\n\n" +
-//                        TextFormatting.YELLOW +"使用其中的终极武器" +
-//                        TextFormatting.RED + "至密金刚剑" +
-//                        TextFormatting.YELLOW + "可以轻松击杀boss，有需要的可以在网易组件中心找到"));
-
         if (!world.isRemote) {
             if (player != null) {
                 if (player.getHeldItemOffhand().isEmpty())

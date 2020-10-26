@@ -1,11 +1,10 @@
 package com.xwm.magicmaid.object.item.equipment;
 
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidMartha;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidRett;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
+import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -41,6 +40,7 @@ public class ItemWhisper extends ItemWeapon
     {
         tooltip.add(TextFormatting.YELLOW + "传说这把法杖的第一任主人是大法师戴安娜");
         tooltip.add(TextFormatting.YELLOW + "上面的结晶注入了她无穷的魔力");
+        tooltip.add(TextFormatting.YELLOW + "可以右键使用");
     }
 
 
@@ -146,10 +146,10 @@ public class ItemWhisper extends ItemWeapon
             for (EntityLiving entityLiving1 : entityLivingBaseList)
             {
                 try{
-                    if (player instanceof EntityPlayer && !PlayerEquipmentUtils.checkEnemy((EntityPlayer) player, entityLiving1))
+                    if (player instanceof EntityPlayer && !MagicEquipmentUtils.checkEnemy((EntityPlayer) player, entityLiving1))
                         continue;
                     //造成20点伤害 和 10点真实伤害
-                    entityLiving1.attackEntityFrom(DamageSource.LIGHTNING_BOLT, PlayerEquipmentUtils.getAttackDamage(player, EnumAttackType.WHISPER));
+                    entityLiving1.attackEntityFrom(DamageSource.LIGHTNING_BOLT, MagicEquipmentUtils.getAttackDamage(player, EnumAttackType.WHISPER));
                     entityLiving1.setHealth(entityLiving1.getHealth() - 10);
                     player.getEntityWorld().playEvent(3000, entityLiving1.getPosition(), 10);
                     EntityLightningBolt bolt = new EntityLightningBolt(player.getEntityWorld(), entityLiving1.posX + itemRand.nextInt(2* (int) radius) - radius, cbb.maxY, entityLiving1.posZ + itemRand.nextInt(2 * (int) radius) - radius, true);

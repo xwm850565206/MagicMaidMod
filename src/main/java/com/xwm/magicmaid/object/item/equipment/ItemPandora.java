@@ -30,6 +30,7 @@ public class ItemPandora extends ItemWeapon
     {
         tooltip.add(TextFormatting.YELLOW + "充满黑暗力量的魔盒，里面");
         tooltip.add(TextFormatting.YELLOW + "似乎拥有无尽的力量");
+        tooltip.add(TextFormatting.YELLOW + "可以右键使用");
     }
 
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)

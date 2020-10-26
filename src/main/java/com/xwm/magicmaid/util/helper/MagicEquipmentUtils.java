@@ -1,17 +1,22 @@
-package com.xwm.magicmaid.object.item.equipment;
+package com.xwm.magicmaid.util.helper;
 
 import com.xwm.magicmaid.entity.mob.basic.EntityTameableCreature;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
+import com.xwm.magicmaid.enumstorage.EnumEquipment;
+import com.xwm.magicmaid.registry.MagicItemRegisty;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.PotionTypes;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.potion.PotionType;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
-public class PlayerEquipmentUtils
+public class MagicEquipmentUtils
 {
     public static boolean checkEnemy(EntityLivingBase player, EntityLivingBase entityLivingBase)
     {
@@ -68,5 +73,18 @@ public class PlayerEquipmentUtils
         }
 
         return damage * factor; //todo 还有很多没写进来
+    }
+
+    public static void dropEquipment(int equipment, int count, World world, BlockPos pos)
+    {
+        if (world.isRemote)
+            return;
+        EnumEquipment enumEquipment = EnumEquipment.valueOf(equipment);
+        Item item = MagicItemRegisty.getPiece(enumEquipment);
+        if (item != null)
+        {
+            EntityItem entityItem = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(item));
+            world.spawnEntity(entityItem);
+        }
     }
 }

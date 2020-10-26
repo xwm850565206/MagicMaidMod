@@ -9,6 +9,6 @@ public class TileEntityHandler
 {
     public static void registerTileEntities()
     {
-        GameRegistry.registerTileEntity(TileEntityMagicCircle.class, new ResourceLocation(Reference.MODID, "magiccircle"));
+        GameRegistry.registerTileEntity(TileEntityMagicCircle.class, new ResourceLocation(Reference.MODID, "magic_circle"));
     }
 }

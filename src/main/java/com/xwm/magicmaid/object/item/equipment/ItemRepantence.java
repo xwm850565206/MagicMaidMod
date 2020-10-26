@@ -7,6 +7,7 @@ import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.ParticlePacket;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
+import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -35,6 +36,7 @@ public class ItemRepantence extends ItemWeapon
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn)
     {
         tooltip.add(TextFormatting.YELLOW + "修女祷告时使用的物品，听说能够镇压邪灵");
+        tooltip.add(TextFormatting.YELLOW + "可以右键使用");
     }
 
     /**
@@ -81,11 +83,11 @@ public class ItemRepantence extends ItemWeapon
             List<EntityLiving> entityLivings = world.getEntitiesWithinAABB(EntityLiving.class, cbb.grow(radius * 3));
             for (EntityLiving entityLiving : entityLivings)
             {
-                if (player instanceof EntityPlayer && !PlayerEquipmentUtils.checkEnemy((EntityPlayer) player, entityLiving))
+                if (player instanceof EntityPlayer && !MagicEquipmentUtils.checkEnemy((EntityPlayer) player, entityLiving))
                     continue;
 
                 entityLiving.attackEntityFrom(new EntityDamageSource("repantence_attack", player).setDamageBypassesArmor(),
-                        PlayerEquipmentUtils.getAttackDamage(player, EnumAttackType.REPANTENCE));
+                        MagicEquipmentUtils.getAttackDamage(player, EnumAttackType.REPANTENCE));
 
                 playParticle(entityLiving.getEntityBoundingBox(), world);
                 if (entityLiving.getHealth() <= 0)

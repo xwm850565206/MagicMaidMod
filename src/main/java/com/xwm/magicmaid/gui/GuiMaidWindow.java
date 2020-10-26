@@ -155,7 +155,7 @@ public class GuiMaidWindow extends GuiContainer
             @Override
             public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)
             {
-                super.drawButton(mc, mouseX, mouseY, partialTicks); //todo
+                super.drawButton(mc, mouseX, mouseY, partialTicks);
             }
         });
     }
