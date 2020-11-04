@@ -2,6 +2,7 @@ package com.xwm.magicmaid.entity.mob.basic.interfaces;
 
 import com.xwm.magicmaid.world.dimension.MagicCreatureFightManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 public interface IEntityBossCreature
@@ -36,4 +37,11 @@ public interface IEntityBossCreature
      * @return
      */
     int getBossCamp();
+
+    /**
+     * 创造一个警告区域，用于boss攻击的抬手范围提示
+     * @param i 渲染区域的id号，必须唯一
+     * @param bb 攻击区域
+     */
+    void createWarningArea(int i, AxisAlignedBB bb);
 }

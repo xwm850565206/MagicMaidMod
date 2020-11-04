@@ -160,6 +160,8 @@ public class ItemWhisper extends ItemWeapon
                     ;
                 }
             }
+
+            stack.damageItem(1, player);
             cbb = null;
         }
     }

@@ -134,31 +134,6 @@ public class EventLoader
         }
     }
 
-//    @SubscribeEvent
-//    public static void onPlayerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event)
-//    {
-//        EntityPlayer player = event.player;
-//        World world = player.getEntityWorld();
-//        if (world.isRemote)
-//            return;
-//
-//        WorldServer oldWorld = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(event.fromDim);
-//
-//        List<EntityMagicMaid> maidList = oldWorld.getEntities(EntityMagicMaid.class, new Predicate<EntityMagicMaid>() {
-//            @Override
-//            public boolean apply(@Nullable EntityMagicMaid input) {
-//                if (input != null && input.getOwnerID() != null && input.getOwnerID().equals(player.getUniqueID()) && EnumMode.valueOf(input.getMode()) != EnumMode.SITTING)
-//                    return true;
-//                return false;
-////                return true;
-//            }
-//        });
-//
-//        for (EntityMagicMaid maid : maidList){
-//           maid.changeDimension(event.toDim, new ChurchTeleporter(oldWorld, event.toDim, player.posX, player.posY, player.posZ));
-//        }
-//    }
-
     @SubscribeEvent
     public static void onZombieDieEvent(LivingDeathEvent event)
     {
@@ -204,42 +179,21 @@ public class EventLoader
 
     }
 
-//    @SubscribeEvent
-//    public static void onPlayerSpawnEvent(LivingDeathEvent event){
-//
-//        EntityLivingBase player = event.getEntityLiving();
-//        if (!(player instanceof EntityPlayer))
-//            return;
-//        World world = player.getEntityWorld();
-//        if (world.isRemote)
-//            return;
-//        if (world.provider.canRespawnHere())
-//            return;
-//
-//
-//        BlockPos pos = ((EntityPlayer) player).getBedLocation(0);
-//        WorldServer[] worldServers = FMLCommonHandler.instance().getMinecraftServerInstance().worlds;
-//        if (pos == null || pos.equals(worldServers[0].getSpawnPoint())) return;
-//        List<EntityMagicMaid> maidList = new ArrayList<>();
-//
-//        for(WorldServer worldServer : worldServers)
-//        {
-//            List<EntityMagicMaid> maidList1 = worldServer.getEntities(EntityMagicMaid.class, new Predicate<EntityMagicMaid>() {
-//                @Override
-//                public boolean apply(@Nullable EntityMagicMaid input) {
-//                    if (input != null && input.getOwnerID() != null && input.getOwnerID().equals(player.getUniqueID()))
-//                        return true;
-//                    return false;
-////                return true;
-//                }
-//            });
-//            maidList.addAll(maidList1);
-//        }
-//
-//        for (EntityMagicMaid maid : maidList) {
-//            maid.changeDimension(0, new ChurchTeleporter((WorldServer) worldServers[0], 0, pos.getX(), pos.getY() + 1, pos.getZ()));
-//        }
-//    }
+
+    @SubscribeEvent
+    public void onPlayerLoggin(PlayerEvent.PlayerLoggedInEvent event)
+    {
+        EntityPlayer player = event.player;
+        World world = player.getEntityWorld();
+        if (!world.isRemote) {
+            if (player.getHeldItemOffhand().isEmpty())
+                player.setHeldItem(EnumHand.OFF_HAND, new ItemStack(ItemInit.ITEME_INSTRUCCTION_BOOK));
+            else {
+                EntityItem entityItem = new EntityItem(player.getEntityWorld(), player.posX, player.posY, player.posZ, new ItemStack(ItemInit.ITEME_INSTRUCCTION_BOOK));
+                world.spawnEntity(entityItem);
+            }
+        }
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onObsssionEntityDie(LivingDeathEvent event)

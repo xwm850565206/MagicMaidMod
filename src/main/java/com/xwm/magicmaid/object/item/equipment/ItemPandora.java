@@ -61,6 +61,7 @@ public class ItemPandora extends ItemWeapon
         box.setOtherOwner(playerIn);
         worldIn.spawnEntity(box);
         itemstack.shrink(1);
+        itemstack.damageItem(1, playerIn);
 
         return new ActionResult<>(EnumActionResult.SUCCESS, ItemStack.EMPTY);
     }

@@ -94,6 +94,8 @@ public class ItemRepantence extends ItemWeapon
                     playDeathParticle(entityLiving.getEntityBoundingBox(), world);
 
             }
+
+            stack.damageItem(1, player);
         }
         super.onUsingTick(stack, player, count);
     }

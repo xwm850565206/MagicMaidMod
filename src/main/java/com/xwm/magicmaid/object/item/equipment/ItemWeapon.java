@@ -6,5 +6,6 @@ public class ItemWeapon extends ItemEquipment
     public ItemWeapon(String name) {
         super(name);
         this.maxStackSize = 1;
+        this.setMaxDamage(100);
     }
 }

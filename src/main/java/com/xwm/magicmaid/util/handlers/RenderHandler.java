@@ -1,23 +1,31 @@
 package com.xwm.magicmaid.util.handlers;
 
+import com.xwm.magicmaid.entity.effect.EffectBox;
+import com.xwm.magicmaid.entity.effect.EffectThrowableBase;
 import com.xwm.magicmaid.entity.mob.maid.*;
 import com.xwm.magicmaid.entity.mob.weapon.*;
 import com.xwm.magicmaid.entity.model.Rett.ModelMagicMaidRett;
 import com.xwm.magicmaid.entity.model.Selina.ModelMagicMaidSeline;
+import com.xwm.magicmaid.entity.model.effect.ModelEffectBox;
+import com.xwm.magicmaid.entity.model.effect.EntityEffectTest;
 import com.xwm.magicmaid.entity.model.martha.ModelMagicMaidMartha;
 import com.xwm.magicmaid.entity.model.weapon.ModelConviction;
 import com.xwm.magicmaid.entity.model.weapon.ModelPandorasBox;
 import com.xwm.magicmaid.entity.model.weapon.ModelRepentance;
 import com.xwm.magicmaid.entity.model.weapon.ModelWhisper;
-import com.xwm.magicmaid.entity.render.RenderBossBall;
-import com.xwm.magicmaid.entity.render.RenderMagicMaid;
-import com.xwm.magicmaid.entity.render.RenderMaidWeapon;
+import com.xwm.magicmaid.render.effect.RenderEffect;
+import com.xwm.magicmaid.render.entity.RenderBossBall;
+import com.xwm.magicmaid.render.entity.RenderMagicMaid;
+import com.xwm.magicmaid.render.entity.RenderMaidWeapon;
 import com.xwm.magicmaid.entity.throwable.EntityEvilBall;
 import com.xwm.magicmaid.entity.throwable.EntityJusticeBall;
 import com.xwm.magicmaid.init.ItemInit;
+import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
@@ -111,6 +119,20 @@ public class RenderHandler
             @Override
             public Render<? super EntityEvilBall> createRenderFor(RenderManager manager) {
                 return new RenderBossBall(manager, ItemInit.ITEM_EVIL, Minecraft.getMinecraft().getRenderItem());
+            }
+        });
+
+        RenderingRegistry.registerEntityRenderingHandler(EffectThrowableBase.class, new IRenderFactory<Entity>() {
+            @Override
+            public Render<? super Entity> createRenderFor(RenderManager manager) {
+                return new RenderEffect(manager, new EntityEffectTest(), 1.0f, new ResourceLocation(Reference.MODID + ":textures/entities/test.png"));
+            }
+        });
+
+        RenderingRegistry.registerEntityRenderingHandler(EffectBox.class, new IRenderFactory<Entity>() {
+            @Override
+            public Render<? super Entity> createRenderFor(RenderManager manager) {
+                return new RenderEffect(manager, new ModelEffectBox(), 0.0f, new ResourceLocation(Reference.MODID + ":textures/effect/effect_box.png"));
             }
         });
     }

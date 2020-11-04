@@ -1,31 +1,44 @@
 package com.xwm.magicmaid.event;
 
+import com.xwm.magicmaid.entity.effect.EffectBox;
+import com.xwm.magicmaid.entity.model.effect.ModelEffectBox;
 import com.xwm.magicmaid.init.BlockInit;
 import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.init.PotionInit;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.SyncEntityDataPacket;
-import com.xwm.magicmaid.particle.EnumCustomParticles;
-import com.xwm.magicmaid.particle.ParticleSpawner;
+import com.xwm.magicmaid.registry.CustomRenderRegistry;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.lwjgl.opengl.GL11;
 
+import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -134,6 +147,8 @@ public class EventRenderLoader
     @SubscribeEvent
     public void onEntityRenderPre(RenderLivingEvent.Pre event)
     {
+        renderWarningArea(event);
+
         Minecraft mc = Minecraft.getMinecraft();
         EntityPlayer player = mc.player;
 
@@ -151,11 +166,30 @@ public class EventRenderLoader
 
     }
 
+    int test = -1;
+    // 渲染红色警告区域
     @SubscribeEvent
     public void onEntityRenderPost(RenderLivingEvent.Post event)
     {
-//        event.getRenderer().setRenderOutlines(true);
-//        GlStateManager.disableOutlineMode();
+//        if (event.getEntity() instanceof  EntityPlayer) {
+//            Minecraft mc = Minecraft.getMinecraft();
+//            EntityPlayer player = mc.player;
+//            CustomRenderRegistry.renderCompiledWarningArea(test, player.getPosition());
+//        }
+
+//        renderWarningArea(event);
+    }
+
+    @SubscribeEvent
+    public void onRenderTick(RenderWorldLastEvent event)
+    {
+        CustomRenderRegistry.addRenderBox(0, Minecraft.getMinecraft().player.getEntityBoundingBox());
+        CustomRenderRegistry.renderBoxList();
+    }
+
+    private void renderWarningArea(RenderLivingEvent event)
+    {
+
     }
 
     private void renderBianBuff(RenderLivingEvent.Pre event, Minecraft mc)

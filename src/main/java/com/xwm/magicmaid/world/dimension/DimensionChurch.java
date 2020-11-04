@@ -167,17 +167,6 @@ public class DimensionChurch extends WorldProvider
      */
     public void onPlayerAdded(EntityPlayerMP player)
     {
-        if (!world.isRemote) {
-            if (player != null) {
-                if (player.getHeldItemOffhand().isEmpty())
-                    player.setHeldItem(EnumHand.OFF_HAND, new ItemStack(ItemInit.ITEME_INSTRUCCTION_BOOK));
-                else {
-                    EntityItem entityItem = new EntityItem(player.getEntityWorld(), player.posX, player.posY, player.posZ, new ItemStack(ItemInit.ITEME_INSTRUCCTION_BOOK));
-                    world.spawnEntity(entityItem);
-                }
-            }
-        }
-
         if (fightManager != null) {
             fightManager.addPlayer(player);
         }

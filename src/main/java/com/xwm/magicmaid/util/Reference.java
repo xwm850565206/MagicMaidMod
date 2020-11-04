@@ -30,5 +30,8 @@ public class Reference
     public static final int ENTITY_JUSTICE_BALL = 310;
     public static final int ENTITY_EVIL_BALL = 311;
 
+    public static final int ENTITY_EFFECT_TEST = 312;
+    public static final int ENTITY_EFFECT_BOX = 313;
+
     public static final int DIMENSION_CHURCH = 2;
 }

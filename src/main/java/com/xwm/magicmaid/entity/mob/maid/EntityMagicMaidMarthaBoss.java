@@ -5,6 +5,7 @@ import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.init.ItemInit;
+import com.xwm.magicmaid.registry.CustomRenderRegistry;
 import com.xwm.magicmaid.util.handlers.LootTableHandler;
 import com.xwm.magicmaid.world.dimension.DimensionChurch;
 import com.xwm.magicmaid.world.dimension.MagicCreatureFightManager;
@@ -15,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.World;
@@ -219,5 +221,16 @@ public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements 
     @Override
     public int getBossCamp() {
         return 0;
+    }
+
+    /**
+     * 创造一个警告区域，用于boss攻击的抬手范围提示
+     *
+     * @param i  渲染区域的id号，必须唯一
+     * @param bb 攻击区域
+     */
+    @Override
+    public void createWarningArea(int i, AxisAlignedBB bb) {
+        CustomRenderRegistry.addRenderBox(i, bb);
     }
 }

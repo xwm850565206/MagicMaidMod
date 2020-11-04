@@ -8,6 +8,7 @@ import com.xwm.magicmaid.init.PotionInit;
 import com.xwm.magicmaid.network.CustomerParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
+import com.xwm.magicmaid.registry.CustomRenderRegistry;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -33,6 +34,7 @@ public class EntityAIConviction extends EntityAIBase
     private int performTick = 0;
     private double radius = 10;
     private Random random = new Random();
+    private int id = CustomRenderRegistry.allocateArea();
 
     public EntityAIConviction(EntityMagicMaid maid){
         this.maid = maid;

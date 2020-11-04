@@ -1,4 +1,4 @@
-package com.xwm.magicmaid.entity.render;
+package com.xwm.magicmaid.render.entity;
 
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidRett;
