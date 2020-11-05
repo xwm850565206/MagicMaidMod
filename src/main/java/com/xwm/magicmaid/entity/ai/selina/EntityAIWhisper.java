@@ -1,5 +1,6 @@
 package com.xwm.magicmaid.entity.ai.selina;
 
+import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidSelina;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponPandorasBox;
@@ -11,6 +12,7 @@ import com.xwm.magicmaid.enumstorage.EnumSelineState;
 import com.xwm.magicmaid.network.CustomerParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
+import com.xwm.magicmaid.registry.CustomRenderRegistry;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
@@ -40,6 +42,7 @@ public class EntityAIWhisper extends EntityAIBase
     private BlockPos cpos;
     private float radius = 4.0f;
     private List<EntityLivingBase> entityLivingBaseList;
+    private int id = CustomRenderRegistry.allocateArea();
 
 
     public EntityAIWhisper(EntityMagicMaidSelina maid)
@@ -91,7 +94,12 @@ public class EntityAIWhisper extends EntityAIBase
         if (this.cbb == null)
             return;
 
-        this.maid.getLookHelper().setLookPositionWithEntity(target, 90, 90);
+        AxisAlignedBB area = cbb.grow(radius, 2, radius);
+        if (this.maid instanceof IEntityBossCreature)
+            ((IEntityBossCreature) this.maid).createWarningArea(id, area);
+
+        if (target != null)
+            this.maid.getLookHelper().setLookPositionWithEntity(target, 90, 90);
 
         //画圆
         float d0 = (float) ((cbb.minX + cbb.maxX) / 2.0);
@@ -131,7 +139,6 @@ public class EntityAIWhisper extends EntityAIBase
 
         if (performTick >= PERFORMTIME - 3) {
 
-
             for (EntityLivingBase entityLivingBase : entityLivingBaseList)
             {
                 try{
@@ -160,6 +167,9 @@ public class EntityAIWhisper extends EntityAIBase
         if (whisper != null)
             whisper.setAttack(false);
         this.tick = 0;
+
+        if (this.maid instanceof IEntityBossCreature)
+            ((IEntityBossCreature) this.maid).removeWarningArea(id);
     }
 
     private void playLinearParticle(float t0, float t1, float t2, float t3, float t4, float t5)

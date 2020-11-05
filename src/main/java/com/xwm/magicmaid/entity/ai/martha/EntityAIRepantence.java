@@ -1,5 +1,6 @@
 package com.xwm.magicmaid.entity.ai.martha;
 
+import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumMode;
@@ -9,6 +10,7 @@ import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.ParticlePacket;
 import com.xwm.magicmaid.network.UpdateEntityPacket;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
+import com.xwm.magicmaid.registry.CustomRenderRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -27,12 +29,13 @@ import java.util.Random;
 //todo
 public class EntityAIRepantence extends EntityAIBase
 {
-    private static final int PERFORMTIME = 20;
+    private static final int PERFORMTIME = 40;
     private EntityMagicMaid maid;
     private EntityLivingBase owner;
     private int tick = 0;
     private int performTick = 0;
     private Random random = new Random();
+    private int id = CustomRenderRegistry.allocateArea();
 
     public EntityAIRepantence(EntityMagicMaid maid){
         this.maid = maid;
@@ -70,6 +73,10 @@ public class EntityAIRepantence extends EntityAIBase
 
     public void updateTask()
     {
+        AxisAlignedBB area = this.maid.getEntityBoundingBox().grow(10, 1, 10);
+        if (this.maid instanceof IEntityBossCreature)
+            ((IEntityBossCreature) this.maid).createWarningArea(id, area);
+
         if (performTick++ < PERFORMTIME-1)
             return;
 
@@ -102,6 +109,9 @@ public class EntityAIRepantence extends EntityAIBase
                 ; //有可能出现问题
             }
         }
+
+        if (this.maid instanceof IEntityBossCreature)
+            ((IEntityBossCreature) this.maid).removeWarningArea(id);
     }
 
     public void resetTask(){

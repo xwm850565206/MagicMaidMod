@@ -59,6 +59,50 @@ public class CustomRenderRegistry
             }
         }
         Tessellator.getInstance().draw();
+
+        GlStateManager.color(0.8f, 0, 0, 0.6f);
+        GL11.glLineWidth(6);
+        bufferbuilder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
+        // FRONT
+        bufferbuilder.pos(-0.5, -0.5, -0.5).endVertex();
+        bufferbuilder.pos(-0.5, 0.5, -0.5).endVertex();
+
+        bufferbuilder.pos(-0.5, 0.5, -0.5).endVertex();
+        bufferbuilder.pos(0.5, 0.5, -0.5).endVertex();
+
+        bufferbuilder.pos(0.5, 0.5, -0.5).endVertex();
+        bufferbuilder.pos(0.5, -0.5, -0.5).endVertex();
+
+        bufferbuilder.pos(0.5, -0.5, -0.5).endVertex();
+        bufferbuilder.pos(-0.5, -0.5, -0.5).endVertex();
+
+        // BACK
+        bufferbuilder.pos(-0.5, -0.5, 0.5).endVertex();
+        bufferbuilder.pos(-0.5, 0.5, 0.5).endVertex();
+
+        bufferbuilder.pos(-0.5, 0.5, 0.5).endVertex();
+        bufferbuilder.pos(0.5, 0.5, 0.5).endVertex();
+
+        bufferbuilder.pos(0.5, 0.5, 0.5).endVertex();
+        bufferbuilder.pos(0.5, -0.5, 0.5).endVertex();
+
+        bufferbuilder.pos(0.5, -0.5, 0.5).endVertex();
+        bufferbuilder.pos(-0.5, -0.5, 0.5).endVertex();
+
+        // betweens.
+        bufferbuilder.pos(0.5, 0.5, -0.5).endVertex();
+        bufferbuilder.pos(0.5, 0.5, 0.5).endVertex();
+
+        bufferbuilder.pos(0.5, -0.5, -0.5).endVertex();
+        bufferbuilder.pos(0.5, -0.5, 0.5).endVertex();
+
+        bufferbuilder.pos(-0.5, -0.5, -0.5).endVertex();
+        bufferbuilder.pos(-0.5, -0.5, 0.5).endVertex();
+
+        bufferbuilder.pos(-0.5, 0.5, -0.5).endVertex();
+        bufferbuilder.pos(-0.5, 0.5, 0.5).endVertex();
+
+        Tessellator.getInstance().draw();
     }
     private static void renderWarningArea(AxisAlignedBB bb)
     {
@@ -69,6 +113,7 @@ public class CustomRenderRegistry
         GlStateManager.disableTexture2D();
         GlStateManager.disableLighting();
         GlStateManager.enableBlend();
+        GlStateManager.disableDepth();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
         double renderPosX = TileEntityRendererDispatcher.staticPlayerX;
@@ -76,11 +121,11 @@ public class CustomRenderRegistry
         double renderPosZ = TileEntityRendererDispatcher.staticPlayerZ;
 
         GlStateManager.translate(-renderPosX + 0.5, -renderPosY + 0.5, -renderPosZ + 0.5);
-        GlStateManager.translate(bb.minX, bb.minY, bb.minZ);
+        GlStateManager.translate((bb.minX + bb.maxX) / 2.0, (bb.minY + bb.maxY) / 2.0, (bb.minZ + bb.maxZ) / 2.0);
 
         GlStateManager.enableRescaleNormal();
         GlStateManager.scale(bb.maxX -  bb.minX, bb.maxY - bb.minY, bb.maxZ - bb.minZ);
-        GlStateManager.color(1.0f, 0.0f, 0.0f,0.4f);
+        GlStateManager.color(0.6f, 0.0f, 0.0f,0.2f);
         renderBox();
 
         RenderHelper.disableStandardItemLighting();
@@ -88,6 +133,7 @@ public class CustomRenderRegistry
         GlStateManager.disableRescaleNormal();
         GlStateManager.disableBlend();
         GlStateManager.enableLighting();
+        GlStateManager.enableDepth();
         GlStateManager.popMatrix();
         Minecraft.getMinecraft().mcProfiler.endSection();
     }
@@ -112,6 +158,7 @@ public class CustomRenderRegistry
 
     public static void removeRenderBox(int i)
     {
-        RENDER_BOX_LIST.remove(i);
+        if (RENDER_BOX_LIST.containsKey(i))
+            RENDER_BOX_LIST.remove(i);
     }
 }

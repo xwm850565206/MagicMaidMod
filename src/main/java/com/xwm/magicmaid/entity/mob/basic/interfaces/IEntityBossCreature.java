@@ -44,4 +44,10 @@ public interface IEntityBossCreature
      * @param bb 攻击区域
      */
     void createWarningArea(int i, AxisAlignedBB bb);
+
+    /**
+     * 消除警告区域
+     * @param i 渲染区域的id号
+     */
+    void removeWarningArea(int i);
 }

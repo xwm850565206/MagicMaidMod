@@ -1,10 +1,12 @@
 package com.xwm.magicmaid.entity.mob.weapon;
 
+import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.network.DistinationParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.registry.CustomRenderRegistry;
 import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import net.minecraft.entity.EntityLivingBase;
@@ -27,6 +29,7 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
 {
     private static final DataParameter<Boolean> ISOPEN = EntityDataManager.<Boolean>createKey(EntityMaidWeaponPandorasBox.class, DataSerializers.BOOLEAN);
     private int radius = 4;
+    private int areaId = CustomRenderRegistry.allocateArea();
 
     public int tick = 0; //client side use to control animation
 
@@ -40,6 +43,15 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
     {
         super.entityInit();
         this.dataManager.register(ISOPEN, false);
+    }
+
+    @Override
+    public void onDeath(DamageSource cause)
+    {
+        super.onDeath(cause);
+        if (this.maid != null && this.maid instanceof IEntityBossCreature){
+            ((IEntityBossCreature) this.maid).removeWarningArea(areaId);
+        }
     }
 
     @Override
@@ -58,8 +70,11 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
 
         if (this.maid != null){
             if (isOpen()){
-                List<EntityLivingBase> entityLivingBases = world.getEntitiesWithinAABB(EntityLivingBase.class,
-                        this.getEntityBoundingBox().grow(radius + maid.getRank() * 2, radius, radius + maid.getRank() * 2));
+                AxisAlignedBB area = this.getEntityBoundingBox().grow(radius + maid.getRank() * 2, radius, radius + maid.getRank() * 2);
+                if (this.maid instanceof IEntityBossCreature)
+                    ((IEntityBossCreature) this.maid).createWarningArea(areaId, area);
+
+                List<EntityLivingBase> entityLivingBases = world.getEntitiesWithinAABB(EntityLivingBase.class, area);
                 try{
                     for (EntityLivingBase entityLivingBase : entityLivingBases)
                     {
@@ -152,6 +167,9 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
     public void setOpen(boolean isOpen)
     {
         this.dataManager.set(ISOPEN, isOpen);
+        if (!isOpen && this.maid != null && this.maid instanceof IEntityBossCreature){
+            ((IEntityBossCreature) this.maid).removeWarningArea(areaId);
+        }
     }
 
     public boolean isOpen(){

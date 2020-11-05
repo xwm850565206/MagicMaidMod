@@ -1,5 +1,6 @@
 package com.xwm.magicmaid.entity.ai.martha;
 
+import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumMode;
@@ -27,7 +28,7 @@ import java.util.Random;
 
 public class EntityAIConviction extends EntityAIBase
 {
-    private static final int PERFORMTIME = 20;
+    private static final int PERFORMTIME = 40;
     private EntityMagicMaid maid;
     private EntityLivingBase owner;
     private int tick = 0;
@@ -67,17 +68,22 @@ public class EntityAIConviction extends EntityAIBase
         this.maid.setState(3);
         this.maid.setIsPerformAttack(true);
         this.tick = 0;
+
     }
 
 
     public void updateTask()
     {
+        AxisAlignedBB area = this.maid.getEntityBoundingBox().grow(radius, 0, radius).expand(0, 2, 0);
+        if (this.maid instanceof IEntityBossCreature)
+            ((IEntityBossCreature) this.maid).createWarningArea(id, area);
+
         if (performTick++ < PERFORMTIME-1)
             return;
 
         playParticle(this.maid.getEntityBoundingBox());
         List<EntityLivingBase> entityLivings = this.maid.world.getEntitiesWithinAABB(EntityLivingBase.class,
-                this.maid.getEntityBoundingBox().grow(radius, 0, radius).expand(0, 4, 0));
+                area);
 
         for (EntityLivingBase entityLivingBase : entityLivings)
         {
@@ -111,13 +117,15 @@ public class EntityAIConviction extends EntityAIBase
             }
         }
 
-
+        if (this.maid instanceof IEntityBossCreature)
+            ((IEntityBossCreature) this.maid).removeWarningArea(id);
     }
 
     public void resetTask(){
         this.maid.setState(0);
         this.maid.setIsPerformAttack(false);
         this.performTick = 0;
+
     }
 
     private void playTipParticle(AxisAlignedBB bb)

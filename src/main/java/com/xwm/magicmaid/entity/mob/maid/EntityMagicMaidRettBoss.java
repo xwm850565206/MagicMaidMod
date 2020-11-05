@@ -226,4 +226,14 @@ public class EntityMagicMaidRettBoss extends EntityMagicMaidRett implements IEnt
     public void createWarningArea(int i, AxisAlignedBB bb) {
         CustomRenderRegistry.addRenderBox(i, bb);
     }
+
+    /**
+     * 消除警告区域
+     *
+     * @param i 渲染区域的id号
+     */
+    @Override
+    public void removeWarningArea(int i) {
+        CustomRenderRegistry.removeRenderBox(i);
+    }
 }

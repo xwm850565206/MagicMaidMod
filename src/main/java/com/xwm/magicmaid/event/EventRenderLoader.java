@@ -183,7 +183,7 @@ public class EventRenderLoader
     @SubscribeEvent
     public void onRenderTick(RenderWorldLastEvent event)
     {
-        CustomRenderRegistry.addRenderBox(0, Minecraft.getMinecraft().player.getEntityBoundingBox());
+//        CustomRenderRegistry.addRenderBox(0, Minecraft.getMinecraft().player.getEntityBoundingBox());
         CustomRenderRegistry.renderBoxList();
     }
 
