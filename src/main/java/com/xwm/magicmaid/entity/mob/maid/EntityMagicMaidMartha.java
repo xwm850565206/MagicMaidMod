@@ -9,14 +9,19 @@ import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
+import com.xwm.magicmaid.object.item.equipment.ItemConviction;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
+import com.xwm.magicmaid.object.item.equipment.ItemRepantence;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -134,6 +139,21 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
             this.setMaxHealthbarnum(10);
         }
 
+    }
+
+    @Override
+    public AxisAlignedBB getUsingArea(ItemStack stack, EntityLivingBase player, AxisAlignedBB bb) {
+        AxisAlignedBB area = bb;
+        if (stack.getItem() instanceof ItemConviction)
+        {
+            area = this.getEntityBoundingBox().grow(4 + 3 * getRank(), 0, 4 + 3 * getRank()).expand(0, 2, 0);
+        }
+        else if (stack.getItem() instanceof ItemRepantence)
+        {
+            area = this.getEntityBoundingBox().grow(6 + 2 * getRank(), 1, 6 + 2 * getRank());
+        }
+
+        return area;
     }
 
     public void switchMode(){

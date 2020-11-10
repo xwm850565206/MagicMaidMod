@@ -6,7 +6,7 @@ import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.network.DistinationParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
-import com.xwm.magicmaid.registry.CustomRenderRegistry;
+import com.xwm.magicmaid.registry.MagicRenderRegistry;
 import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import net.minecraft.entity.EntityLivingBase;
@@ -29,7 +29,7 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
 {
     private static final DataParameter<Boolean> ISOPEN = EntityDataManager.<Boolean>createKey(EntityMaidWeaponPandorasBox.class, DataSerializers.BOOLEAN);
     private int radius = 4;
-    private int areaId = CustomRenderRegistry.allocateArea();
+    private int areaId = MagicRenderRegistry.allocateArea();
 
     public int tick = 0; //client side use to control animation
 

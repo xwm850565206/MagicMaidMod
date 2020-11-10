@@ -9,13 +9,13 @@ import com.xwm.magicmaid.init.PotionInit;
 import com.xwm.magicmaid.network.CustomerParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
-import com.xwm.magicmaid.registry.CustomRenderRegistry;
+import com.xwm.magicmaid.registry.MagicRenderRegistry;
+import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.Potion;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -33,9 +33,9 @@ public class EntityAIConviction extends EntityAIBase
     private EntityLivingBase owner;
     private int tick = 0;
     private int performTick = 0;
-    private double radius = 10;
+    private double radius = 4;
     private Random random = new Random();
-    private int id = CustomRenderRegistry.allocateArea();
+    private int id = MagicRenderRegistry.allocateArea();
 
     public EntityAIConviction(EntityMagicMaid maid){
         this.maid = maid;
@@ -67,14 +67,14 @@ public class EntityAIConviction extends EntityAIBase
             this.owner = this.maid.getEntityWorld().getPlayerEntityByUUID(this.maid.getOwnerID());
         this.maid.setState(3);
         this.maid.setIsPerformAttack(true);
+        this.radius = 4 + 3 * maid.getRank();
         this.tick = 0;
-
     }
 
 
     public void updateTask()
     {
-        AxisAlignedBB area = this.maid.getEntityBoundingBox().grow(radius, 0, radius).expand(0, 2, 0);
+        AxisAlignedBB area = MagicEquipmentUtils.getUsingArea(this.maid.getWeaponFromSlot(), this.maid, this.maid.getEntityBoundingBox());
         if (this.maid instanceof IEntityBossCreature)
             ((IEntityBossCreature) this.maid).createWarningArea(id, area);
 

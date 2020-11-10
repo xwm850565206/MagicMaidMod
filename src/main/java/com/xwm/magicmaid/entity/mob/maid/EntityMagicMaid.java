@@ -40,7 +40,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public class EntityMagicMaid extends EntityEquipmentCreature implements IEntityTameableCreature
+public abstract class EntityMagicMaid extends EntityEquipmentCreature implements IEntityTameableCreature
 {
 
     /**

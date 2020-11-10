@@ -1,6 +1,8 @@
 package com.xwm.magicmaid.util.helper;
 
 import com.xwm.magicmaid.entity.mob.basic.EntityTameableCreature;
+import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityEquipmentCreature;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
@@ -13,6 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -85,6 +88,27 @@ public class MagicEquipmentUtils
         {
             EntityItem entityItem = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(item));
             world.spawnEntity(entityItem);
+        }
+    }
+
+    /**
+     * 得到武器的使用范围，一般是攻击范围
+     * @param stack
+     * @param player
+     * @param pos
+     * @return
+     */
+    public static AxisAlignedBB getUsingArea(ItemStack stack, EntityLivingBase player, AxisAlignedBB bb)
+    {
+        if (player instanceof IEntityEquipmentCreature)
+        {
+            //todo
+            return ((IEntityEquipmentCreature) player).getUsingArea(stack, player, bb);
+        }
+        else
+        {
+            //todo
+            return player.getEntityBoundingBox().grow(1, 1, 1);
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.xwm.magicmaid.object.item.equipment;
 
+import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityEquipmentCreature;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.network.CustomerParticlePacket;
@@ -21,6 +22,8 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
+import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.List;
 
 public class ItemRepantence extends ItemWeapon
@@ -32,35 +35,64 @@ public class ItemRepantence extends ItemWeapon
         super(name);
         enumEquipment = EnumEquipment.REPATENCE;
     }
+
+    /**
+     * 是否是需要蓄力的武器
+     *
+     * @return
+     */
     @Override
-    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn)
-    {
-        tooltip.add(TextFormatting.YELLOW + "修女祷告时使用的物品，听说能够镇压邪灵");
-        tooltip.add(TextFormatting.YELLOW + "可以右键使用");
+    public boolean isChargeable() {
+        return true;
     }
 
     /**
-     * How long it takes to use or consume an item
+     * 不用蓄力的武器调用这个函数
+     *
+     * @param worldIn
+     * @param playerIn
+     * @param handIn
      */
-    public int getMaxItemUseDuration(ItemStack stack)
+    @Override
+    public void onUse(World worldIn, EntityLivingBase playerIn, EnumHand handIn, @Nullable List<EntityLivingBase> entityLivingBases)
     {
-        return 30;
+        if (entityLivingBases == null)
+            return;
+
+        for (EntityLivingBase entityLiving : entityLivingBases)
+        {
+            if (playerIn instanceof EntityPlayer && !MagicEquipmentUtils.checkEnemy((EntityPlayer) playerIn, entityLiving))
+                continue;
+
+            try {
+                entityLiving.attackEntityFrom(new EntityDamageSource("repantence_attack", playerIn).setDamageBypassesArmor(),
+                        MagicEquipmentUtils.getAttackDamage(playerIn, EnumAttackType.REPANTENCE));
+
+                playParticle(entityLiving.getEntityBoundingBox(), worldIn);
+                if (entityLiving.getHealth() <= 0)
+                    playDeathParticle(entityLiving.getEntityBoundingBox(), worldIn);
+            } catch (Exception e){
+                continue;
+            }
+
+        }
+
+        if (playerIn instanceof EntityPlayer) {
+            ItemStack stack = playerIn.getHeldItem(handIn);
+            stack.damageItem(1, playerIn);
+        }
     }
 
-    public EnumAction getItemUseAction(ItemStack stack)
-    {
-        return EnumAction.NONE;
-    }
 
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
-    {
-        ItemStack itemstack = playerIn.getHeldItem(handIn);
-        playerIn.setActiveHand(handIn);
-        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
-    }
-
-    public void onUsingTick(ItemStack stack, EntityLivingBase player, int count)
-    {
+    /**
+     * 蓄力时调用这个函数
+     *
+     * @param stack
+     * @param player
+     * @param count
+     */
+    @Override
+    public void onUsing(ItemStack stack, EntityLivingBase player, int count) {
         World world = player.getEntityWorld();
         BlockPos pos = player.getPosition();
         AxisAlignedBB cbb = player.getEntityBoundingBox();
@@ -80,29 +112,30 @@ public class ItemRepantence extends ItemWeapon
         }
         else if (count == 1)
         {
-            List<EntityLiving> entityLivings = world.getEntitiesWithinAABB(EntityLiving.class, cbb.grow(radius * 3));
-            for (EntityLiving entityLiving : entityLivings)
-            {
-                if (player instanceof EntityPlayer && !MagicEquipmentUtils.checkEnemy((EntityPlayer) player, entityLiving))
-                    continue;
-
-                entityLiving.attackEntityFrom(new EntityDamageSource("repantence_attack", player).setDamageBypassesArmor(),
-                        MagicEquipmentUtils.getAttackDamage(player, EnumAttackType.REPANTENCE));
-
-                playParticle(entityLiving.getEntityBoundingBox(), world);
-                if (entityLiving.getHealth() <= 0)
-                    playDeathParticle(entityLiving.getEntityBoundingBox(), world);
-
-            }
-
-            stack.damageItem(1, player);
+            List<EntityLivingBase> entityLivings = world.getEntitiesWithinAABB(EntityLiving.class, cbb.grow(radius * 3));
+            this.onUse(world, player, EnumHand.MAIN_HAND, entityLivings);
         }
-        super.onUsingTick(stack, player, count);
     }
 
-    public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft)
+    @Override
+    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn)
     {
-        super.onPlayerStoppedUsing(stack, worldIn, entityLiving, timeLeft);
+        tooltip.add(TextFormatting.YELLOW + "修女祷告时使用的物品，听说能够镇压邪灵");
+        tooltip.add(TextFormatting.YELLOW + "可以右键使用");
+    }
+
+    /**
+     * How long it takes to use or consume an item
+     */
+    public int getMaxItemUseDuration(ItemStack stack)
+    {
+        return 30;
+    }
+
+    public void onUsingTick(ItemStack stack, EntityLivingBase player, int count)
+    {
+       this.onUsing(stack, player, count);
+       super.onUsingTick(stack, player, count);
     }
 
     private void playParticle(AxisAlignedBB bb, World world){

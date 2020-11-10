@@ -13,6 +13,7 @@ import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumSelineState;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
+import com.xwm.magicmaid.object.item.equipment.ItemWhisper;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -21,7 +22,9 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
@@ -148,6 +151,16 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
             this.setArmorType(EnumEquipment.toInt(EnumEquipment.NONE));
             this.setMaxHealthbarnum(10);
         }
+    }
+
+    @Override
+    public AxisAlignedBB getUsingArea(ItemStack stack, EntityLivingBase player, AxisAlignedBB bb) {
+        AxisAlignedBB area = bb;
+        if (stack.getItem() instanceof ItemWhisper)
+        {
+            return area.grow( 4 + this.getRank() * 4, 2,  4 + this.getRank() * 4);
+        }
+        return area;
     }
 
 

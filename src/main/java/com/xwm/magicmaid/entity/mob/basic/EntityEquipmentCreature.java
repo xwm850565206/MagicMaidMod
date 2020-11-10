@@ -147,6 +147,17 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
     @Override
     public abstract void loseEquipment(ItemEquipment equipment);
 
+    @Override
+    public ItemStack getWeaponFromSlot()
+    {
+        return this.inventory.get(0);
+    }
+
+    @Override
+    public ItemStack getArmorFromSlot()
+    {
+        return this.inventory.get(1);
+    }
 
     @Override
     public int getSizeInventory() {

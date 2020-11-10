@@ -3,7 +3,6 @@ package com.xwm.magicmaid.entity.ai.selina;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidSelina;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
-import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponPandorasBox;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponWhisper;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
@@ -12,7 +11,8 @@ import com.xwm.magicmaid.enumstorage.EnumSelineState;
 import com.xwm.magicmaid.network.CustomerParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
-import com.xwm.magicmaid.registry.CustomRenderRegistry;
+import com.xwm.magicmaid.registry.MagicRenderRegistry;
+import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
@@ -42,7 +42,7 @@ public class EntityAIWhisper extends EntityAIBase
     private BlockPos cpos;
     private float radius = 4.0f;
     private List<EntityLivingBase> entityLivingBaseList;
-    private int id = CustomRenderRegistry.allocateArea();
+    private int id = MagicRenderRegistry.allocateArea();
 
 
     public EntityAIWhisper(EntityMagicMaidSelina maid)
@@ -94,7 +94,7 @@ public class EntityAIWhisper extends EntityAIBase
         if (this.cbb == null)
             return;
 
-        AxisAlignedBB area = cbb.grow(radius, 2, radius);
+        AxisAlignedBB area = MagicEquipmentUtils.getUsingArea(this.maid.getWeaponFromSlot(), this.maid, cbb);
         if (this.maid instanceof IEntityBossCreature)
             ((IEntityBossCreature) this.maid).createWarningArea(id, area);
 

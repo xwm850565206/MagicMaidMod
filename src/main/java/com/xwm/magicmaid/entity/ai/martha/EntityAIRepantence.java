@@ -8,13 +8,11 @@ import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.network.CustomerParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.ParticlePacket;
-import com.xwm.magicmaid.network.UpdateEntityPacket;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
-import com.xwm.magicmaid.registry.CustomRenderRegistry;
-import net.minecraft.client.Minecraft;
+import com.xwm.magicmaid.registry.MagicRenderRegistry;
+import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumParticleTypes;
@@ -35,7 +33,7 @@ public class EntityAIRepantence extends EntityAIBase
     private int tick = 0;
     private int performTick = 0;
     private Random random = new Random();
-    private int id = CustomRenderRegistry.allocateArea();
+    private int id = MagicRenderRegistry.allocateArea();
 
     public EntityAIRepantence(EntityMagicMaid maid){
         this.maid = maid;
@@ -73,7 +71,7 @@ public class EntityAIRepantence extends EntityAIBase
 
     public void updateTask()
     {
-        AxisAlignedBB area = this.maid.getEntityBoundingBox().grow(10, 1, 10);
+        AxisAlignedBB area = MagicEquipmentUtils.getUsingArea(this.maid.getWeaponFromSlot(), this.maid, this.maid.getEntityBoundingBox());
         if (this.maid instanceof IEntityBossCreature)
             ((IEntityBossCreature) this.maid).createWarningArea(id, area);
 

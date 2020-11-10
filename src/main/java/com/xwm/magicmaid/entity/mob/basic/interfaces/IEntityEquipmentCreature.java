@@ -2,7 +2,11 @@ package com.xwm.magicmaid.entity.mob.basic.interfaces;
 
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.UUID;
 
@@ -35,4 +39,9 @@ public interface IEntityEquipmentCreature extends IInventory
 
     void loseEquipment(ItemEquipment equipment);
 
+    ItemStack getWeaponFromSlot();
+
+    ItemStack getArmorFromSlot();
+
+    AxisAlignedBB getUsingArea(ItemStack stack, EntityLivingBase player, AxisAlignedBB bb);
 }

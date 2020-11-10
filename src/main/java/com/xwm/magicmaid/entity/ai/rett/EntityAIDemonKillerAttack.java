@@ -11,6 +11,7 @@ import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.UpdateEntityPacket;
 import com.xwm.magicmaid.network.VelocityPacket;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
+import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -80,7 +81,7 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
         this.maid.setPerformtick(performTick);
         try{
             if (performTick == 5){
-                List<EntityLivingBase> entityLivingList = world.getEntitiesWithinAABB(EntityLivingBase.class, target.getEntityBoundingBox().grow(2, 1, 2));
+                List<EntityLivingBase> entityLivingList = world.getEntitiesWithinAABB(EntityLivingBase.class, MagicEquipmentUtils.getUsingArea(this.maid.getWeaponFromSlot(), this.maid, target.getEntityBoundingBox()));
                 for (EntityLivingBase entityLiving : entityLivingList){
                     if (!maid.isEnemy(entityLiving))
                         continue;
@@ -90,7 +91,7 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
                 }
             }
             else if (performTick == 10) {
-                List<EntityLivingBase> entityLivingList = world.getEntitiesWithinAABB(EntityLivingBase.class, target.getEntityBoundingBox().grow(2, 1, 2));
+                List<EntityLivingBase> entityLivingList = world.getEntitiesWithinAABB(EntityLivingBase.class, MagicEquipmentUtils.getUsingArea(this.maid.getWeaponFromSlot(), this.maid, target.getEntityBoundingBox()));
                 for (EntityLivingBase entityLiving : entityLivingList){
                     if (!maid.isEnemy(entityLiving))
                         continue;
@@ -105,7 +106,7 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
             }
             else if (performTick == 30) {
                 playBombardmentParticle(this.maid.getEntityBoundingBox());
-                List<EntityLivingBase> entityLivingList = world.getEntitiesWithinAABB(EntityLivingBase.class, maid.getEntityBoundingBox().grow(4, 2, 4));
+                List<EntityLivingBase> entityLivingList = world.getEntitiesWithinAABB(EntityLivingBase.class, MagicEquipmentUtils.getUsingArea(this.maid.getWeaponFromSlot(), this.maid, target.getEntityBoundingBox()).grow(2, 1, 2));
                 for (EntityLivingBase entityLiving : entityLivingList){
                     if (!maid.isEnemy(entityLiving))
                         continue;

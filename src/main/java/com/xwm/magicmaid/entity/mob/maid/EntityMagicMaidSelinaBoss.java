@@ -5,7 +5,7 @@ import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.init.ItemInit;
-import com.xwm.magicmaid.registry.CustomRenderRegistry;
+import com.xwm.magicmaid.registry.MagicRenderRegistry;
 import com.xwm.magicmaid.util.handlers.LootTableHandler;
 import com.xwm.magicmaid.world.dimension.DimensionChurch;
 import com.xwm.magicmaid.world.dimension.MagicCreatureFightManager;
@@ -229,7 +229,7 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
      */
     @Override
     public void createWarningArea(int i, AxisAlignedBB bb) {
-        CustomRenderRegistry.addRenderBox(i, bb);
+        MagicRenderRegistry.addRenderBox(i, bb);
     }
 
     /**
@@ -239,6 +239,6 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
      */
     @Override
     public void removeWarningArea(int i) {
-        CustomRenderRegistry.removeRenderBox(i);
+        MagicRenderRegistry.removeRenderBox(i);
     }
 }

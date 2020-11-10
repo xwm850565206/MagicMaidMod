@@ -3,6 +3,8 @@ package com.xwm.magicmaid.object.item.equipment;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponPandorasBox;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -16,6 +18,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemPandora extends ItemWeapon
@@ -44,10 +47,38 @@ public class ItemPandora extends ItemWeapon
             return new ActionResult<>(EnumActionResult.SUCCESS, ItemStack.EMPTY);
         }
 
+        onUse(worldIn, playerIn, handIn, null);
+
+        return new ActionResult<>(EnumActionResult.SUCCESS, ItemStack.EMPTY);
+    }
+
+    /**
+     * 是否是需要蓄力的武器
+     *
+     * @return
+     */
+    @Override
+    public boolean isChargeable() {
+        return false;
+    }
+
+    /**
+     * 不用蓄力的武器调用这个函数
+     *
+     * @param worldIn
+     * @param playerIn
+     * @param handIn
+     */
+    @Override
+    public void onUse(World worldIn, EntityLivingBase playerIn, EnumHand handIn, @Nullable List<EntityLivingBase> entityLivingBases) {
+        ItemStack itemstack = playerIn.getHeldItem(handIn);
         EntityMaidWeaponPandorasBox box = new EntityMaidWeaponPandorasBox(worldIn);
         AxisAlignedBB bb = playerIn.getEntityBoundingBox();
+
+        float f = 0.2f;
+        if (playerIn instanceof EntityPlayer) f = ((EntityPlayer) playerIn).eyeHeight;
         double d0 = (bb.minX + bb.maxX) / 2.0;
-        double d1 = (bb.minY + playerIn.eyeHeight);
+        double d1 = (bb.minY + f);
         double d2 = (bb.minZ + bb.maxZ) / 2.0;
         BlockPos pos = new BlockPos(d0, d1, d2);
         pos = pos.offset(playerIn.getAdjustedHorizontalFacing(), 1);
@@ -62,7 +93,27 @@ public class ItemPandora extends ItemWeapon
         worldIn.spawnEntity(box);
         itemstack.shrink(1);
         itemstack.damageItem(1, playerIn);
+    }
 
-        return new ActionResult<>(EnumActionResult.SUCCESS, ItemStack.EMPTY);
+    /**
+     * 蓄力时调用这个函数
+     *
+     * @param stack
+     * @param player
+     * @param count
+     */
+    @Override
+    public void onUsing(ItemStack stack, EntityLivingBase player, int count) {
+
+    }
+
+    /**
+     * How long it takes to use or consume an item
+     *
+     * @param stack
+     */
+    @Override
+    public int getMaxItemUseDuration(ItemStack stack) {
+        return 0;
     }
 }
