@@ -7,7 +7,7 @@ import net.minecraft.item.Item;
 
 import java.util.HashMap;
 
-public class MagicItemRegisty
+public class MagicEquipmentRegistry
 {
     private static HashMap<EnumEquipment, ItemEquipment> EQUIPMENT = new HashMap<>();
     private static HashMap<EnumEquipment, Item> PIECE = new HashMap<>();

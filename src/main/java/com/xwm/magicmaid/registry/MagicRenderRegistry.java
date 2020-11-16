@@ -63,7 +63,7 @@ public class MagicRenderRegistry
         Tessellator.getInstance().draw();
 
         GlStateManager.color(1f, 0, 0, 0.4f);
-        GL11.glLineWidth(6);
+        GL11.glLineWidth(4);
         bufferbuilder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
         // FRONT
         bufferbuilder.pos(-0.5, -0.5, -0.5).endVertex();

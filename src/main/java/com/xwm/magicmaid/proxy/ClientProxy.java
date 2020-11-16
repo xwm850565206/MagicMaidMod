@@ -1,12 +1,16 @@
 package com.xwm.magicmaid.proxy;
 
+import com.xwm.magicmaid.object.tileentity.TileEntityChurchPortal;
+import com.xwm.magicmaid.render.portal.TileEntityChurchPortalRenderer;
 import com.xwm.magicmaid.util.handlers.RenderHandler;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ClientProxy extends CommonProxy
 {
@@ -14,6 +18,7 @@ public class ClientProxy extends CommonProxy
     {
         super.preInit(event);
         RenderHandler.registerEntityRenders();
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChurchPortal.class, new TileEntityChurchPortalRenderer());
     }
 
     public void init(FMLInitializationEvent event){

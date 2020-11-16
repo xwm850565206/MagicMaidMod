@@ -238,7 +238,7 @@ public class EventRenderLoader
         else if (entityLivingBase instanceof EntityMob){
             GlStateManager.scale(0.5, 0.5, 0.5);
             mc.getItemRenderer().
-                    renderItemSide(event.getEntity(), new ItemStack(Item.getItemFromBlock(BlockInit.bianFlower)), ItemCameraTransforms.TransformType.GROUND, false);
+                    renderItemSide(event.getEntity(), new ItemStack(Item.getItemFromBlock(BlockInit.BLOCK_BIAN_FLOWER)), ItemCameraTransforms.TransformType.GROUND, false);
         }
         GlStateManager.color(red / 255f, green / 255f, blue / 255f, 0.6f);
         GlStateManager.popMatrix();
@@ -303,7 +303,7 @@ public class EventRenderLoader
             GlStateManager.rotate((int)(tick / 120.0 * 360), 0, 1, 0);
             GlStateManager.scale(0.5, 0.5, 0.5);
             mc.getItemRenderer().
-                    renderItemSide(event.getEntity(), new ItemStack(Item.getItemFromBlock(BlockInit.bianFlower)), ItemCameraTransforms.TransformType.GROUND, false);
+                    renderItemSide(event.getEntity(), new ItemStack(Item.getItemFromBlock(BlockInit.BLOCK_BIAN_FLOWER)), ItemCameraTransforms.TransformType.GROUND, false);
         }
         GlStateManager.color(red / 255f, green / 255f, blue / 255f, 0.6f);
         GlStateManager.popMatrix();

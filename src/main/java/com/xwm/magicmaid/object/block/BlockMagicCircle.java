@@ -7,14 +7,9 @@ import com.xwm.magicmaid.util.Reference;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -29,15 +24,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
-import java.nio.FloatBuffer;
 import java.util.List;
 import java.util.Random;
 
@@ -134,13 +126,13 @@ public class BlockMagicCircle extends BlockBase implements ITileEntityProvider
     @Override
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
-        return Item.getItemFromBlock(BlockInit.magicCircle);
+        return Item.getItemFromBlock(BlockInit.MAGIC_CIRCLE);
     }
 
     @Override
     public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
     {
-        return new ItemStack(BlockInit.magicCircle);
+        return new ItemStack(BlockInit.MAGIC_CIRCLE);
     }
 
     @Override
@@ -171,7 +163,7 @@ public class BlockMagicCircle extends BlockBase implements ITileEntityProvider
     public static void setState(boolean active, World worldIn, BlockPos pos)
     {
         TileEntity tileentity = worldIn.getTileEntity(pos);
-        worldIn.setBlockState(pos, BlockInit.magicCircle.getDefaultState().withProperty(BlockMagicCircle.OPEN, active), 3);
+        worldIn.setBlockState(pos, BlockInit.MAGIC_CIRCLE.getDefaultState().withProperty(BlockMagicCircle.OPEN, active), 3);
 
         if(tileentity != null)
         {

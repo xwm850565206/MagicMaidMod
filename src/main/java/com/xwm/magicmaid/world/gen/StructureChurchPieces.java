@@ -155,7 +155,7 @@ public class StructureChurchPieces
             else if (function.startsWith("memoryclock"))
             {
                 BlockPos blockpos = pos.down();
-                worldIn.setBlockState(blockpos, BlockInit.blockMemoryClock.getDefaultState(), 3);
+                worldIn.setBlockState(blockpos, BlockInit.BLOCK_MEMORY_CLOCK.getDefaultState(), 3);
             }
         }
 

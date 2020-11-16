@@ -18,57 +18,57 @@ public class ContainMagicCircle extends Container
         this.magicCircle = magicCircleIn;
 
         //放置原料槽位
-        addSlotToContainer(new SlotItemHandler(magicCircle, 0, 13, 8){
-            @Override
-            public void onSlotChanged() {
-                magicCircle.markDirty();
-            }
+        addSlotToContainer(new Slot(magicCircle, 0, 13, 8){
+//            @Override
+//            public void onSlotChanged() {
+//                magicCircle.markDirty();
+//            }
         });
-        addSlotToContainer(new SlotItemHandler(magicCircle, 1, 59, 8) {
-            @Override
-            public void onSlotChanged() {
-                magicCircle.markDirty();
-            }
+        addSlotToContainer(new Slot(magicCircle, 1, 59, 8) {
+//            @Override
+//            public void onSlotChanged() {
+//                magicCircle.markDirty();
+//            }
         });
-        addSlotToContainer(new SlotItemHandler(magicCircle, 2, 13, 54) {
-            @Override
-            public void onSlotChanged() {
-                magicCircle.markDirty();
-            }
+        addSlotToContainer(new Slot(magicCircle, 2, 13, 54) {
+//            @Override
+//            public void onSlotChanged() {
+//                magicCircle.markDirty();
+//            }
         });
-        addSlotToContainer(new SlotItemHandler(magicCircle, 3, 59, 54) {
-            @Override
-            public void onSlotChanged() {
-                magicCircle.markDirty();
-            }
+        addSlotToContainer(new Slot(magicCircle, 3, 59, 54) {
+//            @Override
+//            public void onSlotChanged() {
+//                magicCircle.markDirty();
+//            }
         });
 
         //放置烧炼物槽位
-        addSlotToContainer(new SlotItemHandler(magicCircle, 4, 36, 30) {
-            @Override
-            public void onSlotChanged() {
-                magicCircle.markDirty();
-            }
+        addSlotToContainer(new Slot(magicCircle, 4, 36, 30) {
+//            @Override
+//            public void onSlotChanged() {
+//                magicCircle.markDirty();
+//            }
         });
 
         //生成物槽位
-        addSlotToContainer(new SlotItemHandler(magicCircle, 5, 140, 15) {
-            @Override
-            public void onSlotChanged() {
-                magicCircle.markDirty();
-            }
+        addSlotToContainer(new Slot(magicCircle, 5, 140, 15) {
+//            @Override
+//            public void onSlotChanged() {
+//                magicCircle.markDirty();
+//            }
         });
-        addSlotToContainer(new SlotItemHandler(magicCircle, 6, 140, 15 + 18) {
-            @Override
-            public void onSlotChanged() {
-                magicCircle.markDirty();
-            }
+        addSlotToContainer(new Slot(magicCircle, 6, 140, 15 + 18) {
+//            @Override
+//            public void onSlotChanged() {
+//                magicCircle.markDirty();
+//            }
         });
-        addSlotToContainer(new SlotItemHandler(magicCircle, 7, 140, 15 + 18 * 2) {
-            @Override
-            public void onSlotChanged() {
-                magicCircle.markDirty();
-            }
+        addSlotToContainer(new Slot(magicCircle, 7, 140, 15 + 18 * 2) {
+//            @Override
+//            public void onSlotChanged() {
+//                magicCircle.markDirty();
+//            }
         });
 
         for (int i = 0; i < 3; i++) {
@@ -85,7 +85,6 @@ public class ContainMagicCircle extends Container
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int index)
     {
-//        System.out.println("transfer slot: " + index);
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = inventorySlots.get(index);
 

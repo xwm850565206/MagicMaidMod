@@ -48,7 +48,7 @@ public class WorldGenFlowers implements IWorldGenerator
 
     private void generateInNether(Random random, int chunkX, int chunkZ, World world)
     {
-        Block flower = BlockInit.bianFlower;
+        Block flower = BlockInit.BLOCK_BIAN_FLOWER;
         BlockPos position = new BlockPos(chunkX * 16 + 8, 0, chunkZ * 16 + 8);
         for (int i = 0; i < 4; i++)
         {

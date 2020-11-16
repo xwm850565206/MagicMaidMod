@@ -7,15 +7,11 @@ import javax.annotation.Nullable;
 import com.xwm.magicmaid.init.BiomeInit;
 import com.xwm.magicmaid.init.BlockInit;
 import com.xwm.magicmaid.world.gen.MapGenChurch;
-import com.xwm.magicmaid.world.gen.WorldGenStructure;
 import net.minecraft.block.BlockChorusFlower;
 import net.minecraft.block.BlockFalling;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityEndGateway;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
@@ -26,10 +22,7 @@ import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.NoiseGeneratorOctaves;
 import net.minecraft.world.gen.NoiseGeneratorSimplex;
-import net.minecraft.world.gen.feature.WorldGenEndGateway;
 import net.minecraft.world.gen.feature.WorldGenEndIsland;
-import net.minecraft.world.gen.structure.MapGenEndCity;
-import org.lwjgl.Sys;
 
 // todo 美化和添加矿石
 public class ChunkGeneratorChurch implements IChunkGenerator
@@ -191,7 +184,7 @@ public class ChunkGeneratorChurch implements IChunkGenerator
                 }
                 double p = rand.nextDouble();
                 if (p < 0.1)
-                    primer.setBlockState(i, 49, j, BlockInit.blockHolyStone.getDefaultState());
+                    primer.setBlockState(i, 49, j, BlockInit.BLOCK_HOLY_STONE.getDefaultState());
             }
         }
     }

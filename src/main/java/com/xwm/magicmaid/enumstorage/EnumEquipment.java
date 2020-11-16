@@ -1,7 +1,7 @@
 package com.xwm.magicmaid.enumstorage;
 
 import com.xwm.magicmaid.entity.mob.weapon.*;
-import com.xwm.magicmaid.registry.MagicItemRegisty;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import net.minecraft.world.World;
 
@@ -25,7 +25,7 @@ public enum EnumEquipment
 
     public static ItemEquipment toItemEquipment(EnumEquipment equipment)
     {
-        return MagicItemRegisty.getEquipment(equipment);
+        return MagicEquipmentRegistry.getEquipment(equipment);
     }
 
     public static EntityMaidWeapon toEntityMaidWeapon(EnumEquipment equipment, World world)

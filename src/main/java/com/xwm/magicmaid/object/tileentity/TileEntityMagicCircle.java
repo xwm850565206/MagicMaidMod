@@ -1,6 +1,7 @@
 package com.xwm.magicmaid.object.tileentity;
 
 import com.google.common.collect.Lists;
+import com.sun.istack.internal.NotNull;
 import com.xwm.magicmaid.object.block.BlockMagicCircle;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
@@ -8,12 +9,14 @@ import com.xwm.magicmaid.registry.MagicFormulaRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -23,13 +26,14 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-public class TileEntityMagicCircle extends TileEntity implements IItemHandlerModifiable, ITickable
+public class TileEntityMagicCircle extends TileEntity implements IInventory, ITickable
 {
-    private ItemStackHandler inventory = new ItemStackHandler(8);
-//    private NonNullList<ItemStack> inventory = NonNullList.withSize(8, ItemStack.EMPTY);
+//    private ItemStackHandler inventory = new ItemStackHandler(8);
+    private NonNullList<ItemStack> inventory = NonNullList.withSize(8, ItemStack.EMPTY);
     private String customName;
 
     private int cookTime = 0;
@@ -58,46 +62,44 @@ public class TileEntityMagicCircle extends TileEntity implements IItemHandlerMod
     }
 
     @Override
-    public void setStackInSlot(int slot, @Nonnull ItemStack stack) {
-        this.insertItem(slot, stack, world.isRemote);
-    }
-
-    @Override
-    public int getSlots() {
+    public int getSizeInventory() {
         return 8;
     }
 
-    @Nonnull
     @Override
-    public ItemStack getStackInSlot(int slot)
-    {
-        return this.inventory.getStackInSlot(slot);
+    public boolean isEmpty() {
+        return inventory.isEmpty();
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int index) {
+        return inventory.get(index);
     }
 
 
-    @Nonnull
     @Override
-    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-        return this.inventory.insertItem(slot, stack, simulate);
+    public ItemStack decrStackSize(int index, int count) {
+        return ItemStackHelper.getAndSplit(this.inventory, index, count);
     }
 
-
-    @Nonnull
     @Override
-    public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        return this.inventory.extractItem(slot, amount, simulate);
+    public ItemStack removeStackFromSlot(int index) {
+        return ItemStackHelper.getAndRemove(this.inventory, index);
     }
 
-    /**
-     * Retrieves the maximum stack size allowed to exist in the given slot.
-     *
-     * @param slot Slot to query.
-     * @return The maximum stack size allowed in the slot.
-     */
     @Override
-    public int getSlotLimit(int slot) {
+    public void setInventorySlotContents(int index, ItemStack stack) {
+        if (index >= 0 && index < this.inventory.size())
+        {
+            this.inventory.set(index, stack);
+        }
+    }
+
+    @Override
+    public int getInventoryStackLimit() {
         return 64;
     }
+
 
     /**
      * <p>
@@ -112,26 +114,16 @@ public class TileEntityMagicCircle extends TileEntity implements IItemHandlerMod
      * <li>When isItemValid is true, no assumptions can be made and insertion must be simulated case-by-case.</li>
      * <li>The actual items in the inventory, its fullness, or any other state are <strong>not</strong> considered by isItemValid.</li>
      * </ul>
-     *
-     * @param slot  Slot to query for validity
-     * @param stack Stack to test with for validity
-     * @return true if the slot can insert the ItemStack, not considering the current state of the inventory.
-     * false if the slot can never insert the ItemStack in any situation.
      */
-    @Override
-    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return this.inventory.isItemValid(slot, stack);
-    }
-
-
     @Override
     public void readFromNBT(NBTTagCompound compound)
     {
         super.readFromNBT(compound);
-        if (!compound.hasKey("ReadInventory") || compound.getBoolean("ReadInventory")) {
-            this.inventory = new ItemStackHandler(8);
-            this.inventory.deserializeNBT(compound.getCompoundTag("inventory"));
-        }
+        this.inventory = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
+        ItemStackHelper.loadAllItems(compound, this.inventory);
+//        if (!compound.hasKey("ReadInventory") || compound.getBoolean("ReadInventory")) {
+//            this.inventory.deserializeNBT(compound.getCompoundTag("inventory"));
+//        }
         this.cookTime = compound.getInteger("CookTime");
         this.totalCookTime = compound.getInteger("CookTimeTotal");
 
@@ -143,9 +135,11 @@ public class TileEntityMagicCircle extends TileEntity implements IItemHandlerMod
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         super.writeToNBT(compound);
-        if (!compound.hasKey("ReadInventory") || compound.getBoolean("ReadInventory")) {
-            compound.setTag("inventory", this.inventory.serializeNBT());
-        }
+        ItemStackHelper.saveAllItems(compound, this.inventory);
+
+//        if (!compound.hasKey("ReadInventory") || compound.getBoolean("ReadInventory")) {
+//            compound.setTag("inventory", this.inventory.serializeNBT());
+//        }
         compound.setInteger("CookTime", this.cookTime);
         compound.setInteger("CookTimeTotal", this.totalCookTime);
 
@@ -166,10 +160,10 @@ public class TileEntityMagicCircle extends TileEntity implements IItemHandlerMod
     public void update()
     {
         boolean flag = checkFormula(Lists.newArrayList(
-                inventory.getStackInSlot(0),
-                inventory.getStackInSlot(1),
-                inventory.getStackInSlot(2),
-                inventory.getStackInSlot(3)), this.inventory.getStackInSlot(4));
+                inventory.get(0),
+                inventory.get(1),
+                inventory.get(2),
+                inventory.get(3)), this.inventory.get(4));
         boolean flag1 = world.getBlockState(pos).getProperties().getOrDefault(BlockMagicCircle.OPEN, false).equals(true);
         boolean flag2 = hasSlotForCook();
         boolean flag3 = false; // should markDirty
@@ -194,7 +188,6 @@ public class TileEntityMagicCircle extends TileEntity implements IItemHandlerMod
             BlockMagicCircle.setState(this.isCooking(), world, pos);
             flag3 = true;
         }
-
 
         if (flag3 && !world.isRemote) {
             markDirty();
@@ -225,18 +218,18 @@ public class TileEntityMagicCircle extends TileEntity implements IItemHandlerMod
 
     public void cookBegin() {
         this.cookTime = 0;
-        this.totalCookTime = getCookTime(this.inventory.getStackInSlot(4));
+        this.totalCookTime = getCookTime(this.inventory.get(4));
     }
 
     public void cookFinish()
     {
-        List<ItemStack> itemstacks = MagicFormulaRegistry.getResult(this.inventory.getStackInSlot(4));
+        List<ItemStack> itemstacks = MagicFormulaRegistry.getResult(this.inventory.get(4));
         if (itemstacks != null) {
             for (int i = 0; i < 3 && i < itemstacks.size(); i++) {
-                this.inventory.insertItem(5 + i, itemstacks.get(i).copy(), world.isRemote);
+                this.setInventorySlotContents(5 + i, itemstacks.get(i).copy());
             }
             for (int i = 0; i < 5; i++)
-                this.inventory.extractItem(i, 1, world.isRemote);
+                this.decrStackSize(i, 1);
         }
 
         this.cookTime = 0;
@@ -250,7 +243,7 @@ public class TileEntityMagicCircle extends TileEntity implements IItemHandlerMod
     }
 
     public boolean hasSlotForCook() {
-        for (int i = 5; i < 8; i++) if (!this.inventory.getStackInSlot(i).isEmpty())
+        for (int i = 5; i < 8; i++) if (!this.inventory.get(i).isEmpty())
             return false;
         return true;
     }
@@ -279,26 +272,65 @@ public class TileEntityMagicCircle extends TileEntity implements IItemHandlerMod
     }
 
     @Override
+    public boolean isUsableByPlayer(EntityPlayer player) {
+        return false;
+    }
+
+    @Override
+    public void openInventory(EntityPlayer player) {
+
+    }
+
+    @Override
+    public void closeInventory(EntityPlayer player) {
+
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int index, ItemStack stack) {
+        return false;
+    }
+
+    @Override
+    public int getField(int id) {
+        return 0;
+    }
+
+    @Override
+    public void setField(int id, int value) {
+
+    }
+
+    @Override
+    public int getFieldCount() {
+        return 0;
+    }
+
+    @Override
+    public void clear() {
+
+    }
+
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket()
+    {
+        return new SPacketUpdateTileEntity(this.pos, 5, this.getUpdateTag());
+    }
+
+    @Override
     public NBTTagCompound getUpdateTag()
     {
-        NBTTagCompound compound = super.getUpdateTag();
-        compound = writeToNBT(compound);
-        return compound;
+        return this.writeToNBT(new NBTTagCompound());
     }
 
     @Override
     public void handleUpdateTag(NBTTagCompound tag)
     {
-        this.readFromNBT(tag);
+        super.handleUpdateTag(tag);
+//        this.readFromNBT(tag);
     }
-
-
-    @Override
-    public SPacketUpdateTileEntity getUpdatePacket(){
-        NBTTagCompound nbtTag = new NBTTagCompound();
-        nbtTag = this.writeToNBT(nbtTag);
-        return new SPacketUpdateTileEntity(getPos(), -1, nbtTag);
-    }
+//
 
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt){

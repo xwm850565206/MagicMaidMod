@@ -32,6 +32,4 @@ public class Reference
 
     public static final int ENTITY_EFFECT_TEST = 312;
     public static final int ENTITY_EFFECT_BOX = 313;
-
-    public static final int DIMENSION_CHURCH = 2;
 }

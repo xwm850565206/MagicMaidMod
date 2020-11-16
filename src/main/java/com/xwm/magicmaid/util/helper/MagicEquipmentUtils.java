@@ -2,11 +2,10 @@ package com.xwm.magicmaid.util.helper;
 
 import com.xwm.magicmaid.entity.mob.basic.EntityTameableCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityEquipmentCreature;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
-import com.xwm.magicmaid.registry.MagicItemRegisty;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityTameable;
@@ -83,7 +82,7 @@ public class MagicEquipmentUtils
         if (world.isRemote)
             return;
         EnumEquipment enumEquipment = EnumEquipment.valueOf(equipment);
-        Item item = MagicItemRegisty.getPiece(enumEquipment);
+        Item item = MagicEquipmentRegistry.getPiece(enumEquipment);
         if (item != null)
         {
             EntityItem entityItem = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(item));
