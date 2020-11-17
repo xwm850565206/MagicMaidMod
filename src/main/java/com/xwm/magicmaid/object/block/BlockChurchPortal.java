@@ -2,7 +2,10 @@ package com.xwm.magicmaid.object.block;
 
 import com.xwm.magicmaid.init.BlockInit;
 import com.xwm.magicmaid.init.ItemInit;
+import com.xwm.magicmaid.network.CustomerParticlePacket;
 import com.xwm.magicmaid.object.tileentity.TileEntityChurchPortal;
+import com.xwm.magicmaid.particle.EnumCustomParticles;
+import com.xwm.magicmaid.particle.ParticleSpawner;
 import com.xwm.magicmaid.registry.MagicDimensionRegistry;
 import com.xwm.magicmaid.world.dimension.ChurchTeleporter;
 import net.minecraft.block.BlockContainer;
@@ -43,7 +46,7 @@ public class BlockChurchPortal extends BlockContainer
         this.setLightLevel(1.0F);
 
         BlockInit.BLOCKS.add(this);
-        ItemInit.ITEMS.add(new ItemBlock(this).setRegistryName(this.getRegistryName()));
+//        ItemInit.ITEMS.add(new ItemBlock(this).setRegistryName(this.getRegistryName()));
     }
 
     /**
@@ -112,7 +115,8 @@ public class BlockChurchPortal extends BlockContainer
         double d3 = 0.0D;
         double d4 = 0.0D;
         double d5 = 0.0D;
-        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+        ParticleSpawner.spawnParticle(EnumCustomParticles.PANDORA, d0, d1, d2, d0 + rand.nextDouble(), d1 + rand.nextDouble(), d2+rand.nextDouble());
+//        worldIn.spawnParticle(EnumParticleTypes.ENCHANTMENT_TABLE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
     }
 
     public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)

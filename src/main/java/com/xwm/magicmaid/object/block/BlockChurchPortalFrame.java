@@ -35,8 +35,6 @@ import java.util.Random;
 public class BlockChurchPortalFrame extends BlockBase
 {
     public static final PropertyBool GOSPELS = PropertyBool.create("gospels");
-    protected static final AxisAlignedBB AABB_BLOCK = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.8125D, 1.0D);
-    protected static final AxisAlignedBB AABB_GOSPELS = new AxisAlignedBB(0.3125D, 0.8125D, 0.3125D, 0.6875D, 1.0D, 0.6875D);
     private static BlockPattern portalShape;
 
     public BlockChurchPortalFrame(String name) {
@@ -53,28 +51,6 @@ public class BlockChurchPortalFrame extends BlockBase
         return false;
     }
 
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-    {
-        return AABB_BLOCK;
-    }
-
-    public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean isActualState)
-    {
-        addCollisionBoxToList(pos, entityBox, collidingBoxes, AABB_BLOCK);
-
-        if (((Boolean)worldIn.getBlockState(pos).getValue(GOSPELS)).booleanValue())
-        {
-            addCollisionBoxToList(pos, entityBox, collidingBoxes, AABB_GOSPELS);
-        }
-    }
-
-    /**
-     * Get the Item that this Block should drop when harvested.
-     */
-    public Item getItemDropped(IBlockState state, Random rand, int fortune)
-    {
-        return Items.AIR;
-    }
 
     /**
      * Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the
@@ -118,6 +94,10 @@ public class BlockChurchPortalFrame extends BlockBase
         return i;
     }
 
+    @Override
+    public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return state.getValue(GOSPELS) ? 30 : 0;
+    }
 
     protected BlockStateContainer createBlockState()
     {
@@ -141,19 +121,5 @@ public class BlockChurchPortalFrame extends BlockBase
         }
 
         return portalShape;
-    }
-
-    /**
-     * Get the geometry of the queried face at the given position and state. This is used to decide whether things like
-     * buttons are allowed to be placed on the face, or how glass panes connect to the face, among other things.
-     * <p>
-     * Common values are {@code SOLID}, which is the default, and {@code UNDEFINED}, which represents something that
-     * does not fit the other descriptions and will generally cause other things not to connect to the face.
-     *
-     * @return an approximation of the form of the given face
-     */
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-    {
-        return face == EnumFacing.DOWN ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
     }
 }

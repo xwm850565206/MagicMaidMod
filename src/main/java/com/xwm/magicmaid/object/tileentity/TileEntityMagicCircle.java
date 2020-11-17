@@ -168,6 +168,10 @@ public class TileEntityMagicCircle extends TileEntity implements IInventory, ITi
         boolean flag2 = hasSlotForCook();
         boolean flag3 = false; // should markDirty
 
+        if (!flag) {
+            totalCookTime = -1;
+        }
+
         if (this.isCooking() && flag && flag2) {
             this.cookTime++;
         }
@@ -236,11 +240,6 @@ public class TileEntityMagicCircle extends TileEntity implements IInventory, ITi
         this.totalCookTime = -1;
     }
 
-    @SideOnly(Side.CLIENT)
-    public static boolean isCooking(IInventory inventory)
-    {
-        return inventory.getField(1) >= 0;
-    }
 
     public boolean hasSlotForCook() {
         for (int i = 5; i < 8; i++) if (!this.inventory.get(i).isEmpty())

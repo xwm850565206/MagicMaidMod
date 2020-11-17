@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.xwm.magicmaid.init.BlockInit;
 import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.object.tileentity.Formula;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -46,6 +47,9 @@ public class MagicFormulaRegistry
 
         registerFormula(ItemInit.ITEM_LOST_KEY.getRegistryName(), Formula.create(ItemInit.ITEM_LOST_KEY, ItemInit.ITEM_NO_SOUL_GHOST, ItemInit.ITEM_NO_SOUL_GHOST),
                 Lists.newArrayList(new ItemStack(ItemInit.ITEM_JUSTICE_SOUL_PIECE), new ItemStack(ItemInit.ITEM_EVIL_SOUL_PIECE)), 200);
+
+        registerFormula(Item.getItemFromBlock(Blocks.COBBLESTONE).getRegistryName(), Formula.create(Item.getItemFromBlock(Blocks.COBBLESTONE), Items.STICK, Items.STICK, ItemInit.ITEM_OBSESSION),
+                Lists.newArrayList(new ItemStack(Item.getItemFromBlock(BlockInit.CHURCH_PORTAL_FRAME))), 200);
     }
 
     public static Formula getFormula(ItemStack keyItem)

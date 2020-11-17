@@ -3,6 +3,8 @@ package com.xwm.magicmaid.object.item;
 import com.xwm.magicmaid.init.BlockInit;
 import com.xwm.magicmaid.init.DimensionInit;
 import com.xwm.magicmaid.object.block.BlockChurchPortalFrame;
+import com.xwm.magicmaid.particle.EnumCustomParticles;
+import com.xwm.magicmaid.particle.ParticleSpawner;
 import com.xwm.magicmaid.world.dimension.ChurchTeleporter;
 import net.minecraft.block.BlockEndPortalFrame;
 import net.minecraft.block.state.IBlockState;
@@ -10,7 +12,9 @@ import net.minecraft.block.state.pattern.BlockPattern;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -55,6 +59,16 @@ public class ItemTheGospels extends ItemBase
         {
             if (worldIn.isRemote)
             {
+                double sum = hitX + hitY + hitZ;
+                BlockPos pos1 = player.getPosition().offset(player.getHorizontalFacing().rotateY());
+                pos1 = pos1.offset(player.getHorizontalFacing());
+                for (int i = 0; i < 16; ++i)
+                {
+                    double d0 = pos1.getX() + itemRand.nextFloat() / 2 - 0.25;
+                    double d1 = pos1.getY() + player.eyeHeight - 0.15F;
+                    double d2 = pos1.getZ() + itemRand.nextFloat() / 2 - 0.25;
+                    ParticleSpawner.spawnParticle(EnumCustomParticles.PANDORA, d0, d1, d2, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
+                }
                 return EnumActionResult.SUCCESS;
             }
             else
@@ -63,20 +77,8 @@ public class ItemTheGospels extends ItemBase
                 worldIn.updateComparatorOutputLevel(pos, BlockInit.CHURCH_PORTAL_FRAME);
                 itemstack.shrink(1);
 
-                //todo  特效修改
-                for (int i = 0; i < 16; ++i)
-                {
-                    double d0 = (double)((float)pos.getX() + (5.0F + itemRand.nextFloat() * 6.0F) / 16.0F);
-                    double d1 = (double)((float)pos.getY() + 0.8125F);
-                    double d2 = (double)((float)pos.getZ() + (5.0F + itemRand.nextFloat() * 6.0F) / 16.0F);
-                    double d3 = 0.0D;
-                    double d4 = 0.0D;
-                    double d5 = 0.0D;
-                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, 0.0D, 0.0D, 0.0D);
-                }
-
                 // 音效
-                worldIn.playSound((EntityPlayer)null, pos, SoundEvents.BLOCK_END_PORTAL_FRAME_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                worldIn.playSound((EntityPlayer)null, pos, SoundEvents.ENCHANT_THORNS_HIT, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 BlockPattern.PatternHelper blockpattern$patternhelper = BlockChurchPortalFrame.getOrCreatePortalShape().match(worldIn, pos);
 
                 if (blockpattern$patternhelper != null)

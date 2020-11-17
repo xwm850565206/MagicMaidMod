@@ -66,6 +66,7 @@ public class RegistryHandler
         SoundsHandler.registerSounds();
         StructureChurchPieces.registerPieces();
         MagicDimensionRegistry.registerAll();
+        MagicFormulaRegistry.registerAllFormula();
     }
 
     public static void preInitRegistries()
@@ -75,7 +76,6 @@ public class RegistryHandler
         DimensionInit.registerDimensions();
         DimensionInit.registerWorldGenerators();
         PotionInit.registerPotions();
-        MagicFormulaRegistry.registerAllFormula();
     }
 
 }
