@@ -34,7 +34,6 @@ import java.util.Random;
 
 public class BlockChurchPortalFrame extends BlockBase
 {
-    public static final PropertyDirection FACING = BlockHorizontal.FACING;
     public static final PropertyBool GOSPELS = PropertyBool.create("gospels");
     protected static final AxisAlignedBB AABB_BLOCK = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.8125D, 1.0D);
     protected static final AxisAlignedBB AABB_GOSPELS = new AxisAlignedBB(0.3125D, 0.8125D, 0.3125D, 0.6875D, 1.0D, 0.6875D);
@@ -42,7 +41,7 @@ public class BlockChurchPortalFrame extends BlockBase
 
     public BlockChurchPortalFrame(String name) {
         super(name, Material.ROCK);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(GOSPELS, Boolean.valueOf(false)));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(GOSPELS, Boolean.valueOf(false)));
     }
 
 
@@ -83,7 +82,7 @@ public class BlockChurchPortalFrame extends BlockBase
      */
     public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
     {
-        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(GOSPELS, Boolean.valueOf(false));
+        return this.getDefaultState().withProperty(GOSPELS, Boolean.valueOf(false));
     }
 
     public boolean hasComparatorInputOverride(IBlockState state)
@@ -93,7 +92,7 @@ public class BlockChurchPortalFrame extends BlockBase
 
     public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos)
     {
-        return ((Boolean)blockState.getValue(GOSPELS)).booleanValue() ? 15 : 0;
+        return (Boolean) blockState.getValue(GOSPELS) ? 15 : 0;
     }
 
     /**
@@ -101,7 +100,7 @@ public class BlockChurchPortalFrame extends BlockBase
      */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(GOSPELS, Boolean.valueOf((meta & 4) != 0)).withProperty(FACING, EnumFacing.getHorizontal(meta & 3));
+        return this.getDefaultState().withProperty(GOSPELS, (meta & 4) != 0);
     }
 
     /**
@@ -110,9 +109,8 @@ public class BlockChurchPortalFrame extends BlockBase
     public int getMetaFromState(IBlockState state)
     {
         int i = 0;
-        i = i | ((EnumFacing)state.getValue(FACING)).getHorizontalIndex();
 
-        if (((Boolean)state.getValue(GOSPELS)).booleanValue())
+        if ((Boolean) state.getValue(GOSPELS))
         {
             i |= 4;
         }
@@ -120,27 +118,10 @@ public class BlockChurchPortalFrame extends BlockBase
         return i;
     }
 
-    /**
-     * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
-     * blockstate.
-     */
-    public IBlockState withRotation(IBlockState state, Rotation rot)
-    {
-        return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
-    }
-
-    /**
-     * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
-     * blockstate.
-     */
-    public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
-    {
-        return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));
-    }
 
     protected BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer(this, new IProperty[] {FACING, GOSPELS});
+        return new BlockStateContainer(this, new IProperty[] {GOSPELS});
     }
 
     public boolean isFullCube(IBlockState state)
@@ -152,11 +133,10 @@ public class BlockChurchPortalFrame extends BlockBase
     {
         if (portalShape == null)
         {
-            portalShape = FactoryBlockPattern.start().aisle("####", ">??<", ">??<", ">??<", "????")
+            portalShape = FactoryBlockPattern.start().aisle("?##?", "x??x", "x??x", "x??x", "?##?")
                     .where('?', BlockWorldState.hasState(BlockStateMatcher.ANY))
-                    .where('#', BlockWorldState.hasState(BlockStateMatcher.forBlock(Blocks.GOLD_BLOCK)))
-                    .where('>', BlockWorldState.hasState(BlockStateMatcher.forBlock(BlockInit.CHURCH_PORTAL_FRAME).where(GOSPELS, Predicates.equalTo(Boolean.TRUE))))
-                    .where('<', BlockWorldState.hasState(BlockStateMatcher.forBlock(BlockInit.CHURCH_PORTAL_FRAME).where(GOSPELS, Predicates.equalTo(Boolean.TRUE))))
+                    .where('#', BlockWorldState.hasState(BlockStateMatcher.forBlock(Blocks.COBBLESTONE)))
+                    .where('x', BlockWorldState.hasState(BlockStateMatcher.forBlock(BlockInit.CHURCH_PORTAL_FRAME).where(GOSPELS, Predicates.equalTo(Boolean.TRUE))))
                     .build();
         }
 

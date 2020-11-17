@@ -78,51 +78,36 @@ public class TileEntityChurchPortalRenderer extends TileEntitySpecialRenderer<Ti
 
         if (te.shouldRenderFace(EnumFacing.SOUTH))
         {
-            bufferbuilder.pos(x, y, z + 1.0D).color(f3, f4, f5, 1.0F).endVertex();
-            bufferbuilder.pos(x + 1.0D, y, z + 1.0D).color(f3, f4, f5, 1.0F).endVertex();
-            bufferbuilder.pos(x + 1.0D, y + 1.0D, z + 1.0D).color(f3, f4, f5, 1.0F).endVertex();
-            bufferbuilder.pos(x, y + 1.0D, z + 1.0D).color(f3, f4, f5, 1.0F).endVertex();
+            bufferbuilder.pos(x, y, z + 0.5D).color(f3, f4, f5, 1.0F).endVertex();
+            bufferbuilder.pos(x + 1.0D, y, z + 0.5D).color(f3, f4, f5, 1.0F).endVertex();
+            bufferbuilder.pos(x + 1.0D, y + 1.0D, z + 0.5D).color(f3, f4, f5, 1.0F).endVertex();
+            bufferbuilder.pos(x, y + 1.0D, z + 0.5D).color(f3, f4, f5, 1.0F).endVertex();
         }
 
         if (te.shouldRenderFace(EnumFacing.NORTH))
         {
-            bufferbuilder.pos(x, y + 1.0D, z).color(f3, f4, f5, 1.0F).endVertex();
-            bufferbuilder.pos(x + 1.0D, y + 1.0D, z).color(f3, f4, f5, 1.0F).endVertex();
-            bufferbuilder.pos(x + 1.0D, y, z).color(f3, f4, f5, 1.0F).endVertex();
-            bufferbuilder.pos(x, y, z).color(f3, f4, f5, 1.0F).endVertex();
+            bufferbuilder.pos(x, y + 1.0D, z + 0.5D).color(f3, f4, f5, 1.0F).endVertex();
+            bufferbuilder.pos(x + 1.0D, y + 1.0D, z + 0.5D).color(f3, f4, f5, 1.0F).endVertex();
+            bufferbuilder.pos(x + 1.0D, y, z + 0.5D).color(f3, f4, f5, 1.0F).endVertex();
+            bufferbuilder.pos(x, y, z + 0.5D).color(f3, f4, f5, 1.0F).endVertex();
         }
 
         if (te.shouldRenderFace(EnumFacing.EAST))
         {
-            bufferbuilder.pos(x + 1.0D, y + 1.0D, z).color(f3, f4, f5, 1.0F).endVertex();
-            bufferbuilder.pos(x + 1.0D, y + 1.0D, z + 1.0D).color(f3, f4, f5, 1.0F).endVertex();
-            bufferbuilder.pos(x + 1.0D, y, z + 1.0D).color(f3, f4, f5, 1.0F).endVertex();
-            bufferbuilder.pos(x + 1.0D, y, z).color(f3, f4, f5, 1.0F).endVertex();
+            bufferbuilder.pos(x + 0.5D, y + 1.0D, z).color(f3, f4, f5, 1.0F).endVertex();
+            bufferbuilder.pos(x + 0.5D, y + 1.0D, z + 1.0D).color(f3, f4, f5, 1.0F).endVertex();
+            bufferbuilder.pos(x + 0.5D, y, z + 1.0D).color(f3, f4, f5, 1.0F).endVertex();
+            bufferbuilder.pos(x + 0.5D, y, z).color(f3, f4, f5, 1.0F).endVertex();
         }
 
         if (te.shouldRenderFace(EnumFacing.WEST))
         {
-            bufferbuilder.pos(x, y, z).color(f3, f4, f5, 1.0F).endVertex();
-            bufferbuilder.pos(x, y, z + 1.0D).color(f3, f4, f5, 1.0F).endVertex();
-            bufferbuilder.pos(x, y + 1.0D, z + 1.0D).color(f3, f4, f5, 1.0F).endVertex();
-            bufferbuilder.pos(x, y + 1.0D, z).color(f3, f4, f5, 1.0F).endVertex();
+            bufferbuilder.pos(x + 0.5D, y, z).color(f3, f4, f5, 1.0F).endVertex();
+            bufferbuilder.pos(x + 0.5D, y, z + 1.0D).color(f3, f4, f5, 1.0F).endVertex();
+            bufferbuilder.pos(x + 0.5D, y + 1.0D, z + 1.0D).color(f3, f4, f5, 1.0F).endVertex();
+            bufferbuilder.pos(x + 0.5D, y + 1.0D, z).color(f3, f4, f5, 1.0F).endVertex();
         }
 
-        if (te.shouldRenderFace(EnumFacing.DOWN))
-        {
-            bufferbuilder.pos(x, y, z).color(f3, f4, f5, 1.0F).endVertex();
-            bufferbuilder.pos(x + 1.0D, y, z).color(f3, f4, f5, 1.0F).endVertex();
-            bufferbuilder.pos(x + 1.0D, y, z + 1.0D).color(f3, f4, f5, 1.0F).endVertex();
-            bufferbuilder.pos(x, y, z + 1.0D).color(f3, f4, f5, 1.0F).endVertex();
-        }
-
-        if (te.shouldRenderFace(EnumFacing.UP))
-        {
-            bufferbuilder.pos(x, y + (double)f, z + 1.0D).color(f3, f4, f5, 1.0F).endVertex();
-            bufferbuilder.pos(x + 1.0D, y + (double)f, z + 1.0D).color(f3, f4, f5, 1.0F).endVertex();
-            bufferbuilder.pos(x + 1.0D, y + (double)f, z).color(f3, f4, f5, 1.0F).endVertex();
-            bufferbuilder.pos(x, y + (double)f, z).color(f3, f4, f5, 1.0F).endVertex();
-        }
 
         tessellator.draw();
         GlStateManager.popMatrix();
@@ -141,9 +126,13 @@ public class TileEntityChurchPortalRenderer extends TileEntitySpecialRenderer<Ti
         GlStateManager.disableLighting();
         GlStateManager.getFloat(GL11.GL_MODELVIEW_MATRIX, MODELVIEW);
         GlStateManager.getFloat(GL11.GL_PROJECTION_MATRIX, PROJECTION);
-        GlStateManager.matrixMode(5890);
-
         GlStateManager.pushMatrix();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.popMatrix();
+        GlStateManager.matrixMode(5890);
+        GlStateManager.pushMatrix();
+
 //        GlStateManager.enableBlend();
 //        GlStateManager.disableDepth();
 //        GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
@@ -173,26 +162,26 @@ public class TileEntityChurchPortalRenderer extends TileEntitySpecialRenderer<Ti
 
         if (te.shouldRenderFace(EnumFacing.SOUTH))
         {
-            bufferbuilder.pos(x + RANDOM.nextDouble(), y + RANDOM.nextDouble(), z + 1.0D).endVertex();
-            bufferbuilder.pos(x  + RANDOM.nextDouble(), y + RANDOM.nextDouble(), z + 1.0D).endVertex();
+            bufferbuilder.pos(x + RANDOM.nextDouble(), y + RANDOM.nextDouble(), z + 0.5D).endVertex();
+            bufferbuilder.pos(x  + RANDOM.nextDouble(), y + RANDOM.nextDouble(), z + 0.5D).endVertex();
         }
 
         if (te.shouldRenderFace(EnumFacing.NORTH))
         {
-            bufferbuilder.pos(x + RANDOM.nextDouble(), y + RANDOM.nextDouble(), z).endVertex();
-            bufferbuilder.pos(x + RANDOM.nextDouble(), y + RANDOM.nextDouble(), z).endVertex();
+            bufferbuilder.pos(x + RANDOM.nextDouble(), y + RANDOM.nextDouble(), z + 0.5D).endVertex();
+            bufferbuilder.pos(x + RANDOM.nextDouble(), y + RANDOM.nextDouble(), z + 0.5D).endVertex();
         }
 
         if (te.shouldRenderFace(EnumFacing.EAST))
         {
-            bufferbuilder.pos(x + 1.0D, y + RANDOM.nextDouble(), z + RANDOM.nextDouble()).endVertex();
-            bufferbuilder.pos(x + 1.0D, y + RANDOM.nextDouble(), z + + RANDOM.nextDouble()).endVertex();
+            bufferbuilder.pos(x + 0.5D, y + RANDOM.nextDouble(), z + RANDOM.nextDouble()).endVertex();
+            bufferbuilder.pos(x + 0.5D, y + RANDOM.nextDouble(), z + + RANDOM.nextDouble()).endVertex();
         }
 
         if (te.shouldRenderFace(EnumFacing.WEST))
         {
-            bufferbuilder.pos(x, y + RANDOM.nextDouble(), z + RANDOM.nextDouble()).endVertex();
-            bufferbuilder.pos(x, y + RANDOM.nextDouble(), z + RANDOM.nextDouble()).endVertex();
+            bufferbuilder.pos(x + 0.5D, y + RANDOM.nextDouble(), z + RANDOM.nextDouble()).endVertex();
+            bufferbuilder.pos(x + 0.5D, y + RANDOM.nextDouble(), z + RANDOM.nextDouble()).endVertex();
         }
 
 
@@ -201,7 +190,8 @@ public class TileEntityChurchPortalRenderer extends TileEntitySpecialRenderer<Ti
         GlStateManager.popMatrix();
         GlStateManager.matrixMode(5888);
 
-//        GlStateManager.disableBlend();
+        GlStateManager.disableBlend();
+        GlStateManager.enableLighting();
         GlStateManager.enableLighting();
 //        GlStateManager.enableDepth();
     }

@@ -1,0 +1,7 @@
+{
+    "variants":
+    {
+    	"gospels=true": {"model": "magic_maid:block_church_portal_frame_on" },
+        "gospels=false":{"model": "magic_maid:block_church_portal_frame_off" }
+    }
+}

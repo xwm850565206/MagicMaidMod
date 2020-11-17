@@ -63,13 +63,8 @@ public class ChurchTeleporter extends Teleporter
         BlockPos blockpos = BlockPos.ORIGIN;
         long l = ChunkPos.asLong(j, k);
 
-        if (world.provider.getDimension() == DimensionInit.DIMENSION_CHURCH)
-        {
-            d0 = 0.0D;
-            blockpos = new BlockPos(aimPos.getX(), aimPos.getY(), aimPos.getZ());
-            flag = false;
-        }
-        else if (this.destinationCoordinateCache.containsKey(l))
+
+       if (this.destinationCoordinateCache.containsKey(l))
         {
             Teleporter.PortalPosition teleporter$portalposition = (Teleporter.PortalPosition)this.destinationCoordinateCache.get(l);
             d0 = 0.0D;
@@ -79,7 +74,7 @@ public class ChurchTeleporter extends Teleporter
         }
         else
         {
-            BlockPos blockpos3 = new BlockPos(entityIn);
+            BlockPos blockpos3 = world.provider.getDimension() == DimensionInit.DIMENSION_CHURCH ? new BlockPos(aimPos.add(0, 2, 0)) : new BlockPos(entityIn);
 
             for (int i1 = -128; i1 <= 128; ++i1)
             {
@@ -135,10 +130,12 @@ public class ChurchTeleporter extends Teleporter
             if (blockpattern$patternhelper.getForwards().getAxis() == EnumFacing.Axis.X)
             {
                 d7 = d2 + (1.0D - entityIn.getLastPortalVec().x) * (double)blockpattern$patternhelper.getWidth() * (double)blockpattern$patternhelper.getForwards().rotateY().getAxisDirection().getOffset();
+                d5++;
             }
             else
             {
                 d5 = d2 + (1.0D - entityIn.getLastPortalVec().x) * (double)blockpattern$patternhelper.getWidth() * (double)blockpattern$patternhelper.getForwards().rotateY().getAxisDirection().getOffset();
+                d7++;
             }
 
             float f = 0.0F;
@@ -333,7 +330,7 @@ public class ChurchTeleporter extends Teleporter
                         int k10 = k2 + k8;
                         int k11 = k6 + (l7 - 1) * i3 - j7 * l6;
                         boolean flag = k8 < 0;
-                        this.world.setBlockState(new BlockPos(k9, k10, k11), flag ? Blocks.OBSIDIAN.getDefaultState() : Blocks.AIR.getDefaultState());
+                        this.world.setBlockState(new BlockPos(k9, k10, k11), flag ? Blocks.COBBLESTONE.getDefaultState() : Blocks.AIR.getDefaultState());
                     }
                 }
             }
@@ -348,12 +345,12 @@ public class ChurchTeleporter extends Teleporter
                     int k12 = k6 + (l8 - 1) * i3;
                     BlockPos pos = new BlockPos(l10, l11, k12);
                     if (l9 == -1) {
-                        this.world.setBlockState(aimPos.add(i, j, 0), Blocks.END_STONE.getDefaultState(), 2);
+                        this.world.setBlockState(pos, Blocks.COBBLESTONE.getDefaultState(), 2);
                     }
-                    if (l9 == 3) {
-                        this.world.setBlockState(pos, Blocks.GOLD_BLOCK.getDefaultState(), 2);
+                    else if (l9 == 3) {
+                        this.world.setBlockState(pos, Blocks.COBBLESTONE.getDefaultState(), 2);
                     } else if (l8 == 0 || l8 == 3) {
-                        this.world.setBlockState(pos, BlockInit.CHURCH_PORTAL_FRAME.getDefaultState().withProperty(BlockChurchPortalFrame.FACING, EnumFacing.NORTH).withProperty(BlockChurchPortalFrame.GOSPELS, true), 2);
+                        this.world.setBlockState(pos, BlockInit.CHURCH_PORTAL_FRAME.getDefaultState().withProperty(BlockChurchPortalFrame.GOSPELS, true), 2);
                     } else
                         this.world.setBlockState(pos, BlockInit.CHURCH_PORTAL.getDefaultState(), 2);
                 }
@@ -375,27 +372,20 @@ public class ChurchTeleporter extends Teleporter
 
     private boolean makePortalInChurch()
     {
-//        for (int i = -4; i < 4; i++)
-//            for (int j = 0; j < 8; j++) {
-//                for (int k = -4; k < 4; k++) {
-//                    this.world.setBlockState(aimPos.add(i, j, i), Blocks.AIR.getDefaultState());
-//                }
-//            }
-
-
         for (int i = 0; i < 4; i++)
         {
             for (int j = -1; j < 4; j++)
             {
                 if (j == -1) {
-                    this.world.setBlockState(aimPos.add(i, j, 0), Blocks.GOLD_BLOCK.getDefaultState(), 2);
+                    for (int k = -1; k < 2; k++)
+                        this.world.setBlockState(aimPos.add(i, j, k), Blocks.COBBLESTONE.getDefaultState(), 2);
                 }
-                if (j == 3) {
-                    this.world.setBlockState(aimPos.add(i, j, 0), Blocks.GOLD_BLOCK.getDefaultState(), 2);
+                else if (j == 3) {
+                    this.world.setBlockState(aimPos.add(i, j, 0), Blocks.COBBLESTONE.getDefaultState(), 2);
                 }
                 else if (i == 0 || i == 3)
                 {
-                    this.world.setBlockState(aimPos.add(i, j, 0), BlockInit.CHURCH_PORTAL_FRAME.getDefaultState().withProperty(BlockChurchPortalFrame.FACING, EnumFacing.NORTH).withProperty(BlockChurchPortalFrame.GOSPELS, true), 2);
+                    this.world.setBlockState(aimPos.add(i, j, 0), BlockInit.CHURCH_PORTAL_FRAME.getDefaultState().withProperty(BlockChurchPortalFrame.GOSPELS, true), 2);
                 }
                 else
                     this.world.setBlockState(aimPos.add(i, j, 0), BlockInit.CHURCH_PORTAL.getDefaultState(), 2);
