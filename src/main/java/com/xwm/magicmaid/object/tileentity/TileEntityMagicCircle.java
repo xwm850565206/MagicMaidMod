@@ -1,7 +1,6 @@
 package com.xwm.magicmaid.object.tileentity;
 
 import com.google.common.collect.Lists;
-import com.sun.istack.internal.NotNull;
 import com.xwm.magicmaid.object.block.BlockMagicCircle;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
@@ -20,12 +19,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
@@ -230,7 +224,12 @@ public class TileEntityMagicCircle extends TileEntity implements IInventory, ITi
         List<ItemStack> itemstacks = MagicFormulaRegistry.getResult(this.inventory.get(4));
         if (itemstacks != null) {
             for (int i = 0; i < 3 && i < itemstacks.size(); i++) {
-                this.setInventorySlotContents(5 + i, itemstacks.get(i).copy());
+                ItemStack stack = this.getStackInSlot(5 + i);
+                if (stack != ItemStack.EMPTY && stack.getItem() == itemstacks.get(i).getItem())
+                    stack.grow(itemstacks.get(i).getCount());
+                else
+                    stack = itemstacks.get(i).copy();
+                this.setInventorySlotContents(5 + i, stack);
             }
             for (int i = 0; i < 5; i++)
                 this.decrStackSize(i, 1);
@@ -242,8 +241,17 @@ public class TileEntityMagicCircle extends TileEntity implements IInventory, ITi
 
 
     public boolean hasSlotForCook() {
-        for (int i = 5; i < 8; i++) if (!this.inventory.get(i).isEmpty())
-            return false;
+        List<ItemStack> itemstacks = MagicFormulaRegistry.getResult(this.inventory.get(4));
+        for (int i = 5; i < 8; i++)
+        {
+            if (!this.inventory.get(i).isEmpty())
+            {
+                if ((itemstacks.size() + 5 > i && this.getStackInSlot(i).getItem() == itemstacks.get(i - 5).getItem()))
+                    continue;
+                else
+                    return false;
+            }
+        }
         return true;
     }
 

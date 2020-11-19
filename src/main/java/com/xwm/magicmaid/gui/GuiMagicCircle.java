@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiMagicCircle extends GuiContainer
 {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.MODID + ":textures/gui/gui_circle_window.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.MODID + ":textures/gui/gui_circle_window.png");
 
     private TileEntityMagicCircle magicCircle;
 

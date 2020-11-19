@@ -104,7 +104,7 @@ public class EntityAIMaidFollow extends EntityAIBase
     public void startExecuting()
     {
 //        if (this.owner.world.provider.getDimension() != this.tameable.world.provider.getDimension()) {
-//            this.tameable.changeDimension(this.owner.world.provider.getDimension(), new ChurchTeleporter((WorldServer) world, DimensionInit.DIMENSION_CHURCH, owner.posX, owner.posY, owner.posZ)); //todo
+//            this.tameable.changeDimension(this.owner.world.provider.getDimension(), new ChurchTeleporter((WorldServer) world, DimensionInit.DIMENSION_CHURCH, owner.posX, owner.posY, owner.posZ));
 //        }
 
         this.timeToRecalcPath = 0;

@@ -94,19 +94,16 @@ public class MagicEquipmentUtils
      * 得到武器的使用范围，一般是攻击范围
      * @param stack
      * @param player
-     * @param pos
      * @return
      */
     public static AxisAlignedBB getUsingArea(ItemStack stack, EntityLivingBase player, AxisAlignedBB bb)
     {
         if (player instanceof IEntityEquipmentCreature)
         {
-            //todo
             return ((IEntityEquipmentCreature) player).getUsingArea(stack, player, bb);
         }
         else
         {
-            //todo
             return player.getEntityBoundingBox().grow(1, 1, 1);
         }
     }

@@ -72,7 +72,7 @@ public class EntityMagicMaidRett extends EntityMagicMaid
             EnumEquipment equipment = EnumEquipment.valueOf(this.getWeaponType());
             if (equipment == EnumEquipment.DEMONKILLINGSWORD
                     && (mode == EnumMode.FIGHT || mode == EnumMode.BOSS) && !isAttackState()){
-                this.setState(EnumRettState.toInt(EnumRettState.DEMON_KILLER_STANDARD)); // todo 有两把武器不能这么判断
+                this.setState(EnumRettState.toInt(EnumRettState.DEMON_KILLER_STANDARD));
             }
             else if (equipment == EnumEquipment.NONE)
             {

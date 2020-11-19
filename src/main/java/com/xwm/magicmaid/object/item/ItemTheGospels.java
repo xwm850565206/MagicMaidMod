@@ -1,26 +1,19 @@
 package com.xwm.magicmaid.object.item;
 
 import com.xwm.magicmaid.init.BlockInit;
-import com.xwm.magicmaid.init.DimensionInit;
 import com.xwm.magicmaid.object.block.BlockChurchPortalFrame;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
-import com.xwm.magicmaid.world.dimension.ChurchTeleporter;
-import net.minecraft.block.BlockEndPortalFrame;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.block.state.pattern.BlockPattern;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
 import java.util.List;
 
@@ -59,7 +52,6 @@ public class ItemTheGospels extends ItemBase
         {
             if (worldIn.isRemote)
             {
-                double sum = hitX + hitY + hitZ;
                 BlockPos pos1 = player.getPosition().offset(player.getHorizontalFacing().rotateY());
                 pos1 = pos1.offset(player.getHorizontalFacing());
                 for (int i = 0; i < 16; ++i)

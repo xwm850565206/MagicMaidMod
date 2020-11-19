@@ -27,7 +27,6 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 import java.util.List;
-import java.util.UUID;
 
 public class ItemNoSoulGhost extends ItemBase
 {
@@ -128,6 +127,9 @@ public class ItemNoSoulGhost extends ItemBase
     {
         if (entity instanceof IEntityTameableCreature && entity instanceof IEntityAvoidThingCreature) {
             if (!((IEntityTameableCreature) entity).hasOwner() || !((IEntityTameableCreature) entity).getOwnerID().equals(player.getUniqueID()))
+                return false;
+
+            if (stack.getTagCompound() != null && stack.getTagCompound().hasKey("soul"))
                 return false;
 
             NBTTagCompound compound = new NBTTagCompound();

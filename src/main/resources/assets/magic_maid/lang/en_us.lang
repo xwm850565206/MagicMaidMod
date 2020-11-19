@@ -60,6 +60,7 @@ tile.oreholystone.name=圣痕矿石
 tile.memoryclock.name=记忆铜钟
 tile.magic_circle.name=魔法石板
 tile.bianflower.name=彼岸花
+tile.church_portal_frame.name=废墟图腾
 
 
 entity.magic_maid_maid_martha.name=玛莎

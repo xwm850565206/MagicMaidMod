@@ -4,13 +4,26 @@ import com.xwm.magicmaid.object.tileentity.TileEntityMagicCircle;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.SlotItemHandler;
+
+import javax.vecmath.Vector2d;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContainMagicCircle extends Container
 {
+    public static List<Vector2d> SLOT_POSITION = new ArrayList<Vector2d>() {{
+       add(new Vector2d(13, 8));
+       add(new Vector2d(59, 8));
+       add(new Vector2d(13, 54));
+       add(new Vector2d(59, 54));
+       add(new Vector2d(35, 32));
+       add(new Vector2d(140, 15));
+       add(new Vector2d(140, 15 + 18));
+       add(new Vector2d(140, 15 + 18 * 2));
+    }};
+
     private TileEntityMagicCircle magicCircle;
 
     public ContainMagicCircle(InventoryPlayer inventory, TileEntityMagicCircle magicCircleIn)
@@ -44,7 +57,7 @@ public class ContainMagicCircle extends Container
         });
 
         //放置烧炼物槽位
-        addSlotToContainer(new Slot(magicCircle, 4, 36, 30) {
+        addSlotToContainer(new Slot(magicCircle, 4, 35, 32) {
 //            @Override
 //            public void onSlotChanged() {
 //                magicCircle.markDirty();

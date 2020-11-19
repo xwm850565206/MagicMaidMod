@@ -5,6 +5,8 @@ import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.init.ItemInit;
+import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.network.RenderAreaPacket;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
 import com.xwm.magicmaid.util.handlers.LootTableHandler;
 import com.xwm.magicmaid.world.dimension.DimensionChurch;
@@ -224,7 +226,13 @@ public class EntityMagicMaidRettBoss extends EntityMagicMaidRett implements IEnt
      */
     @Override
     public void createWarningArea(int i, AxisAlignedBB bb) {
-        MagicRenderRegistry.addRenderBox(i, bb);
+        if (world.isRemote)
+            MagicRenderRegistry.removeRenderBox(i);
+        else
+        {
+            RenderAreaPacket packet = new RenderAreaPacket(i, 1);
+            NetworkLoader.instance.sendToAll(packet);
+        }
     }
 
     /**

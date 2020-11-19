@@ -3,13 +3,11 @@ package com.xwm.magicmaid.gui;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.object.item.equipment.ItemArmor;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
-import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
 
 public class ContainMaidWindow extends Container

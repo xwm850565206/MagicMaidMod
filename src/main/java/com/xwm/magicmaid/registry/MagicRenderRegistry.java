@@ -1,25 +1,23 @@
 package com.xwm.magicmaid.registry;
 
-import com.xwm.magicmaid.Main;
-import com.xwm.magicmaid.entity.model.effect.ModelEffectBox;
 import com.xwm.magicmaid.util.Reference;
-import jdk.nashorn.internal.ir.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
+
 
 public class MagicRenderRegistry
 {
@@ -107,6 +105,7 @@ public class MagicRenderRegistry
         Tessellator.getInstance().draw();
     }
 
+    @SideOnly(Side.CLIENT)
     public static void renderCell(AxisAlignedBB bb)
     {
         Minecraft.getMinecraft().mcProfiler.startSection("magic_maid");
@@ -149,6 +148,7 @@ public class MagicRenderRegistry
         Minecraft.getMinecraft().mcProfiler.endSection();
     }
 
+    @SideOnly(Side.CLIENT)
     private static void renderWarningArea(AxisAlignedBB bb)
     {
         Minecraft.getMinecraft().mcProfiler.startSection("magic_maid");
@@ -184,6 +184,7 @@ public class MagicRenderRegistry
         Minecraft.getMinecraft().mcProfiler.endSection();
     }
 
+    @SideOnly(Side.CLIENT)
     public static void renderBoxList()
     {
         for (AxisAlignedBB bb : RENDER_BOX_LIST.values())

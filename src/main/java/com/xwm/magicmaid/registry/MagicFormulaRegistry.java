@@ -10,7 +10,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -50,6 +49,9 @@ public class MagicFormulaRegistry
 
         registerFormula(Item.getItemFromBlock(Blocks.COBBLESTONE).getRegistryName(), Formula.create(Item.getItemFromBlock(Blocks.COBBLESTONE), Items.STICK, Items.STICK, ItemInit.ITEM_OBSESSION),
                 Lists.newArrayList(new ItemStack(Item.getItemFromBlock(BlockInit.CHURCH_PORTAL_FRAME))), 200);
+
+        registerFormula(ItemInit.ITEM_THE_GOSPELS.getRegistryName(), Formula.create(ItemInit.ITEM_THE_GOSPELS, ItemInit.ITEM_THE_GOSPELS, ItemInit.ITEM_THE_GOSPELS, ItemInit.ITEM_THE_GOSPELS, ItemInit.ITEM_THE_GOSPELS),
+                Lists.newArrayList(new ItemStack(Items.EMERALD), new ItemStack(Items.PAPER), new ItemStack(Items.PAPER)), 200);
     }
 
     public static Formula getFormula(ItemStack keyItem)
@@ -65,5 +67,10 @@ public class MagicFormulaRegistry
     public static int getCookTime(ItemStack keyItem)
     {
         return COOKTIME.getOrDefault(keyItem.getItem().getRegistryName(), 0);
+    }
+
+    public static HashMap<ResourceLocation, Formula> getFormulaMap()
+    {
+        return FORMULA;
     }
 }

@@ -1,6 +1,5 @@
 package com.xwm.magicmaid.object.tileentity;
 
-import com.xwm.magicmaid.object.block.BlockChurchPortal;
 import com.xwm.magicmaid.object.block.BlockChurchPortalFrame;
 import net.minecraft.block.state.pattern.BlockPattern;
 import net.minecraft.tileentity.TileEntity;

@@ -2,12 +2,15 @@ package com.xwm.magicmaid.particle;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ParticleSpawner
 {
     public static final int DISTANCE = 20;
     private static Minecraft mc = Minecraft.getMinecraft();
 
+    @SideOnly(Side.CLIENT)
     public static Particle spawnParticle(EnumCustomParticles type, double par2, double par4, double par6, double par8, double par10, double par12)
     {
         if (mc != null && mc.getRenderViewEntity() != null && mc.effectRenderer != null)

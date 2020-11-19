@@ -24,7 +24,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import java.util.List;
 import java.util.Random;
 
-//todo
 public class EntityAIRepantence extends EntityAIBase
 {
     private static final int PERFORMTIME = 40;

@@ -9,7 +9,10 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class RenderMagicMaid extends RenderLiving<EntityMagicMaid> {
 
     public static final ResourceLocation TEXTURE_MARTHA = new ResourceLocation(Reference.MODID + ":textures/entities/magicmaidmartha.png");

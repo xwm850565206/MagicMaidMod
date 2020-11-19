@@ -1,0 +1,383 @@
+[
+  [
+    {
+      "type": "content",
+      "name": "写在前面",
+      "description" : "尊敬的玩家，这是一本说明书，请认真阅读."
+    },
+    {
+      "type": "content",
+      "name": "写在前面",
+      "description" : "本模组还在不断更新...目前版本6.0(添加了传送门，更新了说明书，修复了无魂之魄可以连续吸收女仆的bug，修复石板右键可以刷物品的bug).\n下个版本打算更新武器系统和遗留问题，提高游戏性，第二章正在策划中"
+    },
+    {
+      "type": "content",
+      "name": "提示",
+      "description" : "boss的击杀方法在本书后面！本模组难度较大！鉴于难度对新手不友好，本模组可以与【苦力怕】上古神器-石头利用联动!里面的[致密金刚剑]可以轻松击杀boss！"
+    }
+  ],
+  [
+    {
+      "type": "title",
+      "name": "物品介绍"
+    },
+    {
+      "type": "item",
+      "name": "圣痕",
+      "description": "一种矿石，只在终焉教堂维度生成",
+      "resourceLocation": "magic_maid:holystone"
+    },
+    {
+      "type": "item",
+      "name": "碎片",
+      "description": "击败boss后会掉落各种碎片，碎片是合成对应物品的材料，合成方法见合成表",
+      "resourceLocation": "magic_maid:memorypiecemartha"
+    },
+    {
+      "type": "item",
+      "name": "记忆",
+      "description": "由记忆碎片合成，可以右键查看对应女仆的记忆",
+      "resourceLocation": "magic_maid:memorymartha"
+    },
+    {
+      "type": "item",
+      "name": "圣女果",
+      "description": "召唤对应女仆",
+      "resourceLocation": "magic_maid:holy_fruit_martha"
+    },
+    {
+      "type" : "item",
+      "name": "遗失之匙",
+      "description" : "在教堂维度击杀猪人得到，对女仆使用可以收服女仆，也从上面提取残魂",
+      "resourceLocation" : "magic_maid:lostkey"
+    }
+  ],
+  [
+    {
+      "type": "title",
+      "name": "物品介绍"
+    },
+    {
+      "type": "item",
+      "name": "残存的温柔",
+      "description": "击败boss掉落的物品，用于升阶",
+      "resourceLocation": "magic_maid:remaining_soft"
+    },
+    {
+      "type": "content",
+      "name": "装备",
+      "description": "女仆的两个槽位分别是武器槽和护具槽，装备对应能使用的装备来提升女仆，同时玩家也可以使用部分装备"
+    },
+    {
+      "type": "item",
+      "name": "福音书",
+      "description": "使用福音书来激活废墟图腾",
+      "resourceLocation": "magic_maid:the_gospels"
+    },
+    {
+      "type": "item",
+      "name": "废墟图腾",
+      "description": "按照一定样式摆好后可以打开教堂废墟的传送门，摆法见后文[传送门]",
+      "resourceLocation": "magic_maid:church_portal_frame"
+    },
+    {
+      "type" : "item",
+      "name": "魔法石板",
+      "description" : "刻着魔法纹路的石板，是一切的开始，石板的用法见后文[石板公式]",
+      "resourceLocation" : "magic_maid:magic_circle"
+    }
+  ],
+  [
+    {
+      "type": "title",
+      "name": "物品介绍"
+    },
+    {
+      "type": "item",
+      "name": "彼岸花",
+      "description": "一种生长在下界20~50高度的花，它是制作彼岸水的关键",
+      "resourceLocation": "magic_maid:bianflower"
+    },
+    {
+      "type": "item",
+      "name": "彼岸花粉",
+      "description": "彼岸花的花粉，用来炼制彼岸水",
+      "resourceLocation": "magic_maid:bian_flower_pollen"
+    },
+    {
+      "type": "item",
+      "name": "执念",
+      "description": "在喝下彼岸水后，可以看到僵尸是否具有执念，击杀他们掉落执念",
+      "resourceLocation": "magic_maid:obsession"
+    },
+    {
+      "type": "item",
+      "name": "执念之剑",
+      "description": "融合了执念的剑，用它来击杀彼岸的僵尸，收集亡魂",
+      "resourceLocation": "magic_maid:obsession_sword"
+    },
+    {
+      "type" : "item",
+      "name": "亡魂",
+      "description" : "在彼岸的僵尸被执念所后掉落，是魔法石板需要消耗的材料",
+      "resourceLocation" : "magic_maid:ghost"
+    }
+  ],
+  [
+    {
+      "type": "title",
+      "name": "物品介绍"
+    },
+    {
+      "type": "item",
+      "name": "渡魂之刃",
+      "description": "融合了亡魂的执念之剑，可以收割那些被折磨而死的人身上的消魂钉，(本mod的武器系统还在测试制作中，之后会有更多更强的武器)",
+      "resourceLocation": "magic_maid:ghost_obsession_sword"
+    },
+    {
+      "type": "item",
+      "name": "消魂钉",
+      "description": "使用吸魂磁石可以从中提取出一丝残魄",
+      "resourceLocation": "magic_maid:eliminate_soul_nail"
+    },
+    {
+      "type": "item",
+      "name": "吸魂磁石",
+      "description": "使用执念和指南针融合成的磁石，对灵魂有着极大的引力",
+      "resourceLocation": "magic_maid:absorb_soul_compass"
+    },
+    {
+      "type": "item",
+      "name": "无魂之魄",
+      "description": "从消魂钉中提取出来的残魄，用来收集遗失之匙里的残魂，同时也可以将宠物暂存",
+      "resourceLocation": "magic_maid:no_soul_ghost"
+    },
+    {
+      "type" : "item",
+      "name": "正义/邪恶残魂",
+      "description" : "合成正义/邪恶的物品，从遗失之匙里提取",
+      "resourceLocation" : "magic_maid:justice_soul_piece"
+    }
+  ],
+  [
+    {
+      "type": "title",
+      "name": "物品介绍"
+    },
+    {
+      "type": "item",
+      "name": "正义/邪恶",
+      "description": "向对应阵营的boss投掷，可以起到非常大的效果，移除boss减伤，是击败boss的必要物品",
+      "resourceLocation": "magic_maid:justice"
+    }
+  ],
+  [
+    {
+      "type": "title",
+      "name": "生物介绍"
+    },
+    {
+      "type": "content",
+      "name": "女仆",
+      "description": "魔法女仆有服侍、待命、战斗三种模式，玩家可以蹲下右键女仆来打开女仆的控制面板,女仆通过升阶和装备提高强度。收为己有的女仆可以通过[无魂之魄]携带"
+    },
+    {
+      "type": "entity",
+      "name": "玛莎",
+      "description": "[职业]:牧师，武器有[忏悔]和[定罪]，护具有[守护者]\n[服侍]:提供高额的治疗，让玩家拥有金苹果效果，在拥有[守护者]后，玩家会获得[守护者的祝福]\n[战斗]:低额的普通攻击，使用[忏悔]会对周围生物造成大量伤害，如果有生物死亡，则让自己恢复该生物的血量的生命值。使用[定罪]会清除周围生物的ai，并且给有[守护者祝福]buff的生物回血",
+      "resourceLocation": "magic_maid:magic_maid_maid_martha"
+    },
+    {
+      "type": "entity",
+      "name": "蕾特",
+      "description": "[职业]: 骑士，武器有[灭魔大剑]，护具有[不朽者]\n[服侍]: 给予主人高额的攻击力，拥有[不朽者]后，玩家会获得[不朽者的祝福]\n[战斗]: 没有普通攻击，装备[灭魔大剑]后将进行强力的三连斩，每一刀都有特殊效果",
+      "resourceLocation": "magic_maid:magic_maid_maid_rett"
+    }
+  ],
+  [
+    {
+      "type": "title",
+      "name": "生物介绍"
+    },
+    {
+      "type": "entity",
+      "name": "莎莉娜",
+      "description": "[职业]: 法师，武器有[潘多拉魔盒]和[低语者]，铠甲有[大智者]铠甲\n[-服侍-]: 拥有[大智者]后，玩家会获得[大智者的祝福]\n[-战斗-]: 低额的普通攻击，使用[潘多拉魔盒]会吸取周围生物的生命，使用[低语]会创造一个六芒星法阵，释放大量的伤害",
+      "resourceLocation": "magic_maid:magic_maid_maid_selina"
+    },
+    {
+      "type": "title",
+      "name": "buff介绍"
+    },
+    {
+      "type": "content",
+      "name": "boss的愤怒",
+      "description": "终焉维度里的boss伤害提高十倍"
+    }
+  ],
+  [
+    {
+      "type": "title",
+      "name": "buff介绍"
+    },
+    {
+      "type": "content",
+      "name": "彼岸",
+      "description": "进入彼岸状态，可以看到彼岸的景象"
+    },
+    {
+      "type": "content",
+      "name": "亡魂",
+      "description": "进入亡魂状态，可以看到亡魂的景象，受到攻击时屏幕剧烈旋转"
+    },
+    {
+      "type": "content",
+      "name": "守护者的祝福",
+      "description": "玩家可以空手右键任何单位，让它获得高额的回血效果，并且将这个buff赋予它"
+    },
+    {
+      "type" : "content",
+      "name": "不朽者的祝福",
+      "description" : "玩家可以免疫正常手段伤害造成的死亡"
+    },
+    {
+      "type" : "content",
+      "name": "大智者的祝福",
+      "description" : "玩家可以飞行"
+    }
+  ],
+  [
+    {
+      "type": "title",
+      "name": "炼药公式"
+    },
+    {
+      "type" : "content",
+      "name": "彼岸水",
+      "description" : "[粗制的药水] + [彼岸花粉]"
+    },
+    {
+      "type" : "content",
+      "name": "亡魂水",
+      "description" : "[彼岸水] + [执念]"
+    },
+    {
+      "type": "content",
+      "name": "合成表",
+      "description": "暂时没有说明，请自行用合成表mod查看"
+    }
+  ],
+  [
+    {
+      "type": "title",
+      "name": "玩法介绍"
+    },
+    {
+      "type" : "content",
+      "name": "升阶",
+      "description" : "女仆通过击杀生物来积攒经验，之后使用[残存的温柔]升阶"
+    },
+    {
+      "type" : "image",
+      "name": "终焉教堂维度传送门",
+      "resourceLocation" : "magic_maid:instruction_image/portal.png"
+    }
+  ],
+  [
+    {
+      "type": "title",
+      "name": "玩法介绍"
+    },
+    {
+      "type": "item",
+      "name": "忏悔",
+      "description": "除了供女仆使用外，玩家手持长按右键也能发动效果",
+      "resourceLocation": "magic_maid:repantence"
+    },
+    {
+      "type": "item",
+      "name": "低语",
+      "description": "除了供女仆使用外，玩家手持长按右键也能发动效果，但需要瞄准，需要多次右键瞄准",
+      "resourceLocation": "magic_maid:whisper"
+    },
+    {
+      "type" : "item",
+      "name": "潘多拉魔盒",
+      "description" : "除了供女仆使用外，玩家手持右键也能发动效果，将魔盒召唤出来为自己吸取血量",
+      "resourceLocation": "magic_maid:pandorasbox"
+    }
+  ],
+  [
+    {
+      "type": "title",
+      "name": "玩法介绍"
+    },
+    {
+      "type" : "content",
+      "name": "boss",
+      "description": "[*]一次伤害超过50会被清除背包，一次真实伤害超过50会被踢出游戏。当携带其他模组进入终焉教堂时，所有教堂玩家会被赋予[boss之怒]。\n[*]攻击不生效的原因，开和平，护甲过高，开创造等，血量被攻击后不减少，将斩杀并且清除背包"
+    },
+    {
+      "type": "content",
+      "name": "击杀方法",
+      "description": "使用[正义/邪恶]对对应阵营的boss一次造成10%最大生命值的伤害，并且掉落装备碎片,使用岩浆法或窒息法。使用各种模组(可以参考评论区)"
+    },
+    {
+      "type": "content",
+      "name": "反馈",
+      "description": "有任何问题或建议欢迎进群反馈，群号可以查看开发者介绍"
+    }
+  ],
+  [
+    {
+      "type": "title",
+      "name": "更新日志"
+    },
+    {
+      "type": "content",
+      "name": "2.0",
+      "description": "修复了旁观模式，生存模式下无法飞行的问题。"
+    },
+    {
+      "type": "content",
+      "name": "2.5",
+      "description": "修改了建筑的读取方式，尝试修复教堂遗迹地图中会出现的意外崩溃情况。"
+    },
+    {
+      "type": "content",
+      "name": "3.5",
+      "description": "修复了女仆不认主人，女仆不分阵营就进行攻击的bug，女仆待命模式不穿越维度，提供了女仆的斩杀接口，在进入教堂世界的时候添加了提示。"
+    },
+    {
+      "type": "content",
+      "name": "4.0",
+      "description": "调整了游戏问题，现在只能在教堂世界敲钟生成女仆，并且一次只能生成一个女仆boss，增加了清除型神器的判定，教堂世界进行了调整。"
+    }
+  ],
+  [
+    {
+      "type": "title",
+      "name": "更新日志"
+    },
+    {
+      "type": "content",
+      "name": "4.1",
+      "description": "修复了血条显示问题，以及一些小问题。"
+    },
+    {
+      "type": "content",
+      "name": "5.1",
+      "description": "修复了主世界女仆崩溃问题，添加了说明书，降低了难度，添加了mod识别，添加了部分武器的功能，修复了boss掉下虚空的问题，女仆不攻击中立生物，教堂维度生成生物减少，解除必须由玩家最后一击的限制。"
+    },
+    {
+      "type": "content",
+      "name": "5.5",
+      "description": "添加了武器系统，完善世界观，修复bug，终焉教堂维度光线调整，女仆不再随主人穿越维度，现在女仆可以被收纳，尝试修改wy说明书打不开的问题"
+    },
+    {
+      "type": "content",
+      "name": "6.0",
+      "description": "添加了传送门，更新了说明书，修复了无魂之魄可以连续吸收女仆的bug，修复石板右键可以刷物品的bug"
+    }
+  ]
+]

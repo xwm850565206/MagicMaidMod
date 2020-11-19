@@ -1,37 +1,25 @@
 package com.xwm.magicmaid.render.effect;
 
-import com.google.common.collect.Lists;
-import java.nio.FloatBuffer;
-import java.util.List;
-
 import com.xwm.magicmaid.entity.effect.EffectBase;
-import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
+import java.nio.FloatBuffer;
 
-@SideOnly(Side.CLIENT)
 public class RenderEffect<T extends Entity> extends Render<T>
 {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -394,7 +382,7 @@ public class RenderEffect<T extends Entity> extends Render<T>
 
     protected boolean canRenderName(EffectBase entity)
     {
-        EntityPlayerSP entityplayersp = Minecraft.getMinecraft().player;
+        EntityPlayer entityplayersp = Minecraft.getMinecraft().player;
         boolean flag = !entity.isInvisibleToPlayer(entityplayersp);
 
 

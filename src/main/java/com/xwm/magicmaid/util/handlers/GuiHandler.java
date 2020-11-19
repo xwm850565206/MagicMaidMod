@@ -40,7 +40,6 @@ public class GuiHandler implements IGuiHandler
     @Nullable
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        //todo  这里可以改成传id的值而不是xyz
         if (ID == Reference.GUI_MAID_WINDOW)
         {
             List<EntityMagicMaid> entities = world.getEntitiesWithinAABB(EntityMagicMaid.class, new AxisAlignedBB(x, y, z, x, y, z).grow(1));

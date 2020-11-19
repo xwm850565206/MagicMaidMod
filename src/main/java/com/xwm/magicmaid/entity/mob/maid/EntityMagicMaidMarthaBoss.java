@@ -5,6 +5,8 @@ import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.init.ItemInit;
+import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.network.RenderAreaPacket;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
 import com.xwm.magicmaid.util.handlers.LootTableHandler;
 import com.xwm.magicmaid.world.dimension.DimensionChurch;
@@ -20,6 +22,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements IEntityBossCreature
 {
@@ -231,7 +234,14 @@ public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements 
      */
     @Override
     public void createWarningArea(int i, AxisAlignedBB bb) {
-        MagicRenderRegistry.addRenderBox(i, bb);
+        if (world.isRemote)
+            MagicRenderRegistry.addRenderBox(i, bb);
+        else
+        {
+            RenderAreaPacket packet = new RenderAreaPacket(i, 0, bb);
+            NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(this.getEntityWorld().provider.getDimension(), posX, posY, posZ, 40.0D);
+            NetworkLoader.instance.sendToAllAround(packet, target);
+        }
     }
 
     /**
@@ -241,6 +251,12 @@ public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements 
      */
     @Override
     public void removeWarningArea(int i) {
-        MagicRenderRegistry.removeRenderBox(i);
+        if (world.isRemote)
+            MagicRenderRegistry.removeRenderBox(i);
+        else
+        {
+            RenderAreaPacket packet = new RenderAreaPacket(i, 1);
+            NetworkLoader.instance.sendToAll(packet);
+        }
     }
 }

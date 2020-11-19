@@ -7,7 +7,6 @@ import net.minecraft.util.NonNullList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 public class Formula
@@ -25,6 +24,18 @@ public class Formula
         this.keyItem = ItemStack.EMPTY;
         this.allItems = NonNullList.withSize(rawSize + 1, ItemStack.EMPTY);
         this.ordered = false;
+    }
+
+    public List<ItemStack> getRawItems() {
+        return rawItems;
+    }
+
+    public ItemStack getKeyItem() {
+        return keyItem;
+    }
+
+    public List<ItemStack> getAllItems() {
+        return allItems;
     }
 
     private Formula(ItemStack keyItem, ItemStack ...stacks)

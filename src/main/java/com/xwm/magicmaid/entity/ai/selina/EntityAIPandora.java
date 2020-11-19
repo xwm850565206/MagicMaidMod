@@ -65,7 +65,7 @@ public class EntityAIPandora extends EntityAIBase
         if (pandorasBox != null)
             pandorasBox.setOpen(true);
         if (maid.getRank() >= 1){
-//            spawnBats(); //todo
+//            spawnBats();
         }
         this.performTick = 0;
     }

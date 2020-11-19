@@ -8,7 +8,7 @@ import com.xwm.magicmaid.network.SyncEntityDataPacket;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
@@ -25,6 +25,8 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,6 +59,7 @@ public class EventRenderLoader
 
     private int cameratick = 0;
     private int rotateSpeed = 0;
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onCameraSetup(EntityViewRenderEvent.CameraSetup event)
     {
@@ -84,6 +87,7 @@ public class EventRenderLoader
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onFogColorRender(EntityViewRenderEvent.FogColors event)
     {
@@ -106,6 +110,7 @@ public class EventRenderLoader
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onFirstPersonRender(EntityViewRenderEvent.RenderFogEvent event)
     {
@@ -131,11 +136,10 @@ public class EventRenderLoader
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onEntityRenderPre(RenderLivingEvent.Pre event)
     {
-        renderWarningArea(event);
-
         Minecraft mc = Minecraft.getMinecraft();
         EntityPlayer player = mc.player;
 
@@ -153,20 +157,8 @@ public class EventRenderLoader
 
     }
 
-    int test = -1;
-    // 渲染红色警告区域
-    @SubscribeEvent
-    public void onEntityRenderPost(RenderLivingEvent.Post event)
-    {
-//        if (event.getEntity() instanceof  EntityPlayer) {
-//            Minecraft mc = Minecraft.getMinecraft();
-//            EntityPlayer player = mc.player;
-//            MagicRenderRegistry.renderCompiledWarningArea(test, player.getPosition());
-//        }
-
-//        renderWarningArea(event);
-    }
-
+    //渲染红色警告区域
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onRenderTick(RenderWorldLastEvent event)
     {
@@ -174,11 +166,7 @@ public class EventRenderLoader
         MagicRenderRegistry.renderBoxList();
     }
 
-    private void renderWarningArea(RenderLivingEvent event)
-    {
-
-    }
-
+    @SideOnly(Side.CLIENT)
     private void renderBianBuff(RenderLivingEvent.Pre event, Minecraft mc)
     {
         EntityLivingBase entityLivingBase = event.getEntity();
@@ -244,6 +232,7 @@ public class EventRenderLoader
         GlStateManager.popMatrix();
     }
 
+    @SideOnly(Side.CLIENT)
     private void renderGhostBuff(RenderLivingEvent.Pre event, Minecraft mc)
     {
         EntityLivingBase entityLivingBase = event.getEntity();

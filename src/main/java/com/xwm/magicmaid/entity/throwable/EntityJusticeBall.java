@@ -3,7 +3,6 @@ package com.xwm.magicmaid.entity.throwable;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -51,6 +50,7 @@ public class EntityJusticeBall extends EntityBossBall
     public void onUpdate()
     {
         super.onUpdate();
-        ParticleSpawner.spawnParticle(EnumCustomParticles.CROSS, posX, posY, posZ, 0,0, 0);
+        if (world.isRemote)
+            ParticleSpawner.spawnParticle(EnumCustomParticles.CROSS, posX, posY, posZ, 0,0, 0);
     }
 }

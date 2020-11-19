@@ -29,7 +29,7 @@ public class EffectThrowableBase extends EntityThrowable
      */
     @Override
     protected void onImpact(RayTraceResult result) {
-        System.out.println("on impact " + this.ticksExisted); //todo
+//        System.out.println("on impact " + this.ticksExisted); //todo
     }
 
     protected float getGravityVelocity()
