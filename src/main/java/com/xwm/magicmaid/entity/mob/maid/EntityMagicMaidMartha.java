@@ -1,10 +1,9 @@
 package com.xwm.magicmaid.entity.mob.maid;
 
-import com.xwm.magicmaid.entity.ai.EntityAIMaidAttackMelee;
 import com.xwm.magicmaid.entity.ai.EntityAIMaidAttackRanged;
 import com.xwm.magicmaid.entity.ai.martha.EntityAIConviction;
-import com.xwm.magicmaid.entity.ai.martha.EntityAIRepantence;
 import com.xwm.magicmaid.entity.ai.martha.EntityAIMarthaServe;
+import com.xwm.magicmaid.entity.ai.martha.EntityAIRepantence;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
@@ -16,15 +15,12 @@ import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAttackMob
 {
@@ -97,7 +93,8 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
                 this.setWeaponID(weapon1.getUniqueID());
                 this.setWeaponType(EnumEquipment.toInt(equipment1));
                 this.setHasWeapon(true);
-                this.world.spawnEntity(weapon1);
+                if (!world.isRemote)
+                    this.world.spawnEntity(weapon1);
                 this.weapon = weapon1;
                 break;
             case CONVICTION:
@@ -107,7 +104,8 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
                 this.setWeaponID(weapon2.getUniqueID());
                 this.setWeaponType(EnumEquipment.toInt(equipment1));
                 this.setHasWeapon(true);
-                this.world.spawnEntity(weapon2);
+                if (!world.isRemote)
+                    this.world.spawnEntity(weapon2);
                 this.weapon = weapon2;
                 break;
             case PROTECTOR:
@@ -121,10 +119,14 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
 
     public void loseEquipment(ItemEquipment equipment){
 
+        if (world.isRemote)
+            return;
+
         if (equipment instanceof ItemWeapon){
             try {
                 EntityMaidWeapon weapon1 = EntityMaidWeapon.getWeaponFromUUID(world, getWeaponID());
                 weapon1.setDead();
+                weapon.setDead();
                 setWeaponID(null);
                 setWeaponType(0);
                 setHasWeapon(false);

@@ -16,8 +16,8 @@ public class ModelEffectBox extends ModelBase {
 		textureHeight = 32;
 
 		bb_main = new ModelRenderer(this);
-		bb_main.setRotationPoint(0.0F, 24.0F, 0.0F);
-		bb_main.cubeList.add(new ModelBox(bb_main, 0, 0, -4.0F, -8.0F, -4.0F, 8, 8, 8, 0.0F, false));
+		bb_main.setRotationPoint(0F, 0F, 0F);
+		bb_main.cubeList.add(new ModelBox(bb_main, 0, 0, -4, -4, -4, 8, 8, 8, 0.0F, false));
 	}
 
 	@Override

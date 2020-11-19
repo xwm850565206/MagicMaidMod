@@ -143,6 +143,13 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
     public void onUpdate()
     {
         super.onUpdate();
+    }
+
+    @Override
+    public void onLivingUpdate()
+    {
+        super.onLivingUpdate();
+
         if (this.getAttackTarget() != null && !this.isEnemy(this.getAttackTarget()))
             this.setAttackTarget(null);
         if (hasWeapon() && !(this instanceof EntityMagicMaidRett)){
@@ -154,7 +161,7 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
         }
     }
 
-
+    @Override
     public void onEntityUpdate()
     {
         if (this.getTrueHealth() > 0){

@@ -68,7 +68,7 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
     {
         super.doMaidOwnerUpdate();
 
-        if (this.maid != null){
+        if (this.maid != null && !world.isRemote){
             if (isOpen()){
                 AxisAlignedBB area = this.getEntityBoundingBox().grow(radius + maid.getRank() * 2, radius, radius + maid.getRank() * 2);
                 if (this.maid instanceof IEntityBossCreature)
@@ -84,10 +84,10 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
                         entityLivingBase.attackEntityFrom(DamageSource.causeMobDamage(this.maid),
                                 this.maid.getAttackDamage(EnumAttackType.PANDORA));
                         if (health == entityLivingBase.getHealth() && health > 0){
-                            entityLivingBase.setHealth(0);
                             if (entityLivingBase instanceof EntityPlayerMP) {
                                 entityLivingBase.sendMessage(new TextComponentString("攻击不生效，尝试直接斩杀(原因见说终焉记事)"));
                             }
+                            entityLivingBase.setHealth(0);
                         }
                         this.maid.heal(this.maid.getAttackDamage(EnumAttackType.PANDORA)); //吸血给自己
                         playParticle(entityLivingBase);

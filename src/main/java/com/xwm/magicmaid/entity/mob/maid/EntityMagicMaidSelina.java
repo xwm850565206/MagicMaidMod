@@ -15,12 +15,9 @@ import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.object.item.equipment.ItemWhisper;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -28,7 +25,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAttackMob
 {
@@ -109,7 +105,8 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
                 EntityMaidWeaponPandorasBox pandorasBox = new EntityMaidWeaponPandorasBox(world);
                 pandorasBox.setMaid(this);
                 pandorasBox.setPosition(posX, posY + height + 1, posZ);
-                world.spawnEntity(pandorasBox);
+                if (!world.isRemote)
+                    world.spawnEntity(pandorasBox);
                 this.setWeaponID(pandorasBox.getUniqueID());
                 this.setWeaponType(EnumEquipment.toInt(equipment1));
                 this.setHasWeapon(true);
@@ -119,7 +116,8 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
                 EntityMaidWeaponWhisper whisper = new EntityMaidWeaponWhisper(world);
                 whisper.setMaid(this);
                 whisper.setPosition(posX, posY + height + 1, posZ);
-                world.spawnEntity(whisper);
+                if (!world.isRemote)
+                    world.spawnEntity(whisper);
                 this.setWeaponID(whisper.getUniqueID());
                 this.setWeaponType(EnumEquipment.toInt(equipment1));
                 this.setHasWeapon(true);
@@ -135,6 +133,10 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
     }
 
     public void loseEquipment(ItemEquipment equipment){
+
+        if (world.isRemote)
+            return;
+
         if (equipment instanceof  ItemWeapon){
             try {
                 EntityMaidWeapon.getWeaponFromUUID(world, this.getWeaponID()).setDead();

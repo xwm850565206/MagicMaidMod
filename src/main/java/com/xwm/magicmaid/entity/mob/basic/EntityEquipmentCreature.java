@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityEquipmentCreature;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
-import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ItemStackHelper;
@@ -16,13 +15,11 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
-import java.util.List;
 import java.util.UUID;
 
 public abstract class EntityEquipmentCreature extends EntityMagicRankCreature implements IEntityEquipmentCreature
 {
-    protected static int max_inventory_size = 2;
-    public final NonNullList<ItemStack> inventory = NonNullList.<ItemStack>withSize(max_inventory_size, ItemStack.EMPTY); //保存背包里的信息
+    public NonNullList<ItemStack> inventory = NonNullList.<ItemStack>withSize(getSizeInventory(), ItemStack.EMPTY); //保存背包里的信息
 
     private static final DataParameter<Boolean> HAS_WEAPON = EntityDataManager.<Boolean>createKey(EntityMagicMaid.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> HAS_ARMOR = EntityDataManager.<Boolean>createKey(EntityMagicMaid.class, DataSerializers.BOOLEAN);
@@ -58,15 +55,7 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
         else
             compound.setString("weaponID", this.getWeaponID().toString());
 
-        for (int i = 0; i < this.inventory.size(); i++){
-            ItemStack stack = inventory.get(i);
-            if (stack.isEmpty())
-                compound.setInteger("inventory" + i, -1);
-            else {
-                EnumEquipment j = ((ItemEquipment) (stack.getItem())).enumEquipment;
-                compound.setInteger("inventory" + i, EnumEquipment.toInt(j));
-            }
-        }
+        ItemStackHelper.saveAllItems(compound, this.inventory);
     }
 
     @Override
@@ -77,16 +66,8 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
         this.setHasArmor(compound.getBoolean("hasArmor"));
         this.setWeaponType(compound.getInteger("weaponType"));
         this.setArmorType(compound.getInteger("armorType"));
-
-        for (int i = 0; i < this.inventory.size(); i++) {
-            int j = compound.getInteger("inventory" + i);
-            if (j == -1) {
-                this.inventory.set(i, ItemStack.EMPTY);
-            } else {
-                EnumEquipment j1 = EnumEquipment.valueOf(j);
-                this.inventory.set(i, new ItemStack(ItemEquipment.valueOf(j1)));
-            }
-        }
+        this.inventory = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
+        ItemStackHelper.loadAllItems(compound, this.inventory);
     }
 
 
@@ -161,7 +142,7 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
 
     @Override
     public int getSizeInventory() {
-        return max_inventory_size;
+        return 2;
     }
 
     @Override
@@ -189,17 +170,8 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
      */
     @Override
     public ItemStack decrStackSize(int index, int count) {
-        List<ItemStack> list = null;
-        if (inventory.size() > index)
-            list = inventory;
-        if (list != null && !((ItemStack)list.get(index)).isEmpty() )
-        {
-            ItemStack itemStack = ItemStackHelper.getAndSplit(list, index, count);
-            if (itemStack.getItem() instanceof ItemEquipment)
-                this.loseEquipment((ItemEquipment) itemStack.getItem());
-            return itemStack;
-        }
-        else return ItemStack.EMPTY;
+
+        return ItemStackHelper.getAndSplit(this.inventory, index, count);
     }
 
     /**
@@ -209,23 +181,10 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
      */
     @Override
     public ItemStack removeStackFromSlot(int index) {
-        NonNullList<ItemStack> nonnulllist = null;
-        if (inventory.size() > index)
-            nonnulllist = inventory;
-        if (nonnulllist != null && !((ItemStack)nonnulllist.get(index)).isEmpty())
-        {
-            ItemStack itemstack = nonnulllist.get(index);
-            if (itemstack.getItem() instanceof ItemEquipment)
-                this.loseEquipment((ItemEquipment) itemstack.getItem());
-
-            nonnulllist.set(index, ItemStack.EMPTY);
-
-            return itemstack;
-        }
-        else
-        {
-            return ItemStack.EMPTY;
-        }
+        ItemStack itemstack = ItemStackHelper.getAndRemove(this.inventory, index);
+        if (itemstack.getItem() instanceof ItemEquipment)
+            this.loseEquipment((ItemEquipment) itemstack.getItem());
+        return itemstack;
     }
 
     /**
@@ -236,13 +195,13 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
      */
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
-        NonNullList<ItemStack> nonnulllist = null;
-        if (inventory.size() > index)
-            nonnulllist = inventory;
-        if (nonnulllist != null) {
+        if (index >= 0 && index < this.inventory.size())
+        {
+            if (this.inventory.get(index).getItem() instanceof ItemEquipment)
+                this.loseEquipment((ItemEquipment) this.inventory.get(index).getItem());
+            this.inventory.set(index, stack);
             if (stack.getItem() instanceof ItemEquipment)
                 this.getEquipment((ItemEquipment) stack.getItem());
-            nonnulllist.set(index, stack);
         }
     }
 
@@ -260,7 +219,7 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
      */
     @Override
     public void markDirty() {
-
+        //todo 不知道实体的markDirty怎么写
     }
 
     /**

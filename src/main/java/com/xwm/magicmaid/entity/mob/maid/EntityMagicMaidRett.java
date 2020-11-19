@@ -1,7 +1,6 @@
 package com.xwm.magicmaid.entity.mob.maid;
 
 import com.xwm.magicmaid.entity.ai.EntityAIMaidAttackMelee;
-import com.xwm.magicmaid.entity.ai.EntityAINearestAttackableTargetAvoidOwner;
 import com.xwm.magicmaid.entity.ai.rett.EntityAIDemonKillerAttack;
 import com.xwm.magicmaid.entity.ai.rett.EntityAIRettServe;
 import com.xwm.magicmaid.entity.ai.rett.EntityAITeleportAttack;
@@ -11,15 +10,9 @@ import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumRettState;
 import com.xwm.magicmaid.object.item.equipment.ItemDemonKillerSword;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
-import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
@@ -27,10 +20,8 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class EntityMagicMaidRett extends EntityMagicMaid
 {
@@ -105,6 +96,9 @@ public class EntityMagicMaidRett extends EntityMagicMaid
     }
 
     public void loseEquipment(ItemEquipment equipment){
+
+        if (world.isRemote)
+            return;
 
         EnumEquipment equipment1 = equipment.enumEquipment;
         switch (equipment1) {

@@ -2,7 +2,6 @@ package com.xwm.magicmaid.gui;
 
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumMode;
-import com.xwm.magicmaid.init.TextureInit;
 import com.xwm.magicmaid.network.MaidModePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.util.Reference;
@@ -88,6 +87,7 @@ public class GuiMaidWindow extends GuiContainer
         GlStateManager.enableDepth();
         GlStateManager.enableAlpha();
         GlStateManager.pushMatrix();
+        GlStateManager.disableBlend();
         GlStateManager.translate((float)posX, (float)posY, 50.0F);
         GlStateManager.scale((float)(-scale), (float)scale, (float)scale);
         GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
@@ -108,9 +108,9 @@ public class GuiMaidWindow extends GuiContainer
         GlStateManager.translate(0.0F, 0.0F, 0.0F);
         RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
         rendermanager.setPlayerViewY(180.0F);
-        rendermanager.setRenderShadow(false);
+//        rendermanager.setRenderShadow(false);
         rendermanager.renderEntity(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
-        rendermanager.setRenderShadow(true);
+//        rendermanager.setRenderShadow(true);
         ent.renderYawOffset = f;
         ent.rotationYaw = f1;
         ent.rotationPitch = f2;
