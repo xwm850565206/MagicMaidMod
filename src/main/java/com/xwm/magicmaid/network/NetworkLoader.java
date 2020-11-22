@@ -25,11 +25,11 @@ public class NetworkLoader
         registerMessage(MaidModePacket.Handler.class, MaidModePacket.class, Side.SERVER);
         registerMessage(SoundPacket.Handler.class, SoundPacket.class, Side.CLIENT);
         registerMessage(VelocityPacket.Handler.class, VelocityPacket.class, Side.CLIENT);
-        registerMessage(UpdateEntityPacket.Handler.class, UpdateEntityPacket.class, Side.CLIENT);
         registerMessage(PunishPacket.Handler.class, PunishPacket.class, Side.CLIENT);
         registerMessage(InfoLogginPacket.Handler.class, InfoLogginPacket.class, Side.CLIENT);
         registerMessage(AddBookPacket.Handler.class, AddBookPacket.class, Side.SERVER);
-        registerMessage(SyncEntityDataPacket.Handler.class, SyncEntityDataPacket.class, Side.SERVER);
+        registerMessage(ClientEntityDataPacket.Handler.class, ClientEntityDataPacket.class, Side.SERVER);
+        registerMessage(ServerEntityDataPacket.Handler.class, ServerEntityDataPacket.class, Side.CLIENT);
         registerMessage(RenderAreaPacket.Handler.class, RenderAreaPacket.class, Side.CLIENT);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, GuiHandler.maidWindowHandler);

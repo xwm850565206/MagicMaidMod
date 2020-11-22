@@ -27,7 +27,7 @@ public class ItemTheGospels extends ItemBase
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn)
     {
         tooltip.add(TextFormatting.YELLOW + "歌颂神的福音书，为什么会在僵尸身上？");
-        tooltip.add(TextFormatting.YELLOW + "右键使用将穿梭到教堂废墟");
+        tooltip.add(TextFormatting.YELLOW + "对废墟图腾右键将福音书的魔法元素注入");
     }
 
     @Override

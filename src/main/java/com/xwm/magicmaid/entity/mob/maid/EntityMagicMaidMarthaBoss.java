@@ -84,17 +84,6 @@ public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements 
     }
 
     @Override
-    public void onDeath(DamageSource cause)
-    {
-        if (getTrueHealth() > 0){
-            return;
-        }
-        else {
-            super.onDeath(cause);
-        }
-    }
-
-    @Override
     public void onDeathUpdate()
     {
         super.onDeathUpdate();

@@ -3,13 +3,13 @@
     {
       "name": "demonkiller",
       "rolls": {
-        "min": 1,
-        "max": 5
+        "min": 3,
+        "max": 3
       },
       "entries": [
         {
           "type": "item",
-          "weight": 10,
+          "weight": 1,
           "name": "magic_maid:demonkillerpiece",
           "functions": [
             {
@@ -23,13 +23,13 @@
         },
         {
           "type": "item",
-          "weight": 5,
+          "weight": 1,
           "name": "magic_maid:immortalpiece",
           "functions": [
             {
               "function": "set_count",
               "count": {
-                "min": 0,
+                "min": 1,
                 "max": 1
               }
             }
@@ -37,7 +37,7 @@
         },
         {
           "type": "item",
-          "weight": 4,
+          "weight": 10,
           "name": "magic_maid:memorypiecerett",
           "conditions": [
             {
@@ -48,7 +48,7 @@
             {
               "function": "set_count",
               "count": {
-                "min": 1,
+                "min": 4,
                 "max": 9
               }
             }
@@ -62,8 +62,8 @@
             {
               "function": "set_count",
               "count": {
-                "min": 0,
-                "max": 1
+                "min": 1,
+                "max": 2
               }
             }
           ]

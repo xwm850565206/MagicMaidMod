@@ -6,12 +6,11 @@ import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.network.DistinationParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
 import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
-import com.xwm.magicmaid.particle.EnumCustomParticles;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -19,7 +18,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -80,15 +78,15 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
                     {
                         if (!this.maid.isEnemy(entityLivingBase))
                             continue;
-                        float health = entityLivingBase.getHealth();
+//                        float health = entityLivingBase.getHealth();
                         entityLivingBase.attackEntityFrom(DamageSource.causeMobDamage(this.maid),
                                 this.maid.getAttackDamage(EnumAttackType.PANDORA));
-                        if (health == entityLivingBase.getHealth() && health > 0){
-                            if (entityLivingBase instanceof EntityPlayerMP) {
-                                entityLivingBase.sendMessage(new TextComponentString("攻击不生效，尝试直接斩杀(原因见说终焉记事)"));
-                            }
-                            entityLivingBase.setHealth(0);
-                        }
+//                        if (health == entityLivingBase.getHealth() && health > 0){
+//                            if (entityLivingBase instanceof EntityPlayerMP) {
+//                                entityLivingBase.sendMessage(new TextComponentString("攻击不生效，尝试直接斩杀(原因见说终焉记事)"));
+//                            }
+//                            entityLivingBase.setHealth(0);
+//                        }
                         this.maid.heal(this.maid.getAttackDamage(EnumAttackType.PANDORA)); //吸血给自己
                         playParticle(entityLivingBase);
                     }

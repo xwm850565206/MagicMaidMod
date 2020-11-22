@@ -3,8 +3,8 @@ package com.xwm.magicmaid.entity.ai.martha;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
-import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
+import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.network.CustomerParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.ParticlePacket;
@@ -13,11 +13,9 @@ import com.xwm.magicmaid.registry.MagicRenderRegistry;
 import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -85,15 +83,15 @@ public class EntityAIRepantence extends EntityAIBase
             try{
                 if (!maid.isEnemy(entityLivingBase))
                     continue;
-                float health = entityLivingBase.getHealth();
+//                float health = entityLivingBase.getHealth();
                 entityLivingBase.attackEntityFrom(new EntityDamageSource("repantence_attack", maid).setDamageBypassesArmor(),
                         maid.getAttackDamage(EnumAttackType.REPANTENCE));
-                if (health == entityLivingBase.getHealth() && health > 0){
-                    entityLivingBase.setHealth(0);
-                    if (entityLivingBase instanceof EntityPlayerMP) {
-                        entityLivingBase.sendMessage(new TextComponentString("攻击不生效，尝试直接斩杀(原因见说终焉记事)"));
-                    }
-                }
+//                if (health == entityLivingBase.getHealth() && health > 0){
+//                    entityLivingBase.setHealth(0);
+//                    if (entityLivingBase instanceof EntityPlayerMP) {
+//                        entityLivingBase.sendMessage(new TextComponentString("攻击不生效，尝试直接斩杀(原因见说终焉记事)"));
+//                    }
+//                }
                 playParticle(entityLivingBase.getEntityBoundingBox());
 
                 if (maid.getRank() >= 2) //2阶造成伤害回血

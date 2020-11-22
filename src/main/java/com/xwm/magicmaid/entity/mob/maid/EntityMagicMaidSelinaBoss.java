@@ -80,17 +80,6 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
     }
 
     @Override
-    public void onDeath(DamageSource cause)
-    {
-        if (getTrueHealth() > 0){
-            return;
-        }
-        else {
-            super.onDeath(cause);
-        }
-    }
-
-    @Override
     public void onDeathUpdate()
     {
         super.onDeathUpdate();

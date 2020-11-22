@@ -4,7 +4,10 @@ import com.xwm.magicmaid.entity.model.effect.ModelEffectBox;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
@@ -49,7 +52,7 @@ public class MagicRenderRegistry
             2, 6, 7, 3,
     };
 
-    private static void renderBox() {
+    private static void renderBox(int scalex, int scaley, int scalez) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
@@ -61,47 +64,117 @@ public class MagicRenderRegistry
         }
         Tessellator.getInstance().draw();
 
-        GlStateManager.color(1f, 0, 0, 0.4f);
-        GL11.glLineWidth(4);
+        GlStateManager.color(1f, 0, 0, 1f);
+        GL11.glLineWidth(0.01f);
         bufferbuilder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
+
+        if (scalex == 0 || scaley == 0 || scalez == 0)
+            return;
+
+        double dx = 0.5 / scalex;
+        double dy = 0.5 / scaley;
+        double dz = 0.5 / scalez;
+
+//        double dx = 1;
+//        double dy = 1;
+//        double dz = 1;
+
         // FRONT
-        bufferbuilder.pos(-0.5, -0.5, -0.5).endVertex();
-        bufferbuilder.pos(-0.5, 0.5, -0.5).endVertex();
+        for (double x = - 0.5; x <= 0.5; x += dx ){
+            bufferbuilder.pos(x, -0.5, -0.5).endVertex();
+            bufferbuilder.pos(x, 0.5, -0.5).endVertex();
+        }
 
-        bufferbuilder.pos(-0.5, 0.5, -0.5).endVertex();
-        bufferbuilder.pos(0.5, 0.5, -0.5).endVertex();
+        for (double y = - 0.5; y <= 0.5; y += dy ){
+            bufferbuilder.pos(-0.5, y, -0.5).endVertex();
+            bufferbuilder.pos(0.5, y, -0.5).endVertex();
+        }
+//        bufferbuilder.pos(-0.5, -0.5, -0.5).endVertex();
+//        bufferbuilder.pos(-0.5, 0.5, -0.5).endVertex();
 
-        bufferbuilder.pos(0.5, 0.5, -0.5).endVertex();
-        bufferbuilder.pos(0.5, -0.5, -0.5).endVertex();
+//        bufferbuilder.pos(-0.5, 0.5, -0.5).endVertex();
+//        bufferbuilder.pos(0.5, 0.5, -0.5).endVertex();
 
-        bufferbuilder.pos(0.5, -0.5, -0.5).endVertex();
-        bufferbuilder.pos(-0.5, -0.5, -0.5).endVertex();
+//        bufferbuilder.pos(0.5, 0.5, -0.5).endVertex();
+//        bufferbuilder.pos(0.5, -0.5, -0.5).endVertex();
+
+//        bufferbuilder.pos(0.5, -0.5, -0.5).endVertex();
+//        bufferbuilder.pos(-0.5, -0.5, -0.5).endVertex();
 
         // BACK
-        bufferbuilder.pos(-0.5, -0.5, 0.5).endVertex();
-        bufferbuilder.pos(-0.5, 0.5, 0.5).endVertex();
+        for (double x = - 0.5; x <= 0.5; x += dx ){
+            bufferbuilder.pos(x, -0.5, 0.5).endVertex();
+            bufferbuilder.pos(x, 0.5, 0.5).endVertex();
+        }
 
-        bufferbuilder.pos(-0.5, 0.5, 0.5).endVertex();
-        bufferbuilder.pos(0.5, 0.5, 0.5).endVertex();
-
-        bufferbuilder.pos(0.5, 0.5, 0.5).endVertex();
-        bufferbuilder.pos(0.5, -0.5, 0.5).endVertex();
-
-        bufferbuilder.pos(0.5, -0.5, 0.5).endVertex();
-        bufferbuilder.pos(-0.5, -0.5, 0.5).endVertex();
+        for (double y = - 0.5; y<= 0.5; y += dy ){
+            bufferbuilder.pos(-0.5, y, 0.5).endVertex();
+            bufferbuilder.pos(0.5, y, 0.5).endVertex();
+        }
+//        bufferbuilder.pos(-0.5, -0.5, 0.5).endVertex();
+//        bufferbuilder.pos(-0.5, 0.5, 0.5).endVertex();
+//
+//        bufferbuilder.pos(-0.5, 0.5, 0.5).endVertex();
+//        bufferbuilder.pos(0.5, 0.5, 0.5).endVertex();
+//
+//        bufferbuilder.pos(0.5, 0.5, 0.5).endVertex();
+//        bufferbuilder.pos(0.5, -0.5, 0.5).endVertex();
+//
+//        bufferbuilder.pos(0.5, -0.5, 0.5).endVertex();
+//        bufferbuilder.pos(-0.5, -0.5, 0.5).endVertex();
 
         // betweens.
-        bufferbuilder.pos(0.5, 0.5, -0.5).endVertex();
-        bufferbuilder.pos(0.5, 0.5, 0.5).endVertex();
+        for (double z = - 0.5; z <= 0.5; z += dz ){
+            bufferbuilder.pos(0.5, -0.5, z).endVertex();
+            bufferbuilder.pos(0.5, 0.5, z).endVertex();
+        }
 
-        bufferbuilder.pos(0.5, -0.5, -0.5).endVertex();
-        bufferbuilder.pos(0.5, -0.5, 0.5).endVertex();
+        for (double y = - 0.5; y<= 0.5; y += dy ){
+            bufferbuilder.pos(0.5, y, -0.5).endVertex();
+            bufferbuilder.pos(0.5, y, 0.5).endVertex();
+        }
 
-        bufferbuilder.pos(-0.5, -0.5, -0.5).endVertex();
-        bufferbuilder.pos(-0.5, -0.5, 0.5).endVertex();
+        for (double z = - 0.5; z <= 0.5; z += dz ){
+            bufferbuilder.pos(-0.5, -0.5, z).endVertex();
+            bufferbuilder.pos(-0.5, 0.5, z).endVertex();
+        }
 
-        bufferbuilder.pos(-0.5, 0.5, -0.5).endVertex();
-        bufferbuilder.pos(-0.5, 0.5, 0.5).endVertex();
+        for (double y = - 0.5; y <= 0.5; y += dy ){
+            bufferbuilder.pos(-0.5, y, -0.5).endVertex();
+            bufferbuilder.pos(-0.5, y, 0.5).endVertex();
+        }
+
+        for (double z = - 0.5; z <= 0.5; z += dz ){
+            bufferbuilder.pos(-0.5, -0.5, z).endVertex();
+            bufferbuilder.pos(0.5, -0.5, z).endVertex();
+        }
+
+        for (double x = - 0.5; x <= 0.5; x += dx ){
+            bufferbuilder.pos(x, -0.5, -0.5).endVertex();
+            bufferbuilder.pos(x, -0.5, 0.5).endVertex();
+        }
+
+
+        for (double z = - 0.5; z <= 0.5; z += dz ){
+            bufferbuilder.pos(-0.5, 0.5, z).endVertex();
+            bufferbuilder.pos(0.5, 0.5, z).endVertex();
+        }
+
+        for (double x = - 0.5; x <= 0.5; x += dx ){
+            bufferbuilder.pos(x, 0.5, -0.5).endVertex();
+            bufferbuilder.pos(x, 0.5, 0.5).endVertex();
+        }
+//        bufferbuilder.pos(0.5, 0.5, -0.5).endVertex();
+//        bufferbuilder.pos(0.5, 0.5, 0.5).endVertex();
+//
+//        bufferbuilder.pos(0.5, -0.5, -0.5).endVertex();
+//        bufferbuilder.pos(0.5, -0.5, 0.5).endVertex();
+//
+//        bufferbuilder.pos(-0.5, -0.5, -0.5).endVertex();
+//        bufferbuilder.pos(-0.5, -0.5, 0.5).endVertex();
+//
+//        bufferbuilder.pos(-0.5, 0.5, -0.5).endVertex();
+//        bufferbuilder.pos(-0.5, 0.5, 0.5).endVertex();
 
         Tessellator.getInstance().draw();
     }
@@ -157,10 +230,13 @@ public class MagicRenderRegistry
         Minecraft.getMinecraft().mcProfiler.startSection("magic_maid");
         GlStateManager.pushMatrix();
 //        GlStateManager.loadIdentity();
+//        RenderHelper.enableStandardItemLighting();
         GlStateManager.disableLighting();
+        GlStateManager.disableTexture2D();
 //        GlStateManager.enableColorMaterial();
         GlStateManager.enableBlend();
-        GlStateManager.disableDepth();
+//        GlStateManager.disableDepth();
+        GlStateManager.enableDepth();
 
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         double renderPosX = TileEntityRendererDispatcher.staticPlayerX;
@@ -169,26 +245,32 @@ public class MagicRenderRegistry
 
         GlStateManager.translate(-renderPosX + 0.5, -renderPosY + 0.5, -renderPosZ + 0.5);
         GlStateManager.translate((bb.minX + bb.maxX) / 2.0, (bb.minY + bb.maxY) / 2.0, (bb.minZ + bb.maxZ) / 2.0);
-        GlStateManager.scale(0.125, 0.125, 0.125);
+//        GlStateManager.scale(0.125, 0.125, 0.125);
         GlStateManager.scale(bb.maxX -  bb.minX, bb.maxY - bb.minY, bb.maxZ - bb.minZ);
-//        GlStateManager.color(0.6f, 0.0f, 0.0f,0.2f);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(WARNING);
+        GlStateManager.color(0.6f, 0.0f, 0.0f,0.2f);
+//        Minecraft.getMinecraft().getTextureManager().bindTexture(WARNING);
 //        GlStateManager.color(1, 1, 1, 0.5f);
 
-        BOX.render(null, 0, 0, 0, 0, 0, 1);
-//        renderBox();
+//        BOX.render(null, 0, 0, 0, 0, 0, 1);
+        GlStateManager.enableRescaleNormal();
 
+        renderBox((int)(bb.maxX -  bb.minX), (int)(bb.maxY - bb.minY), (int)(bb.maxZ - bb.minZ));
+
+        GlStateManager.disableRescaleNormal();
         GlStateManager.enableLighting();
         GlStateManager.disableBlend();
-        GlStateManager.disableColorMaterial();
-        GlStateManager.enableDepth();
+        GlStateManager.enableTexture2D();
+//        GlStateManager.disableColorMaterial();
+//        GlStateManager.enableDepth();
         GlStateManager.popMatrix();
         Minecraft.getMinecraft().mcProfiler.endSection();
     }
 
+    static int tick = 0;
     @SideOnly(Side.CLIENT)
     public static void renderBoxList()
     {
+        tick++;
         try {
             for (AxisAlignedBB bb : RENDER_BOX_LIST.values())
             renderWarningArea(bb);
@@ -196,6 +278,12 @@ public class MagicRenderRegistry
         } catch (ConcurrentModificationException exception)
         {
             ; //线程间会修改这个LIST
+        }
+        if (tick > 400) {
+            synchronized(RENDER_BOX_LIST) { //This may be access multiple times, from multiple threads, lets be safe.
+                RENDER_BOX_LIST.clear();
+            }
+            tick = 0;
         }
     }
 

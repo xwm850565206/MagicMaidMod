@@ -4,7 +4,7 @@ import com.xwm.magicmaid.init.BlockInit;
 import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.init.PotionInit;
 import com.xwm.magicmaid.network.NetworkLoader;
-import com.xwm.magicmaid.network.SyncEntityDataPacket;
+import com.xwm.magicmaid.network.ClientEntityDataPacket;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
@@ -208,10 +208,10 @@ public class EventRenderLoader
             else {
                 flag = random.nextDouble() < 0.2;
                 entityData.setBoolean(Reference.MODID + "obsession", flag);
-                SyncEntityDataPacket packet = new SyncEntityDataPacket(entityLivingBase.getEntityId(),
+                ClientEntityDataPacket packet = new ClientEntityDataPacket(entityLivingBase.getEntityId(),
                         entityLivingBase.getEntityWorld().provider.getDimension(),
                         0,
-                        flag ? 1 : 0,
+                        flag ? "ture" : "false",
                         Reference.MODID + "obsession");
                 NetworkLoader.instance.sendToServer(packet);
             }
@@ -271,10 +271,10 @@ public class EventRenderLoader
             else {
                 flag = random.nextDouble() < 0.2;
                 entityData.setBoolean(Reference.MODID + "ghost", flag);
-                SyncEntityDataPacket packet = new SyncEntityDataPacket(entityLivingBase.getEntityId(),
+                ClientEntityDataPacket packet = new ClientEntityDataPacket(entityLivingBase.getEntityId(),
                         entityLivingBase.getEntityWorld().provider.getDimension(),
                         0,
-                        flag ? 1 : 0,
+                        flag ? "true" : "false",
                         Reference.MODID + "ghost");
                 NetworkLoader.instance.sendToServer(packet);
             }

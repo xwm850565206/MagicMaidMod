@@ -1,6 +1,5 @@
 package com.xwm.magicmaid.entity.ai.rett;
 
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidRett;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
@@ -8,25 +7,18 @@ import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumRettState;
 import com.xwm.magicmaid.network.CustomerParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
-import com.xwm.magicmaid.network.UpdateEntityPacket;
 import com.xwm.magicmaid.network.VelocityPacket;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import org.lwjgl.Sys;
 
 import java.util.List;
 import java.util.Random;
@@ -112,15 +104,18 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
                         continue;
                     float health = entityLiving.getHealth();
                     entityLiving.attackEntityFrom(DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER) * 2);
-                    if (health == entityLiving.getHealth() && health > 0) {
-                       entityLiving.setHealth(0);
-                        if (entityLiving instanceof EntityPlayerMP) {
-                            entityLiving.sendMessage(new TextComponentString("攻击不生效，尝试直接斩杀(原因见说终焉记事)"));
-                        }
-                    }
+//                    if (health == entityLiving.getHealth() && health > 0) {
+//                       entityLiving.setHealth(health - maid.getAttackDamage(EnumAttackType.DEMONKILLER) * 2);
+//                        if (entityLiving instanceof EntityPlayerMP) {
+//                            entityLiving.sendMessage(new TextComponentString("攻击不生效，尝试使用真实伤害(原因见说终焉记事)"));
+//                        }
+//                    }
                     VelocityPacket packet = new VelocityPacket(entityLiving.getEntityId(), random.nextFloat(), random.nextFloat()*3, random.nextFloat());
                     NetworkLoader.instance.sendToAll(packet);
-                    world.updateEntityWithOptionalForce(entityLiving, false);
+
+//                    entityLiving.motionX += random.nextFloat();
+//                    entityLiving.motionY += random.nextFloat()*3;
+//                    entityLiving.motionZ += random.nextFloat();
                 }
             }
 

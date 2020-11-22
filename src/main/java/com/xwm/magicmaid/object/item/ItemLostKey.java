@@ -11,7 +11,7 @@ public class ItemLostKey extends ItemBase
 {
     public ItemLostKey(String name) {
         super(name);
-        setMaxStackSize(1);
+        setMaxStackSize(64);
     }
 
     @Override

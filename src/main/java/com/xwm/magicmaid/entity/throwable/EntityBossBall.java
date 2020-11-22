@@ -4,6 +4,9 @@ import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAvoidThingCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityEquipmentCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityMultiHealthCreature;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidMarthaBoss;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidRettBoss;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidSelinaBoss;
 import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -101,11 +104,13 @@ public abstract class EntityBossBall extends EntityThrowable
             {
                 if (entity instanceof IEntityMultiHealthCreature)
                 {
+                    fixProblem((IEntityMultiHealthCreature) entity);
+
                     int f = ((IEntityMultiHealthCreature) entity).getHealthBarNum();
                     int f1 = ((IEntityMultiHealthCreature) entity).getMaxHealthBarnum();
 
                     //减少10%的血条
-                    f = f - f1 / 10;
+                    f = f - f1 / 4;
                     if (f >= 0) {
                         ((IEntityMultiHealthCreature) entity).setHealthbarnum(f);
                     }
@@ -128,5 +133,24 @@ public abstract class EntityBossBall extends EntityThrowable
                 MagicEquipmentUtils.dropEquipment(((IEntityEquipmentCreature) entity).getArmorType(), 1, world, getPosition());
             }
         }
+    }
+
+    //解决之前血条最大值没有写进nbt造成的问题 version-6.0
+    private boolean fixProblem(IEntityMultiHealthCreature creature) {
+        int f = creature.getHealthBarNum();
+        int f1 = creature.getMaxHealthBarnum();
+
+        if (f1 < 200)
+        {
+            if (creature instanceof EntityMagicMaidMarthaBoss)
+                creature.setMaxHealthbarnum(200);
+            else if (creature instanceof EntityMagicMaidRettBoss)
+                creature.setMaxHealthbarnum(1000);
+            else if (creature instanceof EntityMagicMaidSelinaBoss)
+                creature.setMaxHealthbarnum(200);
+            return true;
+        }
+        else
+            return false;
     }
 }

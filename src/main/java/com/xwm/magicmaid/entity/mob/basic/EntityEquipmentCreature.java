@@ -4,6 +4,8 @@ import com.google.common.base.Optional;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityEquipmentCreature;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
+import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.network.ServerEntityDataPacket;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ItemStackHelper;
@@ -145,6 +147,15 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
         return 2;
     }
 
+    public NonNullList<ItemStack> getInventory() {
+        return this.inventory;
+    }
+
+    public void setInventory(NonNullList<ItemStack> inventory)
+    {
+        this.inventory = inventory;
+    }
+
     @Override
     public boolean isEmpty() {
         return this.inventory.isEmpty();
@@ -220,6 +231,12 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
     @Override
     public void markDirty() {
         //todo 不知道实体的markDirty怎么写
+        if (world.isRemote)
+            return; //客户端不向服务器更新
+        NBTTagCompound compound = new NBTTagCompound();
+        ItemStackHelper.saveAllItems(compound, this.inventory);
+        ServerEntityDataPacket packet = new ServerEntityDataPacket(this.getEntityId(), this.getEntityWorld().provider.getDimension(), 4, compound);
+        NetworkLoader.instance.sendToAll(packet);
     }
 
     /**

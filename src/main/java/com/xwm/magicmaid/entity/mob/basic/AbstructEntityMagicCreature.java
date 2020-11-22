@@ -1,15 +1,12 @@
 package com.xwm.magicmaid.entity.mob.basic;
 
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAttackableCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAvoidThingCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityMultiHealthCreature;
+import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -60,10 +57,10 @@ public abstract class AbstructEntityMagicCreature extends EntityCreature impleme
         super.initEntityAI();
         this.tasks.addTask(1, new EntityAIWanderAvoidWater(this, 1.0D));
         this.tasks.addTask(1, new EntityAISwimming(this));
-        this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityLivingBase.class, 8.0F));
+        this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityLiving.class, 8.0F));
         this.tasks.addTask(10, new EntityAILookIdle(this));
 
-        this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, true, new Class[0]));
+        this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, false, new Class[0]));
     }
 
     @Override
@@ -81,8 +78,9 @@ public abstract class AbstructEntityMagicCreature extends EntityCreature impleme
     {
         super.writeEntityToNBT(compound);
         compound.setInteger("healthBarNum", this.getHealthBarNum());
-        compound.setInteger("avoidsetnum", this.getAvoidSetHealth());
-        compound.setInteger("avoiddamagenum", this.getAvoidDamage());
+        compound.setInteger("max_health_bar_num", this.getMaxHealthBarnum());
+        compound.setInteger("avoid_set_num", this.getAvoidSetHealth());
+        compound.setInteger("avoid_damage_num", this.getAvoidDamage());
     }
 
     @Override
@@ -90,8 +88,9 @@ public abstract class AbstructEntityMagicCreature extends EntityCreature impleme
     {
         super.readEntityFromNBT(compound);
         this.setHealthbarnum(compound.getInteger("healthBarNum"));
-        this.setAvoidSetHealth(compound.getInteger("avoidsetnum"));
-        this.setAvoidDamage(compound.getInteger("avoiddamagenum"));
+        this.setMaxHealthbarnum(compound.getInteger("max_health_bar_num"));
+        this.setAvoidSetHealth(compound.getInteger("avoid_set_num"));
+        this.setAvoidDamage(compound.getInteger("avoid_damage_num"));
     }
 
     @Override
@@ -152,7 +151,7 @@ public abstract class AbstructEntityMagicCreature extends EntityCreature impleme
      */
     @Override
     public void setMaxHealthbarnum(int maxhealthbarnum){
-        this.dataManager.set(MAX_HEALTH_BAR_NUM, maxhealthbarnum);
+         this.dataManager.set(MAX_HEALTH_BAR_NUM, maxhealthbarnum);
     }
 
 
@@ -241,9 +240,10 @@ public abstract class AbstructEntityMagicCreature extends EntityCreature impleme
      */
     @Override
     public void onDeathUpdate() {
-        if (!world.isRemote && this.getHealthBarNum() > 0){ //如果血条没掉完 是不会死的
+        if (this.getHealthBarNum() > 0){ //如果血条没掉完 是不会死的
             this.setHealthbarnum(this.getHealthBarNum()-1);
             this.setHealth(this.getMaxHealth());
+            this.deathTime = 0;
         }
         else{
             super.onDeathUpdate();
@@ -251,8 +251,20 @@ public abstract class AbstructEntityMagicCreature extends EntityCreature impleme
     }
 
     @Override
+    public void onDeath(DamageSource cause)
+    {
+        if (this.getHealthBarNum() > 0){ //如果血条没掉完 是不会死的
+            this.setHealthbarnum(this.getHealthBarNum()-1);
+            this.setHealth(this.getMaxHealth());
+        }
+        else{
+            super.onDeath(cause);
+        }
+    }
+
+    @Override
     public void setDead(){
-        if (getTrueHealth() == 0) { //血条没掉完不允许被杀死 所以指令应该没用
+        if (getTrueHealth() <= 0) { //血条没掉完不允许被杀死 所以指令应该没用
             super.setDead();
         }
     }

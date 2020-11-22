@@ -3,13 +3,13 @@
     {
       "name": "pandora",
       "rolls": {
-        "min": 1,
-        "max": 5
+        "min": 3,
+        "max": 3
       },
       "entries": [
         {
           "type": "item",
-          "weight": 10,
+          "weight": 1,
           "name": "magic_maid:pandorapiece",
           "functions": [
             {
@@ -23,7 +23,7 @@
         },
         {
           "type": "item",
-          "weight": 5,
+          "weight": 1,
           "name": "magic_maid:wisepiece",
           "functions": [
             {
@@ -37,7 +37,7 @@
         },
         {
           "type": "item",
-          "weight": 4,
+          "weight": 10,
           "name": "magic_maid:memorypieceselina",
           "conditions": [
             {
@@ -48,7 +48,7 @@
             {
               "function": "set_count",
               "count": {
-                "min": 1,
+                "min": 4,
                 "max": 9
               }
             }
@@ -62,7 +62,7 @@
             {
               "function": "set_count",
               "count": {
-                "min": 0,
+                "min": 1,
                 "max": 1
               }
             }
