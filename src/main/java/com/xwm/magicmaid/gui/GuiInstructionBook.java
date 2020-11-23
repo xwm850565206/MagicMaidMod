@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.xwm.magicmaid.enumstorage.EnumInstructElement;
 import com.xwm.magicmaid.object.tileentity.Formula;
+import com.xwm.magicmaid.object.tileentity.Result;
 import com.xwm.magicmaid.registry.MagicFormulaRegistry;
 import com.xwm.magicmaid.registry.MagicModelRegistry;
 import com.xwm.magicmaid.util.Reference;
@@ -109,8 +110,11 @@ public class GuiInstructionBook extends GuiScreen
             for (Map.Entry<ResourceLocation, Formula> entry : formulaMap.entrySet()) {
                 List<ItemStack> allItems = new ArrayList<ItemStack>(){{
                     addAll(entry.getValue().getAllItems());
-                    addAll(MagicFormulaRegistry.getResult(entry.getValue().getKeyItem()));
+                    Result result = MagicFormulaRegistry.getResult(entry.getValue().getKeyItem());
+                    List<ItemStack> itemstacks = result.getResult(entry.getValue().getKeyItem());
+                    addAll(itemstacks);
                 }};
+
                 FormulaElement formulaElement = new FormulaElement(EnumInstructElement.FORMULA, new TextComponentString(""), allItems);
                 instructElements.add(formulaElement);
                 i++;

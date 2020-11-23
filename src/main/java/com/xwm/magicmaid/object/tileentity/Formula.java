@@ -13,13 +13,13 @@ public class Formula
 {
     public static Formula EMPTY = Formula.empty(0);
 
-    private List<ItemStack> rawItems;
-    private ItemStack keyItem;
-    private List<ItemStack> allItems;
-    private boolean ordered;
-    private int cookTime;
+    protected List<ItemStack> rawItems;
+    protected ItemStack keyItem;
+    protected List<ItemStack> allItems;
+    protected boolean ordered;
+    protected int cookTime;
 
-    private Formula(int rawSize) {
+    protected Formula(int rawSize) {
         this.rawItems = NonNullList.withSize(rawSize, ItemStack.EMPTY);
         this.keyItem = ItemStack.EMPTY;
         this.allItems = NonNullList.withSize(rawSize + 1, ItemStack.EMPTY);
@@ -38,22 +38,22 @@ public class Formula
         return allItems;
     }
 
-    private Formula(ItemStack keyItem, ItemStack ...stacks)
+    protected Formula(ItemStack keyItem, ItemStack ...stacks)
     {
        this(keyItem, Arrays.asList(stacks));
     }
 
-    private Formula(ItemStack keyItem, List<ItemStack> stacks)
+    protected Formula(ItemStack keyItem, List<ItemStack> stacks)
     {
         this(keyItem, false, stacks);
     }
 
-    private Formula(ItemStack keyItem, boolean ordered, ItemStack ...stacks)
+    protected Formula(ItemStack keyItem, boolean ordered, ItemStack ...stacks)
     {
        this(keyItem, ordered, Arrays.asList(stacks));
     }
 
-    private Formula(ItemStack keyItem, boolean ordered, List<ItemStack> stacks)
+    protected Formula(ItemStack keyItem, boolean ordered, List<ItemStack> stacks)
     {
         this.rawItems = Lists.newArrayList(stacks);
         while (this.rawItems.size() < 4)
@@ -74,7 +74,7 @@ public class Formula
             for (int i = 0; i < f.allItems.size(); i++) {
                 ItemStack a = this.allItems.get(i);
                 ItemStack b = f.allItems.get(i);
-                if (!a.isItemEqual(b))
+                if (!isItemEqual(a, b))
                     return false;
             }
             return true;
@@ -91,7 +91,7 @@ public class Formula
                 for (int j = 0; j < f.allItems.size(); j++)
                 {
                     ItemStack b = f.allItems.get(j);
-                    if ((a.isEmpty() && b.isEmpty()) || a.isItemEqual(b)) {
+                    if ((a.isEmpty() && b.isEmpty()) || isItemEqual(a, b)) {
                         if (!mark[j]) {
                             flag = true;
                             mark[j] = true;
@@ -127,5 +127,10 @@ public class Formula
 
     public static Formula empty(int rawSize) {
         return new Formula(rawSize);
+    }
+
+    protected boolean isItemEqual(ItemStack a, ItemStack b)
+    {
+        return !b.isEmpty() && a.getItem() == b.getItem() && a.getItemDamage() == b.getItemDamage();
     }
 }

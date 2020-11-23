@@ -42,6 +42,11 @@ public class ItemWhisper extends ItemWeapon
         tooltip.add(TextFormatting.YELLOW + "传说这把法杖的第一任主人是大法师戴安娜");
         tooltip.add(TextFormatting.YELLOW + "上面的结晶注入了她无穷的魔力");
         tooltip.add(TextFormatting.YELLOW + "可以右键使用");
+
+        tooltip.add("\n");
+        int level = getLevel(stack);
+        tooltip.add(TextFormatting.RED + "等级: " + level);
+        tooltip.add(TextFormatting.DARK_RED + "伤害: " + MagicEquipmentUtils.getAttackDamage(stack, EnumAttackType.WHISPER));
     }
 
 
@@ -98,7 +103,7 @@ public class ItemWhisper extends ItemWeapon
                 if (playerIn instanceof EntityPlayer && !MagicEquipmentUtils.checkEnemy((EntityPlayer) playerIn, entityLiving1))
                     continue;
                 //造成20点伤害 和 10点真实伤害
-                entityLiving1.attackEntityFrom(DamageSource.LIGHTNING_BOLT, MagicEquipmentUtils.getAttackDamage(playerIn, EnumAttackType.WHISPER));
+                entityLiving1.attackEntityFrom(DamageSource.LIGHTNING_BOLT, MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.WHISPER));
                 entityLiving1.setHealth(entityLiving1.getHealth() - 10);
                 playerIn.getEntityWorld().playEvent(3000, entityLiving1.getPosition(), 10);
                 EntityLightningBolt bolt = new EntityLightningBolt(playerIn.getEntityWorld(), entityLiving1.posX + itemRand.nextInt(2* (int) radius) - radius, cbb.maxY, entityLiving1.posZ + itemRand.nextInt(2 * (int) radius) - radius, true);

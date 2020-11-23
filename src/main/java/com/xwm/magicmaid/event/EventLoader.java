@@ -19,7 +19,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -39,8 +38,6 @@ import java.util.Random;
 @Mod.EventBusSubscriber
 public class EventLoader
 {
-    private static ResourceLocation SOUL = new ResourceLocation(Reference.MODID + ":textures/items/justice.png");
-
     private static final Random rand =  new Random();
 
     @SubscribeEvent

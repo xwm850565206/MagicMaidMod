@@ -16,7 +16,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.List;
 
 public class ItemDemonKillerSword extends ItemWeapon
@@ -56,16 +55,16 @@ public class ItemDemonKillerSword extends ItemWeapon
             if (attackTime == 0) {
                 target.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 400, 1));
                 target.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) playerIn),
-                        MagicEquipmentUtils.getAttackDamage(playerIn, EnumAttackType.DEMONKILLER));
+                        MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.DEMONKILLER));
             }
             else if (attackTime == 1) {
                 target.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 400, 1));
                 target.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) playerIn),
-                        2 * MagicEquipmentUtils.getAttackDamage(playerIn, EnumAttackType.DEMONKILLER));
+                        2 * MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.DEMONKILLER));
             }
             else if (attackTime == 2) {
                 target.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) playerIn),
-                        4 * MagicEquipmentUtils.getAttackDamage(playerIn, EnumAttackType.DEMONKILLER));
+                        4 * MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.DEMONKILLER));
             }
             else
                 attackTime = 0;
@@ -102,6 +101,11 @@ public class ItemDemonKillerSword extends ItemWeapon
     {
         tooltip.add(TextFormatting.YELLOW + "一把从教堂枯井中找到的破剑，直到骑士长蕾特");
         tooltip.add(TextFormatting.YELLOW + "拿起它，紫红色的光芒瞬间迸发");
+
+        tooltip.add("\n");
+        int level = getLevel(stack);
+        tooltip.add(TextFormatting.RED + "等级: " + level);
+        tooltip.add(TextFormatting.DARK_RED + "伤害: " + MagicEquipmentUtils.getAttackDamage(stack, EnumAttackType.DEMONKILLER));
     }
 
     @Override

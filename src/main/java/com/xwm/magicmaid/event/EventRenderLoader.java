@@ -211,7 +211,7 @@ public class EventRenderLoader
                 ClientEntityDataPacket packet = new ClientEntityDataPacket(entityLivingBase.getEntityId(),
                         entityLivingBase.getEntityWorld().provider.getDimension(),
                         0,
-                        flag ? "ture" : "false",
+                        flag ? "true" : "false",
                         Reference.MODID + "obsession");
                 NetworkLoader.instance.sendToServer(packet);
             }

@@ -5,6 +5,7 @@ import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityEquipmentCreature;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
+import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -44,20 +45,10 @@ public class MagicEquipmentUtils
         return true;
     }
 
-    public static int getAttackDamage(EntityLivingBase player, EnumAttackType type)
+    public static int getAttackDamage(ItemStack stack, EnumAttackType type)
     {
-        if (!(player instanceof EntityPlayer))
-            return 10;
-
-        int factor = 1;
-
-        //todo 力量buff （还未测试）
-        Potion potion = Potion.getPotionById(5);
-        if (potion != null) {
-            PotionEffect effect = player.getActivePotionEffect(potion);
-            if (effect != null)
-                factor = 1 + effect.getAmplifier();
-        }
+        ItemWeapon weapon = (ItemWeapon) stack.getItem();
+        int level = weapon.getLevel(stack);
 
         int damage = 0;
         switch (type) {
@@ -74,7 +65,43 @@ public class MagicEquipmentUtils
                 damage = 1;
         }
 
-        return damage * factor; //todo 还有很多没写进来
+        return damage + (int)(Math.pow(damage * level * 0.2, 2));//todo 还有很多没写进来
+    }
+
+    public static int getAttackDamage(EntityLivingBase player, ItemStack stack, EnumAttackType type)
+    {
+        if (!(player instanceof EntityPlayer))
+            return 10;
+
+        int factor = 1;
+
+        //todo 力量buff （还未测试）
+        Potion potion = Potion.getPotionById(5);
+        if (potion != null) {
+            PotionEffect effect = player.getActivePotionEffect(potion);
+            if (effect != null)
+                factor = 1 + effect.getAmplifier();
+        }
+
+        ItemWeapon weapon = (ItemWeapon) stack.getItem();
+        int level = weapon.getLevel(stack);
+
+        int damage = 0;
+        switch (type) {
+            case REPANTENCE:
+                damage = 10;
+                break;
+            case WHISPER:
+                damage = 20;
+                break;
+            case DEMONKILLER:
+                damage = 10;
+                break;
+            case PANDORA:
+                damage = 1;
+        }
+
+        return damage * factor + (int)(Math.pow(damage * level * 0.2, 2));//todo 还有很多没写进来
     }
 
     public static void dropEquipment(int equipment, int count, World world, BlockPos pos)

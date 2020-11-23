@@ -1,19 +1,19 @@
 package com.xwm.magicmaid.object.item.equipment;
 
+import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.List;
 
 public abstract class ItemWeapon extends ItemEquipment
@@ -77,4 +77,19 @@ public abstract class ItemWeapon extends ItemEquipment
      * How long it takes to use or consume an item
      */
     public abstract int getMaxItemUseDuration(ItemStack stack);
+
+    public int getLevel(ItemStack stack)
+    {
+        NBTTagCompound compound = stack.getTagCompound();
+        return (compound != null && compound.hasKey(Reference.MODID + "_level" )) ? compound.getInteger(Reference.MODID + "_level") : 0;
+    }
+
+    public void setLevel(ItemStack stack, int level)
+    {
+        NBTTagCompound compound = stack.getTagCompound();
+        if (compound == null)
+            compound = new NBTTagCompound();
+        compound.setInteger(Reference.MODID + "_level", level);
+        stack.setTagCompound(compound);
+    }
 }

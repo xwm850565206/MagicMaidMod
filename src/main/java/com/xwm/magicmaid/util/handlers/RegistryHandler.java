@@ -67,6 +67,7 @@ public class RegistryHandler
         StructureChurchPieces.registerPieces();
         MagicDimensionRegistry.registerAll();
         MagicFormulaRegistry.registerAllFormula();
+        OreDictionaryInit.register();
     }
 
     public static void preInitRegistries()

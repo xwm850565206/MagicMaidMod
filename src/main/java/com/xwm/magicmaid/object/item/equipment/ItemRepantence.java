@@ -1,6 +1,5 @@
 package com.xwm.magicmaid.object.item.equipment;
 
-import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityEquipmentCreature;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.network.CustomerParticlePacket;
@@ -13,9 +12,10 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
@@ -23,7 +23,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.List;
 
 public class ItemRepantence extends ItemWeapon
@@ -66,7 +65,7 @@ public class ItemRepantence extends ItemWeapon
 
             try {
                 entityLiving.attackEntityFrom(new EntityDamageSource("repantence_attack", playerIn).setDamageBypassesArmor(),
-                        MagicEquipmentUtils.getAttackDamage(playerIn, EnumAttackType.REPANTENCE));
+                        MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.REPANTENCE));
 
                 playParticle(entityLiving.getEntityBoundingBox(), worldIn);
                 if (entityLiving.getHealth() <= 0)
@@ -122,6 +121,12 @@ public class ItemRepantence extends ItemWeapon
     {
         tooltip.add(TextFormatting.YELLOW + "修女祷告时使用的物品，听说能够镇压邪灵");
         tooltip.add(TextFormatting.YELLOW + "可以右键使用");
+
+        tooltip.add("");
+        int level = getLevel(stack);
+        tooltip.add(TextFormatting.RED + "等级: " + level);
+        tooltip.add(TextFormatting.DARK_RED + "伤害: " + MagicEquipmentUtils.getAttackDamage(stack, EnumAttackType.REPANTENCE));
+
     }
 
     /**

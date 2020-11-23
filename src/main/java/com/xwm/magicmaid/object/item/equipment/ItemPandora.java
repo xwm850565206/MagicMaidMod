@@ -1,9 +1,10 @@
 package com.xwm.magicmaid.object.item.equipment;
 
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponPandorasBox;
+import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
+import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -13,10 +14,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.ProjectileImpactEvent;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -34,6 +33,11 @@ public class ItemPandora extends ItemWeapon
         tooltip.add(TextFormatting.YELLOW + "充满黑暗力量的魔盒，里面");
         tooltip.add(TextFormatting.YELLOW + "似乎拥有无尽的力量");
         tooltip.add(TextFormatting.YELLOW + "可以右键使用");
+
+        tooltip.add("\n");
+        int level = getLevel(stack);
+        tooltip.add(TextFormatting.RED + "等级: " + level);
+        tooltip.add(TextFormatting.DARK_RED + "伤害: " + MagicEquipmentUtils.getAttackDamage(stack, EnumAttackType.PANDORA));
     }
 
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
@@ -72,7 +76,7 @@ public class ItemPandora extends ItemWeapon
     @Override
     public void onUse(World worldIn, EntityLivingBase playerIn, EnumHand handIn, @Nullable List<EntityLivingBase> entityLivingBases) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
-        EntityMaidWeaponPandorasBox box = new EntityMaidWeaponPandorasBox(worldIn);
+        EntityMaidWeaponPandorasBox box = new EntityMaidWeaponPandorasBox(worldIn, playerIn.getHeldItem(handIn));
         AxisAlignedBB bb = playerIn.getEntityBoundingBox();
 
         float f = 0.2f;

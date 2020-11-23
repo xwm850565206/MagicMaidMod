@@ -221,7 +221,9 @@ public class TileEntityMagicCircle extends TileEntity implements IInventory, ITi
 
     public void cookFinish()
     {
-        List<ItemStack> itemstacks = MagicFormulaRegistry.getResult(this.inventory.get(4));
+        Result result = MagicFormulaRegistry.getResult(this.inventory.get(4));
+        List<ItemStack> itemstacks = result.getResult(this.inventory.get(4));
+
         if (itemstacks != null) {
             for (int i = 0; i < 3 && i < itemstacks.size(); i++) {
                 ItemStack stack = this.getStackInSlot(5 + i);
@@ -241,7 +243,9 @@ public class TileEntityMagicCircle extends TileEntity implements IInventory, ITi
 
 
     public boolean hasSlotForCook() {
-        List<ItemStack> itemstacks = MagicFormulaRegistry.getResult(this.inventory.get(4));
+        Result result = MagicFormulaRegistry.getResult(this.inventory.get(4));
+        List<ItemStack> itemstacks = result.getResult(this.inventory.get(4));
+
         for (int i = 5; i < 8; i++)
         {
             if (!this.inventory.get(i).isEmpty())
@@ -261,7 +265,7 @@ public class TileEntityMagicCircle extends TileEntity implements IInventory, ITi
         Formula formula1 = MagicFormulaRegistry.getFormula(input);
         if (formula1 == Formula.EMPTY)
             return false;
-        else return formula.equals(formula1);
+        else return formula1.equals(formula);
     }
 
     @Override

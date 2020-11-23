@@ -28,11 +28,18 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
     private static final DataParameter<Boolean> ISOPEN = EntityDataManager.<Boolean>createKey(EntityMaidWeaponPandorasBox.class, DataSerializers.BOOLEAN);
     private int radius = 4;
     private int areaId = MagicRenderRegistry.allocateArea();
+    private ItemStack itemPandoraBox;
 
     public int tick = 0; //client side use to control animation
 
     public EntityMaidWeaponPandorasBox(World worldIn) {
         super(worldIn);
+        enumEquipment = EnumEquipment.PANDORA;
+    }
+
+    public EntityMaidWeaponPandorasBox(World worldIn, ItemStack stack) {
+        super(worldIn);
+        this.itemPandoraBox = stack;
         enumEquipment = EnumEquipment.PANDORA;
     }
 
@@ -129,7 +136,7 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
                 for (EntityLivingBase entityLivingBase : entityLivingBases) {
                     if (!MagicEquipmentUtils.checkEnemy(otherOwner, entityLivingBase))
                         continue;
-                    int damage = MagicEquipmentUtils.getAttackDamage(otherOwner, EnumAttackType.PANDORA);
+                    int damage = MagicEquipmentUtils.getAttackDamage(otherOwner, itemPandoraBox, EnumAttackType.PANDORA);
                     entityLivingBase.attackEntityFrom(DamageSource.causeMobDamage(otherOwner),
                             damage);
 
