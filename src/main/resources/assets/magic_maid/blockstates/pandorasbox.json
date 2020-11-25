@@ -1,0 +1,155 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "transform": {
+      "gui": {
+        "translation": [
+          0.09375,
+          -0.09375,
+          0.0
+        ],
+        "rotation": [
+          30,
+          -30,
+          0
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "head": {
+        "translation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "fixed": {
+        "translation": [
+          0.25,
+          0.1875,
+          0.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "ground": {
+        "translation": [
+          0.25,
+          0.4375,
+          0.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.4,
+          0.4,
+          0.4
+        ]
+      },
+      "firstperson_righthand": {
+        "translation": [
+          0.21875,
+          0.28125,
+          -0.09375
+        ],
+        "rotation": [
+          0,
+          90,
+          0
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "firstperson_lefthand": {
+        "translation": [
+          0.1875,
+          0.25,
+          0.25
+        ],
+        "rotation": [
+          0,
+          44,
+          0
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "thirdperson_lefthand": {
+        "translation": [
+          -0.3125,
+          0.09375,
+          -0.15625
+        ],
+        "rotation": [
+          0,
+          -30,
+          0
+        ],
+        "scale": [
+          0.4,
+          0.4,
+          0.4
+        ]
+      },
+      "thirdperson_righthand": {
+        "translation": [
+          -0.015625,
+          0.015625,
+          0.046875
+        ],
+        "rotation": [
+          0,
+          330,
+          0
+        ],
+        "scale": [
+          0.4,
+          0.4,
+          0.4
+        ]
+      }
+    },
+    "model": "magic_maid:pandorasbox.obj",
+    "custom": {
+      "flip-v": true
+    }
+  },
+  "variants": {
+    "normal": [
+      {}
+    ],
+    "inventory": [
+      {}
+    ]
+  }
+}

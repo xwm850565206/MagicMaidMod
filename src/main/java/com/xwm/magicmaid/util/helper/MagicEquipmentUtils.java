@@ -1,6 +1,7 @@
 package com.xwm.magicmaid.util.helper;
 
 import com.xwm.magicmaid.entity.mob.basic.EntityTameableCreature;
+import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAvoidThingCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityEquipmentCreature;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
@@ -15,6 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -131,7 +133,83 @@ public class MagicEquipmentUtils
         }
         else
         {
-            return player.getEntityBoundingBox().grow(1, 1, 1);
+            AxisAlignedBB originBB;
+            if (bb != null)
+                originBB = bb;
+            else
+                originBB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+
+            if (!(stack.getItem() instanceof ItemWeapon))
+                return originBB;
+
+            ItemWeapon weapon = (ItemWeapon) stack.getItem();
+            EnumEquipment enumEquipment = weapon.enumEquipment;
+            int level = weapon.getLevel(stack);
+            switch (enumEquipment){
+                case NONE:
+                    break;
+                case PANDORA:
+                    originBB = originBB.grow(4 + 0.5 * level, 4 +  0.5 * level, 4 +  0.5 * level); break;
+                case WHISPER:
+                    originBB = originBB.grow(4 + 0.75 * level, 2, 4 + 0.75 * level); break;
+                case REPATENCE:
+                    originBB = originBB.grow(6 + 0.5 * level, 6 + 0.5 * level, 6 + 0.5 * level); break;
+                case CONVICTION:
+                    originBB = originBB.grow(4 + level, 3, 4 + level); break;
+                case DEMONKILLINGSWORD:
+                    originBB = originBB.grow(1);
+
+            }
+
+            return originBB;
+        }
+    }
+
+    public static double getRadiusFromAxisAlignedBB(AxisAlignedBB bb)
+    {
+        double d0 = bb.maxX - bb.minX;
+        double d2 = bb.maxZ - bb.minZ;
+        return (d0 + d2) / 2.0;
+    }
+
+    public static boolean attackEntityFrom(EntityLivingBase entityLivingBase, DamageSource source, float amount)
+    {
+        if (entityLivingBase instanceof IEntityAvoidThingCreature) {
+            ((IEntityAvoidThingCreature) entityLivingBase).setAvoidDamage(-1);
+            ((IEntityAvoidThingCreature) entityLivingBase).setAvoidSetHealth(-1);
+        }
+        boolean flag = false;
+        try {
+            flag = entityLivingBase.attackEntityFrom(source, amount);
+        }
+        catch (Exception e) {
+            return false;
+         }
+        if (entityLivingBase instanceof IEntityAvoidThingCreature) {
+            ((IEntityAvoidThingCreature) entityLivingBase).setAvoidDamage(50);
+            ((IEntityAvoidThingCreature) entityLivingBase).setAvoidSetHealth(50);
+        }
+
+        return flag;
+    }
+
+    public static void setHealth(EntityLivingBase entityLivingBase, float amount)
+    {
+        if (entityLivingBase instanceof IEntityAvoidThingCreature) {
+            ((IEntityAvoidThingCreature) entityLivingBase).setAvoidDamage(-1);
+            ((IEntityAvoidThingCreature) entityLivingBase).setAvoidSetHealth(-1);
+        }
+
+        try {
+            entityLivingBase.setHealth(amount);
+        }
+        catch (Exception e) {
+            ;
+        }
+
+        if (entityLivingBase instanceof IEntityAvoidThingCreature) {
+            ((IEntityAvoidThingCreature) entityLivingBase).setAvoidDamage(50);
+            ((IEntityAvoidThingCreature) entityLivingBase).setAvoidSetHealth(50);
         }
     }
 }

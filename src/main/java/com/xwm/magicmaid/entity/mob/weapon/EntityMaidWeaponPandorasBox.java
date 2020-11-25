@@ -39,8 +39,9 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
 
     public EntityMaidWeaponPandorasBox(World worldIn, ItemStack stack) {
         super(worldIn);
-        this.itemPandoraBox = stack;
-        enumEquipment = EnumEquipment.PANDORA;
+        this.itemPandoraBox = stack.copy();
+        this.enumEquipment = EnumEquipment.PANDORA;
+        this.radius = (int) MagicEquipmentUtils.getRadiusFromAxisAlignedBB(MagicEquipmentUtils.getUsingArea(stack, null, null));
     }
 
     @Override
@@ -86,7 +87,7 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
                         if (!this.maid.isEnemy(entityLivingBase))
                             continue;
 //                        float health = entityLivingBase.getHealth();
-                        entityLivingBase.attackEntityFrom(DamageSource.causeMobDamage(this.maid),
+                        MagicEquipmentUtils.attackEntityFrom(entityLivingBase, DamageSource.causeMobDamage(this.maid),
                                 this.maid.getAttackDamage(EnumAttackType.PANDORA));
 //                        if (health == entityLivingBase.getHealth() && health > 0){
 //                            if (entityLivingBase instanceof EntityPlayerMP) {
@@ -124,22 +125,20 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
         }
         else if (tick > 100 && this.getDistance(otherOwner) < 1){
             if (otherOwner.getHeldItemMainhand().isEmpty()) {
-                otherOwner.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(ItemInit.ITEM_PANDORA));
+                otherOwner.setHeldItem(EnumHand.MAIN_HAND, itemPandoraBox);
                 this.setDead();
             }
         }
 
         if (isOpen()) {
             List<EntityLivingBase> entityLivingBases = world.getEntitiesWithinAABB(EntityLivingBase.class,
-                    this.getEntityBoundingBox().grow(radius + 2, radius, radius + 2));
+                    MagicEquipmentUtils.getUsingArea(itemPandoraBox, otherOwner, this.getEntityBoundingBox()));
             try {
                 for (EntityLivingBase entityLivingBase : entityLivingBases) {
                     if (!MagicEquipmentUtils.checkEnemy(otherOwner, entityLivingBase))
                         continue;
                     int damage = MagicEquipmentUtils.getAttackDamage(otherOwner, itemPandoraBox, EnumAttackType.PANDORA);
-                    entityLivingBase.attackEntityFrom(DamageSource.causeMobDamage(otherOwner),
-                            damage);
-
+                    MagicEquipmentUtils.attackEntityFrom(entityLivingBase, DamageSource.causeMobDamage(otherOwner), damage);
                     otherOwner.heal(damage); //吸血给自己
                     playParticle(entityLivingBase);
                 }

@@ -64,7 +64,7 @@ public class ItemRepantence extends ItemWeapon
                 continue;
 
             try {
-                entityLiving.attackEntityFrom(new EntityDamageSource("repantence_attack", playerIn).setDamageBypassesArmor(),
+                MagicEquipmentUtils.attackEntityFrom(entityLiving, new EntityDamageSource("repantence_attack", playerIn).setDamageBypassesArmor(),
                         MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.REPANTENCE));
 
                 playParticle(entityLiving.getEntityBoundingBox(), worldIn);
@@ -111,7 +111,7 @@ public class ItemRepantence extends ItemWeapon
         }
         else if (count == 1)
         {
-            List<EntityLivingBase> entityLivings = world.getEntitiesWithinAABB(EntityLiving.class, cbb.grow(radius * 3));
+            List<EntityLivingBase> entityLivings = world.getEntitiesWithinAABB(EntityLiving.class, MagicEquipmentUtils.getUsingArea(stack, player, cbb));
             this.onUse(world, player, EnumHand.MAIN_HAND, entityLivings);
         }
     }
@@ -123,9 +123,7 @@ public class ItemRepantence extends ItemWeapon
         tooltip.add(TextFormatting.YELLOW + "可以右键使用");
 
         tooltip.add("");
-        int level = getLevel(stack);
-        tooltip.add(TextFormatting.RED + "等级: " + level);
-        tooltip.add(TextFormatting.DARK_RED + "伤害: " + MagicEquipmentUtils.getAttackDamage(stack, EnumAttackType.REPANTENCE));
+        super.addInformation(stack, worldIn, tooltip, flagIn);
 
     }
 
@@ -134,7 +132,7 @@ public class ItemRepantence extends ItemWeapon
      */
     public int getMaxItemUseDuration(ItemStack stack)
     {
-        return 30;
+        return 30 - 4 * getLevel(stack);
     }
 
     public void onUsingTick(ItemStack stack, EntityLivingBase player, int count)
@@ -176,5 +174,9 @@ public class ItemRepantence extends ItemWeapon
             NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(world.provider.getDimension(), d0, d1, d2, 40.0D);
             NetworkLoader.instance.sendToAllAround(particlePacket, target);
         }
+    }
+
+    public EnumAttackType getAttackType() {
+        return EnumAttackType.REPANTENCE;
     }
 }

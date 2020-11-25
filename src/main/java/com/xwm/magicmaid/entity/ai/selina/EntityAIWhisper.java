@@ -145,7 +145,7 @@ public class EntityAIWhisper extends EntityAIBase
                     if (!this.maid.isEnemy(entityLivingBase))
                         continue;
                     entityLivingBase.attackEntityFrom(DamageSource.LIGHTNING_BOLT, this.maid.getAttackDamage(EnumAttackType.WHISPER));
-                    entityLivingBase.setHealth(entityLivingBase.getHealth() - 10 * maid.getRank());
+                    MagicEquipmentUtils.setHealth(entityLivingBase, entityLivingBase.getHealth() - 10 * maid.getRank());
                     world.playEvent(3000, entityLivingBase.getPosition(), 10);
                     EntityLightningBolt bolt = new EntityLightningBolt(world, entityLivingBase.posX + random.nextInt(2* (int) radius) - radius, cpos.getY(), entityLivingBase.posZ + random.nextInt(2 * (int) radius) - radius, true);
                     world.addWeatherEffect(bolt);

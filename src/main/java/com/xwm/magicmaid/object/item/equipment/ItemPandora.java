@@ -3,7 +3,6 @@ package com.xwm.magicmaid.object.item.equipment;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponPandorasBox;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
-import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,10 +33,8 @@ public class ItemPandora extends ItemWeapon
         tooltip.add(TextFormatting.YELLOW + "似乎拥有无尽的力量");
         tooltip.add(TextFormatting.YELLOW + "可以右键使用");
 
-        tooltip.add("\n");
-        int level = getLevel(stack);
-        tooltip.add(TextFormatting.RED + "等级: " + level);
-        tooltip.add(TextFormatting.DARK_RED + "伤害: " + MagicEquipmentUtils.getAttackDamage(stack, EnumAttackType.PANDORA));
+        tooltip.add("");
+        super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
@@ -75,8 +72,19 @@ public class ItemPandora extends ItemWeapon
      */
     @Override
     public void onUse(World worldIn, EntityLivingBase playerIn, EnumHand handIn, @Nullable List<EntityLivingBase> entityLivingBases) {
+
+        System.out.println(this.getUnlocalizedName());
+        if (handIn != EnumHand.MAIN_HAND)
+            return;
+        if (worldIn.isRemote)
+            return;
+
         ItemStack itemstack = playerIn.getHeldItem(handIn);
-        EntityMaidWeaponPandorasBox box = new EntityMaidWeaponPandorasBox(worldIn, playerIn.getHeldItem(handIn));
+//        if (!(itemstack.getItem() instanceof ItemPandora))
+//            return;
+
+        itemstack.damageItem(1, playerIn);
+        EntityMaidWeaponPandorasBox box = new EntityMaidWeaponPandorasBox(worldIn, itemstack);
         AxisAlignedBB bb = playerIn.getEntityBoundingBox();
 
         float f = 0.2f;
@@ -96,7 +104,6 @@ public class ItemPandora extends ItemWeapon
         box.setOtherOwner(playerIn);
         worldIn.spawnEntity(box);
         itemstack.shrink(1);
-        itemstack.damageItem(1, playerIn);
     }
 
     /**
@@ -119,5 +126,9 @@ public class ItemPandora extends ItemWeapon
     @Override
     public int getMaxItemUseDuration(ItemStack stack) {
         return 0;
+    }
+
+    public EnumAttackType getAttackType() {
+        return EnumAttackType.PANDORA;
     }
 }

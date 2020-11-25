@@ -79,7 +79,7 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
                         continue;
 
                     entityLiving.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 400, 1 + maid.getRank()));
-                    entityLiving.attackEntityFrom(DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER));
+                    MagicEquipmentUtils.attackEntityFrom(entityLiving, DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER));
                 }
             }
             else if (performTick == 10) {
@@ -89,7 +89,7 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
                         continue;
 
                     entityLiving.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 400, 1));
-                    entityLiving.attackEntityFrom(DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER));
+                    MagicEquipmentUtils.attackEntityFrom(entityLiving, DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER));
 
                 }
             }
@@ -103,7 +103,7 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
                     if (!maid.isEnemy(entityLiving))
                         continue;
                     float health = entityLiving.getHealth();
-                    entityLiving.attackEntityFrom(DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER) * 2);
+                    MagicEquipmentUtils.attackEntityFrom(entityLiving, DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER) * 2);
 //                    if (health == entityLiving.getHealth() && health > 0) {
 //                       entityLiving.setHealth(health - maid.getAttackDamage(EnumAttackType.DEMONKILLER) * 2);
 //                        if (entityLiving instanceof EntityPlayerMP) {

@@ -24,6 +24,9 @@ public class ItemInstructionBook extends ItemBase
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
     {
+        if (handIn != EnumHand.MAIN_HAND)
+            return new ActionResult<ItemStack>(EnumActionResult.PASS, playerIn.getHeldItem(handIn));
+
         playerIn.openGui(Main.instance, Reference.GUI_INSTRUCTION_BOOK, worldIn, (int)playerIn.posX, (int)playerIn.posY, (int)playerIn.posZ);
         playerIn.addStat(StatList.getObjectUseStats(Items.WRITTEN_BOOK));
         return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));

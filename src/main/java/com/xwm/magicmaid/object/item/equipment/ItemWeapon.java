@@ -1,7 +1,9 @@
 package com.xwm.magicmaid.object.item.equipment;
 
+import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
@@ -11,6 +13,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -23,6 +26,19 @@ public abstract class ItemWeapon extends ItemEquipment
         super(name);
         this.maxStackSize = 1;
         this.setMaxDamage(100);
+    }
+
+    public EnumAttackType getAttackType() {
+        return EnumAttackType.NORMAL;
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn)
+    {
+        int level = getLevel(stack);
+        tooltip.add(TextFormatting.RED + "等级: " + level);
+        tooltip.add(TextFormatting.DARK_RED + "伤害: " + MagicEquipmentUtils.getAttackDamage(stack, getAttackType()));
+        tooltip.add(TextFormatting.DARK_RED + "攻击范围: " + MagicEquipmentUtils.getUsingArea(stack, null, null));
     }
 
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)

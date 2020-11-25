@@ -1,0 +1,155 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "magic_maid:conviction.obj",
+    "transform": {
+      "thirdperson_righthand": {
+        "scale": [
+          0.8,
+          0.8,
+          0.8
+        ],
+        "translation": [
+          0.15625,
+          0.3125,
+          0.421875
+        ],
+        "rotation": [
+          0,
+          330,
+          0
+        ]
+      },
+      "fixed": {
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "translation": [
+          0.15625,
+          0.15625,
+          0.625
+        ],
+        "rotation": [
+          0,
+          330,
+          0
+        ]
+      },
+      "gui": {
+        "scale": [
+          1.0,
+          0.9,
+          1.0
+        ],
+        "translation": [
+          0.21875,
+          -0.171875,
+          0.0
+        ],
+        "rotation": [
+          30,
+          330,
+          0
+        ]
+      },
+      "ground": {
+        "scale": [
+          0.66,
+          0.66,
+          0.66
+        ],
+        "translation": [
+          0.375,
+          0.625,
+          0.375
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ]
+      },
+      "head": {
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "translation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ]
+      },
+      "thirdperson_lefthand": {
+        "scale": [
+          0.8,
+          0.8,
+          0.8
+        ],
+        "translation": [
+          -0.53125,
+          0.3125,
+          0.0625
+        ],
+        "rotation": [
+          0,
+          330,
+          0
+        ]
+      },
+      "firstperson_righthand": {
+        "scale": [
+          1.2,
+          1.2,
+          1.0
+        ],
+        "translation": [
+          0.875,
+          0.21875,
+          0.15625
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ]
+      },
+      "firstperson_lefthand": {
+        "scale": [
+          1.2,
+          1.2,
+          1.0
+        ],
+        "translation": [
+          -0.0625,
+          0.09375,
+          0.0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "custom": {
+      "flip-v": true
+    }
+  },
+  "variants": {
+    "normal": [
+      {}
+    ],
+    "inventory": [
+      {}
+    ]
+  }
+}

@@ -84,7 +84,7 @@ public class EntityAIRepantence extends EntityAIBase
                 if (!maid.isEnemy(entityLivingBase))
                     continue;
 //                float health = entityLivingBase.getHealth();
-                entityLivingBase.attackEntityFrom(new EntityDamageSource("repantence_attack", maid).setDamageBypassesArmor(),
+                MagicEquipmentUtils.attackEntityFrom(entityLivingBase, new EntityDamageSource("repantence_attack", maid).setDamageBypassesArmor(),
                         maid.getAttackDamage(EnumAttackType.REPANTENCE));
 //                if (health == entityLivingBase.getHealth() && health > 0){
 //                    entityLivingBase.setHealth(0);

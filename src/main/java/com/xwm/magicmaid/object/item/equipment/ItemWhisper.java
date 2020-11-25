@@ -26,7 +26,6 @@ public class ItemWhisper extends ItemWeapon
 {
     private static final int perAngle = 10;
     private static final int[] hexameron = new int[]{0, 60, 120, 180, 240, 300};
-    private float radius = 4.0f;
 
     private AxisAlignedBB cbb = null;
 
@@ -43,34 +42,32 @@ public class ItemWhisper extends ItemWeapon
         tooltip.add(TextFormatting.YELLOW + "上面的结晶注入了她无穷的魔力");
         tooltip.add(TextFormatting.YELLOW + "可以右键使用");
 
-        tooltip.add("\n");
-        int level = getLevel(stack);
-        tooltip.add(TextFormatting.RED + "等级: " + level);
-        tooltip.add(TextFormatting.DARK_RED + "伤害: " + MagicEquipmentUtils.getAttackDamage(stack, EnumAttackType.WHISPER));
+        tooltip.add("");
+        super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
 
-    public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
-    {
-        if (target.getEntityWorld().isRemote)
-            return true;
+//    public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
+//    {
+//        if (target.getEntityWorld().isRemote)
+//            return true;
+////
+////        if (target instanceof EntityMagicMaidMartha)
+////            target.attackEntityFrom(new EntityDamageSource("killed_martha", attacker), 0);
+////        else if (target instanceof EntityMagicMaidRett)
+////            target.attackEntityFrom(new EntityDamageSource("killed_rett", attacker), 0);
+////        else
+////            target.attackEntityFrom(new EntityDamageSource("killed_selina", attacker), 0);
 //
-//        if (target instanceof EntityMagicMaidMartha)
-//            target.attackEntityFrom(new EntityDamageSource("killed_martha", attacker), 0);
-//        else if (target instanceof EntityMagicMaidRett)
-//            target.attackEntityFrom(new EntityDamageSource("killed_rett", attacker), 0);
-//        else
-//            target.attackEntityFrom(new EntityDamageSource("killed_selina", attacker), 0);
-
-        return true;
-    }
+//        return true;
+//    }
 
     /**
      * How long it takes to use or consume an item
      */
     public int getMaxItemUseDuration(ItemStack stack)
     {
-        return 50;
+        return 50 - 6 * getLevel(stack);
     }
 
     public EnumAction getItemUseAction(ItemStack stack)
@@ -103,9 +100,10 @@ public class ItemWhisper extends ItemWeapon
                 if (playerIn instanceof EntityPlayer && !MagicEquipmentUtils.checkEnemy((EntityPlayer) playerIn, entityLiving1))
                     continue;
                 //造成20点伤害 和 10点真实伤害
-                entityLiving1.attackEntityFrom(DamageSource.LIGHTNING_BOLT, MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.WHISPER));
-                entityLiving1.setHealth(entityLiving1.getHealth() - 10);
+                MagicEquipmentUtils.attackEntityFrom(entityLiving1, DamageSource.LIGHTNING_BOLT, MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.WHISPER));
+                MagicEquipmentUtils.setHealth(entityLiving1, entityLiving1.getHealth() - 10);
                 playerIn.getEntityWorld().playEvent(3000, entityLiving1.getPosition(), 10);
+                float radius = (float) MagicEquipmentUtils.getRadiusFromAxisAlignedBB(MagicEquipmentUtils.getUsingArea(playerIn.getHeldItem(handIn), null, null));
                 EntityLightningBolt bolt = new EntityLightningBolt(playerIn.getEntityWorld(), entityLiving1.posX + itemRand.nextInt(2* (int) radius) - radius, cbb.maxY, entityLiving1.posZ + itemRand.nextInt(2 * (int) radius) - radius, true);
                 playerIn.getEntityWorld().addWeatherEffect(bolt);
                 playerIn.getEntityWorld().spawnEntity(bolt);
@@ -144,6 +142,7 @@ public class ItemWhisper extends ItemWeapon
             }
         }
 
+        float radius = (float) MagicEquipmentUtils.getRadiusFromAxisAlignedBB(MagicEquipmentUtils.getUsingArea(stack, null, null));
         if (count != 0 && cbb != null && player.getEntityWorld().isRemote) {
             //画圆
             float d0 = (float) ((cbb.minX + cbb.maxX) / 2.0);
@@ -177,7 +176,7 @@ public class ItemWhisper extends ItemWeapon
         }
         if (count == 1 && cbb != null)
         {
-            List<EntityLivingBase> entityLivingBaseList = player.getEntityWorld().getEntitiesWithinAABB(EntityLiving.class, cbb.grow(radius, 2, radius));
+            List<EntityLivingBase> entityLivingBaseList = player.getEntityWorld().getEntitiesWithinAABB(EntityLiving.class, MagicEquipmentUtils.getUsingArea(stack, player, cbb));
             this.onUse(player.getEntityWorld(), player, EnumHand.MAIN_HAND, entityLivingBaseList);
             cbb = null;
         }
@@ -230,11 +229,10 @@ public class ItemWhisper extends ItemWeapon
                     t2 + d2 * i,
                     0, 0, 0
                     );
-//            CustomerParticlePacket particlePacket =
-//                    new CustomerParticlePacket(t0 + d0 * i, d1, t2 + d2 * i, EnumCustomParticles.WHISPER);
-//            NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(world.provider.getDimension(), t0 + d0 * i, d1, t2 + d2 * i, 40.0D);
-//            NetworkLoader.instance.sendToAllAround(particlePacket, target);
-
         }
+    }
+
+    public EnumAttackType getAttackType() {
+        return EnumAttackType.WHISPER;
     }
 }

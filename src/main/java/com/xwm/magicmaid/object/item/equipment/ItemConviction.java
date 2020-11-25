@@ -1,16 +1,16 @@
 package com.xwm.magicmaid.object.item.equipment;
 
+import com.xwm.magicmaid.Main;
+import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.List;
 
 public class ItemConviction extends ItemWeapon
@@ -40,6 +40,7 @@ public class ItemConviction extends ItemWeapon
     @Override
     public void onUse(World worldIn, EntityLivingBase playerIn, EnumHand handIn, @Nullable List<EntityLivingBase> entityLivingBases) {
         //todo
+        System.out.println(this.getRegistryName());
     }
 
 
@@ -70,5 +71,19 @@ public class ItemConviction extends ItemWeapon
     {
         tooltip.add(TextFormatting.YELLOW + "教堂的圣器，传说是大主教镇压恶鬼修斯时");
         tooltip.add(TextFormatting.YELLOW + "所用的武器，光是靠近它就让人心生敬畏");
+        tooltip.add("");
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+    }
+
+    public EnumAttackType getAttackType() {
+        return EnumAttackType.CONVICTION;
+    }
+
+
+    @Override
+    public void registerModels()
+    {
+//        super.registerModels();
+        Main.proxy.registerOBJRenderer(this, 0, "inventory");
     }
 }
