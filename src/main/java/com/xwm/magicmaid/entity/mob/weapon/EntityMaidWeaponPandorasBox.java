@@ -3,7 +3,6 @@ package com.xwm.magicmaid.entity.mob.weapon;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
-import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.network.DistinationParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
@@ -119,7 +118,7 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
         else if (tick == 100)
             this.moveToBlockPosAndAngles(otherOwner.getPosition().add(0, otherOwner.height / 2.0, 0), rotationYaw, rotationPitch);
         else if (tick == 120) {
-            EntityItem item = new EntityItem(world, posX, posY, posZ, new ItemStack(ItemInit.ITEM_PANDORA));
+            EntityItem item = new EntityItem(world, posX, posY, posZ, this.itemPandoraBox);
             world.spawnEntity(item);
             this.setDead();
         }

@@ -39,6 +39,9 @@ public abstract class ItemWeapon extends ItemEquipment
         tooltip.add(TextFormatting.RED + "等级: " + level);
         tooltip.add(TextFormatting.DARK_RED + "伤害: " + MagicEquipmentUtils.getAttackDamage(stack, getAttackType()));
         tooltip.add(TextFormatting.DARK_RED + "攻击范围: " + MagicEquipmentUtils.getUsingArea(stack, null, null));
+        if (this.isChargeable()) {
+            tooltip.add(TextFormatting.DARK_RED + "施法时间: " + this.getMaxItemUseDuration(stack));
+        }
     }
 
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)

@@ -1,9 +1,30 @@
 package com.xwm.magicmaid.entity.mob.weapon;
 
+import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAvoidThingCreature;
+import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityMultiHealthCreature;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
+import com.xwm.magicmaid.network.CustomerParticlePacket;
+import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
+import com.xwm.magicmaid.util.helper.MagicCreatureUtils;
+import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.EntityAITasks;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EntityMaidWeaponConviction extends EntityMaidWeapon
 {
@@ -13,9 +34,20 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
     private double radius = 0.5;
     private double perHeight = height / 6;
 
+    private int attackTick = 0;
+    private int attackRadius = 4;
+    private ItemStack itemConviction;
+
     public EntityMaidWeaponConviction(World worldIn) {
         super(worldIn);
         enumEquipment = EnumEquipment.CONVICTION;
+    }
+
+    public EntityMaidWeaponConviction(World world, ItemStack stack)
+    {
+        this(world);
+        this.itemConviction = stack.copy();
+        this.attackRadius = (int) MagicEquipmentUtils.getRadiusFromAxisAlignedBB(MagicEquipmentUtils.getUsingArea(stack, null, null));
     }
 
     @Override
@@ -23,31 +55,130 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
     {
         super.onUpdate();
 
-        if (!world.isRemote)
+        if (world.isRemote) {
+            gap = !gap;
+            if (gap)
+                return;
+            this.tick++;
+            if (tick > 12) tick = 0;
+
+            int t = tick % 6;
+            double d0 = (this.getEntityBoundingBox().minX + this.getEntityBoundingBox().maxX) / 2.0;
+            double d1 = this.getEntityBoundingBox().minY;
+            double d2 = (this.getEntityBoundingBox().minZ + this.getEntityBoundingBox().maxZ) / 2.0;
+
+            ParticleSpawner.spawnParticle(EnumCustomParticles.CROSS, d0 + radius * Math.sin(Math.toRadians(t * perAngle)), d1 + perHeight * t, d2 + radius * Math.cos(Math.toRadians(t * perAngle)), 0, 0, 0);
+        }
+    }
+
+    @Override
+    public void onLivingUpdate()
+    {
+        super.onLivingUpdate();
+
+        this.attackTick++;
+        if (this.attackTick == 120)
+            this.attackTick = 0;
+    }
+
+    @Override
+    protected void doOhterOwnerUpdate()
+    {
+        super.doOhterOwnerUpdate();
+
+        if (otherOwner == null)
+            return;
+        if (world.isRemote)
             return;
 
+        if (attackTick == 60)
+        {
+            AxisAlignedBB bb = MagicEquipmentUtils.getUsingArea(this.itemConviction, this, this.getEntityBoundingBox());
 
-        gap = !gap;
-        if (gap)
-            return;
-        this.tick++;
-        if (tick > 12) tick = 0;
+            playParticle(bb);
 
-        int t = tick % 6;
-        double d0 = (this.getEntityBoundingBox().minX + this.getEntityBoundingBox().maxX) / 2.0;
-        double d1 = this.getEntityBoundingBox().minY;
-        double d2 = (this.getEntityBoundingBox().minZ + this.getEntityBoundingBox().maxZ) / 2.0;
+            int damage = MagicEquipmentUtils.getAttackDamage(itemConviction, ((ItemWeapon)itemConviction.getItem()).getAttackType());
+            List<EntityLivingBase> entityLivings = this.world.getEntitiesWithinAABB(EntityLivingBase.class, bb);
 
-        ParticleSpawner.spawnParticle(EnumCustomParticles.CROSS, d0 + radius * Math.sin(Math.toRadians(t * perAngle)), d1 + perHeight * t, d2 + radius * Math.cos(Math.toRadians(t * perAngle)), 0, 0, 0);
+            for (EntityLivingBase entityLivingBase : entityLivings)
+            {
 
+                try {
+                    float health = entityLivingBase.getHealth();
+                    if (entityLivingBase instanceof IEntityMultiHealthCreature)
+                        health = ((IEntityMultiHealthCreature) entityLivingBase).getTrueHealth();
 
-//        CustomerParticlePacket particlePacket = new CustomerParticlePacket(
-//                d0 + radius * Math.sin(Math.toRadians(t * perAngle)),
-//                d1 + perHeight * t,
-//                d2 + radius * Math.cos(Math.toRadians(t * perAngle)), EnumCustomParticles.CROSS);
-//        NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(this.getEntityWorld().provider.getDimension(), d0, d1, d2, 40.0D);
-//        NetworkLoader.instance.sendToAllAround(particlePacket, target);
+                    if (health <= damage) {
+                        if (entityLivingBase == otherOwner)
+                            continue;
+                        else if (entityLivingBase instanceof EntityPlayer) {
+                            InventoryHelper.dropInventoryItems(entityLivingBase.getEntityWorld(), entityLivingBase.getPosition(), ((EntityPlayer) entityLivingBase).inventory);
+                            entityLivingBase.setDead();
+                        }
+                        else if (entityLivingBase instanceof EntityLiving){
+                            if (((EntityLiving) entityLivingBase).getAttackTarget() == this.otherOwner || entityLivingBase instanceof EntityMob) {
+                                removeTasks((EntityLiving) entityLivingBase);
+                                if (entityLivingBase instanceof IEntityAvoidThingCreature)
+                                    MagicCreatureUtils.unLock((IEntityAvoidThingCreature) entityLivingBase);
+                                entityLivingBase.setHealth(1);
+                                if (entityLivingBase instanceof IEntityAvoidThingCreature)
+                                    MagicCreatureUtils.lock((IEntityAvoidThingCreature) entityLivingBase);
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    ;
+                }
+            }
+        }
+        else if (attackTick == 80)
+            this.moveToBlockPosAndAngles(otherOwner.getPosition().add(0, otherOwner.height / 2.0, 0), rotationYaw, rotationPitch);
+        else if (attackTick == 100) {
+            EntityItem item = new EntityItem(world, posX, posY, posZ, this.itemConviction);
+            world.spawnEntity(item);
+            this.setDead();
+        }
+        else if (attackTick > 80 && this.getDistance(otherOwner) < 4){
+            if (otherOwner.getHeldItemMainhand().isEmpty()) {
+                otherOwner.setHeldItem(EnumHand.MAIN_HAND, itemConviction);
+                this.setDead();
+            }
+        }
+    }
 
+    private void playParticle(AxisAlignedBB bb) {
+        double d0 = (bb.minX + bb.maxX) / 2.0;
+        double d1 = bb.minY;
+        double d2 = (bb.minZ + bb.maxZ) / 2.0;
+        double perAngle = 360 / 10.0;
+        double perHeight = (bb.maxY - bb.minY) / 3.0;
+        double perRadius = bb.getAverageEdgeLength() / 10.0;
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 10; j++)
+            {
+                for (int k = 0; k < 10; k++) {
+                    CustomerParticlePacket particlePacket = new CustomerParticlePacket(
+                            d0 + perRadius * k * Math.sin(Math.toRadians(j * perAngle)),
+                            d1 + perHeight * i,
+                            d2 + perRadius * k * Math.cos(Math.toRadians(j * perAngle)), EnumCustomParticles.CROSS);
+                    NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(this.getEntityWorld().provider.getDimension(), d0, d1, d2, 40.0D);
+                    NetworkLoader.instance.sendToAllAround(particlePacket, target);
+                }
+            }
+    }
 
+    private void removeTasks(EntityLiving entityLiving)
+    {
+        List<EntityAITasks.EntityAITaskEntry> taskEntryList = new ArrayList<EntityAITasks.EntityAITaskEntry>(entityLiving.targetTasks.taskEntries);
+        for (EntityAITasks.EntityAITaskEntry ai : taskEntryList)
+        {
+            entityLiving.targetTasks.removeTask(ai.action);
+        }
+
+        taskEntryList = new ArrayList<EntityAITasks.EntityAITaskEntry>(entityLiving.tasks.taskEntries);
+        for (EntityAITasks.EntityAITaskEntry ai : taskEntryList)
+        {
+            entityLiving.tasks.removeTask(ai.action);
+        }
     }
 }

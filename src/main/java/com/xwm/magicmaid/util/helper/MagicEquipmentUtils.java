@@ -65,9 +65,12 @@ public class MagicEquipmentUtils
                 break;
             case PANDORA:
                 damage = 1;
+                break;
+            case CONVICTION:
+                damage = 50;
         }
 
-        return damage + (int)(Math.pow(damage * level * 0.2, 2));//todo 还有很多没写进来
+        return damage + (int)(Math.pow(Math.log(damage * level + 1), 2));//todo 还有很多没写进来
     }
 
     public static int getAttackDamage(EntityLivingBase player, ItemStack stack, EnumAttackType type)
@@ -101,6 +104,9 @@ public class MagicEquipmentUtils
                 break;
             case PANDORA:
                 damage = 1;
+                break;
+            case CONVICTION:
+                damage = 50;
         }
 
         return damage * factor + (int)(Math.pow(damage * level * 0.2, 2));//todo 还有很多没写进来
