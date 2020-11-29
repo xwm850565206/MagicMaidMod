@@ -2,31 +2,47 @@ package com.xwm.magicmaid.util.handlers;
 
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.PunishPacket;
-import net.minecraft.entity.player.EntityPlayer;
+import com.xwm.magicmaid.store.WorldDifficultyData;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.world.GameType;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-
-import java.util.Iterator;
 
 public class PunishOperationHandler
 {
     private static void kickPlayer(EntityPlayerMP entityPlayer)
     {
-        PunishPacket packet = new PunishPacket(2);
-        NetworkLoader.instance.sendTo(packet, entityPlayer);
+        int difficulty = WorldDifficultyData.get(entityPlayer.getEntityWorld()).getWorldDifficulty();
+        if (difficulty == 2) { // 难度2
+            PunishPacket packet = new PunishPacket(2);
+            NetworkLoader.instance.sendTo(packet, entityPlayer);
+        }
+        else if (difficulty == 1) { // 难度1
+            entityPlayer.setDead();
+        }
+        else { // 难度0
+            ;
+        }
     }
 
     private static void clearPlayerInv(EntityPlayerMP entityPlayer)
     {
-        entityPlayer.inventory.clear();
+        int difficulty = WorldDifficultyData.get(entityPlayer.getEntityWorld()).getWorldDifficulty();
+        if (difficulty == 2) {
+            entityPlayer.inventory.clear();
+        }
+        else if (difficulty == 1) {
+            InventoryHelper.dropInventoryItems(entityPlayer.getEntityWorld(), entityPlayer.getPosition(), entityPlayer.inventory);
+        }
+        else {
+
+        }
     }
 
     //todo
     private static void changeGameMode(EntityPlayerMP entityPlayer){
         if (entityPlayer.world.isRemote)
             return;
+//        FMLCommonHandler.instance().getMinecraftServerInstance().setForceGamemode(true);
 //        PunishPacket packet = new PunishPacket(4);
 //        NetworkLoader.instance.sendTo(packet, entityPlayer);
 //        FMLCommonHandler.instance().getMinecraftServerInstance().setGameType(GameType.ADVENTURE);
@@ -41,7 +57,8 @@ public class PunishOperationHandler
         if ((punishLevel & 4) == 4)
             changeGameMode(entityPlayer);
 
+        int difficulty = WorldDifficultyData.get(entityPlayer.getEntityWorld()).getWorldDifficulty();
         if (message != null && !message.equals(""))
-            entityPlayer.sendMessage(new TextComponentString(message));
+            entityPlayer.sendMessage(new TextComponentString("当前难度:" + difficulty + " 触发惩罚: " + message));
     }
 }

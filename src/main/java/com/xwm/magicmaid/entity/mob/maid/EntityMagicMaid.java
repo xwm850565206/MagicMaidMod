@@ -164,11 +164,12 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
     @Override
     public void onEntityUpdate()
     {
+        super.onEntityUpdate();
+
         if (this.getTrueHealth() > 0){
             if (this.isDead) this.isDead = false;
             if (this.deathTime > 0) this.deathTime = 0;
         }
-        super.onEntityUpdate();
     }
 
     @Override

@@ -113,43 +113,46 @@ public class ServerEntityDataPacket implements IMessage {
     public static class Handler implements IMessageHandler<ServerEntityDataPacket, IMessage> {
         @Override
         public IMessage onMessage(ServerEntityDataPacket message, MessageContext ctx) {
-            if (ctx.side != Side.SERVER)
-                return null;
-
-            World world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(message.dimension);
-            Entity entity = world.getEntityByID(message.id);
-            if (entity == null)
+            if (ctx.side != Side.CLIENT)
                 return null;
 
             try {
-                //更新nbt tag
-                switch (message.type) {
-                    case 0:
-                        entity.getEntityData().setBoolean(message.name, Boolean.valueOf(message.data));
-                        break;
-                    case 1:
-                        entity.getEntityData().setInteger(message.name, Integer.valueOf(message.data));
-                        break;
-                    case 2:
-                        entity.getEntityData().setDouble(message.name, Double.valueOf(message.data));
-                        break;
-                    case 3:
-                        entity.getEntityData().setString(message.name, String.valueOf(message.data));
-                        break;
-                }
+                World world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(message.dimension);
+                Entity entity = world.getEntityByID(message.id);
+                if (entity == null)
+                    return null;
 
-                //更新其他的
-                switch (message.type) {
-                    case 4:
-                        if (entity instanceof IEntityEquipmentCreature) {
-                            NonNullList<ItemStack> inventory = NonNullList.<ItemStack>withSize(((IEntityEquipmentCreature) entity).getSizeInventory(), ItemStack.EMPTY);
-                            ItemStackHelper.loadAllItems(message.compound, inventory);
-                            ((IEntityEquipmentCreature) entity).setInventory(inventory);
-                        }
+                try {
+                    //更新nbt tag
+                    switch (message.type) {
+                        case 0:
+                            entity.getEntityData().setBoolean(message.name, Boolean.valueOf(message.data));
+                            break;
+                        case 1:
+                            entity.getEntityData().setInteger(message.name, Integer.valueOf(message.data));
+                            break;
+                        case 2:
+                            entity.getEntityData().setDouble(message.name, Double.valueOf(message.data));
+                            break;
+                        case 3:
+                            entity.getEntityData().setString(message.name, String.valueOf(message.data));
+                            break;
+                    }
+
+                    //更新其他的
+                    switch (message.type) {
+                        case 4:
+                            if (entity instanceof IEntityEquipmentCreature) {
+                                NonNullList<ItemStack> inventory = NonNullList.<ItemStack>withSize(((IEntityEquipmentCreature) entity).getSizeInventory(), ItemStack.EMPTY);
+                                ItemStackHelper.loadAllItems(message.compound, inventory);
+                                ((IEntityEquipmentCreature) entity).setInventory(inventory);
+                            }
+                    }
+                } catch (Exception e) {
+                    System.out.println("entity data update failed, maybe formatter error");
                 }
-            } catch (Exception e)
-            {
-                System.out.println("entity data update failed, maybe formatter error");
+            } catch (Exception e) {
+                System.out.println("sync entity data failed");
             }
 
             return null;

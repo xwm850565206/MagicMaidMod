@@ -1,6 +1,7 @@
 package com.xwm.magicmaid.util.handlers;
 
 import com.xwm.magicmaid.init.*;
+import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.registry.MagicDimensionRegistry;
 import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.registry.MagicFormulaRegistry;
@@ -27,6 +28,14 @@ public class RegistryHandler
     {
         event.getRegistry().registerAll(ItemInit.ITEMS.toArray(new Item[0]));
         MagicEquipmentRegistry.registerAllEquipment();
+
+        for (Item item : ItemInit.ITEMS)
+        {
+            if (item instanceof ItemWeapon)
+            {
+                ((ItemWeapon)item).registerAttackDamage();
+            }
+        }
     }
 
     @SubscribeEvent

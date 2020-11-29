@@ -52,25 +52,9 @@ public class MagicEquipmentUtils
         ItemWeapon weapon = (ItemWeapon) stack.getItem();
         int level = weapon.getLevel(stack);
 
-        int damage = 0;
-        switch (type) {
-            case REPANTENCE:
-                damage = 10;
-                break;
-            case WHISPER:
-                damage = 20;
-                break;
-            case DEMONKILLER:
-                damage = 10;
-                break;
-            case PANDORA:
-                damage = 1;
-                break;
-            case CONVICTION:
-                damage = 50;
-        }
+        int damage = MagicEquipmentRegistry.getEquipmentAttack(type, level);
 
-        return damage + (int)(Math.pow(Math.log(damage * level + 1), 2));//todo 还有很多没写进来
+        return weapon.getBaseDamage() + damage;//todo 还有很多没写进来
     }
 
     public static int getAttackDamage(EntityLivingBase player, ItemStack stack, EnumAttackType type)
@@ -91,25 +75,9 @@ public class MagicEquipmentUtils
         ItemWeapon weapon = (ItemWeapon) stack.getItem();
         int level = weapon.getLevel(stack);
 
-        int damage = 0;
-        switch (type) {
-            case REPANTENCE:
-                damage = 10;
-                break;
-            case WHISPER:
-                damage = 20;
-                break;
-            case DEMONKILLER:
-                damage = 10;
-                break;
-            case PANDORA:
-                damage = 1;
-                break;
-            case CONVICTION:
-                damage = 50;
-        }
+        int damage = MagicEquipmentRegistry.getEquipmentAttack(type, level);
 
-        return damage * factor + (int)(Math.pow(damage * level * 0.2, 2));//todo 还有很多没写进来
+        return weapon.getBaseDamage() + damage;//todo 还有很多没写进来
     }
 
     public static void dropEquipment(int equipment, int count, World world, BlockPos pos)

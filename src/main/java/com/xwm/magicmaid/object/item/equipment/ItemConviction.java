@@ -45,7 +45,7 @@ public class ItemConviction extends ItemWeapon
      */
     @Override
     public void onUse(World worldIn, EntityLivingBase playerIn, EnumHand handIn, @Nullable List<EntityLivingBase> entityLivingBases) {
-        System.out.println(this.getUnlocalizedName());
+
         if (handIn != EnumHand.MAIN_HAND)
             return;
         if (worldIn.isRemote)
@@ -133,4 +133,8 @@ public class ItemConviction extends ItemWeapon
         return EnumAttackType.CONVICTION;
     }
 
+    //基础伤害
+    public int getBaseDamage() {
+        return 50;
+    }
 }

@@ -63,8 +63,7 @@ public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements 
     @Override
     public void onLivingUpdate()
     {
-        if (fightManager != null)
-            fightManager.onBossUpdate(this);
+        super.onLivingUpdate();
 
         if (EnumEquipment.valueOf(this.getWeaponType()) == EnumEquipment.NONE) {
             double f = rand.nextDouble();
@@ -80,7 +79,10 @@ public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements 
         this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));
         this.bossInfo.setPercent(getHealth() / getMaxHealth());
 
-        super.onLivingUpdate();
+
+        if (fightManager != null)
+            fightManager.onBossUpdate(this);
+
     }
 
     @Override

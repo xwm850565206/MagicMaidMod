@@ -2,7 +2,9 @@ package com.xwm.magicmaid.object.item;
 
 import com.xwm.magicmaid.Main;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -18,6 +20,20 @@ public class ItemHolyStone extends ItemBase
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        if (!isInCreativeTab(tab))
+            return;
+
+        for (int i = 0; i <= 6; i++){
+            ItemStack stack = new ItemStack(this);
+            stack.setItemDamage(i);
+            items.add(stack);
+        }
+    }
+
+
+    @Override
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn)
     {
         tooltip.add(TextFormatting.YELLOW + "这块石头里蕴含着非凡的能量");
@@ -26,13 +42,13 @@ public class ItemHolyStone extends ItemBase
         {
             int level = stack.getItemDamage();
             if (level < 2) {
-                tooltip.add(TextFormatting.GRAY + "品质: +" + level);
+                tooltip.add(TextFormatting.GRAY + "品质: + " + level);
             }
             else if (level < 4) {
-                tooltip.add(TextFormatting.YELLOW + "品质: +" + level);
+                tooltip.add(TextFormatting.YELLOW + "品质: + " + level);
             }
             else{
-                tooltip.add(TextFormatting.LIGHT_PURPLE + "品质: +" + level);
+                tooltip.add(TextFormatting.LIGHT_PURPLE + "品质: + " + level);
             }
         }
     }

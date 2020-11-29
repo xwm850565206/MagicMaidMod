@@ -36,7 +36,7 @@ import net.minecraftforge.fml.common.registry.EntityEntry;
 import java.util.Random;
 
 @Mod.EventBusSubscriber
-public class EventLoader
+public class CommonEventLoader
 {
     private static final Random rand =  new Random();
 

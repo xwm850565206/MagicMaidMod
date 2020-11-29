@@ -58,8 +58,8 @@ public class FormulaUpLevelDamage extends FormulaDamageCareless
         return 6;
     }
 
-    protected int getItemDamage(){
-        return this.keyItem.getItemDamage();
+    protected int getItemDamage(Formula f){
+        return f.keyItem.getItemDamage();
     }
 
     @Override
@@ -69,8 +69,8 @@ public class FormulaUpLevelDamage extends FormulaDamageCareless
             return false;
 
         //所有rawitem的damage必须一样
-        int damage = this.getItemDamage();
-        if (damage > getMaxLevel()) return false; // 等级上限
+        int damage = this.getItemDamage(f);
+        if (damage >= getMaxLevel()) return false; // 等级上限
         for (int i = 0; i < f.rawItems.size(); i++) {
             if (!f.rawItems.get(i).isEmpty() && damage != f.rawItems.get(i).getItemDamage()) return false;
         }

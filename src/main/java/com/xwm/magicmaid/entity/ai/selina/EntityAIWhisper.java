@@ -8,7 +8,7 @@ import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumSelineState;
-import com.xwm.magicmaid.network.CustomerParticlePacket;
+import com.xwm.magicmaid.network.ThreeParamParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
@@ -106,7 +106,7 @@ public class EntityAIWhisper extends EntityAIBase
         float d1 = (float) cbb.minY;
         float d2 = (float) ((cbb.minZ + cbb.maxZ) / 2.0);
         for (int i = 0; i < 36; i++){
-            CustomerParticlePacket particlePacket = new CustomerParticlePacket(
+            ThreeParamParticlePacket particlePacket = new ThreeParamParticlePacket(
                     d0 + radius * Math.sin(Math.toRadians(i * perAngle)),
                     d1,
                     d2 + radius * Math.cos(Math.toRadians(i * perAngle)), EnumCustomParticles.WHISPER);
@@ -181,8 +181,8 @@ public class EntityAIWhisper extends EntityAIBase
 
         for (int i = 0; i <= 10; i++)
         {
-            CustomerParticlePacket particlePacket =
-                    new CustomerParticlePacket(t0 + d0 * i, d1, t2 + d2 * i, EnumCustomParticles.WHISPER);
+            ThreeParamParticlePacket particlePacket =
+                    new ThreeParamParticlePacket(t0 + d0 * i, d1, t2 + d2 * i, EnumCustomParticles.WHISPER);
             NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(maid.getEntityWorld().provider.getDimension(), t0 + d0 * i, d1, t2 + d2 * i, 40.0D);
             NetworkLoader.instance.sendToAllAround(particlePacket, target);
 

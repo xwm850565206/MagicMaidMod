@@ -3,7 +3,7 @@ package com.xwm.magicmaid.entity.mob.weapon;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
-import com.xwm.magicmaid.network.DistinationParticlePacket;
+import com.xwm.magicmaid.network.SixParamParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
@@ -158,7 +158,7 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
         double d4 = (cbb.minY + cbb.maxY) / 2.0;
         double d5 = (cbb.minZ + cbb.maxZ) / 2.0;
         for (int i = 0; i < 4; i++) {
-            DistinationParticlePacket particlePacket = new DistinationParticlePacket(
+            SixParamParticlePacket particlePacket = new SixParamParticlePacket(
                             d0 + rand.nextDouble(),
                             d1 + rand.nextDouble(),
                             d2 + rand.nextDouble(), d3, d4, d5, EnumCustomParticles.PANDORA);

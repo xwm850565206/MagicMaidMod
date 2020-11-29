@@ -1,6 +1,6 @@
 package com.xwm.magicmaid.proxy;
 
-import com.xwm.magicmaid.event.EventRenderLoader;
+import com.xwm.magicmaid.event.ClientEventLoader;
 import com.xwm.magicmaid.object.tileentity.TileEntityChurchPortal;
 import com.xwm.magicmaid.render.portal.TileEntityChurchPortalRenderer;
 import com.xwm.magicmaid.util.handlers.RenderHandler;
@@ -24,7 +24,7 @@ public class ClientProxy extends CommonProxy
 
     public void init(FMLInitializationEvent event){
         super.init(event);
-        MinecraftForge.EVENT_BUS.register(new EventRenderLoader());
+        MinecraftForge.EVENT_BUS.register(new ClientEventLoader());
 
 //        registerItemRenderer(ItemInit.ITEM_CONVICTION, 0, "inventory");
     }
@@ -46,6 +46,6 @@ public class ClientProxy extends CommonProxy
 //        ModelLoader.setCustomMeshDefinition(item, meta, new ModelResourceLocation(item.getRegistryName(), id));
         ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName(), id));
 //        RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
-//        renderItem.getItemModelMesher().register(item, meta, new ModelResourceLocation(Reference.MODID + ":" + item.getUnlocalizedName().substring(5), id));
+//        renderItem.getItemModelMesher().registerEquipmentPiece(item, meta, new ModelResourceLocation(Reference.MODID + ":" + item.getUnlocalizedName().substring(5), id));
     }
 }

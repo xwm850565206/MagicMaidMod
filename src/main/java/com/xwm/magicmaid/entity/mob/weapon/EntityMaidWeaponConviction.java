@@ -3,11 +3,13 @@ package com.xwm.magicmaid.entity.mob.weapon;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAvoidThingCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityMultiHealthCreature;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
-import com.xwm.magicmaid.network.CustomerParticlePacket;
+import com.xwm.magicmaid.network.ThreeParamParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.network.ServerEntityDataPacket;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
+import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.helper.MagicCreatureUtils;
 import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import net.minecraft.entity.EntityLiving;
@@ -18,6 +20,7 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
@@ -77,7 +80,7 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
         super.onLivingUpdate();
 
         this.attackTick++;
-        if (this.attackTick == 120)
+        if (this.attackTick == 80)
             this.attackTick = 0;
     }
 
@@ -91,7 +94,7 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
         if (world.isRemote)
             return;
 
-        if (attackTick == 60)
+        if (attackTick == 40)
         {
             AxisAlignedBB bb = MagicEquipmentUtils.getUsingArea(this.itemConviction, this, this.getEntityBoundingBox());
 
@@ -109,8 +112,9 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
                         health = ((IEntityMultiHealthCreature) entityLivingBase).getTrueHealth();
 
                     if (health <= damage) {
-                        if (entityLivingBase == otherOwner)
-                            continue;
+                        if (entityLivingBase == otherOwner || entityLivingBase == this || !MagicEquipmentUtils.checkEnemy(otherOwner, entityLivingBase)) {
+                            ;
+                        }
                         else if (entityLivingBase instanceof EntityPlayer) {
                             InventoryHelper.dropInventoryItems(entityLivingBase.getEntityWorld(), entityLivingBase.getPosition(), ((EntityPlayer) entityLivingBase).inventory);
                             entityLivingBase.setDead();
@@ -123,7 +127,36 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
                                 entityLivingBase.setHealth(1);
                                 if (entityLivingBase instanceof IEntityAvoidThingCreature)
                                     MagicCreatureUtils.lock((IEntityAvoidThingCreature) entityLivingBase);
+                                //有罪
+                                NBTTagCompound entityData = entityLivingBase.getEntityData();
+                                entityData.setBoolean(Reference.EFFECT_CONVICTION, true);
+                                ServerEntityDataPacket packet = new ServerEntityDataPacket(entityLivingBase.getEntityId(),
+                                        entityLivingBase.getEntityWorld().provider.getDimension(),
+                                        0,
+                                        "true",
+                                        Reference.EFFECT_CONVICTION);
+                                NetworkLoader.instance.sendToAll(packet);
                             }
+                            else {
+                                NBTTagCompound entityData = entityLivingBase.getEntityData();
+                                entityData.setBoolean(Reference.EFFECT_CONVICTION, false);
+                                ServerEntityDataPacket packet = new ServerEntityDataPacket(entityLivingBase.getEntityId(),
+                                        entityLivingBase.getEntityWorld().provider.getDimension(),
+                                        0,
+                                        "false",
+                                        Reference.EFFECT_CONVICTION);
+                                NetworkLoader.instance.sendToAll(packet);
+                            }
+                        }
+                        else { // 无罪
+                            NBTTagCompound entityData = entityLivingBase.getEntityData();
+                            entityData.setBoolean(Reference.EFFECT_CONVICTION, false);
+                            ServerEntityDataPacket packet = new ServerEntityDataPacket(entityLivingBase.getEntityId(),
+                                    entityLivingBase.getEntityWorld().provider.getDimension(),
+                                    0,
+                                    "false",
+                                    Reference.EFFECT_CONVICTION);
+                            NetworkLoader.instance.sendToAll(packet);
                         }
                     }
                 } catch (Exception e) {
@@ -131,14 +164,14 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
                 }
             }
         }
-        else if (attackTick == 80)
+        else if (attackTick == 50)
             this.moveToBlockPosAndAngles(otherOwner.getPosition().add(0, otherOwner.height / 2.0, 0), rotationYaw, rotationPitch);
-        else if (attackTick == 100) {
+        else if (attackTick == 80) {
             EntityItem item = new EntityItem(world, posX, posY, posZ, this.itemConviction);
             world.spawnEntity(item);
             this.setDead();
         }
-        else if (attackTick > 80 && this.getDistance(otherOwner) < 4){
+        else if (attackTick > 50 && this.getDistance(otherOwner) < 4){
             if (otherOwner.getHeldItemMainhand().isEmpty()) {
                 otherOwner.setHeldItem(EnumHand.MAIN_HAND, itemConviction);
                 this.setDead();
@@ -157,7 +190,7 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
             for (int j = 0; j < 10; j++)
             {
                 for (int k = 0; k < 10; k++) {
-                    CustomerParticlePacket particlePacket = new CustomerParticlePacket(
+                    ThreeParamParticlePacket particlePacket = new ThreeParamParticlePacket(
                             d0 + perRadius * k * Math.sin(Math.toRadians(j * perAngle)),
                             d1 + perHeight * i,
                             d2 + perRadius * k * Math.cos(Math.toRadians(j * perAngle)), EnumCustomParticles.CROSS);

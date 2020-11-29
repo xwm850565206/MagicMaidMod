@@ -2,7 +2,7 @@ package com.xwm.magicmaid.object.item.equipment;
 
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
-import com.xwm.magicmaid.network.CustomerParticlePacket;
+import com.xwm.magicmaid.network.ThreeParamParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.ParticlePacket;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
@@ -132,7 +132,7 @@ public class ItemRepantence extends ItemWeapon
      */
     public int getMaxItemUseDuration(ItemStack stack)
     {
-        return 30 - 4 * getLevel(stack);
+        return Math.max(30 - 4 * getLevel(stack), 5);
     }
 
     public void onUsingTick(ItemStack stack, EntityLivingBase player, int count)
@@ -167,7 +167,7 @@ public class ItemRepantence extends ItemWeapon
         double d2 = (bb.minZ + bb.maxZ) / 2.0;
         for (int j = 0; j < 2; j++)
         {
-            CustomerParticlePacket particlePacket = new CustomerParticlePacket(
+            ThreeParamParticlePacket particlePacket = new ThreeParamParticlePacket(
                     d0 + itemRand.nextDouble(),
                     d1 + itemRand.nextDouble(),
                     d2 + itemRand.nextDouble(), EnumCustomParticles.SOUL);
@@ -178,5 +178,10 @@ public class ItemRepantence extends ItemWeapon
 
     public EnumAttackType getAttackType() {
         return EnumAttackType.REPANTENCE;
+    }
+
+    //基础伤害
+    public int getBaseDamage() {
+        return 15;
     }
 }

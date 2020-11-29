@@ -319,7 +319,7 @@ public class TileEntityMagicCircle extends TileEntity implements IInventory, ITi
 
     @Override
     public void clear() {
-
+        this.inventory.clear();
     }
 
     @Nullable

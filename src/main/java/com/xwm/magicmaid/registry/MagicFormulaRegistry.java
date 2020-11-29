@@ -68,19 +68,19 @@ public class MagicFormulaRegistry
 
         String levelKey = Reference.MODID + "_level";
         registerFormula(ItemInit.ITEM_REPANTENCE.getRegistryName(), FormulaUpLevelComponent.create(new ItemStack(ItemInit.ITEM_REPANTENCE), levelKey, new ItemStack(ItemInit.ITEM_HOLY_STONE), new ItemStack(ItemInit.ITEM_HOLY_STONE)),
-                ResultNBTTagCompound.create(new ArrayList<>(), Result.MetadataTypes.INCREASE, 1, Reference.MODID + "_level"), 50);
+                ResultNBTTagCompound.create(new ArrayList<>(), Result.MetadataTypes.INCREASE, 1, levelKey), 50);
 
         registerFormula(ItemInit.ITEM_CONVICTION.getRegistryName(), FormulaUpLevelComponent.create(new ItemStack(ItemInit.ITEM_CONVICTION), levelKey, new ItemStack(ItemInit.ITEM_HOLY_STONE), new ItemStack(ItemInit.ITEM_HOLY_STONE)),
-                ResultNBTTagCompound.create(new ArrayList<>(), Result.MetadataTypes.INCREASE, 1, Reference.MODID + "_level"), 50);
+                ResultNBTTagCompound.create(new ArrayList<>(), Result.MetadataTypes.INCREASE, 1, levelKey), 50);
 
         registerFormula(ItemInit.ITEM_PANDORA.getRegistryName(), FormulaUpLevelComponent.create(new ItemStack(ItemInit.ITEM_PANDORA), levelKey, new ItemStack(ItemInit.ITEM_HOLY_STONE), new ItemStack(ItemInit.ITEM_HOLY_STONE)),
-                ResultNBTTagCompound.create(new ArrayList<>(), Result.MetadataTypes.INCREASE, 1, Reference.MODID + "_level"), 50);
+                ResultNBTTagCompound.create(new ArrayList<>(), Result.MetadataTypes.INCREASE, 1, levelKey), 50);
 
         registerFormula(ItemInit.ITEM_WHISPER.getRegistryName(), FormulaUpLevelComponent.create(new ItemStack(ItemInit.ITEM_WHISPER), levelKey, new ItemStack(ItemInit.ITEM_HOLY_STONE), new ItemStack(ItemInit.ITEM_HOLY_STONE)),
-                ResultNBTTagCompound.create(new ArrayList<>(), Result.MetadataTypes.INCREASE, 1, Reference.MODID + "_level"), 50);
+                ResultNBTTagCompound.create(new ArrayList<>(), Result.MetadataTypes.INCREASE, 1, levelKey), 50);
 
         registerFormula(ItemInit.ITEM_DEMON_KILLER_SWORD.getRegistryName(), FormulaUpLevelComponent.create(new ItemStack(ItemInit.ITEM_DEMON_KILLER_SWORD), levelKey, new ItemStack(ItemInit.ITEM_HOLY_STONE), new ItemStack(ItemInit.ITEM_HOLY_STONE)),
-                ResultNBTTagCompound.create(new ArrayList<>(), Result.MetadataTypes.INCREASE, 1, Reference.MODID + "_level"), 50);
+                ResultNBTTagCompound.create(new ArrayList<>(), Result.MetadataTypes.INCREASE, 1, levelKey), 50);
 //        ItemStack stone0 = new ItemStack(ItemInit.ITEM_HOLY_STONE);
 //        stone0.setItemDamage(0);
 //        registerFormula(ItemInit.ITEM_HOLY_STONE.getRegistryName(), FormulaDamageCareless.create(stone0.copy(), stone0.copy(), stone0.copy(), stone0.copy(), stone0.copy()),

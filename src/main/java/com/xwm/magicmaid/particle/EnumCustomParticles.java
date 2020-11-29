@@ -14,7 +14,8 @@ public enum EnumCustomParticles
     CONVICTION("conviction", 2, false),
     STAR("star", 3, false),
     PANDORA("pandora", 4, false),
-    WHISPER("whisper", 5, false);
+    WHISPER("whisper", 5, false),
+    SWEEP("sweep", 6, false);
 
     private final String particleName;
     private final int particleID;

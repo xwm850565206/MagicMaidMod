@@ -6,7 +6,7 @@ import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.init.PotionInit;
-import com.xwm.magicmaid.network.CustomerParticlePacket;
+import com.xwm.magicmaid.network.ThreeParamParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
@@ -134,7 +134,7 @@ public class EntityAIConviction extends EntityAIBase
         double d1 = bb.maxY;
         double d2 = (bb.minZ + bb.maxZ) / 2.0;
         for (int i = 0; i < 4; i++) {
-            CustomerParticlePacket particlePacket = new CustomerParticlePacket(
+            ThreeParamParticlePacket particlePacket = new ThreeParamParticlePacket(
                     d0 + random.nextDouble(),
                     d1 + random.nextDouble(),
                     d2 + random.nextDouble(), EnumCustomParticles.CONVICTION);
@@ -154,7 +154,7 @@ public class EntityAIConviction extends EntityAIBase
             for (int j = 0; j < 10; j++)
             {
                 for (int k = 0; k < 20; k++) {
-                    CustomerParticlePacket particlePacket = new CustomerParticlePacket(
+                    ThreeParamParticlePacket particlePacket = new ThreeParamParticlePacket(
                             d0 + perRadius * k * Math.sin(Math.toRadians(j * perAngle)),
                             d1 + perHeight * i,
                             d2 + perRadius * k * Math.cos(Math.toRadians(j * perAngle)), EnumCustomParticles.CROSS);

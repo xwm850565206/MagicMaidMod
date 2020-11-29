@@ -1,6 +1,5 @@
 package com.xwm.magicmaid.network;
 
-import com.xwm.magicmaid.event.EventLoader;
 import com.xwm.magicmaid.init.DimensionInit;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.item.EntityItem;
@@ -14,8 +13,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
-
-import java.io.IOException;
 
 public class AddBookPacket implements IMessage
 {

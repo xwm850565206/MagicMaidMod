@@ -63,12 +63,12 @@ public class FormulaUpLevelComponent extends FormulaUpLevelDamage
 
     @Override
     protected int getMaxLevel() {
-        return 6;
+        return 7;
     }
 
     @Override
-    protected int getItemDamage(){
-        NBTTagCompound compound = this.keyItem.getTagCompound();
+    protected int getItemDamage(Formula f){
+        NBTTagCompound compound = f.keyItem.getTagCompound();
         if (compound == null || !compound.hasKey(this.componentKey))
             return 0;
         return compound.getInteger(this.componentKey);

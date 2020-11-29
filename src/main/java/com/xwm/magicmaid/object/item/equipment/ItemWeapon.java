@@ -1,6 +1,7 @@
 package com.xwm.magicmaid.object.item.equipment;
 
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import net.minecraft.client.util.ITooltipFlag;
@@ -17,6 +18,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ItemWeapon extends ItemEquipment
@@ -32,11 +34,31 @@ public abstract class ItemWeapon extends ItemEquipment
         return EnumAttackType.NORMAL;
     }
 
+    public void registerAttackDamage() {
+        List<Integer> attackList = new ArrayList<>();
+        for (int i = 0; i <= 7; i++)
+        {
+            attackList.add((int) Math.ceil(Math.sqrt(getBaseDamage() * i * 7 * Math.log(1 + i * i))));
+        }
+
+        MagicEquipmentRegistry.registerEquipmentAttack(getAttackType(), attackList);
+    }
+
+    //基础伤害
+    public int getBaseDamage() {
+        return 0;
+    }
+
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn)
     {
         int level = getLevel(stack);
-        tooltip.add(TextFormatting.RED + "等级: " + level);
+        if (level < 7) {
+            tooltip.add(TextFormatting.RED + "等级: " + level);
+        }
+        else {
+            tooltip.add(TextFormatting.RED + "满级");
+        }
         tooltip.add(TextFormatting.DARK_RED + "伤害: " + MagicEquipmentUtils.getAttackDamage(stack, getAttackType()));
         tooltip.add(TextFormatting.DARK_RED + "攻击范围: " + MagicEquipmentUtils.getUsingArea(stack, null, null));
         if (this.isChargeable()) {

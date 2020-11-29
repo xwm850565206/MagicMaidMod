@@ -7,6 +7,7 @@ import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityMultiHealthCreature;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidMarthaBoss;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidRettBoss;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidSelinaBoss;
+import com.xwm.magicmaid.util.helper.MagicCreatureUtils;
 import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -119,9 +120,9 @@ public abstract class EntityBossBall extends EntityThrowable
                         ((IEntityMultiHealthCreature) entity).setHealthbarnum(0);
                         if (entity instanceof IEntityAvoidThingCreature)
                         {
-                            ((IEntityAvoidThingCreature) entity).setAvoidDamage(-1);
-                            ((IEntityAvoidThingCreature) entity).setAvoidSetHealth(-1);
+                            MagicCreatureUtils.unLock((IEntityAvoidThingCreature) entity);
                             entity.attackEntityFrom(DamageSource.causeMobDamage(thrower), 100); //默认所有生物的最大生命值是100
+                            MagicCreatureUtils.lock((IEntityAvoidThingCreature) entity);
                         }
                     }
                 }

@@ -256,6 +256,7 @@ public abstract class AbstructEntityMagicCreature extends EntityCreature impleme
         if (this.getHealthBarNum() > 0){ //如果血条没掉完 是不会死的
             this.setHealthbarnum(this.getHealthBarNum()-1);
             this.setHealth(this.getMaxHealth());
+            this.deathTime = 0;
         }
         else{
             super.onDeath(cause);
@@ -266,6 +267,9 @@ public abstract class AbstructEntityMagicCreature extends EntityCreature impleme
     public void setDead(){
         if (getTrueHealth() <= 0) { //血条没掉完不允许被杀死 所以指令应该没用
             super.setDead();
+        }
+        else {
+            this.deathTime = 0;
         }
     }
 

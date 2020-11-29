@@ -20,8 +20,8 @@ public class NetworkLoader
     public NetworkLoader(FMLPreInitializationEvent event)
     {
         registerMessage(ParticlePacket.Handler.class, ParticlePacket.class, Side.CLIENT);
-        registerMessage(CustomerParticlePacket.Handler.class, CustomerParticlePacket.class, Side.CLIENT);
-        registerMessage(DistinationParticlePacket.Handler.class, DistinationParticlePacket.class, Side.CLIENT);
+        registerMessage(ThreeParamParticlePacket.Handler.class, ThreeParamParticlePacket.class, Side.CLIENT);
+        registerMessage(SixParamParticlePacket.Handler.class, SixParamParticlePacket.class, Side.CLIENT);
         registerMessage(MaidModePacket.Handler.class, MaidModePacket.class, Side.SERVER);
         registerMessage(SoundPacket.Handler.class, SoundPacket.class, Side.CLIENT);
         registerMessage(VelocityPacket.Handler.class, VelocityPacket.class, Side.CLIENT);

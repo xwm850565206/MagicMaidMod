@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class DistinationParticlePacket implements IMessage
+public class ThreeParamParticlePacket implements IMessage
 {
     private boolean messageValid;
 
@@ -18,18 +18,15 @@ public class DistinationParticlePacket implements IMessage
     public EnumCustomParticles particle;
 
 
-    public DistinationParticlePacket(){
+    public ThreeParamParticlePacket(){
         this.messageValid = false;
     }
 
-    public DistinationParticlePacket(double x, double y, double z, double tx, double ty, double tz, EnumCustomParticles particle)
+    public ThreeParamParticlePacket(double x, double y, double z, EnumCustomParticles particle)
     {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.tx = tx;
-        this.ty = ty;
-        this.tz = tz;
         this.particle = particle;
         this.messageValid = true;
     }
@@ -42,9 +39,6 @@ public class DistinationParticlePacket implements IMessage
             this.x = buf.readDouble();
             this.y = buf.readDouble();
             this.z = buf.readDouble();
-            this.tx = buf.readDouble();
-            this.ty = buf.readDouble();
-            this.tz = buf.readDouble();
             this.particle = EnumCustomParticles.getParticleFromId(buf.readInt());
         }
         catch (IndexOutOfBoundsException e)
@@ -63,16 +57,13 @@ public class DistinationParticlePacket implements IMessage
         buf.writeDouble(x);
         buf.writeDouble(y);
         buf.writeDouble(z);
-        buf.writeDouble(tx);
-        buf.writeDouble(ty);
-        buf.writeDouble(tz);
         buf.writeInt(particle.getParticleID());
     }
 
-    public static class Handler implements IMessageHandler<DistinationParticlePacket, IMessage>
+    public static class Handler implements IMessageHandler<ThreeParamParticlePacket, IMessage>
     {
         @Override
-        public IMessage onMessage(DistinationParticlePacket message, MessageContext ctx)
+        public IMessage onMessage(ThreeParamParticlePacket message, MessageContext ctx)
         {
             if (message.messageValid && ctx.side != Side.CLIENT)
                 return null;
@@ -82,9 +73,10 @@ public class DistinationParticlePacket implements IMessage
             return null;
         }
 
-        private void processMessage(DistinationParticlePacket message, MessageContext ctx){
+        private void processMessage(ThreeParamParticlePacket message, MessageContext ctx){
 
-            ParticleSpawner.spawnParticle(message.particle, message.x, message.y, message.z, message.tx, message.ty, message.tz);
+            //后3个参数是备选参数
+            ParticleSpawner.spawnParticle(message.particle, message.x, message.y, message.z,0, 0, 0);
         }
     }
 }

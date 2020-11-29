@@ -62,7 +62,10 @@ public class EntityMagicMaidRettBoss extends EntityMagicMaidRett implements IEnt
     @Override
     public void onLivingUpdate()
     {
-        if (EnumEquipment.valueOf(this.getWeaponType()) == EnumEquipment.NONE) {
+        super.onLivingUpdate();
+
+
+        if (getTrueHealth() > 0 && EnumEquipment.valueOf(this.getWeaponType()) == EnumEquipment.NONE) {
             this.setInventorySlotContents(0, new ItemStack(ItemInit.ITEM_DEMON_KILLER_SWORD));
             this.setInventorySlotContents(1, new ItemStack(ItemInit.ITEM_IMMORTAL));
         }
@@ -71,7 +74,9 @@ public class EntityMagicMaidRettBoss extends EntityMagicMaidRett implements IEnt
         this.bossInfo.setPercent(getHealth() / getMaxHealth());
 
 
-        super.onLivingUpdate();
+        if (fightManager != null)
+            fightManager.onBossUpdate(this);
+
     }
 
     @Override

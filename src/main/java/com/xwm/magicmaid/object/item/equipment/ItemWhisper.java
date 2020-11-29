@@ -235,4 +235,9 @@ public class ItemWhisper extends ItemWeapon
     public EnumAttackType getAttackType() {
         return EnumAttackType.WHISPER;
     }
+
+    //基础伤害
+    public int getBaseDamage() {
+        return 20;
+    }
 }

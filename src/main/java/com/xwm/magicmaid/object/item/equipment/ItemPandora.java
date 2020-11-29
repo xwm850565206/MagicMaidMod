@@ -130,4 +130,9 @@ public class ItemPandora extends ItemWeapon
     public EnumAttackType getAttackType() {
         return EnumAttackType.PANDORA;
     }
+
+    //基础伤害
+    public int getBaseDamage() {
+        return 1;
+    }
 }

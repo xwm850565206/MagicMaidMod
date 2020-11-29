@@ -61,6 +61,8 @@ public class ParticleSpawner
                 return new PandoraParticle(mc.world, d0, d1, d2, d3, d4, d5);
             case WHISPER:
                 return new WhisperParticle(mc.world, d0, d1, d2);
+            case SWEEP:
+                return new SweepAttackParticle(mc.world, d0, d1, d2, d3, (float) d4);
 //            case RED_STRIP: return new SuperHimAttackParticle(mc.world, d0, d1, d2, 0xDC143C);
 //            case ORANGE_STRIP: return new SuperHimAttackParticle(mc.world, d0, d1, d2, 0xFFA500);
 //            case PURPLE_STRIP: return new SuperHimAttackParticle(mc.world, d0, d1, d2, 0xD15FEE);

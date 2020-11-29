@@ -5,7 +5,7 @@ import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
-import com.xwm.magicmaid.network.CustomerParticlePacket;
+import com.xwm.magicmaid.network.ThreeParamParticlePacket;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.ParticlePacket;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
@@ -141,7 +141,7 @@ public class EntityAIRepantence extends EntityAIBase
         double d2 = (bb.minZ + bb.maxZ) / 2.0;
         for (int j = 0; j < 2; j++)
         {
-            CustomerParticlePacket particlePacket = new CustomerParticlePacket(
+            ThreeParamParticlePacket particlePacket = new ThreeParamParticlePacket(
                     d0 + random.nextDouble(),
                     d1 + random.nextDouble(),
                     d2 + random.nextDouble(), EnumCustomParticles.SOUL);

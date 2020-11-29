@@ -19,6 +19,15 @@ public class GuiMagicCircle extends GuiContainer
     }
 
     /**
+     * Draws the screen and all the components in it.
+     */
+    public void drawScreen(int mouseX, int mouseY, float partialTicks)
+    {
+        this.drawDefaultBackground();
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
+    }
+    /**
      * Draws the background layer of this container (behind the items).
      *
      * @param partialTicks

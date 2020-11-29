@@ -3,13 +3,15 @@ package com.xwm.magicmaid.event;
 import com.xwm.magicmaid.init.BlockInit;
 import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.init.PotionInit;
-import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.ClientEntityDataPacket;
+import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySkeleton;
@@ -19,6 +21,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -35,7 +39,7 @@ import java.util.Random;
 
 //控制各种渲染
 @Mod.EventBusSubscriber
-public class EventRenderLoader
+public class ClientEventLoader
 {
     private List<List<Integer>> biancolor = new ArrayList<List<Integer>>(){{
         add(Arrays.asList(67, 235, 217));
@@ -155,6 +159,37 @@ public class EventRenderLoader
             return;
         }
 
+    }
+
+    public static final ResourceLocation QUARTZ = new ResourceLocation("minecraft", "textures/blocks/quartz_block_chiseled_top.png");
+
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void onConvictionRender(RenderLivingEvent.Pre event)
+    {
+        EntityLivingBase entityLivingBase = event.getEntity();
+        NBTTagCompound entityData = entityLivingBase.getEntityData();
+
+        if (entityData.hasKey(Reference.EFFECT_CONVICTION))
+        {
+            AxisAlignedBB bb = entityLivingBase.getEntityBoundingBox();
+            double renderPosX = (bb.maxX + bb.minX) / 2.0 - TileEntityRendererDispatcher.staticPlayerX - 0.5;
+            double renderPosY = bb.maxY - TileEntityRendererDispatcher.staticPlayerY;
+            double renderPosZ = (bb.maxZ + bb.minZ) / 2.0 - TileEntityRendererDispatcher.staticPlayerZ - 0.5;
+
+            boolean flag = entityData.getBoolean(Reference.EFFECT_CONVICTION);
+            float[] color = null;
+            if (flag) {
+                color = new float[]{0.2f, 0.2f, 0.2f};
+                Minecraft.getMinecraft().getTextureManager().bindTexture(QUARTZ);
+                }
+            else{
+                color = new float[]{1.0f, 1.0f, 0.0f};
+                event.getRenderer().bindTexture(QUARTZ);
+            }
+            TileEntityBeaconRenderer.renderBeamSegment(renderPosX, renderPosY, renderPosZ, 1.0, 1.0, (double) entityLivingBase.getEntityWorld().getTotalWorldTime(), 0, 256, color);
+
+        }
     }
 
     //渲染红色警告区域
