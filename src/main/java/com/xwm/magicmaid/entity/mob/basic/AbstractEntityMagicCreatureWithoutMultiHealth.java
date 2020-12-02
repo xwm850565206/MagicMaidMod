@@ -2,7 +2,6 @@ package com.xwm.magicmaid.entity.mob.basic;
 
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAttackableCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAvoidThingCreature;
-import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityMultiHealthCreature;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
@@ -15,14 +14,8 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
-public abstract class AbstructEntityMagicCreature extends EntityCreature implements IEntityMultiHealthCreature, IEntityAttackableCreature, IEntityAvoidThingCreature
+public abstract class AbstractEntityMagicCreatureWithoutMultiHealth extends EntityCreature implements IEntityAttackableCreature, IEntityAvoidThingCreature
 {
-    /**
-     * multi-health creature
-     */
-    protected static int max_health_bar_num = 10;
-    private static final DataParameter<Integer> MAX_HEALTH_BAR_NUM = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> HEALTH_BAR_NUM = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
 
     /**
      * avoid thing creature
@@ -37,7 +30,7 @@ public abstract class AbstructEntityMagicCreature extends EntityCreature impleme
      */
     private Boolean isPerformAttack = false;
 
-    public AbstructEntityMagicCreature(World worldIn) {
+    public AbstractEntityMagicCreatureWithoutMultiHealth(World worldIn) {
         super(worldIn);
     }
 
@@ -45,8 +38,6 @@ public abstract class AbstructEntityMagicCreature extends EntityCreature impleme
     protected void entityInit()
     {
         super.entityInit();
-        this.dataManager.register(MAX_HEALTH_BAR_NUM, 10);
-        this.dataManager.register(HEALTH_BAR_NUM, 10);
         this.dataManager.register(MAX_SET_HEALTH, 50);
         this.dataManager.register(MAX_DAMAGE_HEALTH, 50);
     }
@@ -77,8 +68,6 @@ public abstract class AbstructEntityMagicCreature extends EntityCreature impleme
     public void writeEntityToNBT(NBTTagCompound compound)
     {
         super.writeEntityToNBT(compound);
-        compound.setInteger("healthBarNum", this.getHealthBarNum());
-        compound.setInteger("max_health_bar_num", this.getMaxHealthBarnum());
         compound.setInteger("avoid_set_num", this.getAvoidSetHealth());
         compound.setInteger("avoid_damage_num", this.getAvoidDamage());
     }
@@ -87,8 +76,6 @@ public abstract class AbstructEntityMagicCreature extends EntityCreature impleme
     public void readEntityFromNBT(NBTTagCompound compound)
     {
         super.readEntityFromNBT(compound);
-        this.setHealthbarnum(compound.getInteger("healthBarNum"));
-        this.setMaxHealthbarnum(compound.getInteger("max_health_bar_num"));
         this.setAvoidSetHealth(compound.getInteger("avoid_set_num"));
         this.setAvoidDamage(compound.getInteger("avoid_damage_num"));
     }
@@ -145,65 +132,6 @@ public abstract class AbstructEntityMagicCreature extends EntityCreature impleme
 
 
     /**
-     * 设置血条最大值
-     *
-     * @param maxhealthbarnum
-     */
-    @Override
-    public void setMaxHealthbarnum(int maxhealthbarnum){
-         this.dataManager.set(MAX_HEALTH_BAR_NUM, maxhealthbarnum);
-    }
-
-
-    /**
-     * 得到血条最大值
-     *
-     * @return
-     */
-    @Override
-    public int getMaxHealthBarnum() {
-        return dataManager.get(MAX_HEALTH_BAR_NUM);
-    }
-
-    /**
-     * 设置当前血条数
-     *
-     * @param healthbarnum
-     */
-    @Override
-    public void setHealthbarnum(int healthbarnum) {
-        this.dataManager.set(HEALTH_BAR_NUM, healthbarnum);
-    }
-
-    /**
-     * 得到当前血条数
-     *
-     * @return
-     */
-    @Override
-    public int getHealthBarNum() {
-        return this.dataManager.get(HEALTH_BAR_NUM);
-    }
-
-    /**
-     * 得到当前真正血量
-     * @return
-     */
-    @Override
-    public float getTrueHealth(){
-        return getMaxHealth() * getHealthBarNum() + Math.max(getHealth(), 0);
-    }
-
-    /**
-     * 得到当前最大血量
-     * @return
-     */
-    @Override
-    public float getTrueMaxHealth() {
-        return getMaxHealthBarnum() * getMaxHealth();
-    }
-
-    /**
      * 直接设置血量
      * @param health
      */
@@ -220,75 +148,59 @@ public abstract class AbstructEntityMagicCreature extends EntityCreature impleme
     }
 
 
-    /**
-     * 恢复生命
-     * @param healAmount
-     */
-    @Override
-    public void heal(float healAmount){
-        if (healAmount < 0)
-            return;
-        float t = healAmount + getHealth();
-        int barHeal = (int)(t / getMaxHealth());
-        float heal = t - barHeal * getMaxHealth();
-        setHealthbarnum(Math.min(getHealthBarNum()+barHeal, getMaxHealthBarnum()));
-        super.heal(heal);
-    }
+//    /**
+//     * 恢复生命
+//     * @param healAmount
+//     */
+//    @Override
+//    public void heal(float healAmount){
+//        if (healAmount < 0)
+//            return;
+//        float t = healAmount + getHealth();
+//        int barHeal = (int)(t / getMaxHealth());
+//        float heal = t - barHeal * getMaxHealth();
+//        setHealthbarnum(Math.min(getHealthBarNum()+barHeal, getMaxHealthBarnum()));
+//        super.heal(heal);
+//    }
 
-    /**
-     * 死亡的回收步骤
-     */
-    @Override
-    public void onDeathUpdate() {
-        if (this.getHealthBarNum() > 0){ //如果血条没掉完 是不会死的
-            this.setHealthbarnum(this.getHealthBarNum()-1);
-            this.setHealth(this.getMaxHealth());
-            this.deathTime = 0;
-        }
-        else{
-            super.onDeathUpdate();
-        }
-    }
+//    /**
+//     * 死亡的回收步骤
+//     */
+//    @Override
+//    public void onDeathUpdate() {
+//        if (this.getHealthBarNum() > 0){ //如果血条没掉完 是不会死的
+//            this.setHealthbarnum(this.getHealthBarNum()-1);
+//            this.setHealth(this.getMaxHealth());
+//            this.deathTime = 0;
+//        }
+//        else{
+//            super.onDeathUpdate();
+//        }
+//    }
 
-    @Override
-    public void onDeath(DamageSource cause)
-    {
-        if (this.getHealthBarNum() > 0){ //如果血条没掉完 是不会死的
-            this.setHealthbarnum(this.getHealthBarNum()-1);
-            this.setHealth(this.getMaxHealth());
-            this.deathTime = 0;
-        }
-        else{
-            super.onDeath(cause);
-        }
-    }
+//    @Override
+//    public void onDeath(DamageSource cause)
+//    {
+//        if (this.getHealthBarNum() > 0){ //如果血条没掉完 是不会死的
+//            this.setHealthbarnum(this.getHealthBarNum()-1);
+//            this.setHealth(this.getMaxHealth());
+//            this.deathTime = 0;
+//        }
+//        else{
+//            super.onDeath(cause);
+//        }
+//    }
 
-    @Override
-    public void setDead(){
-        if (getTrueHealth() <= 0) { //血条没掉完不允许被杀死 所以指令应该没用
-            super.setDead();
-        }
-        else {
-            this.deathTime = 0;
-        }
-    }
-
-    @Override
-    public boolean isEntityAlive(){
-        return this.getTrueHealth() > 0;
-    }
-
-
-    /**
-     * 直接死亡
-     */
-    @Override
-    public void killSelf() {
-        setAvoidDamage(-1);
-        setAvoidSetHealth(-1);
-        setHealthbarnum(0);
-        setHealth(0);
-    }
+//    @Override
+//    public void setDead(){
+//        if (getTrueHealth() <= 0) { //血条没掉完不允许被杀死 所以指令应该没用
+//            super.setDead();
+//        }
+//        else {
+//            this.deathTime = 0;
+//        }
+//    }
+//
 
     /**
      * 普通攻击

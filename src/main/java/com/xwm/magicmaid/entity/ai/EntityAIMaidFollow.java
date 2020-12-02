@@ -1,12 +1,9 @@
 package com.xwm.magicmaid.entity.ai;
 
-import com.xwm.magicmaid.entity.mob.basic.AbstructEntityMagicCreature;
+import com.xwm.magicmaid.entity.mob.basic.AbstractEntityMagicCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityMultiModeCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityTameableCreature;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumMode;
-import com.xwm.magicmaid.init.DimensionInit;
-import com.xwm.magicmaid.world.dimension.ChurchTeleporter;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -20,12 +17,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class EntityAIMaidFollow extends EntityAIBase
 {
-    private final AbstructEntityMagicCreature tameable;
+    private final AbstractEntityMagicCreature tameable;
     private EntityLivingBase owner;
     World world;
     private final double followSpeed;
@@ -35,7 +31,7 @@ public class EntityAIMaidFollow extends EntityAIBase
     float minDist;
     private float oldWaterCost;
 
-    public EntityAIMaidFollow(AbstructEntityMagicCreature tameableIn, double followSpeedIn, float minDistIn, float maxDistIn)
+    public EntityAIMaidFollow(AbstractEntityMagicCreature tameableIn, double followSpeedIn, float minDistIn, float maxDistIn)
     {
         this.tameable = tameableIn;
         this.world = tameableIn.world;

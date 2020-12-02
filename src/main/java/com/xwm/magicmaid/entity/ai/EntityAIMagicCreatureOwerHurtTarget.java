@@ -1,10 +1,8 @@
 package com.xwm.magicmaid.entity.ai;
 
-import com.xwm.magicmaid.entity.mob.basic.AbstructEntityMagicCreature;
-import com.xwm.magicmaid.entity.mob.basic.EntityTameableCreature;
+import com.xwm.magicmaid.entity.mob.basic.AbstractEntityMagicCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityMultiModeCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityTameableCreature;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITarget;
@@ -12,11 +10,11 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class EntityAIMagicCreatureOwerHurtTarget extends EntityAITarget
 {
-    AbstructEntityMagicCreature tameable;
+    AbstractEntityMagicCreature tameable;
     EntityLivingBase attacker;
     private int timestamp;
 
-    public EntityAIMagicCreatureOwerHurtTarget(AbstructEntityMagicCreature theEntityTameableIn)
+    public EntityAIMagicCreatureOwerHurtTarget(AbstractEntityMagicCreature theEntityTameableIn)
     {
         super(theEntityTameableIn, false);
         this.tameable = theEntityTameableIn;

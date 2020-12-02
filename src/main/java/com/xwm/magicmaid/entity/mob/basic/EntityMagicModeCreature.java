@@ -11,7 +11,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 
-public class EntityMagicModeCreature extends AbstructEntityMagicCreature implements IEntityMultiModeCreature
+public class EntityMagicModeCreature extends AbstractEntityMagicCreature implements IEntityMultiModeCreature
 {
     private static final DataParameter<Integer> MODE = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> STATE = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);

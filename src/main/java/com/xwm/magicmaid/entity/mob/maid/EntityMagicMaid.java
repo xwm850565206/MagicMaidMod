@@ -1,9 +1,13 @@
 package com.xwm.magicmaid.entity.mob.maid;
 
 
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.xwm.magicmaid.Main;
-import com.xwm.magicmaid.entity.ai.*;
+import com.xwm.magicmaid.entity.ai.EntityAIMagicCreatureOwerHurtTarget;
+import com.xwm.magicmaid.entity.ai.EntityAIMagicCreatureOwnerHurtByTarget;
+import com.xwm.magicmaid.entity.ai.EntityAIMaidFollow;
+import com.xwm.magicmaid.entity.ai.EntityAINearestAttackableTargetAvoidOwner;
 import com.xwm.magicmaid.entity.mob.basic.EntityEquipmentCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityTameableCreature;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
@@ -32,8 +36,6 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-
-import com.google.common.base.Optional;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nullable;
@@ -80,8 +82,8 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
     {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30000000298023224D);
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(100);
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(20);
+
     }
 
     @Override
@@ -159,6 +161,8 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
                 getEquipment(ItemEquipment.valueOf(EnumEquipment.valueOf(getWeaponType())));
             }
         }
+
+        System.out.println(this.getHealth());
     }
 
     @Override

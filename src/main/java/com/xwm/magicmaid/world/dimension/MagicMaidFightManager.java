@@ -1,6 +1,6 @@
 package com.xwm.magicmaid.world.dimension;
 
-import com.xwm.magicmaid.entity.mob.basic.AbstructEntityMagicCreature;
+import com.xwm.magicmaid.entity.mob.basic.AbstractEntityMagicCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidMarthaBoss;
@@ -10,19 +10,15 @@ import com.xwm.magicmaid.init.PotionInit;
 import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.Session;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.world.BossInfo;
 import net.minecraft.world.WorldServer;
 
 import java.util.*;
@@ -96,7 +92,7 @@ public class MagicMaidFightManager implements MagicCreatureFightManager
     }
 
     @Override
-    public void onBossUpdate(AbstructEntityMagicCreature boss) {
+    public void onBossUpdate(AbstractEntityMagicCreature boss) {
         bossPos = boss.getPosition();
         this.boss = (EntityMagicMaid) boss;
         if (!isOrigin) {
@@ -147,7 +143,7 @@ public class MagicMaidFightManager implements MagicCreatureFightManager
         }
     }
 
-    public AbstructEntityMagicCreature getBoss() {
+    public AbstractEntityMagicCreature getBoss() {
 
         switch (bossType) {
             case 0: return null;
@@ -248,7 +244,7 @@ public class MagicMaidFightManager implements MagicCreatureFightManager
     }
 
     @Override
-    public void init(AbstructEntityMagicCreature boss) {
+    public void init(AbstractEntityMagicCreature boss) {
         this.bossuuid = boss.getUniqueID();
         this.boss = (EntityMagicMaid) boss;
         this.bossPos = boss.getPosition();
@@ -280,7 +276,7 @@ public class MagicMaidFightManager implements MagicCreatureFightManager
     }
 
     @Override
-    public void setBoss(AbstructEntityMagicCreature boss) {
+    public void setBoss(AbstractEntityMagicCreature boss) {
         this.boss = (EntityMagicMaid) boss;
     }
 

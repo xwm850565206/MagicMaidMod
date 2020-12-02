@@ -1,9 +1,13 @@
 package com.xwm.magicmaid.util.helper;
 
+import com.xwm.magicmaid.entity.mob.basic.AbstractEntityMagicCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAvoidThingCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityMultiHealthCreature;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+
+import java.lang.reflect.Field;
 
 public class MagicCreatureUtils
 {
@@ -39,5 +43,27 @@ public class MagicCreatureUtils
     {
         creature.setAvoidDamage(-1);
         creature.setAvoidSetHealth(-1);
+    }
+
+    public static void setCreatureMaxHealth(AbstractEntityMagicCreature creature, int maxHealth)
+    {
+        Class attributes = null;
+        Field f = null;
+        try {
+            attributes = Class.forName("net.minecraft.entity.ai.attributes.RangedAttribute");
+            f = attributes.getDeclaredField("maximumValue");
+            f.setAccessible(true);
+            f.set(SharedMonsterAttributes.MAX_HEALTH, 1024 << 8);
+            creature.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(maxHealth);
+            f.set(SharedMonsterAttributes.MAX_HEALTH, 1024);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } finally {
+           f.setAccessible(false);
+        }
     }
 }

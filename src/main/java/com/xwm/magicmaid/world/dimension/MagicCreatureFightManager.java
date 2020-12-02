@@ -1,25 +1,22 @@
 package com.xwm.magicmaid.world.dimension;
 
-import com.xwm.magicmaid.entity.mob.basic.AbstructEntityMagicCreature;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
-import net.minecraft.entity.player.EntityPlayer;
+import com.xwm.magicmaid.entity.mob.basic.AbstractEntityMagicCreature;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface MagicCreatureFightManager
 {
     NBTTagCompound getCompound();
 
-    void onBossUpdate(AbstructEntityMagicCreature boss);
+    void onBossUpdate(AbstractEntityMagicCreature boss);
 
     void tick();
 
-    void init(AbstructEntityMagicCreature boss);
+    void init(AbstractEntityMagicCreature boss);
 
     void setBossAlive(boolean bossAlive);
 
@@ -29,7 +26,7 @@ public interface MagicCreatureFightManager
 
     void setWorld(WorldServer world);
 
-    void setBoss(AbstructEntityMagicCreature boss);
+    void setBoss(AbstractEntityMagicCreature boss);
 
     void setBossPos(BlockPos pos);
 
@@ -41,7 +38,7 @@ public interface MagicCreatureFightManager
 
     WorldServer getWorld();
 
-    AbstructEntityMagicCreature getBoss();
+    AbstractEntityMagicCreature getBoss();
 
     BlockPos getBossPos();
 
