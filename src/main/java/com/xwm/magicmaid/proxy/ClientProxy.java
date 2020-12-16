@@ -1,6 +1,6 @@
 package com.xwm.magicmaid.proxy;
 
-import com.xwm.magicmaid.event.ClientEventLoader;
+import com.xwm.magicmaid.event.loader.ClientEventLoader;
 import com.xwm.magicmaid.key.KeyLoader;
 import com.xwm.magicmaid.object.tileentity.TileEntityChurchPortal;
 import com.xwm.magicmaid.render.portal.TileEntityChurchPortalRenderer;

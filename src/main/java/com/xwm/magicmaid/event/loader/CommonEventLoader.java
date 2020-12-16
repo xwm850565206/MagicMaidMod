@@ -1,8 +1,9 @@
-package com.xwm.magicmaid.event;
+package com.xwm.magicmaid.event.loader;
 
 
 import com.xwm.magicmaid.entity.mob.basic.AbstractEntityMagicCreature;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
+import com.xwm.magicmaid.event.SkillLevelUpEvent;
 import com.xwm.magicmaid.init.DimensionInit;
 import com.xwm.magicmaid.init.EntityInit;
 import com.xwm.magicmaid.init.ItemInit;
@@ -10,6 +11,8 @@ import com.xwm.magicmaid.init.PotionInit;
 import com.xwm.magicmaid.player.capability.CapabilityLoader;
 import com.xwm.magicmaid.player.capability.CapabilityMagicCreature;
 import com.xwm.magicmaid.player.capability.CapabilitySkill;
+import com.xwm.magicmaid.player.capability.ISkillCapability;
+import com.xwm.magicmaid.player.skill.IAttributeSkill;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -27,6 +30,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
@@ -63,6 +67,10 @@ public class CommonEventLoader
             if (event.getObject() instanceof EntityPlayer && !event.getObject().hasCapability(CapabilityLoader.SKILL_CAPABILITY, null)) {
                 ICapabilitySerializable<NBTTagCompound> provider = new CapabilitySkill.Provider();
                 event.addCapability(new ResourceLocation(Reference.MODID + ":" + "magic_skill"), provider);
+                ISkillCapability skillCapability = provider.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
+                for (IAttributeSkill skill : skillCapability.getAttributeSkills()) {
+                    MinecraftForge.EVENT_BUS.post(new SkillLevelUpEvent<IAttributeSkill>(skill, (EntityPlayer) event.getObject()));
+                }
             }
         }
     }

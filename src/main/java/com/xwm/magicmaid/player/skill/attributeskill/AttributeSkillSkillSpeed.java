@@ -1,5 +1,6 @@
 package com.xwm.magicmaid.player.skill.attributeskill;
 
+import com.xwm.magicmaid.player.MagicCreatureAttributes;
 import com.xwm.magicmaid.player.capability.CapabilityLoader;
 import com.xwm.magicmaid.player.capability.ICreatureCapability;
 import com.xwm.magicmaid.util.Reference;
@@ -9,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class AttributeSkillSkillSpeed extends AttributeSkillBase
 {
-    private double skill_speed = 1;
+    private double skill_speed = MagicCreatureAttributes.SKILL_SPEED.getDefaultValue();
 
     @Override
     public void perform(EntityLivingBase player) {

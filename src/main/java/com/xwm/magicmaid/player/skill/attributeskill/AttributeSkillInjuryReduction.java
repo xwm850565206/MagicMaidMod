@@ -1,5 +1,6 @@
 package com.xwm.magicmaid.player.skill.attributeskill;
 
+import com.xwm.magicmaid.player.MagicCreatureAttributes;
 import com.xwm.magicmaid.player.capability.CapabilityLoader;
 import com.xwm.magicmaid.player.capability.ICreatureCapability;
 import com.xwm.magicmaid.util.Reference;
@@ -9,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class AttributeSkillInjuryReduction extends AttributeSkillBase
 {
-    private double injury_reduction = 1;
+    private double injury_reduction = MagicCreatureAttributes.INJURY_REDUCTION.getDefaultValue();
 
     @Override
     public void perform(EntityLivingBase player) {

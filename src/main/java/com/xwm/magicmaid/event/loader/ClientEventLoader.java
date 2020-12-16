@@ -1,4 +1,4 @@
-package com.xwm.magicmaid.event;
+package com.xwm.magicmaid.event.loader;
 
 import com.xwm.magicmaid.Main;
 import com.xwm.magicmaid.init.BlockInit;

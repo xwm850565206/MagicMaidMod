@@ -2,7 +2,8 @@ package com.xwm.magicmaid.proxy;
 
 import com.xwm.magicmaid.achievement.AchievementLoader;
 import com.xwm.magicmaid.command.CommandLoader;
-import com.xwm.magicmaid.event.CommonEventLoader;
+import com.xwm.magicmaid.event.loader.CommonEventLoader;
+import com.xwm.magicmaid.event.loader.SkillEventLoader;
 import com.xwm.magicmaid.network.NetworkLoader;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
@@ -21,6 +22,7 @@ public class CommonProxy
 
     public void init(FMLInitializationEvent event){
         MinecraftForge.EVENT_BUS.register(new CommonEventLoader());
+        MinecraftForge.EVENT_BUS.register(new SkillEventLoader());
         new AchievementLoader();
     }
     public void postInit(FMLPostInitializationEvent event){}

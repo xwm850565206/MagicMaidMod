@@ -1,5 +1,6 @@
 package com.xwm.magicmaid.player.skill.attributeskill;
 
+import com.xwm.magicmaid.player.MagicCreatureAttributes;
 import com.xwm.magicmaid.player.capability.CapabilityLoader;
 import com.xwm.magicmaid.player.capability.ICreatureCapability;
 import com.xwm.magicmaid.util.Reference;
@@ -9,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class AttributeSkillSkillDamageRate extends AttributeSkillBase
 {
-    private double skill_damage_rate = 1;
+    private double skill_damage_rate = MagicCreatureAttributes.SKILL_DAMAGE_RATE.getDefaultValue();
 
     @Override
     public void perform(EntityLivingBase player) {
