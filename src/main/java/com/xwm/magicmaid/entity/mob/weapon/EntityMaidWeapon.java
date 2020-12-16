@@ -4,9 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
-import com.xwm.magicmaid.init.ItemInit;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -52,11 +50,10 @@ public class EntityMaidWeapon extends EntityLivingBase
         this.dataManager.register(BINARY_MODE, false);
     }
 
-    public void setHealth(float health)
+    public boolean getAlwaysRenderNameTag()
     {
-        return; //防止被误杀
+        return false;
     }
-
 
     @Override
     public void onLivingUpdate()
@@ -98,8 +95,8 @@ public class EntityMaidWeapon extends EntityLivingBase
      */
     protected void doOhterOwnerUpdate() {
         if (!world.isRemote && otherOwner == null) {
-            EntityItem item = new EntityItem(world, posX, posY, posZ, new ItemStack(ItemInit.ITEM_PANDORA));
-            world.spawnEntity(item);
+//            EntityItem item = new EntityItem(world, posX, posY, posZ, this.activeItemStack);
+//            world.spawnEntity(item);
             this.setDead();
         }
     }

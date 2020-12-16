@@ -1,4 +1,4 @@
-package com.xwm.magicmaid.world.dimension;
+package com.xwm.magicmaid.manager;
 
 import com.xwm.magicmaid.entity.mob.basic.AbstractEntityMagicCreature;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -8,7 +8,7 @@ import net.minecraft.world.WorldServer;
 
 import java.util.UUID;
 
-public interface MagicCreatureFightManager
+public interface IMagicBossManager
 {
     NBTTagCompound getCompound();
 

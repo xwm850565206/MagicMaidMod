@@ -1,4 +1,4 @@
-package com.xwm.magicmaid.gui;
+package com.xwm.magicmaid.gui.maidwindow;
 
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.object.item.equipment.ItemArmor;
@@ -10,7 +10,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 
-public class ContainMaidWindow extends Container
+public class ContainerMaidWindow extends Container
 {
     private InventoryPlayer player;
     private EntityMagicMaid maid;
@@ -18,7 +18,7 @@ public class ContainMaidWindow extends Container
     public Slot weaponSlot;
     public Slot armorSlot;
 
-    public ContainMaidWindow(InventoryPlayer inventory, EntityMagicMaid maid) {
+    public ContainerMaidWindow(InventoryPlayer inventory, EntityMagicMaid maid) {
         this.player = inventory;
         this.maid = maid;
 

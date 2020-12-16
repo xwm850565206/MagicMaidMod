@@ -1,11 +1,15 @@
 package com.xwm.magicmaid.event;
 
 
+import com.xwm.magicmaid.entity.mob.basic.AbstractEntityMagicCreature;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.init.DimensionInit;
 import com.xwm.magicmaid.init.EntityInit;
 import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.init.PotionInit;
+import com.xwm.magicmaid.player.capability.CapabilityLoader;
+import com.xwm.magicmaid.player.capability.CapabilityMagicCreature;
+import com.xwm.magicmaid.player.capability.CapabilitySkill;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,9 +23,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -40,12 +47,40 @@ public class CommonEventLoader
 {
     private static final Random rand =  new Random();
 
+    /**
+     * 添加magic creature的capability
+     * @param event
+     */
+    @SubscribeEvent
+    public static void onAttachCapabilitiesEntity(AttachCapabilitiesEvent<Entity> event)
+    {
+        if (event.getObject() instanceof AbstractEntityMagicCreature || event.getObject() instanceof EntityPlayer)
+        {
+            if (!event.getObject().hasCapability(CapabilityLoader.CREATURE_CAPABILITY, null)) {
+                ICapabilitySerializable<NBTTagCompound> provider = new CapabilityMagicCreature.Provider();
+                event.addCapability(new ResourceLocation(Reference.MODID + ":" + "magic_creature"), provider);
+            }
+            if (event.getObject() instanceof EntityPlayer && !event.getObject().hasCapability(CapabilityLoader.SKILL_CAPABILITY, null)) {
+                ICapabilitySerializable<NBTTagCompound> provider = new CapabilitySkill.Provider();
+                event.addCapability(new ResourceLocation(Reference.MODID + ":" + "magic_skill"), provider);
+            }
+        }
+    }
+
+    /**
+     * 注册实体
+     * @param event
+     */
     @SubscribeEvent
     public static void onEntityRegister(RegistryEvent.Register<EntityEntry> event)
     {
         EntityInit.registerEntities(event);
     }
 
+    /**
+     * 实现逻辑martha守护者祝福为其他生物添加祝福
+     * @param event
+     */
     @SubscribeEvent
     public static void onPlayerInteractive(PlayerInteractEvent.EntityInteractSpecific event)
     {
@@ -69,6 +104,10 @@ public class CommonEventLoader
         }
     }
 
+    /**
+     * 实现逻辑rett的不朽者祝福逻辑，在受到致命伤时避免伤害
+     * @param event
+     */
     @SubscribeEvent
     public static void onPlayerDieEvent(LivingHurtEvent event)
     {

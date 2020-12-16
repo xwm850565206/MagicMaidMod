@@ -1,22 +1,23 @@
 package com.xwm.magicmaid.entity.mob.weapon;
 
-import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAvoidThingCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityMultiHealthCreature;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
-import com.xwm.magicmaid.network.ThreeParamParticlePacket;
+import com.xwm.magicmaid.init.DimensionInit;
+import com.xwm.magicmaid.manager.IMagicFightManagerImpl;
+import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.ServerEntityDataPacket;
+import com.xwm.magicmaid.network.ThreeParamParticlePacket;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
 import com.xwm.magicmaid.util.Reference;
-import com.xwm.magicmaid.util.helper.MagicCreatureUtils;
-import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
@@ -122,11 +123,7 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
                         else if (entityLivingBase instanceof EntityLiving){
                             if (((EntityLiving) entityLivingBase).getAttackTarget() == this.otherOwner || entityLivingBase instanceof EntityMob) {
                                 removeTasks((EntityLiving) entityLivingBase);
-                                if (entityLivingBase instanceof IEntityAvoidThingCreature)
-                                    MagicCreatureUtils.unLock((IEntityAvoidThingCreature) entityLivingBase);
-                                entityLivingBase.setHealth(1);
-                                if (entityLivingBase instanceof IEntityAvoidThingCreature)
-                                    MagicCreatureUtils.lock((IEntityAvoidThingCreature) entityLivingBase);
+                                IMagicFightManagerImpl.getInstance().setHealth(entityLivingBase, 1);
                                 //有罪
                                 NBTTagCompound entityData = entityLivingBase.getEntityData();
                                 entityData.setBoolean(Reference.EFFECT_CONVICTION, true);
@@ -135,7 +132,17 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
                                         0,
                                         "true",
                                         Reference.EFFECT_CONVICTION);
-                                NetworkLoader.instance.sendToAll(packet);
+                                NetworkLoader.instance.sendToDimension(packet, this.world.provider.getDimension());
+                            }
+                            else if ((entityLivingBase instanceof EntityVillager) && ((EntityVillager) entityLivingBase).getWorld().provider.getDimension() == DimensionInit.DIMENSION_CHURCH) { // 教堂维度的村民也有罪
+                                NBTTagCompound entityData = entityLivingBase.getEntityData();
+                                entityData.setBoolean(Reference.EFFECT_CONVICTION, true);
+                                ServerEntityDataPacket packet = new ServerEntityDataPacket(entityLivingBase.getEntityId(),
+                                        entityLivingBase.getEntityWorld().provider.getDimension(),
+                                        0,
+                                        "true",
+                                        Reference.EFFECT_CONVICTION);
+                                NetworkLoader.instance.sendToDimension(packet, this.world.provider.getDimension());
                             }
                             else {
                                 NBTTagCompound entityData = entityLivingBase.getEntityData();
@@ -145,7 +152,7 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
                                         0,
                                         "false",
                                         Reference.EFFECT_CONVICTION);
-                                NetworkLoader.instance.sendToAll(packet);
+                                NetworkLoader.instance.sendToDimension(packet, this.world.provider.getDimension());
                             }
                         }
                         else { // 无罪
@@ -156,7 +163,7 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
                                     0,
                                     "false",
                                     Reference.EFFECT_CONVICTION);
-                            NetworkLoader.instance.sendToAll(packet);
+                            NetworkLoader.instance.sendToDimension(packet, this.world.provider.getDimension());
                         }
                     }
                 } catch (Exception e) {

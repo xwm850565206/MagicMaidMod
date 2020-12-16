@@ -22,6 +22,10 @@ public interface IEntityEquipmentCreature extends IInventory
 
     boolean hasArmor();
 
+    boolean isFirstGetArmor();
+
+    void setFirstGetArmor(boolean isFirstGetArmor);
+
     void setWeaponID(UUID uuid);
 
     UUID getWeaponID();

@@ -2,6 +2,10 @@ package com.xwm.magicmaid.world.dimension;
 
 import com.xwm.magicmaid.init.BiomeInit;
 import com.xwm.magicmaid.init.DimensionInit;
+import com.xwm.magicmaid.manager.IMagicBossManager;
+import com.xwm.magicmaid.manager.IMagicBossManagerImpl;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -18,7 +22,7 @@ import javax.annotation.Nullable;
 
 public class DimensionChurch extends WorldProvider
 {
-    private MagicCreatureFightManager fightManager;
+    private IMagicBossManager fightManager;
 
     public void init()
     {
@@ -26,7 +30,7 @@ public class DimensionChurch extends WorldProvider
         this.biomeProvider = new BiomeProviderSingle(BiomeInit.RUINS);
         this.hasSkyLight = true;
         NBTTagCompound nbttagcompound = this.world.getWorldInfo().getDimensionData(this.world.provider.getDimension());
-        this.fightManager = this.world instanceof WorldServer ? new MagicMaidFightManager((WorldServer)this.world, nbttagcompound.getCompoundTag("MaidFight")) : null;
+        this.fightManager = this.world instanceof WorldServer ? new IMagicBossManagerImpl((WorldServer)this.world, nbttagcompound.getCompoundTag("MaidFight")) : null;
     }
 
     public BlockPos getSpawnCoordinate()
@@ -159,6 +163,16 @@ public class DimensionChurch extends WorldProvider
             this.fightManager.tick();
         }
 
+        if (this.getWorldTime() == 1 && this.world.loadedEntityList.size() > 50) {
+            for (Entity entity : this.world.loadedEntityList)
+            {
+                if (entity instanceof EntityVillager)
+                {
+                    entity.setFire(20);
+                }
+            }
+        }
+
         super.onWorldUpdateEntities();
     }
 
@@ -174,11 +188,11 @@ public class DimensionChurch extends WorldProvider
         super.onWorldSave();
     }
 
-    public MagicCreatureFightManager getFightManager() {
+    public IMagicBossManager getFightManager() {
         return this.fightManager;
     }
 
-    public void setFightManager(MagicCreatureFightManager fightManager) {
+    public void setFightManager(IMagicBossManager fightManager) {
         this.fightManager = fightManager;
     }
 }

@@ -8,11 +8,12 @@ import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumSelineState;
-import com.xwm.magicmaid.network.ThreeParamParticlePacket;
+import com.xwm.magicmaid.manager.IMagicFightManagerImpl;
+import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.network.ThreeParamParticlePacket;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
-import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
@@ -145,7 +146,7 @@ public class EntityAIWhisper extends EntityAIBase
                     if (!this.maid.isEnemy(entityLivingBase))
                         continue;
                     entityLivingBase.attackEntityFrom(DamageSource.LIGHTNING_BOLT, this.maid.getAttackDamage(EnumAttackType.WHISPER));
-                    MagicEquipmentUtils.setHealth(entityLivingBase, entityLivingBase.getHealth() - 10 * maid.getRank());
+                    IMagicFightManagerImpl.getInstance().setHealth(entityLivingBase, entityLivingBase.getHealth() - 10 * maid.getRank());
                     world.playEvent(3000, entityLivingBase.getPosition(), 10);
                     EntityLightningBolt bolt = new EntityLightningBolt(world, entityLivingBase.posX + random.nextInt(2* (int) radius) - radius, cpos.getY(), entityLivingBase.posZ + random.nextInt(2 * (int) radius) - radius, true);
                     world.addWeatherEffect(bolt);

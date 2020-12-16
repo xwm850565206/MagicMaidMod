@@ -1,4 +1,4 @@
-package com.xwm.magicmaid.gui;
+package com.xwm.magicmaid.gui.magiccircle;
 
 import com.xwm.magicmaid.object.tileentity.TileEntityMagicCircle;
 import com.xwm.magicmaid.util.Reference;

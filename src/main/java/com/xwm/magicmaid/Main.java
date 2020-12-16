@@ -4,6 +4,7 @@ package com.xwm.magicmaid;
 import com.xwm.magicmaid.proxy.CommonProxy;
 import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.handlers.RegistryHandler;
+import com.xwm.magicmaid.manager.MagicCreatureUtils;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -29,15 +30,17 @@ public class Main
     public void preInit(FMLPreInitializationEvent event)
     {
         logger = event.getModLog();
-        RegistryHandler.preInitRegistries();
+        RegistryHandler.preInitRegistries(event);
         proxy.preInit(event);
+
+        MagicCreatureUtils.setCreatureMaxHealthLimit(1024 << 8);
 
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-        RegistryHandler.initRegisteries();
+        RegistryHandler.initRegisteries(event);
         proxy.init(event);
     }
 

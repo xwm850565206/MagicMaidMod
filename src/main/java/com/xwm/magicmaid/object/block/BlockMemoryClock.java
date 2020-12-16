@@ -7,7 +7,7 @@ import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidSelinaBoss;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.SoundPacket;
 import com.xwm.magicmaid.world.dimension.DimensionChurch;
-import com.xwm.magicmaid.world.dimension.MagicCreatureFightManager;
+import com.xwm.magicmaid.manager.IMagicBossManager;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -72,7 +72,7 @@ public class BlockMemoryClock extends BlockBase
         }
 
         //如果boss存在，就不该再生成boss了
-        MagicCreatureFightManager fightManager = ((DimensionChurch) worldIn.provider).getFightManager();
+        IMagicBossManager fightManager = ((DimensionChurch) worldIn.provider).getFightManager();
         if (fightManager.getBossAlive()) {
             playerIn.sendMessage(new TextComponentString("请击杀boss后再敲响记忆铜钟"));
             return false;

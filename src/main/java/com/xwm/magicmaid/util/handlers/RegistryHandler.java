@@ -2,9 +2,11 @@ package com.xwm.magicmaid.util.handlers;
 
 import com.xwm.magicmaid.init.*;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
+import com.xwm.magicmaid.player.capability.CapabilityLoader;
 import com.xwm.magicmaid.registry.MagicDimensionRegistry;
 import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.registry.MagicFormulaRegistry;
+import com.xwm.magicmaid.registry.MagicSkillRegistry;
 import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.interfaces.IHasModel;
 import com.xwm.magicmaid.world.gen.StructureChurchPieces;
@@ -15,6 +17,8 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -75,7 +79,7 @@ public class RegistryHandler
     }
 
 
-    public static void initRegisteries()
+    public static void initRegisteries(FMLInitializationEvent event)
     {
         SoundsHandler.registerSounds();
         StructureChurchPieces.registerPieces();
@@ -84,9 +88,11 @@ public class RegistryHandler
         OreDictionaryInit.register();
     }
 
-    public static void preInitRegistries()
+    public static void preInitRegistries(FMLPreInitializationEvent event)
     {
 //        EntityInit.registerEntities();
+        MagicSkillRegistry.registerAll();
+        new CapabilityLoader(event);
         BiomeInit.registerBiomes();
         DimensionInit.registerDimensions();
         DimensionInit.registerWorldGenerators();

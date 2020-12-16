@@ -10,12 +10,11 @@ import com.xwm.magicmaid.network.RenderAreaPacket;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
 import com.xwm.magicmaid.util.handlers.LootTableHandler;
 import com.xwm.magicmaid.world.dimension.DimensionChurch;
-import com.xwm.magicmaid.world.dimension.MagicCreatureFightManager;
+import com.xwm.magicmaid.manager.IMagicBossManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -26,9 +25,9 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements IEntityBossCreature
 {
-    protected MagicCreatureFightManager fightManager = null;
+    protected IMagicBossManager fightManager = null;
 
-    private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenSky(false);
+    private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName().appendText(" 剩余血量: " + getHealth()), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenSky(false);
     private int factor = 1;
 
     public EntityMagicMaidSelinaBoss(World worldIn) {
@@ -74,7 +73,7 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
             this.setInventorySlotContents(1, new ItemStack(ItemInit.ITEM_WISE));
         }
 
-        this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));
+        this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealth()));
         this.bossInfo.setPercent(getHealth() / getMaxHealth());
 
         if (fightManager != null)
@@ -85,9 +84,7 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
     public void onDeathUpdate()
     {
         super.onDeathUpdate();
-        if (getTrueHealth() > 0)
-            this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));
-        else if (this.deathTime == 20) {
+        if (this.deathTime == 20) {
             if (fightManager != null) {
                 fightManager.setBossAlive(false); //boss真实死亡
                 fightManager.setBossKilled(true);
@@ -95,27 +92,15 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
         }
     }
 
-    @Override
-    public void heal(float healAmount)
-    {
-        super.heal(healAmount);
-        this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));
-    }
-
 
     @Override
     protected ResourceLocation getLootTable()
     {
-        if (getTrueHealth() > 0) return null;
+        if (getHealth() > 0) return null;
         EnumEquipment equipment = EnumEquipment.valueOf(getWeaponType());
         return equipment == EnumEquipment.PANDORA ? LootTableHandler.PANDORA : LootTableHandler.WHISPER;
     }
 
-    @Override
-    public void readEntityFromNBT(NBTTagCompound compound){
-        super.readEntityFromNBT(compound);
-        this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));
-    }
 
     /**
      * Sets the custom name tag for this entity
@@ -157,7 +142,6 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
             return true;
         this.setAvoidSetHealth(-1);
         this.setAvoidDamage(-1);
-        this.setHealthbarnum(0);
         return super.attackEntityFrom(DamageSource.
                 causePlayerDamage(player), getMaxHealth()+1);
     }
@@ -168,7 +152,7 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
      * @return
      */
     @Override
-    public MagicCreatureFightManager getFightManager() {
+    public IMagicBossManager getFightManager() {
         return this.fightManager;
     }
 

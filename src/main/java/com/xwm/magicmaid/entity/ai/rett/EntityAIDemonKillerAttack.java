@@ -5,11 +5,12 @@ import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumRettState;
-import com.xwm.magicmaid.network.ThreeParamParticlePacket;
+import com.xwm.magicmaid.manager.IMagicFightManagerImpl;
+import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.network.ThreeParamParticlePacket;
 import com.xwm.magicmaid.network.VelocityPacket;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
-import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.init.MobEffects;
@@ -79,7 +80,7 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
                         continue;
 
                     entityLiving.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 400, 1 + maid.getRank()));
-                    MagicEquipmentUtils.attackEntityFrom(entityLiving, DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER));
+                    IMagicFightManagerImpl.getInstance().attackEntityFrom(entityLiving, DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER));
                 }
             }
             else if (performTick == 10) {
@@ -89,7 +90,7 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
                         continue;
 
                     entityLiving.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 400, 1));
-                    MagicEquipmentUtils.attackEntityFrom(entityLiving, DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER));
+                    IMagicFightManagerImpl.getInstance().attackEntityFrom(entityLiving, DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER));
 
                 }
             }
@@ -103,7 +104,7 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
                     if (!maid.isEnemy(entityLiving))
                         continue;
                     float health = entityLiving.getHealth();
-                    MagicEquipmentUtils.attackEntityFrom(entityLiving, DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER) * 2);
+                    IMagicFightManagerImpl.getInstance().attackEntityFrom(entityLiving, DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER) * 2);
 //                    if (health == entityLiving.getHealth() && health > 0) {
 //                       entityLiving.setHealth(health - maid.getAttackDamage(EnumAttackType.DEMONKILLER) * 2);
 //                        if (entityLiving instanceof EntityPlayerMP) {

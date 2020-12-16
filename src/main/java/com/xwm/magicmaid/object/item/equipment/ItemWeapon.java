@@ -3,7 +3,7 @@ package com.xwm.magicmaid.object.item.equipment;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.util.Reference;
-import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
+import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -118,19 +118,4 @@ public abstract class ItemWeapon extends ItemEquipment
      * How long it takes to use or consume an item
      */
     public abstract int getMaxItemUseDuration(ItemStack stack);
-
-    public int getLevel(ItemStack stack)
-    {
-        NBTTagCompound compound = stack.getTagCompound();
-        return (compound != null && compound.hasKey(Reference.MODID + "_level" )) ? compound.getInteger(Reference.MODID + "_level") : 0;
-    }
-
-    public void setLevel(ItemStack stack, int level)
-    {
-        NBTTagCompound compound = stack.getTagCompound();
-        if (compound == null)
-            compound = new NBTTagCompound();
-        compound.setInteger(Reference.MODID + "_level", level);
-        stack.setTagCompound(compound);
-    }
 }

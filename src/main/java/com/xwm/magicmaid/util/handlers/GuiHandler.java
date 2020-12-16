@@ -1,22 +1,24 @@
 package com.xwm.magicmaid.util.handlers;
 
-import com.xwm.magicmaid.entity.ai.EntityAINearestAttackableTargetAvoidOwner;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.gui.*;
+import com.xwm.magicmaid.gui.magiccircle.ContainerMagicCircle;
+import com.xwm.magicmaid.gui.magiccircle.GuiMagicCircle;
+import com.xwm.magicmaid.gui.maidwindow.ContainerMaidWindow;
+import com.xwm.magicmaid.gui.maidwindow.GuiMaidWindow;
+import com.xwm.magicmaid.gui.player.ContainerPlayerMenuMain;
+import com.xwm.magicmaid.gui.player.GuiPlayerMenuMain;
 import com.xwm.magicmaid.object.tileentity.TileEntityMagicCircle;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -47,16 +49,19 @@ public class GuiHandler implements IGuiHandler
                 return null;
             Collections.sort(entities, new Sorter(player));
             EntityMagicMaid maid = entities.get(0);
-            return new ContainMaidWindow(player.inventory, maid);
+            return new ContainerMaidWindow(player.inventory, maid);
         }
         else if (ID == Reference.GUI_MAID_MEMORY) {
             ;
         }
         else if (ID == Reference.GUI_MAGIC_CIRCLE) {
-            return new ContainMagicCircle(player.inventory, (TileEntityMagicCircle) world.getTileEntity(new BlockPos(x, y, z)));
+            return new ContainerMagicCircle(player.inventory, (TileEntityMagicCircle) world.getTileEntity(new BlockPos(x, y, z)));
         }
         else if (ID == Reference.GUI_INSTRUCTION_BOOK) {
             ;
+        }
+        else if (ID == Reference.GUI_PLAYER_MENU_MAIN) {
+            return  new ContainerPlayerMenuMain(player.inventory);
         }
 
         return null;
@@ -87,7 +92,7 @@ public class GuiHandler implements IGuiHandler
 
             Collections.sort(entities, new Sorter(player));
             EntityMagicMaid maid = entities.get(0);
-            return new GuiMaidWindow(new ContainMaidWindow(player.inventory, maid), player.inventory, maid);
+            return new GuiMaidWindow(new ContainerMaidWindow(player.inventory, maid), player.inventory, maid);
         }
         else if (ID == Reference.GUI_MAID_MEMORY)
         {
@@ -99,6 +104,9 @@ public class GuiHandler implements IGuiHandler
         }
         else if (ID == Reference.GUI_INSTRUCTION_BOOK) {
             return new GuiInstructionBook();
+        }
+        else if (ID == Reference.GUI_PLAYER_MENU_MAIN) {
+            return new GuiPlayerMenuMain(new ContainerPlayerMenuMain(player.inventory), player);
         }
 
         return null;

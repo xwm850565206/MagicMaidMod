@@ -1,8 +1,6 @@
 package com.xwm.magicmaid.entity.mob.basic;
 
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityRankCreature;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
-import com.xwm.magicmaid.enumstorage.EnumMode;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -12,9 +10,9 @@ import net.minecraft.world.World;
 public class EntityMagicRankCreature extends EntityMagicModeCreature implements IEntityRankCreature
 {
     protected static int max_rank = 2; //默认只有3阶 0,1,2
-    private static final DataParameter<Integer> LEVEL = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> EXP = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> RANK = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> LEVEL = EntityDataManager.<Integer>createKey(EntityMagicRankCreature.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> EXP = EntityDataManager.<Integer>createKey(EntityMagicRankCreature.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> RANK = EntityDataManager.<Integer>createKey(EntityMagicRankCreature.class, DataSerializers.VARINT);
 
 
     public EntityMagicRankCreature(World worldIn) {

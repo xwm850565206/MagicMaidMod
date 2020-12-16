@@ -5,7 +5,6 @@ import com.xwm.magicmaid.entity.ai.EntityAIMagicCreatureOwerHurtTarget;
 import com.xwm.magicmaid.entity.ai.EntityAIMagicCreatureOwnerHurtByTarget;
 import com.xwm.magicmaid.entity.ai.EntityAIMaidFollow;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityTameableCreature;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityTameable;
@@ -20,7 +19,7 @@ import java.util.UUID;
 public class EntityTameableCreature extends EntityMagicRankCreature implements IEntityTameableCreature
 {
 
-    private static final DataParameter<Optional<UUID>> OWNERID = EntityDataManager.<Optional<UUID>>createKey(EntityMagicMaid.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+    private static final DataParameter<Optional<UUID>> OWNERID = EntityDataManager.<Optional<UUID>>createKey(EntityTameableCreature.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     private EnumMode oldMode = null;
 
     public EntityTameableCreature(World worldIn) {

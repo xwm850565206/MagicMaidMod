@@ -1,28 +1,36 @@
-package com.xwm.magicmaid.util.helper;
+package com.xwm.magicmaid.manager;
 
 import com.xwm.magicmaid.entity.mob.basic.EntityTameableCreature;
-import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAvoidThingCreature;
+import com.xwm.magicmaid.player.MagicCreatureAttributes;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityEquipmentCreature;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
+import com.xwm.magicmaid.util.Reference;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class MagicEquipmentUtils
 {
+    /**
+     * 检查目标是否是发起者的敌人
+     * @param player 发起者
+     * @param entityLivingBase 目标
+     * @return 是否是敌人
+     */
     public static boolean checkEnemy(EntityLivingBase player, EntityLivingBase entityLivingBase)
     {
         if (!(player instanceof EntityPlayer))
@@ -99,11 +107,11 @@ public class MagicEquipmentUtils
      * @param player
      * @return
      */
-    public static AxisAlignedBB getUsingArea(ItemStack stack, EntityLivingBase player, AxisAlignedBB bb)
+    public static AxisAlignedBB getUsingArea(ItemStack stack, Entity player, AxisAlignedBB bb)
     {
         if (player instanceof IEntityEquipmentCreature)
         {
-            return ((IEntityEquipmentCreature) player).getUsingArea(stack, player, bb);
+            return ((IEntityEquipmentCreature) player).getUsingArea(stack, (EntityLivingBase) player, bb);
         }
         else
         {
@@ -146,44 +154,78 @@ public class MagicEquipmentUtils
         return (d0 + d2) / 2.0;
     }
 
-    public static boolean attackEntityFrom(EntityLivingBase entityLivingBase, DamageSource source, float amount)
+    public static double getNormalDamageRate(ItemStack stack)
     {
-        if (entityLivingBase instanceof IEntityAvoidThingCreature) {
-            ((IEntityAvoidThingCreature) entityLivingBase).setAvoidDamage(-1);
-            ((IEntityAvoidThingCreature) entityLivingBase).setAvoidSetHealth(-1);
-        }
-        boolean flag = false;
-        try {
-            flag = entityLivingBase.attackEntityFrom(source, amount);
-        }
-        catch (Exception e) {
-            return false;
-         }
-        if (entityLivingBase instanceof IEntityAvoidThingCreature) {
-            ((IEntityAvoidThingCreature) entityLivingBase).setAvoidDamage(50);
-            ((IEntityAvoidThingCreature) entityLivingBase).setAvoidSetHealth(50);
-        }
-
-        return flag;
+        NBTTagCompound compound = stack.getOrCreateSubCompound(Reference.MODID + "_item");
+        if (compound.hasKey(MagicCreatureAttributes.NORMAL_DAMAGE_RATE.getName()))
+            return compound.getDouble(MagicCreatureAttributes.NORMAL_DAMAGE_RATE.getName());
+        else
+            return 0;
     }
 
-    public static void setHealth(EntityLivingBase entityLivingBase, float amount)
+    public static void setNormalDamageRate(ItemStack stack, double normalDamageRate)
     {
-        if (entityLivingBase instanceof IEntityAvoidThingCreature) {
-            ((IEntityAvoidThingCreature) entityLivingBase).setAvoidDamage(-1);
-            ((IEntityAvoidThingCreature) entityLivingBase).setAvoidSetHealth(-1);
-        }
+        NBTTagCompound compound = stack.getOrCreateSubCompound(Reference.MODID + "_item");
+        compound.setDouble(MagicCreatureAttributes.NORMAL_DAMAGE_RATE.getName(), normalDamageRate);
+    }
 
-        try {
-            entityLivingBase.setHealth(amount);
-        }
-        catch (Exception e) {
-            ;
-        }
+    public static double getSkillDamageRate(ItemStack stack)
+    {
+        NBTTagCompound compound = stack.getOrCreateSubCompound(Reference.MODID + "_item");
+        if (compound.hasKey(MagicCreatureAttributes.SKILL_DAMAGE_RATE.getName()))
+            return compound.getDouble(MagicCreatureAttributes.SKILL_DAMAGE_RATE.getName());
+        else
+            return 0;
+    }
 
-        if (entityLivingBase instanceof IEntityAvoidThingCreature) {
-            ((IEntityAvoidThingCreature) entityLivingBase).setAvoidDamage(50);
-            ((IEntityAvoidThingCreature) entityLivingBase).setAvoidSetHealth(50);
-        }
+    public static void setSkillDamageRate(ItemStack stack, double skillDamageRate)
+    {
+        NBTTagCompound compound = stack.getOrCreateSubCompound(Reference.MODID + "_item");
+        compound.setDouble(MagicCreatureAttributes.SKILL_DAMAGE_RATE.getName(), skillDamageRate);
+    }
+
+    public static double getSkillSpeed(ItemStack stack)
+    {
+        NBTTagCompound compound = stack.getOrCreateSubCompound(Reference.MODID + "_item");
+        if (compound.hasKey(MagicCreatureAttributes.SKILL_SPEED.getName()))
+            return compound.getDouble(MagicCreatureAttributes.SKILL_SPEED.getName());
+        else
+            return 0;
+    }
+
+    public static void setSkillSpeed(ItemStack stack, int skillSpeed)
+    {
+        NBTTagCompound compound = stack.getOrCreateSubCompound(Reference.MODID + "_item");
+        compound.setDouble(MagicCreatureAttributes.SKILL_SPEED.getName(), skillSpeed);
+    }
+
+    public static double getInjuryReduction(ItemStack stack)
+    {
+        NBTTagCompound compound = stack.getOrCreateSubCompound(Reference.MODID + "_item");
+        if (compound.hasKey(MagicCreatureAttributes.INJURY_REDUCTION.getName()))
+            return compound.getDouble(MagicCreatureAttributes.INJURY_REDUCTION.getName());
+        else
+            return 0;
+    }
+
+    public static void setInjuryReduction(ItemStack stack, double injuryReduction)
+    {
+        NBTTagCompound compound = stack.getOrCreateSubCompound(Reference.MODID + "_item");
+        compound.setDouble(MagicCreatureAttributes.INJURY_REDUCTION.getName(), injuryReduction);
+    }
+
+    public static double getIgnoreReduction(ItemStack stack)
+    {
+        NBTTagCompound compound = stack.getOrCreateSubCompound(Reference.MODID + "_item");
+        if (compound.hasKey(MagicCreatureAttributes.IGNORE_REDUCTION.getName()))
+            return compound.getDouble(MagicCreatureAttributes.IGNORE_REDUCTION.getName());
+        else
+            return 0;
+    }
+
+    public static void setIgnoreReduction(ItemStack stack, double ignoreReduction)
+    {
+        NBTTagCompound compound = stack.getOrCreateSubCompound(Reference.MODID + "_item");
+        compound.setDouble(MagicCreatureAttributes.IGNORE_REDUCTION.getName(), ignoreReduction);
     }
 }

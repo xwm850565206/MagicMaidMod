@@ -2,9 +2,10 @@ package com.xwm.magicmaid.object.item.equipment;
 
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
+import com.xwm.magicmaid.manager.IMagicFightManagerImpl;
+import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
-import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -100,8 +101,8 @@ public class ItemWhisper extends ItemWeapon
                 if (playerIn instanceof EntityPlayer && !MagicEquipmentUtils.checkEnemy((EntityPlayer) playerIn, entityLiving1))
                     continue;
                 //造成20点伤害 和 10点真实伤害
-                MagicEquipmentUtils.attackEntityFrom(entityLiving1, DamageSource.LIGHTNING_BOLT, MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.WHISPER));
-                MagicEquipmentUtils.setHealth(entityLiving1, entityLiving1.getHealth() - 10);
+                IMagicFightManagerImpl.getInstance().attackEntityFrom(entityLiving1, DamageSource.LIGHTNING_BOLT, MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.WHISPER));
+                IMagicFightManagerImpl.getInstance().setHealth(entityLiving1, entityLiving1.getHealth() - 10);
                 playerIn.getEntityWorld().playEvent(3000, entityLiving1.getPosition(), 10);
                 float radius = (float) MagicEquipmentUtils.getRadiusFromAxisAlignedBB(MagicEquipmentUtils.getUsingArea(playerIn.getHeldItem(handIn), null, null));
                 EntityLightningBolt bolt = new EntityLightningBolt(playerIn.getEntityWorld(), entityLiving1.posX + itemRand.nextInt(2* (int) radius) - radius, cbb.maxY, entityLiving1.posZ + itemRand.nextInt(2 * (int) radius) - radius, true);

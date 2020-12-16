@@ -3,11 +3,12 @@ package com.xwm.magicmaid.entity.mob.weapon;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
-import com.xwm.magicmaid.network.SixParamParticlePacket;
+import com.xwm.magicmaid.manager.IMagicFightManagerImpl;
+import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.network.SixParamParticlePacket;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
-import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
@@ -86,7 +87,7 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
                         if (!this.maid.isEnemy(entityLivingBase))
                             continue;
 //                        float health = entityLivingBase.getHealth();
-                        MagicEquipmentUtils.attackEntityFrom(entityLivingBase, DamageSource.causeMobDamage(this.maid),
+                        IMagicFightManagerImpl.getInstance().attackEntityFrom(entityLivingBase, DamageSource.causeMobDamage(this.maid),
                                 this.maid.getAttackDamage(EnumAttackType.PANDORA));
 //                        if (health == entityLivingBase.getHealth() && health > 0){
 //                            if (entityLivingBase instanceof EntityPlayerMP) {
@@ -137,7 +138,7 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
                     if (!MagicEquipmentUtils.checkEnemy(otherOwner, entityLivingBase))
                         continue;
                     int damage = MagicEquipmentUtils.getAttackDamage(otherOwner, itemPandoraBox, EnumAttackType.PANDORA);
-                    MagicEquipmentUtils.attackEntityFrom(entityLivingBase, DamageSource.causeMobDamage(otherOwner), damage);
+                    IMagicFightManagerImpl.getInstance().attackEntityFrom(entityLivingBase, DamageSource.causeMobDamage(otherOwner), damage);
                     otherOwner.heal(damage); //吸血给自己
                     playParticle(entityLivingBase);
                 }

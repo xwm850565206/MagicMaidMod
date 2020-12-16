@@ -1,4 +1,4 @@
-package com.xwm.magicmaid.gui;
+package com.xwm.magicmaid.gui.magiccircle;
 
 import com.xwm.magicmaid.object.tileentity.TileEntityMagicCircle;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,7 +11,7 @@ import javax.vecmath.Vector2d;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContainMagicCircle extends Container
+public class ContainerMagicCircle extends Container
 {
     public static List<Vector2d> SLOT_POSITION = new ArrayList<Vector2d>() {{
        add(new Vector2d(13, 8));
@@ -26,7 +26,7 @@ public class ContainMagicCircle extends Container
 
     private TileEntityMagicCircle magicCircle;
 
-    public ContainMagicCircle(InventoryPlayer inventory, TileEntityMagicCircle magicCircleIn)
+    public ContainerMagicCircle(InventoryPlayer inventory, TileEntityMagicCircle magicCircleIn)
     {
         this.magicCircle = magicCircleIn;
 

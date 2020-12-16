@@ -13,6 +13,7 @@ import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemRepantence;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
+import com.xwm.magicmaid.manager.MagicCreatureUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -110,9 +111,12 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
                 break;
             case PROTECTOR:
                 this.setHasArmor(true);
-                this.setMaxHealthbarnum(200); //提高血量上限
-                this.setHealthbarnum(200);
+                MagicCreatureUtils.setCreatureMaxHealth(this, 20000); //提高血量上限
                 this.setArmorType(EnumEquipment.toInt(EnumEquipment.PROTECTOR));
+                if (this.isFirstGetArmor()) {
+                    this.heal(this.getMaxHealth());
+                    this.setFirstGetArmor(false);
+                }
                 break;
         }
     }
@@ -138,7 +142,7 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
         else {
             this.setHasArmor(false);
             this.setArmorType(EnumEquipment.toInt(EnumEquipment.NONE));
-            this.setMaxHealthbarnum(10);
+            MagicCreatureUtils.setCreatureMaxHealth(this, 1000);
         }
 
     }

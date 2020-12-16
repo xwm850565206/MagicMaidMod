@@ -1,6 +1,5 @@
 package com.xwm.magicmaid.entity.mob.basic;
 
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityMultiModeCreature;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumMode;
@@ -13,8 +12,8 @@ import net.minecraft.world.World;
 
 public class EntityMagicModeCreature extends AbstractEntityMagicCreature implements IEntityMultiModeCreature
 {
-    private static final DataParameter<Integer> MODE = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> STATE = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> MODE = EntityDataManager.<Integer>createKey(EntityMagicModeCreature.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> STATE = EntityDataManager.<Integer>createKey(EntityMagicModeCreature.class, DataSerializers.VARINT);
 
     public EntityMagicModeCreature(World worldIn) {
         super(worldIn);

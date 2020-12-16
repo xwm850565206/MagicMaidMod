@@ -3,14 +3,15 @@ package com.xwm.magicmaid.entity.ai.martha;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
-import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
+import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.init.PotionInit;
-import com.xwm.magicmaid.network.ThreeParamParticlePacket;
+import com.xwm.magicmaid.manager.IMagicFightManagerImpl;
+import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.network.ThreeParamParticlePacket;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
-import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -102,7 +103,7 @@ public class EntityAIConviction extends EntityAIBase
                     if (entityLivingBase instanceof EntityPlayer){
                         entityLivingBase.sendMessage(new TextComponentString("定罪之力，定夺世间一切罪恶"));
                         FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(this.maid, "clear " + entityLivingBase.getName());
-                        MagicEquipmentUtils.setHealth(entityLivingBase, 0);
+                        IMagicFightManagerImpl.getInstance().setHealth(entityLivingBase, 0);
                     }
                     entityLivingBase.setDead();
                 }

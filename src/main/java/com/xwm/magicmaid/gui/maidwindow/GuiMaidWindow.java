@@ -1,4 +1,4 @@
-package com.xwm.magicmaid.gui;
+package com.xwm.magicmaid.gui.maidwindow;
 
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumMode;
@@ -34,10 +34,10 @@ public class GuiMaidWindow extends GuiContainer
     /** The old y position of the mouse pointer */
     private float oldMouseY;
 
-    private ContainMaidWindow maidWindow;
+    private ContainerMaidWindow maidWindow;
 
 
-    public GuiMaidWindow(ContainMaidWindow maidWindow, InventoryPlayer player, EntityMagicMaid maid) {
+    public GuiMaidWindow(ContainerMaidWindow maidWindow, InventoryPlayer player, EntityMagicMaid maid) {
         super(maidWindow);
         this.maidWindow = maidWindow;
         this.player = player;
@@ -133,15 +133,15 @@ public class GuiMaidWindow extends GuiContainer
         GlStateManager.scale(0.9, 0.9, 0.9);
         GlStateManager.translate(12, 0, 0);
         String tmp = I18n.format("container.maid.health");
-        fontRenderer.drawString(tmp, 77 + 85,  7, 0x000000);
+        fontRenderer.drawString(tmp + ": " + maid.getHealth(), 77 + 85,  7, 0x000000);
         tmp = I18n.format("container.maid.exp");
         fontRenderer.drawString(tmp, 77 + 85,  23, 0x000000);
         tmp = I18n.format("container.maid.rank");
         fontRenderer.drawString(tmp, 77 + 85, 37, 0x000000);
         GlStateManager.popMatrix();
 
-        tmp = I18n.format("container.maid.healthBar");
-        fontRenderer.drawString(tmp + ": " + maid.getHealthBarNum(), 77, 50, 0x000000);
+//        tmp = I18n.format("container.maid.healthBar");
+//        fontRenderer.drawString(tmp + ": " + maid.getHealthBarNum(), 77, 50, 0x000000);
 
         tmp = I18n.format("container.maid." + EnumMode.valueOf(maid.getMode()).toString().toLowerCase());
         fontRenderer.drawString(tmp, 77,  70, 0x000000);
@@ -182,8 +182,8 @@ public class GuiMaidWindow extends GuiContainer
     }
 
     private void drawHealthNumLayer(int x, int y){
-        for (int i = 0; i < maid.getHealth() / 10; i++)
-            drawTexturedModalRect(x + 77 + i * 8, y + 7, 178, 38, 7, 7);
+//        for (int i = 0; i < maid.getHealth() / 10; i++)
+//            drawTexturedModalRect(x + 77 + i * 8, y + 7, 178, 38, 7, 7);
     }
 
     private void drawExpLayer(int x, int y){

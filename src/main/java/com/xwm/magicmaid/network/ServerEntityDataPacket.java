@@ -3,13 +3,13 @@ package com.xwm.magicmaid.network;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityEquipmentCreature;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.NonNullList;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -116,11 +116,17 @@ public class ServerEntityDataPacket implements IMessage {
             if (ctx.side != Side.CLIENT)
                 return null;
 
+            FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> processMessage(message, ctx));
+
+            return null;
+        }
+
+        private void processMessage(ServerEntityDataPacket message, MessageContext ctx)
+        {
             try {
-                World world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(message.dimension);
-                Entity entity = world.getEntityByID(message.id);
+                Entity entity = Minecraft.getMinecraft().world.getEntityByID(message.id);
                 if (entity == null)
-                    return null;
+                    return;
 
                 try {
                     //更新nbt tag
@@ -155,7 +161,6 @@ public class ServerEntityDataPacket implements IMessage {
                 System.out.println("sync entity data failed");
             }
 
-            return null;
         }
     }
 }

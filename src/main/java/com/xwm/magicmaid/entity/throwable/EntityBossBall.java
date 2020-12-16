@@ -1,14 +1,10 @@
 package com.xwm.magicmaid.entity.throwable;
 
-import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAvoidThingCreature;
+import com.xwm.magicmaid.entity.mob.basic.AbstractEntityMagicCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityEquipmentCreature;
-import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityMultiHealthCreature;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidMarthaBoss;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidRettBoss;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidSelinaBoss;
-import com.xwm.magicmaid.util.helper.MagicCreatureUtils;
-import com.xwm.magicmaid.util.helper.MagicEquipmentUtils;
+import com.xwm.magicmaid.manager.IMagicFightManagerImpl;
+import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
@@ -71,7 +67,7 @@ public abstract class EntityBossBall extends EntityThrowable
                 pos = result.getBlockPos();
                 break;
         }
-        List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos).grow(1));
+        List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos).grow(2));
         for (Entity entity : entities)
         {
             try {
@@ -92,10 +88,6 @@ public abstract class EntityBossBall extends EntityThrowable
         if (entity == null)
             return;
 
-        if (entity instanceof EntityMob) {
-            entity.attackEntityFrom(DamageSource.causeMobDamage(thrower), 100);
-        }
-
         int camp;
         if (entity instanceof IEntityBossCreature)
         {
@@ -103,28 +95,9 @@ public abstract class EntityBossBall extends EntityThrowable
             camp = ((IEntityBossCreature) entity).getBossCamp();
             if (camp == getCamp())
             {
-                if (entity instanceof IEntityMultiHealthCreature)
-                {
-                    fixProblem((IEntityMultiHealthCreature) entity);
-
-                    int f = ((IEntityMultiHealthCreature) entity).getHealthBarNum();
-                    int f1 = ((IEntityMultiHealthCreature) entity).getMaxHealthBarnum();
-
-                    //减少10%的血条
-                    f = f - f1 / 4;
-                    if (f >= 0) {
-                        ((IEntityMultiHealthCreature) entity).setHealthbarnum(f);
-                    }
-                    else
-                    {
-                        ((IEntityMultiHealthCreature) entity).setHealthbarnum(0);
-                        if (entity instanceof IEntityAvoidThingCreature)
-                        {
-                            MagicCreatureUtils.unLock((IEntityAvoidThingCreature) entity);
-                            entity.attackEntityFrom(DamageSource.causeMobDamage(thrower), 100); //默认所有生物的最大生命值是100
-                            MagicCreatureUtils.lock((IEntityAvoidThingCreature) entity);
-                        }
-                    }
+                if (entity instanceof AbstractEntityMagicCreature) {
+                    float f = ((AbstractEntityMagicCreature) entity).getMaxHealth() / 4;
+                    IMagicFightManagerImpl.getInstance().attackEntityFrom((EntityLivingBase) entity, DamageSource.causeMobDamage(thrower), f);
                 }
             }
 
@@ -134,24 +107,10 @@ public abstract class EntityBossBall extends EntityThrowable
                 MagicEquipmentUtils.dropEquipment(((IEntityEquipmentCreature) entity).getArmorType(), 1, world, getPosition());
             }
         }
-    }
-
-    //解决之前血条最大值没有写进nbt造成的问题 version-6.0
-    private boolean fixProblem(IEntityMultiHealthCreature creature) {
-        int f = creature.getHealthBarNum();
-        int f1 = creature.getMaxHealthBarnum();
-
-        if (f1 < 200)
-        {
-            if (creature instanceof EntityMagicMaidMarthaBoss)
-                creature.setMaxHealthbarnum(200);
-            else if (creature instanceof EntityMagicMaidRettBoss)
-                creature.setMaxHealthbarnum(1000);
-            else if (creature instanceof EntityMagicMaidSelinaBoss)
-                creature.setMaxHealthbarnum(200);
-            return true;
+        else {
+            if (entity instanceof EntityMob) {
+                entity.attackEntityFrom(DamageSource.causeMobDamage(thrower), 1000);
+            }
         }
-        else
-            return false;
     }
 }

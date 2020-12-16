@@ -1,8 +1,10 @@
 package com.xwm.magicmaid.event;
 
+import com.xwm.magicmaid.Main;
 import com.xwm.magicmaid.init.BlockInit;
 import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.init.PotionInit;
+import com.xwm.magicmaid.key.KeyLoader;
 import com.xwm.magicmaid.network.ClientEntityDataPacket;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
@@ -29,6 +31,7 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -59,6 +62,20 @@ public class ClientEventLoader
             return 120;
 
         return 120 - tick;
+    }
+
+    /**
+     * 控制打开player menu的事宜
+     * @param event
+     */
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void onKeyInput(InputEvent.KeyInputEvent event)
+    {
+        EntityPlayer player = Minecraft.getMinecraft().player;
+        if (KeyLoader.OPEN_MENU.isPressed()) {
+            player.openGui(Main.instance, Reference.GUI_PLAYER_MENU_MAIN, player.getEntityWorld(), (int)player.posX, (int)player.posY, (int)player.posZ);
+        }
     }
 
     private int cameratick = 0;

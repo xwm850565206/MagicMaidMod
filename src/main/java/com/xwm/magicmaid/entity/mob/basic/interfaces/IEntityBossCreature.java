@@ -1,13 +1,13 @@
 package com.xwm.magicmaid.entity.mob.basic.interfaces;
 
-import com.xwm.magicmaid.world.dimension.MagicCreatureFightManager;
+import com.xwm.magicmaid.manager.IMagicBossManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 public interface IEntityBossCreature
 {
-    MagicCreatureFightManager fightManager = null;
+    IMagicBossManager fightManager = null;
 
     /**
      * 提供斩杀接口
@@ -19,7 +19,7 @@ public interface IEntityBossCreature
      * 获取战斗管理器
      * @return
      */
-    MagicCreatureFightManager getFightManager();
+    IMagicBossManager getFightManager();
 
     /**
      * 初始化战斗管理器

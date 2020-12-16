@@ -10,12 +10,11 @@ import com.xwm.magicmaid.network.RenderAreaPacket;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
 import com.xwm.magicmaid.util.handlers.LootTableHandler;
 import com.xwm.magicmaid.world.dimension.DimensionChurch;
-import com.xwm.magicmaid.world.dimension.MagicCreatureFightManager;
+import com.xwm.magicmaid.manager.IMagicBossManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -25,9 +24,9 @@ import net.minecraft.world.World;
 
 public class EntityMagicMaidRettBoss extends EntityMagicMaidRett implements IEntityBossCreature
 {
-    protected MagicCreatureFightManager fightManager = null;
+    protected IMagicBossManager fightManager = null;
 
-    private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenSky(false);
+    private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName().appendText(" 剩余血量: " + getHealth()), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenSky(false);
     private int factor = 1;
 
 
@@ -65,12 +64,12 @@ public class EntityMagicMaidRettBoss extends EntityMagicMaidRett implements IEnt
         super.onLivingUpdate();
 
 
-        if (getTrueHealth() > 0 && EnumEquipment.valueOf(this.getWeaponType()) == EnumEquipment.NONE) {
+        if (EnumEquipment.valueOf(this.getWeaponType()) == EnumEquipment.NONE) {
             this.setInventorySlotContents(0, new ItemStack(ItemInit.ITEM_DEMON_KILLER_SWORD));
             this.setInventorySlotContents(1, new ItemStack(ItemInit.ITEM_IMMORTAL));
         }
 
-        this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));
+        this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血量: " + getHealth()));
         this.bossInfo.setPercent(getHealth() / getMaxHealth());
 
 
@@ -83,9 +82,7 @@ public class EntityMagicMaidRettBoss extends EntityMagicMaidRett implements IEnt
     public void onDeathUpdate()
     {
         super.onDeathUpdate();
-        if (getTrueHealth() > 0)
-            this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));
-        else if (this.deathTime == 20) {
+        if (this.deathTime == 20) {
             if (fightManager != null) {
                 fightManager.setBossAlive(false); //boss真实死亡
                 fightManager.setBossKilled(true);
@@ -93,26 +90,14 @@ public class EntityMagicMaidRettBoss extends EntityMagicMaidRett implements IEnt
         }
     }
 
-    @Override
-    public void heal(float healAmount)
-    {
-        super.heal(healAmount);
-        this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));
-    }
 
     @Override
     protected ResourceLocation getLootTable()
     {
-        if (getTrueHealth() > 0) return null;
+        if (getHealth() > 0) return null;
         return LootTableHandler.DEMONKILLER;
     }
 
-
-    @Override
-    public void readEntityFromNBT(NBTTagCompound compound){
-        super.readEntityFromNBT(compound);
-        this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));
-    }
 
     /**
      * Sets the custom name tag for this entity
@@ -154,7 +139,6 @@ public class EntityMagicMaidRettBoss extends EntityMagicMaidRett implements IEnt
             return true;
         this.setAvoidSetHealth(-1);
         this.setAvoidDamage(-1);
-        this.setHealthbarnum(0);
         return super.attackEntityFrom(DamageSource.
                 causePlayerDamage(player), getMaxHealth()+1);
     }
@@ -165,7 +149,7 @@ public class EntityMagicMaidRettBoss extends EntityMagicMaidRett implements IEnt
      * @return
      */
     @Override
-    public MagicCreatureFightManager getFightManager() {
+    public IMagicBossManager getFightManager() {
         return this.fightManager;
     }
 

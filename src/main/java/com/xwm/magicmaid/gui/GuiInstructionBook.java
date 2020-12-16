@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.xwm.magicmaid.enumstorage.EnumInstructElement;
+import com.xwm.magicmaid.gui.magiccircle.ContainerMagicCircle;
+import com.xwm.magicmaid.gui.magiccircle.GuiMagicCircle;
 import com.xwm.magicmaid.object.tileentity.Formula;
 import com.xwm.magicmaid.object.tileentity.Result;
 import com.xwm.magicmaid.registry.MagicFormulaRegistry;
@@ -26,8 +28,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.vecmath.Vector2d;
 import java.io.BufferedReader;
@@ -42,7 +42,6 @@ import java.util.Map;
 
 public class GuiInstructionBook extends GuiScreen
 {
-    private static final Logger LOGGER = LogManager.getLogger();
     private static final ResourceLocation BOOK_GUI_TEXTURES = new ResourceLocation("minecraft:textures/gui/book.png");
     private final int bookImageWidth = 384;
     private final int bookImageHeight = 216;
@@ -54,7 +53,7 @@ public class GuiInstructionBook extends GuiScreen
     private GuiInstructionBook.NextPageButton buttonPreviousPage;
 
     public GuiInstructionBook() {
-        bookPages = new ArrayList<>();
+        this.bookPages = new ArrayList<>();
     }
 
     public void initGui()
@@ -237,6 +236,7 @@ public class GuiInstructionBook extends GuiScreen
     private int drawInstructionEntry(InstructElement instructElement, int x, int y)
     {
         EnumInstructElement enumInstructElement = instructElement.type;
+        RenderHelper.enableGUIStandardItemLighting();
         switch (enumInstructElement)
         {
             case NONE:
@@ -319,7 +319,7 @@ public class GuiInstructionBook extends GuiScreen
             case FORMULA:
                 FormulaElement formulaElement = (FormulaElement) instructElement;
                 List<ItemStack> allItems = formulaElement.formula;
-                if (allItems.size() > ContainMagicCircle.SLOT_POSITION.size()){
+                if (allItems.size() > ContainerMagicCircle.SLOT_POSITION.size()){
                     System.out.println("formula error");
                     break;
                 }
@@ -334,7 +334,7 @@ public class GuiInstructionBook extends GuiScreen
 //                RenderHelper.enableStandardItemLighting();
                 for (int i = 0; i < allItems.size(); i++)
                 {
-                    Vector2d vector2d = ContainMagicCircle.SLOT_POSITION.get(i);
+                    Vector2d vector2d = ContainerMagicCircle.SLOT_POSITION.get(i);
                     ItemStack stack = allItems.get(i);
                     this.itemRender.renderItemAndEffectIntoGUI(stack, (int)vector2d.x, (int)vector2d.y);
                 }
@@ -344,6 +344,7 @@ public class GuiInstructionBook extends GuiScreen
                 GlStateManager.popMatrix();
                 return y + 2 * this.fontRenderer.FONT_HEIGHT + (int)(75 * 0.8);
         }
+        GlStateManager.disableLighting();
         return y;
     }
 

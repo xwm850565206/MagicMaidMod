@@ -1,4 +1,4 @@
-package com.xwm.magicmaid.world.dimension;
+package com.xwm.magicmaid.manager;
 
 import com.xwm.magicmaid.entity.mob.basic.AbstractEntityMagicCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
@@ -23,7 +23,7 @@ import net.minecraft.world.WorldServer;
 
 import java.util.*;
 
-public class MagicMaidFightManager implements MagicCreatureFightManager
+public class IMagicBossManagerImpl implements IMagicBossManager
 {
     /**
      * 白名单，使用这些mod，boss不会被强化
@@ -47,7 +47,7 @@ public class MagicMaidFightManager implements MagicCreatureFightManager
     public List<EntityPlayerMP> playerList;
 
 
-    public MagicMaidFightManager(WorldServer worldIn, NBTTagCompound compound)
+    public IMagicBossManagerImpl(WorldServer worldIn, NBTTagCompound compound)
     {
         this.world = worldIn;
         this.playerList = new Vector<>();
@@ -215,7 +215,7 @@ public class MagicMaidFightManager implements MagicCreatureFightManager
         if (world.isRemote)
             return;
 
-        if (boss == null && getBossAlive()) {
+        if ((boss == null) && getBossAlive()) {
             bossKilled = false;
             if (getBossAlive()) {
                 boss = (EntityMagicMaid) getBoss();

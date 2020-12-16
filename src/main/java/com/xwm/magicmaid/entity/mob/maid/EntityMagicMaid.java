@@ -20,6 +20,7 @@ import com.xwm.magicmaid.network.ParticlePacket;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
+import com.xwm.magicmaid.manager.MagicCreatureUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
@@ -83,7 +84,7 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30000000298023224D);
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(20);
-
+        MagicCreatureUtils.setCreatureMaxHealth(this, 1000);
     }
 
     @Override
@@ -152,7 +153,8 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
     {
         super.onLivingUpdate();
 
-        if (this.getAttackTarget() != null && !this.isEnemy(this.getAttackTarget()))
+        // 版本6.5，拔刀剑攻击女仆(因为没继承原版的宠物类)，女仆会攻击主人(原因不明)，修改为在待命和服侍模式下把攻击目标清空
+        if (this.getAttackTarget() != null && (!this.isEnemy(this.getAttackTarget()) || EnumMode.valueOf(this.getMode()) == EnumMode.SITTING || EnumMode.valueOf(this.getMode()) == EnumMode.SERVE))
             this.setAttackTarget(null);
         if (hasWeapon() && !(this instanceof EntityMagicMaidRett)){
             if (weapon == null)
@@ -161,20 +163,8 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
                 getEquipment(ItemEquipment.valueOf(EnumEquipment.valueOf(getWeaponType())));
             }
         }
-
-        System.out.println(this.getHealth());
     }
 
-    @Override
-    public void onEntityUpdate()
-    {
-        super.onEntityUpdate();
-
-        if (this.getTrueHealth() > 0){
-            if (this.isDead) this.isDead = false;
-            if (this.deathTime > 0) this.deathTime = 0;
-        }
-    }
 
     @Override
     public void writeEntityToNBT(NBTTagCompound compound)
@@ -286,7 +276,7 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
         System.out.println("state: " + EnumRettState.valueOf(this.getState())
                 + " mode: " + EnumMode.valueOf(this.getMode())
                 + " owner: " + this.hasOwner() + " Equipment: " + EnumEquipment.valueOf(this.getWeaponType())
-                + " rank: " + this.getRank() + " health: " + this.getTrueHealth());
+                + " rank: " + this.getRank() + " health: " + this.getHealth());
     }
 
     public static class EnemySelect implements Predicate<EntityLivingBase> {

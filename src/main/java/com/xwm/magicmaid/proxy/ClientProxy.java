@@ -1,6 +1,7 @@
 package com.xwm.magicmaid.proxy;
 
 import com.xwm.magicmaid.event.ClientEventLoader;
+import com.xwm.magicmaid.key.KeyLoader;
 import com.xwm.magicmaid.object.tileentity.TileEntityChurchPortal;
 import com.xwm.magicmaid.render.portal.TileEntityChurchPortalRenderer;
 import com.xwm.magicmaid.util.handlers.RenderHandler;
@@ -20,6 +21,7 @@ public class ClientProxy extends CommonProxy
         super.preInit(event);
         RenderHandler.registerEntityRenders();
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChurchPortal.class, new TileEntityChurchPortalRenderer());
+        new KeyLoader();
     }
 
     public void init(FMLInitializationEvent event){

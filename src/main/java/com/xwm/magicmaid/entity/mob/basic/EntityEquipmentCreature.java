@@ -2,7 +2,6 @@ package com.xwm.magicmaid.entity.mob.basic;
 
 import com.google.common.base.Optional;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityEquipmentCreature;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.ServerEntityDataPacket;
@@ -23,11 +22,12 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
 {
     public NonNullList<ItemStack> inventory = NonNullList.<ItemStack>withSize(getSizeInventory(), ItemStack.EMPTY); //保存背包里的信息
 
-    private static final DataParameter<Boolean> HAS_WEAPON = EntityDataManager.<Boolean>createKey(EntityMagicMaid.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> HAS_ARMOR = EntityDataManager.<Boolean>createKey(EntityMagicMaid.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Optional<UUID>> WEAPON_ID = EntityDataManager.<Optional<UUID>>createKey(EntityMagicMaid.class, DataSerializers.OPTIONAL_UNIQUE_ID);
-    private static final DataParameter<Integer> WEAPON_TYPE = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> ARMOR_TYPE = EntityDataManager.<Integer>createKey(EntityMagicMaid.class, DataSerializers.VARINT);
+    private static final DataParameter<Boolean> HAS_WEAPON = EntityDataManager.<Boolean>createKey(EntityEquipmentCreature.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> HAS_ARMOR = EntityDataManager.<Boolean>createKey(EntityEquipmentCreature.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> IS_FIRST_GET_ARMOR = EntityDataManager.createKey(EntityEquipmentCreature.class, DataSerializers.BOOLEAN); //第一次获得防具血量调整
+    private static final DataParameter<Optional<UUID>> WEAPON_ID = EntityDataManager.<Optional<UUID>>createKey(EntityEquipmentCreature.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+    private static final DataParameter<Integer> WEAPON_TYPE = EntityDataManager.<Integer>createKey(EntityEquipmentCreature.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> ARMOR_TYPE = EntityDataManager.<Integer>createKey(EntityEquipmentCreature.class, DataSerializers.VARINT);
 
     public EntityEquipmentCreature(World worldIn) {
         super(worldIn);
@@ -38,6 +38,7 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
         super.entityInit();
         this.dataManager.register(HAS_WEAPON, false);
         this.dataManager.register(HAS_ARMOR, false);
+        this.dataManager.register(IS_FIRST_GET_ARMOR, true);
         this.dataManager.register(WEAPON_ID, Optional.fromNullable(null));
         this.dataManager.register(WEAPON_TYPE, EnumEquipment.toInt(EnumEquipment.NONE));
         this.dataManager.register(ARMOR_TYPE, EnumEquipment.toInt(EnumEquipment.NONE));
@@ -49,6 +50,7 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
         super.writeEntityToNBT(compound);
         compound.setBoolean("hasWeapon", this.hasWeapon());
         compound.setBoolean("hasArmor", this.hasArmor());
+        compound.setBoolean("isFirstGetArmor", this.isFirstGetArmor());
         compound.setInteger("weaponType", this.getWeaponType());
         compound.setInteger("armorType", this.getArmorType());
 
@@ -66,6 +68,7 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
         super.readEntityFromNBT(compound);
         this.setHasWeapon(compound.getBoolean("hasWeapon"));
         this.setHasArmor(compound.getBoolean("hasArmor"));
+        this.setFirstGetArmor(compound.getBoolean("isFirstGetArmor"));
         this.setWeaponType(compound.getInteger("weaponType"));
         this.setArmorType(compound.getInteger("armorType"));
         this.inventory = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
@@ -91,6 +94,17 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
     @Override
     public boolean hasArmor() {
         return this.dataManager.get(HAS_ARMOR);
+    }
+
+
+    @Override
+    public boolean isFirstGetArmor() {
+        return this.dataManager.get(IS_FIRST_GET_ARMOR);
+    }
+
+    @Override
+    public void setFirstGetArmor(boolean isFirstGetArmor) {
+        this.dataManager.set(IS_FIRST_GET_ARMOR, isFirstGetArmor);
     }
 
     @Override

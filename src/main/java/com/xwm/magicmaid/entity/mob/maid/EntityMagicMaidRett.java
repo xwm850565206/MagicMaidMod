@@ -11,6 +11,7 @@ import com.xwm.magicmaid.enumstorage.EnumRettState;
 import com.xwm.magicmaid.object.item.equipment.ItemDemonKillerSword;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
+import com.xwm.magicmaid.manager.MagicCreatureUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -47,6 +48,12 @@ public class EntityMagicMaidRett extends EntityMagicMaid
         this.targetTasks.addTask(3, new EntityAIDemonKillerAttack(this));
     }
 
+    @Override
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        MagicCreatureUtils.setCreatureMaxHealth(this, 2000);
+    }
 
 
     @Override
@@ -86,9 +93,12 @@ public class EntityMagicMaidRett extends EntityMagicMaid
                 break;
             case IMMORTAL:
                 this.setHasArmor(true);
-                this.setMaxHealthbarnum(1000);
-                this.setHealthbarnum(1000);
+                MagicCreatureUtils.setCreatureMaxHealth(this, 100000);
                 this.setArmorType(EnumEquipment.toInt(EnumEquipment.IMMORTAL));
+                if (this.isFirstGetArmor()) {
+                    this.heal(this.getMaxHealth());
+                    this.setFirstGetArmor(false);
+                }
                 break;
 
         }
@@ -109,7 +119,7 @@ public class EntityMagicMaidRett extends EntityMagicMaid
             case IMMORTAL:
                 this.setHasArmor(false);
                 this.setArmorType(EnumEquipment.toInt(EnumEquipment.NONE));
-                this.setMaxHealthbarnum(20);
+                MagicCreatureUtils.setCreatureMaxHealth(this, 2000);;
                 break;
         }
     }

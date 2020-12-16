@@ -15,6 +15,7 @@ import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.object.item.equipment.ItemWhisper;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
+import com.xwm.magicmaid.manager.MagicCreatureUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -125,9 +126,12 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
                 break;
             case WISE:
                 this.setHasArmor(true);
-                this.setMaxHealthbarnum(200);
-                this.setHealthbarnum(200);
+                MagicCreatureUtils.setCreatureMaxHealth(this, 20000);
                 this.setArmorType(EnumEquipment.toInt(EnumEquipment.WISE));
+                if (this.isFirstGetArmor()) {
+                    this.heal(this.getMaxHealth());
+                    this.setFirstGetArmor(false);
+                }
                 break;
         }
     }
@@ -151,7 +155,7 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
         else {
             this.setHasArmor(false);
             this.setArmorType(EnumEquipment.toInt(EnumEquipment.NONE));
-            this.setMaxHealthbarnum(10);
+            MagicCreatureUtils.setCreatureMaxHealth(this, 1000);
         }
     }
 
