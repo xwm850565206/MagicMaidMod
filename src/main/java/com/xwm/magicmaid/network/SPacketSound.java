@@ -1,30 +1,27 @@
 package com.xwm.magicmaid.network;
 
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.util.handlers.SoundsHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class SoundPacket implements IMessage {
+public class SPacketSound implements IMessage {
     private boolean messageValid;
     private BlockPos pos;
     private int soundType;
 
-    public SoundPacket() {
+    public SPacketSound() {
         this.messageValid = false;
     }
 
-    public SoundPacket(int soundType, BlockPos pos) {
+    public SPacketSound(int soundType, BlockPos pos) {
         this.soundType = soundType;
         this.pos = pos;
     }
@@ -41,9 +38,9 @@ public class SoundPacket implements IMessage {
         buf.writeLong(this.pos.toLong());
     }
 
-    public static class Handler implements IMessageHandler<SoundPacket, IMessage> {
+    public static class Handler implements IMessageHandler<SPacketSound, IMessage> {
         @Override
-        public IMessage onMessage(SoundPacket message, MessageContext ctx) {
+        public IMessage onMessage(SPacketSound message, MessageContext ctx) {
             if (message.messageValid && ctx.side != Side.CLIENT)
                 return null;
 
@@ -51,7 +48,7 @@ public class SoundPacket implements IMessage {
             return null;
         }
 
-        private void processMessage(SoundPacket message, MessageContext ctx)
+        private void processMessage(SPacketSound message, MessageContext ctx)
         {
             SoundEvent event;
             SoundCategory category;

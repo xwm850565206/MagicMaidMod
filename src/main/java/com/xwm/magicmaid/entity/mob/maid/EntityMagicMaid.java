@@ -16,7 +16,7 @@ import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumRettState;
 import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.network.NetworkLoader;
-import com.xwm.magicmaid.network.ParticlePacket;
+import com.xwm.magicmaid.network.particle.SPacketParticle;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
@@ -98,7 +98,7 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
             //打开ui
             if (player.isSneaking() && this.hasOwner() && this.getOwnerID().equals(player.getUniqueID())){
                 player.openGui(Main.instance, Reference.GUI_MAID_WINDOW, world, (int) this.posX, (int) this.posY, (int) this.posZ);
-                /*SoundPacket packet = new SoundPacket(1, getPosition());
+                /*SPacketSound packet = new SPacketSound(1, getPosition());
                 NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(world.provider.getDimension(), posX, posY, posZ, 40.0D);
                 NetworkLoader.instance.sendToAllAround(packet, target);*/
             } //转换模式
@@ -118,12 +118,12 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
                     stack.shrink(1);
                 this.setOwnerID(player.getUniqueID());
                 for (int i = 0; i < 4; i++) {
-                    ParticlePacket particlePacket = new ParticlePacket(
+                    SPacketParticle sPacketParticle = new SPacketParticle(
                             this.posX + rand.nextDouble() * 0.1,
                             this.posY + this.height + rand.nextDouble(),
                             this.posZ + rand.nextDouble() * 0.1, EnumParticleTypes.HEART);
                     NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(this.getEntityWorld().provider.getDimension(), posX, posY, posZ, 40.0D);
-                    NetworkLoader.instance.sendToAllAround(particlePacket, target);
+                    NetworkLoader.instance.sendToAllAround(sPacketParticle, target);
                 }
                 return true;
             }

@@ -1,28 +1,24 @@
 package com.xwm.magicmaid.network;
 
-import com.xwm.magicmaid.util.handlers.SoundsHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class VelocityPacket implements IMessage {
+public class SPacketVelocity implements IMessage {
     private boolean messageValid;
     private int id;
     private float motionX, motionY, motionZ;
 
-    public VelocityPacket() {
+    public SPacketVelocity() {
         this.messageValid = false;
     }
 
-    public VelocityPacket(int id, float motionX, float motionY, float motionZ) {
+    public SPacketVelocity(int id, float motionX, float motionY, float motionZ) {
         this.id = id;
         this.motionX = motionX;
         this.motionY = motionY;
@@ -45,9 +41,9 @@ public class VelocityPacket implements IMessage {
         buf.writeFloat(this.motionZ);
     }
 
-    public static class Handler implements IMessageHandler<VelocityPacket, IMessage> {
+    public static class Handler implements IMessageHandler<SPacketVelocity, IMessage> {
         @Override
-        public IMessage onMessage(VelocityPacket message, MessageContext ctx) {
+        public IMessage onMessage(SPacketVelocity message, MessageContext ctx) {
             if (message.messageValid && ctx.side != Side.CLIENT)
                 return null;
 
@@ -55,7 +51,7 @@ public class VelocityPacket implements IMessage {
             return null;
         }
 
-        private void processMessage(VelocityPacket message, MessageContext ctx)
+        private void processMessage(SPacketVelocity message, MessageContext ctx)
         {
             try {
                 Entity entity = Minecraft.getMinecraft().world.getEntityByID(message.id);

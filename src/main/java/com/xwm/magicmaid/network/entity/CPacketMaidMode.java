@@ -1,4 +1,4 @@
-package com.xwm.magicmaid.network;
+package com.xwm.magicmaid.network.entity;
 
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import io.netty.buffer.ByteBuf;
@@ -9,17 +9,17 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class MaidModePacket implements IMessage
+public class CPacketMaidMode implements IMessage
 {
     private boolean messageValid;
     private int maidId;
     private int dimension;
 
-    public MaidModePacket(){
+    public CPacketMaidMode(){
         this.messageValid = false;
     }
 
-    public MaidModePacket(int maidId, int dimension) {
+    public CPacketMaidMode(int maidId, int dimension) {
        this.maidId = maidId;
        this.dimension = dimension;
     }
@@ -37,17 +37,17 @@ public class MaidModePacket implements IMessage
         buf.writeInt(this.dimension);
     }
 
-    public static class Handler implements IMessageHandler<MaidModePacket, IMessage>
+    public static class Handler implements IMessageHandler<CPacketMaidMode, IMessage>
     {
         @Override
-        public IMessage onMessage(MaidModePacket message, MessageContext ctx) {
+        public IMessage onMessage(CPacketMaidMode message, MessageContext ctx) {
             if (message.messageValid && ctx.side != Side.SERVER)
                 return null;
 
             FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> processMessage(message, ctx));
             return null;
         }
-        private void processMessage(MaidModePacket message, MessageContext ctx)
+        private void processMessage(CPacketMaidMode message, MessageContext ctx)
         {
             World world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(message.dimension);
             EntityMagicMaid maid = (EntityMagicMaid) world.getEntityByID(message.maidId);

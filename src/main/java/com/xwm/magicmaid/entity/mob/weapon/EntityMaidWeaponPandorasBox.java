@@ -6,7 +6,7 @@ import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.manager.IMagicFightManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
-import com.xwm.magicmaid.network.SixParamParticlePacket;
+import com.xwm.magicmaid.network.particle.SPacketSixParamParticle;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
 import net.minecraft.entity.EntityLivingBase;
@@ -159,7 +159,7 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
         double d4 = (cbb.minY + cbb.maxY) / 2.0;
         double d5 = (cbb.minZ + cbb.maxZ) / 2.0;
         for (int i = 0; i < 4; i++) {
-            SixParamParticlePacket particlePacket = new SixParamParticlePacket(
+            SPacketSixParamParticle particlePacket = new SPacketSixParamParticle(
                             d0 + rand.nextDouble(),
                             d1 + rand.nextDouble(),
                             d2 + rand.nextDouble(), d3, d4, d5, EnumCustomParticles.PANDORA);

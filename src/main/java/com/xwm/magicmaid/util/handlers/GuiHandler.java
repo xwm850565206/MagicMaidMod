@@ -61,7 +61,7 @@ public class GuiHandler implements IGuiHandler
             ;
         }
         else if (ID == Reference.GUI_PLAYER_MENU_MAIN) {
-            return  new ContainerPlayerMenuMain(player.inventory);
+            return  new ContainerPlayerMenuMain(player.inventory, player);
         }
 
         return null;
@@ -106,7 +106,7 @@ public class GuiHandler implements IGuiHandler
             return new GuiInstructionBook();
         }
         else if (ID == Reference.GUI_PLAYER_MENU_MAIN) {
-            return new GuiPlayerMenuMain(new ContainerPlayerMenuMain(player.inventory), player);
+            return new GuiPlayerMenuMain(new ContainerPlayerMenuMain(player.inventory, player), player);
         }
 
         return null;

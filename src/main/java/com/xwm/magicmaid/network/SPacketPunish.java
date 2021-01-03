@@ -3,24 +3,21 @@ package com.xwm.magicmaid.network;
 import com.xwm.magicmaid.gui.KickOutWindow;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.network.Packet;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class PunishPacket implements IMessage
+public class SPacketPunish implements IMessage
 {
     public int punishLevel;
     private boolean messageValid;
-    public PunishPacket() {
+    public SPacketPunish() {
         this.messageValid = false;
     }
 
-    public PunishPacket(int punishLevel) {
+    public SPacketPunish(int punishLevel) {
         this.punishLevel = punishLevel;
         this.messageValid = true;
     }
@@ -37,10 +34,10 @@ public class PunishPacket implements IMessage
         buf.writeInt(this.punishLevel);
     }
 
-    public static class Handler implements IMessageHandler<PunishPacket, IMessage> {
+    public static class Handler implements IMessageHandler<SPacketPunish, IMessage> {
         @SideOnly(Side.CLIENT)
         @Override
-        public IMessage onMessage(PunishPacket message, MessageContext ctx) {
+        public IMessage onMessage(SPacketPunish message, MessageContext ctx) {
             if (ctx.side != Side.CLIENT || !message.messageValid)
                 return null;
 

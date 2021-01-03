@@ -8,11 +8,10 @@ import com.xwm.magicmaid.init.DimensionInit;
 import com.xwm.magicmaid.init.EntityInit;
 import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.init.PotionInit;
-import com.xwm.magicmaid.player.capability.CapabilityLoader;
-import com.xwm.magicmaid.player.capability.CapabilityMagicCreature;
-import com.xwm.magicmaid.player.capability.CapabilitySkill;
-import com.xwm.magicmaid.player.capability.ISkillCapability;
+import com.xwm.magicmaid.manager.ISkillManagerImpl;
+import com.xwm.magicmaid.player.capability.*;
 import com.xwm.magicmaid.player.skill.IAttributeSkill;
+import com.xwm.magicmaid.player.skill.IPerformSkill;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -22,6 +21,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
@@ -133,6 +133,34 @@ public class CommonEventLoader
         }
     }
 
+    /**
+     * 复制 skill capability 和 creature capability
+     */
+    @SubscribeEvent
+    public void onPlayerClone(net.minecraftforge.event.entity.player.PlayerEvent.Clone event)
+    {
+        EntityPlayer player = event.getEntityPlayer();
+        if (player.hasCapability(CapabilityLoader.SKILL_CAPABILITY, null))
+        {
+            ISkillCapability old = event.getOriginal().getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
+            NBTBase data = CapabilityLoader.SKILL_CAPABILITY.getStorage().writeNBT(CapabilityLoader.SKILL_CAPABILITY, old, null);
+            ISkillCapability ne = player.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
+            CapabilityLoader.SKILL_CAPABILITY.getStorage().readNBT(CapabilityLoader.SKILL_CAPABILITY, ne, null, data);
+        }
+
+        if (player.hasCapability(CapabilityLoader.CREATURE_CAPABILITY, null))
+        {
+            ICreatureCapability old = event.getOriginal().getCapability(CapabilityLoader.CREATURE_CAPABILITY, null);
+            NBTBase data = CapabilityLoader.CREATURE_CAPABILITY.getStorage().writeNBT(CapabilityLoader.CREATURE_CAPABILITY, old, null);
+            ICreatureCapability ne = player.getCapability(CapabilityLoader.CREATURE_CAPABILITY, null);
+            CapabilityLoader.CREATURE_CAPABILITY.getStorage().readNBT(CapabilityLoader.CREATURE_CAPABILITY, ne, null, data);
+        }
+    }
+
+    /**
+     * 大智者的祝福逻辑，技能冷却逻辑
+     * @param event
+     */
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event)
     {
@@ -149,6 +177,19 @@ public class CommonEventLoader
         else if (effect != null && effect.getDuration() == 1){
             player.capabilities.allowFlying = false;
             player.capabilities.isFlying = false;
+        }
+
+        if (player.hasCapability(CapabilityLoader.SKILL_CAPABILITY, null))
+        {
+            ISkillCapability skillCapability = player.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
+            if (skillCapability != null)
+            {
+                for (IPerformSkill performSkill : skillCapability.getPerformSkills())
+                {
+                    performSkill.update();
+                }
+                // todo 被动技能可能也需要tick
+            }
         }
     }
 
@@ -208,6 +249,7 @@ public class CommonEventLoader
                 EntityItem entityItem = new EntityItem(player.getEntityWorld(), player.posX, player.posY, player.posZ, new ItemStack(ItemInit.ITEME_INSTRUCCTION_BOOK));
                 world.spawnEntity(entityItem);
             }
+            ISkillManagerImpl.instance.updateToClient(player);
         }
     }
 

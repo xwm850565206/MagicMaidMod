@@ -6,7 +6,7 @@ import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.manager.IMagicFightManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
-import com.xwm.magicmaid.network.SixParamParticlePacket;
+import com.xwm.magicmaid.network.particle.SPacketSixParamParticle;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.util.ITooltipFlag;
@@ -98,7 +98,7 @@ public class ItemDemonKillerSword extends ItemWeapon
 
         if (world instanceof WorldServer)
         {
-            SixParamParticlePacket packet = new SixParamParticlePacket(
+            SPacketSixParamParticle packet = new SPacketSixParamParticle(
                     entityLivingBase.posX + d0,
                     entityLivingBase.posY + (double)entityLivingBase.height * 0.5D,
                     entityLivingBase.posZ + d1, 1, angle, 0, EnumCustomParticles.SWEEP);

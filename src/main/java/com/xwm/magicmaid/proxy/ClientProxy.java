@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class ClientProxy extends CommonProxy
 {
+    public ClientEventLoader eventLoader = new ClientEventLoader();
     public void preInit(FMLPreInitializationEvent event)
     {
         super.preInit(event);
@@ -26,9 +27,7 @@ public class ClientProxy extends CommonProxy
 
     public void init(FMLInitializationEvent event){
         super.init(event);
-        MinecraftForge.EVENT_BUS.register(new ClientEventLoader());
-
-//        registerItemRenderer(ItemInit.ITEM_CONVICTION, 0, "inventory");
+        MinecraftForge.EVENT_BUS.register(eventLoader);
     }
 
     public void postInit(FMLPostInitializationEvent event){
@@ -44,10 +43,6 @@ public class ClientProxy extends CommonProxy
     @Override
     public void registerOBJRenderer(Item item, int meta, String id)
     {
-//        ModelLoader.setCustomMeshDefinition(item, stack -> new ModelResourceLocation(item.getRegistryName(), id));
-//        ModelLoader.setCustomMeshDefinition(item, meta, new ModelResourceLocation(item.getRegistryName(), id));
         ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName(), id));
-//        RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
-//        renderItem.getItemModelMesher().registerEquipmentPiece(item, meta, new ModelResourceLocation(Reference.MODID + ":" + item.getUnlocalizedName().substring(5), id));
     }
 }

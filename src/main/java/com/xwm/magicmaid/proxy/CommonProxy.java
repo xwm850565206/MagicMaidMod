@@ -14,14 +14,14 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 public class CommonProxy
 {
-
+    public CommonEventLoader eventLoader = new CommonEventLoader();
     public void preInit(FMLPreInitializationEvent event)
     {
        new NetworkLoader(event);
     }
 
     public void init(FMLInitializationEvent event){
-        MinecraftForge.EVENT_BUS.register(new CommonEventLoader());
+        MinecraftForge.EVENT_BUS.register(eventLoader);
         MinecraftForge.EVENT_BUS.register(new SkillEventLoader());
         new AchievementLoader();
     }

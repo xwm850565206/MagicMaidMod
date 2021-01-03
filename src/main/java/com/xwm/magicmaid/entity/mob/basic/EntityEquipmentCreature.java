@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityEquipmentCreature;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.network.NetworkLoader;
-import com.xwm.magicmaid.network.ServerEntityDataPacket;
+import com.xwm.magicmaid.network.entity.SPacketEntityData;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ItemStackHelper;
@@ -249,7 +249,7 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
             return; //客户端不向服务器更新
         NBTTagCompound compound = new NBTTagCompound();
         ItemStackHelper.saveAllItems(compound, this.inventory);
-        ServerEntityDataPacket packet = new ServerEntityDataPacket(this.getEntityId(), this.getEntityWorld().provider.getDimension(), 4, compound);
+        SPacketEntityData packet = new SPacketEntityData(this.getEntityId(), this.getEntityWorld().provider.getDimension(), 4, compound);
         NetworkLoader.instance.sendToAll(packet);
     }
 

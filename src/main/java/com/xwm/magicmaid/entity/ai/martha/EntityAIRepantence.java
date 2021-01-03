@@ -8,8 +8,8 @@ import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.manager.IMagicFightManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
-import com.xwm.magicmaid.network.ParticlePacket;
-import com.xwm.magicmaid.network.ThreeParamParticlePacket;
+import com.xwm.magicmaid.network.particle.SPacketParticle;
+import com.xwm.magicmaid.network.particle.SPacketThreeParamParticle;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
 import net.minecraft.entity.EntityLivingBase;
@@ -127,12 +127,12 @@ public class EntityAIRepantence extends EntityAIBase
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 10; j++)
             {
-                ParticlePacket particlePacket = new ParticlePacket(
+                SPacketParticle sPacketParticle = new SPacketParticle(
                         d0 + radius * Math.sin(Math.toRadians(j * perAngle)),
                         d1 + perHeight * i,
                         d2 + radius * Math.cos(Math.toRadians(j * perAngle)), EnumParticleTypes.SMOKE_LARGE);
                 NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(maid.getEntityWorld().provider.getDimension(), d0, d1, d2, 40.0D);
-                NetworkLoader.instance.sendToAllAround(particlePacket, target);
+                NetworkLoader.instance.sendToAllAround(sPacketParticle, target);
             }
     }
 
@@ -142,7 +142,7 @@ public class EntityAIRepantence extends EntityAIBase
         double d2 = (bb.minZ + bb.maxZ) / 2.0;
         for (int j = 0; j < 2; j++)
         {
-            ThreeParamParticlePacket particlePacket = new ThreeParamParticlePacket(
+            SPacketThreeParamParticle particlePacket = new SPacketThreeParamParticle(
                     d0 + random.nextDouble(),
                     d1 + random.nextDouble(),
                     d2 + random.nextDouble(), EnumCustomParticles.SOUL);

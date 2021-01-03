@@ -3,10 +3,8 @@ package com.xwm.magicmaid.player.skill.attributeskill;
 import com.xwm.magicmaid.player.MagicCreatureAttributes;
 import com.xwm.magicmaid.player.capability.CapabilityLoader;
 import com.xwm.magicmaid.player.capability.ICreatureCapability;
-import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 
 public class AttributeSkillIgnoreReduction extends AttributeSkillBase
 {
@@ -41,13 +39,13 @@ public class AttributeSkillIgnoreReduction extends AttributeSkillBase
     }
 
     @Override
-    public String getDescription() {
-        return "减伤无视";
+    public void drawIcon(int x, int y) {
+
     }
 
     @Override
-    public ResourceLocation getIcon() {
-        return new ResourceLocation(Reference.MODID, "texture/gui/icon/ignore_reduction");
+    public String getDescription() {
+        return "减伤无视" + ": " + ignore_reduction;
     }
 
 }

@@ -1,19 +1,23 @@
 package com.xwm.magicmaid.player.capability;
 
-import com.xwm.magicmaid.player.skill.IAttributeSkill;
-import com.xwm.magicmaid.player.skill.IPassiveSkill;
-import com.xwm.magicmaid.player.skill.IPerformSkill;
-import com.xwm.magicmaid.player.skill.ISkill;
+import com.xwm.magicmaid.player.skill.*;
 import com.xwm.magicmaid.player.skill.attributeskill.*;
+import com.xwm.magicmaid.player.skill.perfomskill.PerformSkillBoost;
+import com.xwm.magicmaid.player.skill.perfomskill.PerformSkillFlash;
+import com.xwm.magicmaid.player.skill.perfomskill.PerformSkillNone;
+import com.xwm.magicmaid.registry.MagicSkillRegistry;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -24,62 +28,112 @@ public class CapabilitySkill
         @Override
         public NBTBase writeNBT(Capability<ISkillCapability> capability, ISkillCapability instance, EnumFacing side)
         {
-            NBTTagList tagList = new NBTTagList();
+            NBTTagCompound compound = new NBTTagCompound();
+            compound.setInteger("skill_point", instance.getSkillPoint());
 
+            compound.setTag("skill_inventory", ((InventorySingleSlot)instance.getSkillPointInventory()).serializeNBT());
+
+            NBTTagList tagList = new NBTTagList();
             NBTTagList attributeSkillTagList = new NBTTagList();
             for (ISkill skill : instance.getAttributeSkills())
             {
-                attributeSkillTagList.appendTag(skill.writeToNBTTagCompound(new NBTTagCompound()));
+                NBTTagCompound skillCompound = new NBTTagCompound();
+                skillCompound.setString("skill_name", skill.getName());
+                attributeSkillTagList.appendTag(skill.writeToNBTTagCompound(skillCompound));
             }
 
             NBTTagList passiveSkillTagList = new NBTTagList();
             for (ISkill skill : instance.getPassiveSkills())
             {
-                passiveSkillTagList.appendTag(skill.writeToNBTTagCompound(new NBTTagCompound()));
+                NBTTagCompound skillCompound = new NBTTagCompound();
+                skillCompound.setString("skill_name", skill.getName());
+                passiveSkillTagList.appendTag(skill.writeToNBTTagCompound(skillCompound));
             }
 
             NBTTagList performSkillTagList = new NBTTagList();
             for (ISkill skill : instance.getPerformSkills())
             {
-                performSkillTagList.appendTag(skill.writeToNBTTagCompound(new NBTTagCompound()));
+                NBTTagCompound skillCompound = new NBTTagCompound();
+                skillCompound.setString("skill_name", skill.getName());
+                performSkillTagList.appendTag(skill.writeToNBTTagCompound(skillCompound));
+            }
+
+            NBTTagList activeSkillTagList = new NBTTagList();
+            for (ISkill skill : instance.getActivePerformSkills())
+            {
+                NBTTagCompound skillCompound = new NBTTagCompound();
+                skillCompound.setString("skill_name", skill.getName());
+                activeSkillTagList.appendTag(skill.writeToNBTTagCompound(skillCompound));
             }
 
             tagList.appendTag(attributeSkillTagList);
             tagList.appendTag(passiveSkillTagList);
             tagList.appendTag(performSkillTagList);
-            return tagList;
+            tagList.appendTag(activeSkillTagList);
+
+            compound.setTag("skill_list", tagList);
+            return compound;
         }
 
         @Override
         public void readNBT(Capability<ISkillCapability> capability, ISkillCapability instance, EnumFacing side, NBTBase nbt)
         {
-            NBTTagList tagList = (NBTTagList) nbt;
+            NBTTagCompound data = (NBTTagCompound) nbt;
+
+            // 技能点
+            instance.setSkillPoint(data.getInteger("skill_point"));
+
+            // 技能点相关的背包
+            ((InventorySingleSlot)instance.getSkillPointInventory()).deserializeNBT(data.getCompoundTag("skill_inventory"));
+
+            // 技能
+            NBTTagList tagList = (NBTTagList) data.getTag("skill_list");
             NBTTagList attributeSkillTagList = (NBTTagList) tagList.get(0);
             NBTTagList passiveSkillTagList = (NBTTagList) tagList.get(1);
             NBTTagList performSkillTagList = (NBTTagList) tagList.get(2);
+            NBTTagList activeSkillTagList = (NBTTagList) tagList.get(3);
 
             for (int i = 0; i < attributeSkillTagList.tagCount(); i++)
             {
                 NBTTagCompound compound = attributeSkillTagList.getCompoundTagAt(i);
                 String name = compound.getString("skill_name");
-                if (instance.getAttributeSkill(name) != null)
-                    instance.getAttributeSkill(name).readFromNBTTagCompound(compound);
+                ISkill skill = MagicSkillRegistry.getSkill(name);
+                if (skill != null) {
+                    skill.readFromNBTTagCompound(compound);
+                    instance.setAttributeSkill(name, (IAttributeSkill) skill);
+                }
             }
 
             for (int i = 0; i < passiveSkillTagList.tagCount(); i++)
             {
                 NBTTagCompound compound = passiveSkillTagList.getCompoundTagAt(i);
                 String name = compound.getString("skill_name");
-                if (instance.getPassiveSkill(name) != null)
-                    instance.getPassiveSkill(name).readFromNBTTagCompound(compound);
+                ISkill skill = MagicSkillRegistry.getSkill(name);
+                if (skill != null) {
+                    skill.readFromNBTTagCompound(compound);
+                    instance.setPassiveSkill(name, (IPassiveSkill) skill);
+                }
             }
 
             for (int i = 0; i < performSkillTagList.tagCount(); i++)
             {
                 NBTTagCompound compound = performSkillTagList.getCompoundTagAt(i);
                 String name = compound.getString("skill_name");
-                if (instance.getPerformSkill(name) != null)
-                    instance.getPerformSkill(name).readFromNBTTagCompound(compound);
+                ISkill skill = MagicSkillRegistry.getSkill(name);
+                if (skill != null) {
+                    skill.readFromNBTTagCompound(compound);
+                    instance.setPerformSkill(name, (IPerformSkill) skill);
+                }
+            }
+
+            for (int i = 0; i < activeSkillTagList.tagCount(); i++)
+            {
+                NBTTagCompound compound = activeSkillTagList.getCompoundTagAt(i);
+                String name = compound.getString("skill_name");
+                IPerformSkill skill = instance.getPerformSkill(name);
+                if (skill != null) {
+                    instance.setActivePerformSkill(i, skill);
+                }
             }
         }
     }
@@ -105,8 +159,32 @@ public class CapabilitySkill
             IAttributeSkill ignoreReduction = new AttributeSkillIgnoreReduction();
             put(ignoreReduction.getName(), ignoreReduction);
         }};
+
         private Map<String, IPassiveSkill> passiveSkillMap = new HashMap<>();
-        private Map<String, IPerformSkill> performSkillMap = new HashMap<>();
+
+        private Map<String, IPerformSkill> performSkillMap = new HashMap<String, IPerformSkill>(){{
+            IPerformSkill flash = new PerformSkillFlash();
+            put(flash.getName(), flash);
+
+            IPerformSkill boost = new PerformSkillBoost();
+            put(boost.getName(), boost);
+        }};
+
+        private NonNullList<IPerformSkill> activePerformSkill =  NonNullList.withSize(2, PerformSkillNone.NONE); //同时持有两个技能
+
+        private int skillPoint = 0;
+
+        private IInventory singleSlot = new InventorySingleSlot();
+
+        @Override
+        public int getSkillPoint() {
+            return skillPoint;
+        }
+
+        @Override
+        public IInventory getSkillPointInventory() {
+            return singleSlot;
+        }
 
         @Override
         public Collection<IAttributeSkill> getAttributeSkills() {
@@ -139,6 +217,17 @@ public class CapabilitySkill
         }
 
         @Override
+        public void setSkillPoint(int skillPoint) {
+            this.skillPoint = skillPoint;
+        }
+
+        @Override
+        public void setSkillPointInventory(IInventory inventory) {
+            this.singleSlot = inventory;
+        }
+
+
+        @Override
         public void setAttributeSkill(String name, IAttributeSkill attributeSkill) {
             attributeSkillMap.put(name, attributeSkill);
         }
@@ -151,6 +240,21 @@ public class CapabilitySkill
         @Override
         public void setPerformSkill(String name, IPerformSkill performSkill) {
             performSkillMap.put(name, performSkill);
+        }
+
+        @Override
+        public List<IPerformSkill> getActivePerformSkills() {
+            return this.activePerformSkill;
+        }
+
+        @Override
+        public IPerformSkill getActivePerformSkill(int index) {
+            return this.activePerformSkill.get(index);
+        }
+
+        @Override
+        public void setActivePerformSkill(int index, IPerformSkill performSkill) {
+            this.activePerformSkill.set(index, performSkill);
         }
     }
 
@@ -180,16 +284,13 @@ public class CapabilitySkill
         @Override
         public NBTTagCompound serializeNBT()
         {
-            NBTTagCompound compound = new NBTTagCompound();
-            compound.setTag("magic_skill", storage.writeNBT(CapabilityLoader.SKILL_CAPABILITY, capability, null));
-            return compound;
+            return (NBTTagCompound) storage.writeNBT(CapabilityLoader.SKILL_CAPABILITY, capability, null);
         }
 
         @Override
         public void deserializeNBT(NBTTagCompound compound)
         {
-            NBTTagList list = (NBTTagList) compound.getTag("magic_skill");
-            storage.readNBT(CapabilityLoader.SKILL_CAPABILITY, capability, null, list);
+            storage.readNBT(CapabilityLoader.SKILL_CAPABILITY, capability, null, compound);
         }
     }
 

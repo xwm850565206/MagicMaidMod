@@ -1,6 +1,13 @@
 package com.xwm.magicmaid.network;
 
 import com.xwm.magicmaid.Main;
+import com.xwm.magicmaid.network.entity.*;
+import com.xwm.magicmaid.network.gui.CPacketOpenGui;
+import com.xwm.magicmaid.network.particle.SPacketParticle;
+import com.xwm.magicmaid.network.particle.SPacketSixParamParticle;
+import com.xwm.magicmaid.network.particle.SPacketThreeParamParticle;
+import com.xwm.magicmaid.network.skill.CPacketSkill;
+import com.xwm.magicmaid.network.skill.CPacketSkillPoint;
 import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.handlers.GuiHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -19,18 +26,25 @@ public class NetworkLoader
 
     public NetworkLoader(FMLPreInitializationEvent event)
     {
-        registerMessage(ParticlePacket.Handler.class, ParticlePacket.class, Side.CLIENT);
-        registerMessage(ThreeParamParticlePacket.Handler.class, ThreeParamParticlePacket.class, Side.CLIENT);
-        registerMessage(SixParamParticlePacket.Handler.class, SixParamParticlePacket.class, Side.CLIENT);
-        registerMessage(MaidModePacket.Handler.class, MaidModePacket.class, Side.SERVER);
-        registerMessage(SoundPacket.Handler.class, SoundPacket.class, Side.CLIENT);
-        registerMessage(VelocityPacket.Handler.class, VelocityPacket.class, Side.CLIENT);
-        registerMessage(PunishPacket.Handler.class, PunishPacket.class, Side.CLIENT);
+        registerMessage(SPacketParticle.Handler.class, SPacketParticle.class, Side.CLIENT);
+        registerMessage(SPacketThreeParamParticle.Handler.class, SPacketThreeParamParticle.class, Side.CLIENT);
+        registerMessage(SPacketSixParamParticle.Handler.class, SPacketSixParamParticle.class, Side.CLIENT);
+        registerMessage(SPacketSound.Handler.class, SPacketSound.class, Side.CLIENT);
+        registerMessage(SPacketVelocity.Handler.class, SPacketVelocity.class, Side.CLIENT);
+        registerMessage(SPacketPunish.Handler.class, SPacketPunish.class, Side.CLIENT);
         registerMessage(InfoLogginPacket.Handler.class, InfoLogginPacket.class, Side.CLIENT);
-        registerMessage(AddBookPacket.Handler.class, AddBookPacket.class, Side.SERVER);
-        registerMessage(ClientEntityDataPacket.Handler.class, ClientEntityDataPacket.class, Side.SERVER);
-        registerMessage(ServerEntityDataPacket.Handler.class, ServerEntityDataPacket.class, Side.CLIENT);
+        registerMessage(SPacketEntityData.Handler.class, SPacketEntityData.class, Side.CLIENT);
         registerMessage(RenderAreaPacket.Handler.class, RenderAreaPacket.class, Side.CLIENT);
+        registerMessage(SPacketCapabilityUpdate.Handler.class, SPacketCapabilityUpdate.class, Side.CLIENT);
+
+
+        registerMessage(CPacketEntityData.Handler.class, CPacketEntityData.class, Side.SERVER);
+        registerMessage(AddBookPacket.Handler.class, AddBookPacket.class, Side.SERVER);
+        registerMessage(CPacketMaidMode.Handler.class, CPacketMaidMode.class, Side.SERVER);
+        registerMessage(CPacketOpenGui.Handler.class, CPacketOpenGui.class, Side.SERVER);
+        registerMessage(CPacketSkill.Handler.class, CPacketSkill.class, Side.SERVER);
+        registerMessage(CPacketSkillPoint.Handler.class, CPacketSkillPoint.class, Side.SERVER);
+        registerMessage(CPacketCapabilityUpdate.Handler.class, CPacketCapabilityUpdate.class, Side.SERVER);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, GuiHandler.maidWindowHandler);
     }

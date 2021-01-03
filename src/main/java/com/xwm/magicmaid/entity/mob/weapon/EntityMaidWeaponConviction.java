@@ -6,8 +6,8 @@ import com.xwm.magicmaid.init.DimensionInit;
 import com.xwm.magicmaid.manager.IMagicFightManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
-import com.xwm.magicmaid.network.ServerEntityDataPacket;
-import com.xwm.magicmaid.network.ThreeParamParticlePacket;
+import com.xwm.magicmaid.network.entity.SPacketEntityData;
+import com.xwm.magicmaid.network.particle.SPacketThreeParamParticle;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
@@ -127,7 +127,7 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
                                 //有罪
                                 NBTTagCompound entityData = entityLivingBase.getEntityData();
                                 entityData.setBoolean(Reference.EFFECT_CONVICTION, true);
-                                ServerEntityDataPacket packet = new ServerEntityDataPacket(entityLivingBase.getEntityId(),
+                                SPacketEntityData packet = new SPacketEntityData(entityLivingBase.getEntityId(),
                                         entityLivingBase.getEntityWorld().provider.getDimension(),
                                         0,
                                         "true",
@@ -137,7 +137,7 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
                             else if ((entityLivingBase instanceof EntityVillager) && ((EntityVillager) entityLivingBase).getWorld().provider.getDimension() == DimensionInit.DIMENSION_CHURCH) { // 教堂维度的村民也有罪
                                 NBTTagCompound entityData = entityLivingBase.getEntityData();
                                 entityData.setBoolean(Reference.EFFECT_CONVICTION, true);
-                                ServerEntityDataPacket packet = new ServerEntityDataPacket(entityLivingBase.getEntityId(),
+                                SPacketEntityData packet = new SPacketEntityData(entityLivingBase.getEntityId(),
                                         entityLivingBase.getEntityWorld().provider.getDimension(),
                                         0,
                                         "true",
@@ -147,7 +147,7 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
                             else {
                                 NBTTagCompound entityData = entityLivingBase.getEntityData();
                                 entityData.setBoolean(Reference.EFFECT_CONVICTION, false);
-                                ServerEntityDataPacket packet = new ServerEntityDataPacket(entityLivingBase.getEntityId(),
+                                SPacketEntityData packet = new SPacketEntityData(entityLivingBase.getEntityId(),
                                         entityLivingBase.getEntityWorld().provider.getDimension(),
                                         0,
                                         "false",
@@ -158,7 +158,7 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
                         else { // 无罪
                             NBTTagCompound entityData = entityLivingBase.getEntityData();
                             entityData.setBoolean(Reference.EFFECT_CONVICTION, false);
-                            ServerEntityDataPacket packet = new ServerEntityDataPacket(entityLivingBase.getEntityId(),
+                            SPacketEntityData packet = new SPacketEntityData(entityLivingBase.getEntityId(),
                                     entityLivingBase.getEntityWorld().provider.getDimension(),
                                     0,
                                     "false",
@@ -197,7 +197,7 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
             for (int j = 0; j < 10; j++)
             {
                 for (int k = 0; k < 10; k++) {
-                    ThreeParamParticlePacket particlePacket = new ThreeParamParticlePacket(
+                    SPacketThreeParamParticle particlePacket = new SPacketThreeParamParticle(
                             d0 + perRadius * k * Math.sin(Math.toRadians(j * perAngle)),
                             d1 + perHeight * i,
                             d2 + perRadius * k * Math.cos(Math.toRadians(j * perAngle)), EnumCustomParticles.CROSS);

@@ -3,10 +3,8 @@ package com.xwm.magicmaid.player.skill.attributeskill;
 import com.xwm.magicmaid.player.MagicCreatureAttributes;
 import com.xwm.magicmaid.player.capability.CapabilityLoader;
 import com.xwm.magicmaid.player.capability.ICreatureCapability;
-import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 
 public class AttributeSkillSkillDamageRate extends AttributeSkillBase
 {
@@ -41,13 +39,12 @@ public class AttributeSkillSkillDamageRate extends AttributeSkillBase
     }
 
     @Override
-    public String getDescription() {
-        return "技能倍率";
+    public void drawIcon(int x, int y) {
+
     }
 
     @Override
-    public ResourceLocation getIcon() {
-        return new ResourceLocation(Reference.MODID, "texture/gui/icon/skill_damage_rate");
+    public String getDescription() {
+        return "技能倍率" + ": " + skill_damage_rate;
     }
-
 }

@@ -11,7 +11,7 @@ import com.xwm.magicmaid.enumstorage.EnumSelineState;
 import com.xwm.magicmaid.manager.IMagicFightManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
-import com.xwm.magicmaid.network.ThreeParamParticlePacket;
+import com.xwm.magicmaid.network.particle.SPacketThreeParamParticle;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
 import net.minecraft.entity.EntityLivingBase;
@@ -107,7 +107,7 @@ public class EntityAIWhisper extends EntityAIBase
         float d1 = (float) cbb.minY;
         float d2 = (float) ((cbb.minZ + cbb.maxZ) / 2.0);
         for (int i = 0; i < 36; i++){
-            ThreeParamParticlePacket particlePacket = new ThreeParamParticlePacket(
+            SPacketThreeParamParticle particlePacket = new SPacketThreeParamParticle(
                     d0 + radius * Math.sin(Math.toRadians(i * perAngle)),
                     d1,
                     d2 + radius * Math.cos(Math.toRadians(i * perAngle)), EnumCustomParticles.WHISPER);
@@ -182,8 +182,8 @@ public class EntityAIWhisper extends EntityAIBase
 
         for (int i = 0; i <= 10; i++)
         {
-            ThreeParamParticlePacket particlePacket =
-                    new ThreeParamParticlePacket(t0 + d0 * i, d1, t2 + d2 * i, EnumCustomParticles.WHISPER);
+            SPacketThreeParamParticle particlePacket =
+                    new SPacketThreeParamParticle(t0 + d0 * i, d1, t2 + d2 * i, EnumCustomParticles.WHISPER);
             NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(maid.getEntityWorld().provider.getDimension(), t0 + d0 * i, d1, t2 + d2 * i, 40.0D);
             NetworkLoader.instance.sendToAllAround(particlePacket, target);
 

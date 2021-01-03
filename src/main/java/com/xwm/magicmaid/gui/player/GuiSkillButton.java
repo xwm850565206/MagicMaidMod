@@ -12,13 +12,13 @@ import net.minecraft.util.text.TextComponentString;
 
 import java.util.List;
 
-public class GuiSkillWidget extends GuiButton
+public class GuiSkillButton extends GuiButton
 {
     private static final ResourceLocation BACKGROUND = new ResourceLocation(Reference.MODID, "textures/gui/player_menu_attribute.png");
     private ISkill iSkill;
     private List<ITextComponent> cache;
 
-    public GuiSkillWidget(int buttonId, int x, int y, ISkill skill) {
+    public GuiSkillButton(int buttonId, int x, int y, ISkill skill) {
         super(buttonId, x, y, 65, 60, "");
         this.iSkill = skill;
     }
@@ -50,9 +50,17 @@ public class GuiSkillWidget extends GuiButton
             int j = 182;
 
             // 画背景
-            mc.getTextureManager().bindTexture(GuiSkillWidget.BACKGROUND);
+            mc.getTextureManager().bindTexture(GuiSkillButton.BACKGROUND);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             this.drawTexturedModalRect(this.x, this.y, i, j, this.width, this.height);
+
+            // 画技能
+            iSkill.drawIcon(this.x + 6, this.y + 7);
+
+            mc.getTextureManager().bindTexture(GuiSkillButton.BACKGROUND);
+            // 画按钮
+            if (this.enabled)
+                this.drawTexturedModalRect(this.x + 41, this.y + 230 - 182, 14, 242, 19, 8);
 
             // 画等级
             this.drawCenteredString(mc.fontRenderer, "Lv: " + iSkill.getLevel(), this.x + 18, this.y + 230 - 182 - 2, 16777120);
@@ -71,18 +79,26 @@ public class GuiSkillWidget extends GuiButton
 
             GlStateManager.popMatrix();
 
-            // 画按钮
-            int color = 14737632;
+            // 画按钮上的字
             if (!this.enabled)
-            {
-                color = 10526880;
-            }
-            else if (this.hovered)
+                return;
+
+            int color = 14737632;
+
+            if (this.hovered)
             {
                 color = 16777120;
             }
 
             this.drawCenteredString(mc.fontRenderer, "+", this.x + 42 + 17 / 2, this.y +  231 - 182 - 2  , color);
         }
+    }
+
+    public ISkill getSkill() {
+        return iSkill;
+    }
+
+    public void setSkill(ISkill iSkill) {
+        this.iSkill = iSkill;
     }
 }

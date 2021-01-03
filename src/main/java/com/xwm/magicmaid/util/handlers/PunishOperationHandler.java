@@ -1,7 +1,7 @@
 package com.xwm.magicmaid.util.handlers;
 
 import com.xwm.magicmaid.network.NetworkLoader;
-import com.xwm.magicmaid.network.PunishPacket;
+import com.xwm.magicmaid.network.SPacketPunish;
 import com.xwm.magicmaid.store.WorldDifficultyData;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryHelper;
@@ -13,7 +13,7 @@ public class PunishOperationHandler
     {
         int difficulty = WorldDifficultyData.get(entityPlayer.getEntityWorld()).getWorldDifficulty();
         if (difficulty == 2) { // 难度2
-            PunishPacket packet = new PunishPacket(2);
+            SPacketPunish packet = new SPacketPunish(2);
             NetworkLoader.instance.sendTo(packet, entityPlayer);
         }
         else if (difficulty == 1) { // 难度1
@@ -43,7 +43,7 @@ public class PunishOperationHandler
         if (entityPlayer.world.isRemote)
             return;
 //        FMLCommonHandler.instance().getMinecraftServerInstance().setForceGamemode(true);
-//        PunishPacket packet = new PunishPacket(4);
+//        SPacketPunish packet = new SPacketPunish(4);
 //        NetworkLoader.instance.sendTo(packet, entityPlayer);
 //        FMLCommonHandler.instance().getMinecraftServerInstance().setGameType(GameType.ADVENTURE);
 //        FMLCommonHandler.instance().getMinecraftServerInstance().setForceGamemode(true);

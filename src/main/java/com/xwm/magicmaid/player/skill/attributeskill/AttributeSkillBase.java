@@ -5,8 +5,8 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public abstract class AttributeSkillBase implements IAttributeSkill
 {
-    private static final int MAX_LEVEL = 6;
-    private int level = 0;
+    protected static final int MAX_LEVEL = 6;
+    protected int level = 0;
     @Override
     public int getLevel() {
         return level;

@@ -5,8 +5,8 @@ import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.manager.IMagicFightManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
-import com.xwm.magicmaid.network.ParticlePacket;
-import com.xwm.magicmaid.network.ThreeParamParticlePacket;
+import com.xwm.magicmaid.network.particle.SPacketParticle;
+import com.xwm.magicmaid.network.particle.SPacketThreeParamParticle;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
 import net.minecraft.client.util.ITooltipFlag;
@@ -153,12 +153,12 @@ public class ItemRepantence extends ItemWeapon
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 10; j++)
             {
-                ParticlePacket particlePacket = new ParticlePacket(
+                SPacketParticle sPacketParticle = new SPacketParticle(
                         d0 + radius * Math.sin(Math.toRadians(j * perAngle)),
                         d1 + perHeight * i,
                         d2 + radius * Math.cos(Math.toRadians(j * perAngle)), EnumParticleTypes.SMOKE_LARGE);
                 NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(world.provider.getDimension(), d0, d1, d2, 40.0D);
-                NetworkLoader.instance.sendToAllAround(particlePacket, target);
+                NetworkLoader.instance.sendToAllAround(sPacketParticle, target);
             }
     }
 
@@ -168,7 +168,7 @@ public class ItemRepantence extends ItemWeapon
         double d2 = (bb.minZ + bb.maxZ) / 2.0;
         for (int j = 0; j < 2; j++)
         {
-            ThreeParamParticlePacket particlePacket = new ThreeParamParticlePacket(
+            SPacketThreeParamParticle particlePacket = new SPacketThreeParamParticle(
                     d0 + itemRand.nextDouble(),
                     d1 + itemRand.nextDouble(),
                     d2 + itemRand.nextDouble(), EnumCustomParticles.SOUL);

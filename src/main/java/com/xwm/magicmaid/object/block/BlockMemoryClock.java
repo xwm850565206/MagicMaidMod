@@ -5,7 +5,7 @@ import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidMarthaBoss;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidRettBoss;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidSelinaBoss;
 import com.xwm.magicmaid.network.NetworkLoader;
-import com.xwm.magicmaid.network.SoundPacket;
+import com.xwm.magicmaid.network.SPacketSound;
 import com.xwm.magicmaid.world.dimension.DimensionChurch;
 import com.xwm.magicmaid.manager.IMagicBossManager;
 import net.minecraft.block.material.Material;
@@ -94,7 +94,7 @@ public class BlockMemoryClock extends BlockBase
         worldIn.spawnEntity(bossMaid);
         fightManager.init(bossMaid);
 
-        SoundPacket packet = new SoundPacket(0, pos);
+        SPacketSound packet = new SPacketSound(0, pos);
         NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(worldIn.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 40.0D);
         NetworkLoader.instance.sendToAllAround(packet, target);
 

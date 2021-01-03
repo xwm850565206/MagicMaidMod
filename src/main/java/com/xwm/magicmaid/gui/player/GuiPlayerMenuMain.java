@@ -1,5 +1,10 @@
 package com.xwm.magicmaid.gui.player;
 
+import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.network.skill.CPacketSkillPoint;
+import com.xwm.magicmaid.object.item.interfaces.ICanGetSkillPoint;
+import com.xwm.magicmaid.player.capability.CapabilityLoader;
+import com.xwm.magicmaid.player.capability.ISkillCapability;
 import com.xwm.magicmaid.store.WorldDifficultyData;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
@@ -12,7 +17,10 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -32,10 +40,12 @@ public class GuiPlayerMenuMain extends GuiContainer
     private EntityPlayer player;
     private SelectButton backward;
     private SelectButton forward;
+    private IInventory singleSlot;
 
     public GuiPlayerMenuMain(Container inventorySlotsIn, EntityPlayer player) {
         super(inventorySlotsIn);
         this.player = player;
+        this.singleSlot = ((ContainerPlayerMenuMain)inventorySlotsIn).singleSlot;
     }
 
     public void initGui()
@@ -48,7 +58,7 @@ public class GuiPlayerMenuMain extends GuiContainer
         this.addButton(new MenuButton(2, i + this.imageWidth, j + 16*2+1, "技能")).enabled = true;
         this.addButton(new MenuButton(3, i + this.imageWidth, j + 16*3+1, "武器")).enabled = true;
 
-        this.addButton(new GuiButton(4, i + 115, j + 28, 20, 10, "吸收"));
+        this.addButton(new GuiButton(4, i + 97, j + 10, 20, 11, "吸收"));
         backward = this.addButton(new SelectButton(5, i + 145, j + 66, false));
         forward = this.addButton(new SelectButton(6, i + 145 + 9 + 5, j + 66, true));
 
@@ -90,7 +100,17 @@ public class GuiPlayerMenuMain extends GuiContainer
             }
             else if (button.id == 2)
             {
-
+                mc.displayGuiScreen(new GuiPlayerMenuSkill());
+            }
+            else if (button.id == 3)
+            {
+                ; // todo
+            }
+            else if (button.id == 4)
+            {
+//                ISkillManagerImpl.instance.addSkillPoint(player);
+                CPacketSkillPoint packet = new CPacketSkillPoint(player.getEntityWorld().provider.getDimension(), player.getEntityId());
+                NetworkLoader.instance.sendToServer(packet);
             }
         }
     }
@@ -169,6 +189,23 @@ public class GuiPlayerMenuMain extends GuiContainer
     {
         String tmp = DIFFICULT[WorldDifficultyData.get(mc.world).getWorldDifficulty()];
         fontRenderer.drawString(tmp, 125,  68, 0x000000);
+
+        ItemStack stack = this.singleSlot.getStackInSlot(0);
+        if (stack.getItem() instanceof ICanGetSkillPoint) {
+            String tmp1 = TextFormatting.YELLOW + "点数: " + ((ICanGetSkillPoint) stack.getItem()).getSkillPoint(stack, player) * stack.getCount();
+            fontRenderer.drawString(tmp1, 76, 26, 0x111111);
+        }
+
+        if (player.hasCapability(CapabilityLoader.SKILL_CAPABILITY, null))
+        {
+            ISkillCapability skillCapability = player.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
+            if (skillCapability != null) {
+                int curSkillPoint = skillCapability.getSkillPoint();
+//                float scaled = 0.9f;
+//                GlStateManager.scale(scaled, 1, 1);
+                fontRenderer.drawString(TextFormatting.YELLOW + "当前持有 " + curSkillPoint, (int) (120), (int) (11), 0x111111);
+            }
+        }
     }
 
     @SideOnly(Side.CLIENT)

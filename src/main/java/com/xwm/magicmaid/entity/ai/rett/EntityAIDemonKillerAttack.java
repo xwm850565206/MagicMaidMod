@@ -8,8 +8,8 @@ import com.xwm.magicmaid.enumstorage.EnumRettState;
 import com.xwm.magicmaid.manager.IMagicFightManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
-import com.xwm.magicmaid.network.ThreeParamParticlePacket;
-import com.xwm.magicmaid.network.VelocityPacket;
+import com.xwm.magicmaid.network.particle.SPacketThreeParamParticle;
+import com.xwm.magicmaid.network.SPacketVelocity;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -111,7 +111,7 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
 //                            entityLiving.sendMessage(new TextComponentString("攻击不生效，尝试使用真实伤害(原因见说终焉记事)"));
 //                        }
 //                    }
-                    VelocityPacket packet = new VelocityPacket(entityLiving.getEntityId(), random.nextFloat(), random.nextFloat()*3, random.nextFloat());
+                    SPacketVelocity packet = new SPacketVelocity(entityLiving.getEntityId(), random.nextFloat(), random.nextFloat()*3, random.nextFloat());
                     NetworkLoader.instance.sendToAll(packet);
 
 //                    entityLiving.motionX += random.nextFloat();
@@ -141,7 +141,7 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
         double d1 = bb.maxY;
         double d2 = (bb.minZ + bb.maxZ) / 2.0 + Math.cos(angle) * k;
         for (int i = 0; i < 2; i++) {
-            ThreeParamParticlePacket particlePacket = new ThreeParamParticlePacket(
+            SPacketThreeParamParticle particlePacket = new SPacketThreeParamParticle(
                     d0 + random.nextDouble(),
                     d1 + random.nextDouble(),
                     d2 + random.nextDouble(), EnumCustomParticles.STAR);
@@ -162,7 +162,7 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
         for (int j = 0; j < 10; j++)
             for (int k = 0; k < 6; k++) {
                 for (int i = 0; i < k; i++) {
-                    ThreeParamParticlePacket particlePacket = new ThreeParamParticlePacket(
+                    SPacketThreeParamParticle particlePacket = new SPacketThreeParamParticle(
                             d0 + perRadius * k * Math.sin(Math.toRadians(j * perAngle)),
                             d1 + perHeight * i,
                             d2 + perRadius * k * Math.cos(Math.toRadians(j * perAngle)), EnumCustomParticles.STAR);

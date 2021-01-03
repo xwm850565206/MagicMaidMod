@@ -2,6 +2,7 @@ package com.xwm.magicmaid.object.item;
 
 import com.xwm.magicmaid.init.BlockInit;
 import com.xwm.magicmaid.object.block.BlockChurchPortalFrame;
+import com.xwm.magicmaid.object.item.interfaces.ICanGetSkillPoint;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
 import net.minecraft.block.state.IBlockState;
@@ -17,7 +18,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ItemTheGospels extends ItemBase
+public class ItemTheGospels extends ItemBase implements ICanGetSkillPoint
 {
     public ItemTheGospels(String name) {
         super(name);
@@ -98,4 +99,8 @@ public class ItemTheGospels extends ItemBase
     }
 
 
+    @Override
+    public int getSkillPoint(ItemStack stack, EntityPlayer player) {
+        return 1;
+    }
 }

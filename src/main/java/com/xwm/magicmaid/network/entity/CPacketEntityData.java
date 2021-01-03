@@ -1,15 +1,15 @@
-package com.xwm.magicmaid.network;
+package com.xwm.magicmaid.network.entity;
 
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityEquipmentCreature;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.IOException;
 
-public class ServerEntityDataPacket implements IMessage {
+public class CPacketEntityData implements IMessage {
     public int id;
     public int dimension;
     public int type;
@@ -30,11 +30,11 @@ public class ServerEntityDataPacket implements IMessage {
     public NBTTagCompound compound;
     public PacketBuffer packetBuffer;
 
-    public ServerEntityDataPacket() {
+    public CPacketEntityData() {
 
     }
 
-    public ServerEntityDataPacket(int id, int dimension, int type, String data, String name) {
+    public CPacketEntityData(int id, int dimension, int type, String data, String name) {
         this.id = id;
         this.dimension = dimension;
         this.type = type;
@@ -44,7 +44,7 @@ public class ServerEntityDataPacket implements IMessage {
         this.compound = new NBTTagCompound();
     }
 
-    public ServerEntityDataPacket(int id, int dimension, int type, NBTTagCompound compound)
+    public CPacketEntityData(int id, int dimension, int type, NBTTagCompound compound)
     {
         this(id, dimension, type, "", "");
         this.compound = compound;
@@ -110,57 +110,49 @@ public class ServerEntityDataPacket implements IMessage {
         }
     }
 
-    public static class Handler implements IMessageHandler<ServerEntityDataPacket, IMessage> {
+    public static class Handler implements IMessageHandler<CPacketEntityData, IMessage> {
         @Override
-        public IMessage onMessage(ServerEntityDataPacket message, MessageContext ctx) {
-            if (ctx.side != Side.CLIENT)
+        public IMessage onMessage(CPacketEntityData message, MessageContext ctx) {
+            if (ctx.side != Side.SERVER)
                 return null;
 
-            FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> processMessage(message, ctx));
+            World world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(message.dimension);
+            Entity entity = world.getEntityByID(message.id);
+            if (entity == null)
+                return null;
 
-            return null;
-        }
-
-        private void processMessage(ServerEntityDataPacket message, MessageContext ctx)
-        {
             try {
-                Entity entity = Minecraft.getMinecraft().world.getEntityByID(message.id);
-                if (entity == null)
-                    return;
-
-                try {
-                    //更新nbt tag
-                    switch (message.type) {
-                        case 0:
-                            entity.getEntityData().setBoolean(message.name, Boolean.valueOf(message.data));
-                            break;
-                        case 1:
-                            entity.getEntityData().setInteger(message.name, Integer.valueOf(message.data));
-                            break;
-                        case 2:
-                            entity.getEntityData().setDouble(message.name, Double.valueOf(message.data));
-                            break;
-                        case 3:
-                            entity.getEntityData().setString(message.name, String.valueOf(message.data));
-                            break;
-                    }
-
-                    //更新其他的
-                    switch (message.type) {
-                        case 4:
-                            if (entity instanceof IEntityEquipmentCreature) {
-                                NonNullList<ItemStack> inventory = NonNullList.<ItemStack>withSize(((IEntityEquipmentCreature) entity).getSizeInventory(), ItemStack.EMPTY);
-                                ItemStackHelper.loadAllItems(message.compound, inventory);
-                                ((IEntityEquipmentCreature) entity).setInventory(inventory);
-                            }
-                    }
-                } catch (Exception e) {
-                    System.out.println("entity data update failed, maybe formatter error");
+                //更新nbt tag
+                switch (message.type) {
+                    case 0:
+                        entity.getEntityData().setBoolean(message.name, Boolean.valueOf(message.data));
+                        break;
+                    case 1:
+                        entity.getEntityData().setInteger(message.name, Integer.valueOf(message.data));
+                        break;
+                    case 2:
+                        entity.getEntityData().setDouble(message.name, Double.valueOf(message.data));
+                        break;
+                    case 3:
+                        entity.getEntityData().setString(message.name, String.valueOf(message.data));
+                        break;
                 }
-            } catch (Exception e) {
-                System.out.println("sync entity data failed");
+
+                //更新其他的
+                switch (message.type) {
+                    case 4:
+                        if (entity instanceof IEntityEquipmentCreature) {
+                            NonNullList<ItemStack> inventory = NonNullList.<ItemStack>withSize(((IEntityEquipmentCreature) entity).getSizeInventory(), ItemStack.EMPTY);
+                            ItemStackHelper.loadAllItems(message.compound, inventory);
+                            ((IEntityEquipmentCreature) entity).setInventory(inventory);
+                        }
+                }
+            } catch (Exception e)
+            {
+                System.out.println("entity data update failed, maybe formatter error");
             }
 
+            return null;
         }
     }
 }

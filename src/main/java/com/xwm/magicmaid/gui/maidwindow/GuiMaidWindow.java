@@ -2,7 +2,7 @@ package com.xwm.magicmaid.gui.maidwindow;
 
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumMode;
-import com.xwm.magicmaid.network.MaidModePacket;
+import com.xwm.magicmaid.network.entity.CPacketMaidMode;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
@@ -172,7 +172,7 @@ public class GuiMaidWindow extends GuiContainer
 
     private void swithMode()
     {
-        MaidModePacket packet = new MaidModePacket(maid.getEntityId(), maid.getEntityWorld().provider.getDimension());
+        CPacketMaidMode packet = new CPacketMaidMode(maid.getEntityId(), maid.getEntityWorld().provider.getDimension());
         NetworkLoader.instance.sendToServer(packet);
     }
 

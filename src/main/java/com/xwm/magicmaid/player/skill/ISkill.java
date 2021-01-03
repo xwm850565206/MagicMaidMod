@@ -1,7 +1,6 @@
 package com.xwm.magicmaid.player.skill;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -56,6 +55,11 @@ public interface ISkill
      */
     NBTTagCompound writeToNBTTagCompound(NBTTagCompound compound);
 
+    /**
+     * @param x 绘制起始点x
+     * @param y 绘制起始点y
+     * 绘制技能图标
+     */
     @SideOnly(Side.CLIENT)
-    ResourceLocation getIcon();
+    void drawIcon(int x, int y);
 }

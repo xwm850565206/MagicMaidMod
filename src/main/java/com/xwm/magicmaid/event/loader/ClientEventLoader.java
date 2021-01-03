@@ -1,15 +1,23 @@
 package com.xwm.magicmaid.event.loader;
 
 import com.xwm.magicmaid.Main;
+import com.xwm.magicmaid.event.SkillChangedEvent;
+import com.xwm.magicmaid.gui.player.GuiSkillHDU;
 import com.xwm.magicmaid.init.BlockInit;
 import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.init.PotionInit;
 import com.xwm.magicmaid.key.KeyLoader;
-import com.xwm.magicmaid.network.ClientEntityDataPacket;
 import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.network.entity.CPacketEntityData;
+import com.xwm.magicmaid.network.gui.CPacketOpenGui;
+import com.xwm.magicmaid.network.skill.CPacketSkill;
+import com.xwm.magicmaid.player.capability.CapabilityLoader;
+import com.xwm.magicmaid.player.capability.ISkillCapability;
+import com.xwm.magicmaid.player.skill.IPerformSkill;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
@@ -26,12 +34,14 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -39,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+
 
 //控制各种渲染
 @Mod.EventBusSubscriber
@@ -51,6 +62,9 @@ public class ClientEventLoader
     }};
 
     private Random random = new Random();
+
+    private List<GuiSkillHDU> skillHDUList;
+    public boolean skillListDirt = true;
 
     private int reverseTick(int tick)
     {
@@ -66,6 +80,7 @@ public class ClientEventLoader
 
     /**
      * 控制打开player menu的事宜
+     * 控制技能的释放
      * @param event
      */
     @SideOnly(Side.CLIENT)
@@ -75,6 +90,94 @@ public class ClientEventLoader
         EntityPlayer player = Minecraft.getMinecraft().player;
         if (KeyLoader.OPEN_MENU.isPressed()) {
             player.openGui(Main.instance, Reference.GUI_PLAYER_MENU_MAIN, player.getEntityWorld(), (int)player.posX, (int)player.posY, (int)player.posZ);
+            CPacketOpenGui packet = new CPacketOpenGui(player.getEntityId(), Reference.GUI_PLAYER_MENU_MAIN, player.getEntityWorld().provider.getDimension(), (int)player.posX, (int)player.posY, (int)player.posZ);
+            NetworkLoader.instance.sendToServer(packet);
+        }
+        if (KeyLoader.SKILL_1.isPressed()) {
+            if (player.hasCapability(CapabilityLoader.SKILL_CAPABILITY, null)) {
+                ISkillCapability skillCapability = player.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
+                if (skillCapability == null) return;
+
+                // 客户端运行
+                 skillCapability.getActivePerformSkill(0).perform(player, player.getEntityWorld(), player.getPosition());
+
+                // 服务端运行
+                CPacketSkill packet = new CPacketSkill(player.getUniqueID(), skillCapability.getActivePerformSkill(0), 0, player.getEntityWorld().provider.getDimension(), player.getPosition(), 0);
+                NetworkLoader.instance.sendToServer(packet);
+            }
+        }
+        if (KeyLoader.SKILL_2.isPressed()) {
+            if (player.hasCapability(CapabilityLoader.SKILL_CAPABILITY, null)) {
+                ISkillCapability skillCapability = player.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
+                if (skillCapability == null) return;
+
+                // 客户端运行
+                skillCapability.getActivePerformSkill(1).perform(player, player.getEntityWorld(), player.getPosition());
+
+                // 服务端运行
+                CPacketSkill packet = new CPacketSkill(player.getUniqueID(), skillCapability.getActivePerformSkill(1), 1, player.getEntityWorld().provider.getDimension(), player.getPosition(), 0);
+                NetworkLoader.instance.sendToServer(packet);
+            }
+        }
+    }
+
+    /**
+     * 监听技能是否变化，目前主要是用来修改客户端渲染
+     * @param event
+     */
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void onPlayerActiveSkillChanged(SkillChangedEvent event)
+    {
+//        skillListDirt = true;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void onPlayerLoggin(PlayerEvent.PlayerLoggedInEvent event)
+    {
+        skillListDirt = true;
+    }
+
+
+    /**
+     * 控制技能冷却显示等的绘制
+     */
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void onPlayerScreenRender(RenderGameOverlayEvent event)
+    {
+        if (event.getType() == RenderGameOverlayEvent.ElementType.ALL)
+        {
+            Minecraft mc = Minecraft.getMinecraft();
+            EntityPlayerSP playerSP = mc.player;
+            if (playerSP.hasCapability(CapabilityLoader.SKILL_CAPABILITY, null))
+            {
+                ISkillCapability skillCapability = playerSP.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
+                if (skillCapability != null)
+                {
+                    List<IPerformSkill> performSkills = skillCapability.getActivePerformSkills();
+                    if (skillHDUList == null || skillListDirt)
+                    {
+                        skillHDUList = new ArrayList<>();
+                        int i = 0;
+                        for (IPerformSkill performSkill : performSkills) {
+                            skillHDUList.add(new GuiSkillHDU(performSkill, event.getResolution().getScaledWidth() - 40, event.getResolution().getScaledHeight() + ((i - performSkills.size()) * 50)));
+                            i++;
+                        }
+                        skillListDirt = false;
+                    }
+
+                    int i = 0;
+                    for (GuiSkillHDU skillHDU : skillHDUList) {
+                        skillHDU.setiSkill(performSkills.get(i));
+                        skillHDU.setX(event.getResolution().getScaledWidth() - 40);
+                        skillHDU.setY(event.getResolution().getScaledHeight() + ((i - performSkills.size()) * 50));
+                        skillHDU.drawScreen(mc);
+                        i++;
+                    }
+                }
+            }
         }
     }
 
@@ -260,7 +363,7 @@ public class ClientEventLoader
             else {
                 flag = random.nextDouble() < 0.2;
                 entityData.setBoolean(Reference.MODID + "obsession", flag);
-                ClientEntityDataPacket packet = new ClientEntityDataPacket(entityLivingBase.getEntityId(),
+                CPacketEntityData packet = new CPacketEntityData(entityLivingBase.getEntityId(),
                         entityLivingBase.getEntityWorld().provider.getDimension(),
                         0,
                         flag ? "true" : "false",
@@ -323,7 +426,7 @@ public class ClientEventLoader
             else {
                 flag = random.nextDouble() < 0.2;
                 entityData.setBoolean(Reference.MODID + "ghost", flag);
-                ClientEntityDataPacket packet = new ClientEntityDataPacket(entityLivingBase.getEntityId(),
+                CPacketEntityData packet = new CPacketEntityData(entityLivingBase.getEntityId(),
                         entityLivingBase.getEntityWorld().provider.getDimension(),
                         0,
                         flag ? "true" : "false",

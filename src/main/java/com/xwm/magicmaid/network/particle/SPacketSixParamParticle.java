@@ -1,4 +1,4 @@
-package com.xwm.magicmaid.network;
+package com.xwm.magicmaid.network.particle;
 
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class ThreeParamParticlePacket implements IMessage
+public class SPacketSixParamParticle implements IMessage
 {
     private boolean messageValid;
 
@@ -18,15 +18,18 @@ public class ThreeParamParticlePacket implements IMessage
     public EnumCustomParticles particle;
 
 
-    public ThreeParamParticlePacket(){
+    public SPacketSixParamParticle(){
         this.messageValid = false;
     }
 
-    public ThreeParamParticlePacket(double x, double y, double z, EnumCustomParticles particle)
+    public SPacketSixParamParticle(double x, double y, double z, double tx, double ty, double tz, EnumCustomParticles particle)
     {
         this.x = x;
         this.y = y;
         this.z = z;
+        this.tx = tx;
+        this.ty = ty;
+        this.tz = tz;
         this.particle = particle;
         this.messageValid = true;
     }
@@ -39,6 +42,9 @@ public class ThreeParamParticlePacket implements IMessage
             this.x = buf.readDouble();
             this.y = buf.readDouble();
             this.z = buf.readDouble();
+            this.tx = buf.readDouble();
+            this.ty = buf.readDouble();
+            this.tz = buf.readDouble();
             this.particle = EnumCustomParticles.getParticleFromId(buf.readInt());
         }
         catch (IndexOutOfBoundsException e)
@@ -57,13 +63,16 @@ public class ThreeParamParticlePacket implements IMessage
         buf.writeDouble(x);
         buf.writeDouble(y);
         buf.writeDouble(z);
+        buf.writeDouble(tx);
+        buf.writeDouble(ty);
+        buf.writeDouble(tz);
         buf.writeInt(particle.getParticleID());
     }
 
-    public static class Handler implements IMessageHandler<ThreeParamParticlePacket, IMessage>
+    public static class Handler implements IMessageHandler<SPacketSixParamParticle, IMessage>
     {
         @Override
-        public IMessage onMessage(ThreeParamParticlePacket message, MessageContext ctx)
+        public IMessage onMessage(SPacketSixParamParticle message, MessageContext ctx)
         {
             if (message.messageValid && ctx.side != Side.CLIENT)
                 return null;
@@ -73,10 +82,9 @@ public class ThreeParamParticlePacket implements IMessage
             return null;
         }
 
-        private void processMessage(ThreeParamParticlePacket message, MessageContext ctx){
+        private void processMessage(SPacketSixParamParticle message, MessageContext ctx){
 
-            //后3个参数是备选参数
-            ParticleSpawner.spawnParticle(message.particle, message.x, message.y, message.z,0, 0, 0);
+            ParticleSpawner.spawnParticle(message.particle, message.x, message.y, message.z, message.tx, message.ty, message.tz);
         }
     }
 }
