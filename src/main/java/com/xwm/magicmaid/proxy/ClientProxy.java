@@ -16,7 +16,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class ClientProxy extends CommonProxy
 {
-    public ClientEventLoader eventLoader = new ClientEventLoader();
     public void preInit(FMLPreInitializationEvent event)
     {
         super.preInit(event);
@@ -27,7 +26,7 @@ public class ClientProxy extends CommonProxy
 
     public void init(FMLInitializationEvent event){
         super.init(event);
-        MinecraftForge.EVENT_BUS.register(eventLoader);
+        MinecraftForge.EVENT_BUS.register(new ClientEventLoader());
     }
 
     public void postInit(FMLPostInitializationEvent event){

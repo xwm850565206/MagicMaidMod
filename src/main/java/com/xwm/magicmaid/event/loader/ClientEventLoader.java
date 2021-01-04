@@ -17,7 +17,6 @@ import com.xwm.magicmaid.player.skill.IPerformSkill;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
@@ -98,12 +97,12 @@ public class ClientEventLoader
                 ISkillCapability skillCapability = player.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
                 if (skillCapability == null) return;
 
-                // 客户端运行
-                 skillCapability.getActivePerformSkill(0).perform(player, player.getEntityWorld(), player.getPosition());
-
                 // 服务端运行
-                CPacketSkill packet = new CPacketSkill(player.getUniqueID(), skillCapability.getActivePerformSkill(0), 0, player.getEntityWorld().provider.getDimension(), player.getPosition(), 0);
+                CPacketSkill packet = new CPacketSkill(player.getUniqueID(), skillCapability.getActivePerformSkill(0).getName(), 0, player.getEntityWorld().provider.getDimension(), player.getPosition(), 0);
                 NetworkLoader.instance.sendToServer(packet);
+
+                // 客户端运行
+                skillCapability.getActivePerformSkill(0).perform(player, player.getEntityWorld(), player.getPosition());
             }
         }
         if (KeyLoader.SKILL_2.isPressed()) {
@@ -111,12 +110,12 @@ public class ClientEventLoader
                 ISkillCapability skillCapability = player.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
                 if (skillCapability == null) return;
 
+                // 服务端运行
+                CPacketSkill packet = new CPacketSkill(player.getUniqueID(), skillCapability.getActivePerformSkill(1).getName(), 1, player.getEntityWorld().provider.getDimension(), player.getPosition(), 0);
+                NetworkLoader.instance.sendToServer(packet);
+
                 // 客户端运行
                 skillCapability.getActivePerformSkill(1).perform(player, player.getEntityWorld(), player.getPosition());
-
-                // 服务端运行
-                CPacketSkill packet = new CPacketSkill(player.getUniqueID(), skillCapability.getActivePerformSkill(1), 1, player.getEntityWorld().provider.getDimension(), player.getPosition(), 0);
-                NetworkLoader.instance.sendToServer(packet);
             }
         }
     }
@@ -129,7 +128,7 @@ public class ClientEventLoader
     @SubscribeEvent
     public void onPlayerActiveSkillChanged(SkillChangedEvent event)
     {
-//        skillListDirt = true;
+        skillListDirt = true;
     }
 
     @SideOnly(Side.CLIENT)
@@ -150,10 +149,10 @@ public class ClientEventLoader
         if (event.getType() == RenderGameOverlayEvent.ElementType.ALL)
         {
             Minecraft mc = Minecraft.getMinecraft();
-            EntityPlayerSP playerSP = mc.player;
-            if (playerSP.hasCapability(CapabilityLoader.SKILL_CAPABILITY, null))
+            EntityPlayer player = mc.player;
+            if (player.hasCapability(CapabilityLoader.SKILL_CAPABILITY, null))
             {
-                ISkillCapability skillCapability = playerSP.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
+                ISkillCapability skillCapability = player.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
                 if (skillCapability != null)
                 {
                     List<IPerformSkill> performSkills = skillCapability.getActivePerformSkills();

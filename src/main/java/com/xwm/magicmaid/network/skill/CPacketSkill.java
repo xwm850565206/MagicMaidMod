@@ -5,10 +5,8 @@ import com.xwm.magicmaid.player.capability.CapabilityLoader;
 import com.xwm.magicmaid.player.capability.ISkillCapability;
 import com.xwm.magicmaid.player.skill.IPerformSkill;
 import com.xwm.magicmaid.player.skill.ISkill;
-import com.xwm.magicmaid.registry.MagicSkillRegistry;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -18,13 +16,14 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.io.IOException;
 import java.util.UUID;
 
+// todo 逻辑有问题，不应该传递技能的数据，而应该传递技能的序号等来控制技能事宜
 public class CPacketSkill implements IMessage
 {
     private UUID playerUUID;
-    private ISkill iSkill;
+//    private ISkill iSkill;
+    private String skillName;
     private int skillIndex;
     private int dimension;
     private BlockPos pos; // 释放技能需要的参数
@@ -35,16 +34,16 @@ public class CPacketSkill implements IMessage
 
     }
 
-    public CPacketSkill(UUID playerUUID, ISkill iSkill, int skillIndex, int dimension, int type) {
+    public CPacketSkill(UUID playerUUID, String skillName, int skillIndex, int dimension, int type) {
         this.playerUUID = playerUUID;
-        this.iSkill = iSkill;
+        this.skillName = skillName;
         this.skillIndex = skillIndex;
         this.dimension = dimension;
         this.type = type;
     }
 
-    public CPacketSkill(UUID playerUUID, ISkill iSkill, int skillIndex, int dimension, BlockPos pos, int type) {
-        this(playerUUID, iSkill, skillIndex, dimension, type);
+    public CPacketSkill(UUID playerUUID, String skillName, int skillIndex, int dimension, BlockPos pos, int type) {
+        this(playerUUID, skillName, skillIndex, dimension, type);
         this.pos = pos;
     }
 
@@ -56,12 +55,12 @@ public class CPacketSkill implements IMessage
         this.playerUUID = playerUUID;
     }
 
-    public ISkill getiSkill() {
-        return iSkill;
+    public String getiSkill() {
+        return skillName;
     }
 
-    public void setiSkill(ISkill iSkill) {
-        this.iSkill = iSkill;
+    public void setiSkill(String skillName) {
+        this.skillName = skillName;
     }
 
     public int getSkillIndex() {
@@ -92,21 +91,7 @@ public class CPacketSkill implements IMessage
     public void fromBytes(ByteBuf buf) {
         packetBuffer = new PacketBuffer(buf);
         playerUUID = packetBuffer.readUniqueId();
-        String skillName = packetBuffer.readString(32767);
-        ISkill skill = MagicSkillRegistry.getSkill(skillName);
-        if (skill == null){
-            Main.logger.warn("read skill error");
-            return;
-        }
-        try {
-            NBTTagCompound skillComponent = packetBuffer.readCompoundTag();
-            skill.readFromNBTTagCompound(skillComponent);
-            this.iSkill = skill;
-        } catch (IOException e) {
-            Main.logger.warn("read skill data error");
-            e.printStackTrace();
-        }
-
+        skillName = packetBuffer.readString(32767);
         skillIndex = packetBuffer.readInt();
         dimension = packetBuffer.readInt();
         type = packetBuffer.readInt();
@@ -119,8 +104,7 @@ public class CPacketSkill implements IMessage
     public void toBytes(ByteBuf buf) {
         packetBuffer = new PacketBuffer(buf);
         packetBuffer.writeUniqueId(playerUUID);
-        packetBuffer.writeString(iSkill.getName());
-        packetBuffer.writeCompoundTag(iSkill.writeToNBTTagCompound(new NBTTagCompound()));
+        packetBuffer.writeString(skillName);
         packetBuffer.writeInt(skillIndex);
         packetBuffer.writeInt(dimension);
         packetBuffer.writeInt(type);
@@ -145,17 +129,26 @@ public class CPacketSkill implements IMessage
             EntityPlayer entityPlayer = world.getPlayerEntityByUUID(message.playerUUID);
             try {
                 ISkillCapability skillCapability = entityPlayer.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
+                ISkill skill = null;
+                if (message.skillName.startsWith("attribute"))
+                    skill = skillCapability.getAttributeSkill(message.skillName);
+                else if (message.skillName.startsWith("passive"))
+                    skill = skillCapability.getPassiveSkill(message.skillName);
+                else if (message.skillName.startsWith("perform"))
+                    skill = skillCapability.getPerformSkill(message.skillName);
 
                 switch (message.type){
                     case 0:
-                        ((IPerformSkill)message.iSkill).perform(entityPlayer, world, message.pos);
+                        skillCapability.getActivePerformSkill(message.skillIndex).perform(entityPlayer, world, message.pos);
                         break;
                     case 1:
-                        skillCapability.setActivePerformSkill(message.skillIndex, (IPerformSkill) message.iSkill);
+                        skillCapability.setActivePerformSkill(message.skillIndex, (IPerformSkill) skill);
                 }
 
             } catch (NullPointerException e) {
                 ;
+            } catch (ClassCastException e) {
+                Main.logger.warn("error type skill");
             }
         }
     }

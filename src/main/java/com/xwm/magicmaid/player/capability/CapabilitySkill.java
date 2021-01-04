@@ -17,7 +17,6 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -243,7 +242,7 @@ public class CapabilitySkill
         }
 
         @Override
-        public List<IPerformSkill> getActivePerformSkills() {
+        public NonNullList<IPerformSkill> getActivePerformSkills() {
             return this.activePerformSkill;
         }
 
@@ -253,8 +252,54 @@ public class CapabilitySkill
         }
 
         @Override
+        public Map<String, IAttributeSkill> getAtributeSkillMap() {
+            return attributeSkillMap;
+        }
+
+        @Override
+        public Map<String, IPassiveSkill> getPassiveSkillMap() {
+            return passiveSkillMap;
+        }
+
+        @Override
+        public Map<String, IPerformSkill> getPerformSkillMap() {
+            return performSkillMap;
+        }
+
+        @Override
         public void setActivePerformSkill(int index, IPerformSkill performSkill) {
             this.activePerformSkill.set(index, performSkill);
+        }
+
+        @Override
+        public void setAttributeSkills(Map<String, IAttributeSkill> attributeSkillMap) {
+            this.attributeSkillMap = attributeSkillMap;
+        }
+
+        @Override
+        public void setPassiveSkills(Map<String, IPassiveSkill> passiveSkillMap) {
+            this.passiveSkillMap = passiveSkillMap;
+        }
+
+        @Override
+        public void setPerformSkills(Map<String, IPerformSkill> performSkillMap) {
+            this.performSkillMap = performSkillMap;
+        }
+
+        @Override
+        public void setActivePerformSkills(NonNullList<IPerformSkill> activePerformSkill) {
+            this.activePerformSkill = activePerformSkill;
+        }
+
+
+        @Override
+        public void fromSkillCapability(ISkillCapability other) {
+            this.setAttributeSkills(other.getAtributeSkillMap());
+            this.setPassiveSkills(other.getPassiveSkillMap());
+            this.setPerformSkills(other.getPerformSkillMap());
+            this.setSkillPoint(other.getSkillPoint());
+            this.setSkillPointInventory(other.getSkillPointInventory());
+            this.setActivePerformSkills(other.getActivePerformSkills());
         }
     }
 

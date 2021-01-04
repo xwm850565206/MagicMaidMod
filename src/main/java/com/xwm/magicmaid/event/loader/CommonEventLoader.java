@@ -143,9 +143,10 @@ public class CommonEventLoader
         if (player.hasCapability(CapabilityLoader.SKILL_CAPABILITY, null))
         {
             ISkillCapability old = event.getOriginal().getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
-            NBTBase data = CapabilityLoader.SKILL_CAPABILITY.getStorage().writeNBT(CapabilityLoader.SKILL_CAPABILITY, old, null);
             ISkillCapability ne = player.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
-            CapabilityLoader.SKILL_CAPABILITY.getStorage().readNBT(CapabilityLoader.SKILL_CAPABILITY, ne, null, data);
+            if (ne != null && old != null) {
+                ne.fromSkillCapability(old);
+            }
         }
 
         if (player.hasCapability(CapabilityLoader.CREATURE_CAPABILITY, null))
@@ -155,6 +156,12 @@ public class CommonEventLoader
             ICreatureCapability ne = player.getCapability(CapabilityLoader.CREATURE_CAPABILITY, null);
             CapabilityLoader.CREATURE_CAPABILITY.getStorage().readNBT(CapabilityLoader.CREATURE_CAPABILITY, ne, null, data);
         }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event)
+    {
+        ISkillManagerImpl.instance.updateToClient(event.player);
     }
 
     /**

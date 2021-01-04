@@ -9,9 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -44,15 +42,17 @@ public class SPacketCapabilityUpdate implements IMessage
             if (ctx.side != Side.CLIENT)
                 return null;
 
-            FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> processMessage(message, ctx));
+            Minecraft.getMinecraft().addScheduledTask(() -> processMessage(message, ctx));
+//            FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask();
             return null;
         }
 
         @SideOnly(Side.CLIENT)
         private void processMessage(SPacketCapabilityUpdate message, MessageContext ctx)
         {
-            World world = Minecraft.getMinecraft().world;
-            Entity entity = world.getEntityByID(message.entityID);
+//            World world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(message.dimension);
+//            Entity entity = world.getEntityByID(message.entityID);
+            Entity entity = Minecraft.getMinecraft().player;
             try {
                 switch (message.type) {
                     case 0:

@@ -35,22 +35,22 @@ public class PerformSkillBoost extends PerformSkillBase
 
         if (getLevel() >= 0)
         {
-            playerIn.addPotionEffect(new PotionEffect(MobEffects.SPEED, 1200, 1 + getLevel()));
+            playerIn.addPotionEffect(new PotionEffect(MobEffects.SPEED, 120, 1 + getLevel()));
         }
 
         if (getLevel() >= 1)
         {
-            playerIn.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 1200, 1 + getLevel()));
+            playerIn.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 120, 1 + getLevel()));
         }
 
         if (getLevel() >= 2)
         {
-            playerIn.addPotionEffect(new PotionEffect(MobEffects.HEALTH_BOOST, 1200, 1 + getLevel()));
+            playerIn.addPotionEffect(new PotionEffect(MobEffects.HEALTH_BOOST, 120, 1 + getLevel()));
         }
 
         if (getLevel() >= 3)
         {
-            playerIn.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 1200, 1 + getLevel()));
+            playerIn.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 120, 1 + getLevel()));
         }
     }
 
