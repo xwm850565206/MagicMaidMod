@@ -17,7 +17,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 public class ISkillManagerImpl implements ISkillManager {
 
-    public static final ISkillManager instance = new ISkillManagerImpl();
+    private static ISkillManager instance = null;
 
     @Override
     public boolean addSkillPoint(EntityPlayer player) {
@@ -109,7 +109,6 @@ public class ISkillManagerImpl implements ISkillManager {
 
     @Override
     public void updateToOtherSide(EntityPlayer player) {
-
         if (player.getEntityWorld().isRemote)
             updateToServer(player);
         else
@@ -134,14 +133,14 @@ public class ISkillManagerImpl implements ISkillManager {
 
     @Override
     public void updateToServer(ISkillCapability instance, EntityPlayer player) {
-//        if (!player.world.isRemote) return;
+        if (!player.world.isRemote) return;
         CPacketCapabilityUpdate packet = new CPacketCapabilityUpdate(getCompound(instance), player.getEntityWorld().provider.getDimension(), player.getEntityId(), 0);
         NetworkLoader.instance.sendToServer(packet);
     }
 
     @Override
     public void updateToClient(ISkillCapability instance, EntityPlayer player) {
-//        if (player.world.isRemote) return;
+        if (player.world.isRemote) return;
         SPacketCapabilityUpdate packet = new SPacketCapabilityUpdate(getCompound(instance), player.getEntityWorld().provider.getDimension(), player.getEntityId(), 0);
         NetworkLoader.instance.sendTo(packet, (EntityPlayerMP) player);
     }
@@ -149,5 +148,15 @@ public class ISkillManagerImpl implements ISkillManager {
     private NBTTagCompound getCompound(ISkillCapability instance)
     {
         return (NBTTagCompound) CapabilityLoader.SKILL_CAPABILITY.getStorage().writeNBT(CapabilityLoader.SKILL_CAPABILITY, instance, null);
+    }
+
+    /**
+     * 单例模式，用于魔法生物的技能事宜
+     * @return 返回实例
+     */
+    public static ISkillManager getInstance() {
+        if (instance == null)
+            instance = new ISkillManagerImpl();
+        return instance;
     }
 }

@@ -33,8 +33,8 @@ public class PerformSkillFlash extends PerformSkillBase
     public void perform(EntityLivingBase playerIn, World worldIn, BlockPos posIn) {
 
         if (curColdTime > 0) return;
-
         if (MinecraftForge.EVENT_BUS.post(new SkillPerformEvent<IPerformSkill>(this, playerIn, posIn))) return;
+        if (!consumEnergy(playerIn, worldIn, posIn)) return;
 
         if (worldIn.isRemote)
         {
@@ -71,17 +71,18 @@ public class PerformSkillFlash extends PerformSkillBase
     }
 
     @Override
-    public void drawIcon(int x, int y) {
+    public void drawIcon(int x, int y, float scale) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
 
-        double scalex = 24.0 / 40.0;
-        double scaley = 29.0 / 40.0;
+        double scalex = 46.0 / 46.0;
+        double scaley = 46.0 / 46.0;
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, 90);
         GlStateManager.scale(scalex, scaley, 1);
+        GlStateManager.scale(scale, scale, 1);
 
-        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 0, 0, 40, 40);
+        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 134, 0, 46, 46);
         GlStateManager.popMatrix();
     }
 }

@@ -1,5 +1,7 @@
 package com.xwm.magicmaid.player.skill.perfomskill;
 
+import com.xwm.magicmaid.event.SkillPerformEvent;
+import com.xwm.magicmaid.player.skill.IPerformSkill;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -9,6 +11,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 
 public class PerformSkillBoost extends PerformSkillBase
 {
@@ -16,7 +19,7 @@ public class PerformSkillBoost extends PerformSkillBase
 
     @Override
     public int getPerformEnergy() {
-        return 200;
+        return 100;
     }
 
     @Override
@@ -28,10 +31,8 @@ public class PerformSkillBoost extends PerformSkillBase
     public void perform(EntityLivingBase playerIn, World worldIn, BlockPos posIn) {
 
         if (curColdTime > 0) return;
-
-        curColdTime = getColdTime();
-
-//        if (worldIn.isRemote) return;
+        if (MinecraftForge.EVENT_BUS.post(new SkillPerformEvent<IPerformSkill>(this, playerIn, posIn))) return;
+        if (!consumEnergy(playerIn, worldIn, posIn)) return;
 
         if (getLevel() >= 0)
         {
@@ -52,6 +53,8 @@ public class PerformSkillBoost extends PerformSkillBase
         {
             playerIn.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 120, 1 + getLevel()));
         }
+
+        curColdTime = getColdTime();
     }
 
     @Override
@@ -65,18 +68,19 @@ public class PerformSkillBoost extends PerformSkillBase
     }
 
     @Override
-    public void drawIcon(int x, int y) {
-        // 0 90 65 101
+    public void drawIcon(int x, int y, float scale) {
+        // 134 48 46 46
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
 
-        double scalex = 24.0 / 65.0;
-        double scaley = 29.0 / 101.0;
+        double scalex = 46.0 / 46.0;
+        double scaley = 46.0 / 46.0;
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, 90);
         GlStateManager.scale(scalex, scaley, 1);
+        GlStateManager.scale(scale, scale, 1);
 
-        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 0, 90, 65, 101);
+        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 134, 48, 46, 46);
         GlStateManager.popMatrix();
     }
 }

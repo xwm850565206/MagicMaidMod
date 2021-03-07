@@ -58,8 +58,9 @@ public interface ISkill
     /**
      * @param x 绘制起始点x
      * @param y 绘制起始点y
+     * @param scale 缩放大小
      * 绘制技能图标
      */
     @SideOnly(Side.CLIENT)
-    void drawIcon(int x, int y);
+    void drawIcon(int x, int y, float scale);
 }

@@ -107,4 +107,10 @@ public interface ICreatureCapability
      * @param ignoreReduction  攻击时的无视减少率
      */
     void setIgnoreReduction(double ignoreReduction);
+
+    /**
+     * 从其他creatureCapability得到capability
+     * @param other 其他capability
+     */
+    void fromCreatureCapability(ICreatureCapability other);
 }

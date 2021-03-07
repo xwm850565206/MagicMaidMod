@@ -4,8 +4,8 @@ import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAttackableCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAvoidThingCreature;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
-import com.xwm.magicmaid.manager.IMagicFightManager;
-import com.xwm.magicmaid.manager.IMagicFightManagerImpl;
+import com.xwm.magicmaid.manager.IMagicCreatureManager;
+import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.manager.MagicCreatureUtils;
 import com.xwm.magicmaid.manager.MagicDamageSource;
 import net.minecraft.entity.*;
@@ -22,7 +22,7 @@ import net.minecraft.world.World;
  */
 public abstract class AbstractEntityMagicCreature extends EntityCreature implements IEntityAttackableCreature, IEntityAvoidThingCreature
 {
-    protected IMagicFightManager magicFightManager = IMagicFightManagerImpl.getInstance();
+    protected IMagicCreatureManager magicFightManager = IMagicCreatureManagerImpl.getInstance();
     /**
      * avoid thing creature
      */
@@ -221,6 +221,18 @@ public abstract class AbstractEntityMagicCreature extends EntityCreature impleme
 //            super.onDeath(cause);
 //        }
 //    }
+
+
+    @Override
+    public void setNoAI(boolean disabled)
+    {
+        return; //不允许暂停ai
+    }
+
+
+    public void setItNoAI(boolean disabled){
+        super.setNoAI(disabled);
+    }
 
     @Override
     public void setDead(){

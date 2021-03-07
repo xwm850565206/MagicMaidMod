@@ -3,7 +3,7 @@ package com.xwm.magicmaid.object.item;
 import com.xwm.magicmaid.Main;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAvoidThingCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityTameableCreature;
-import com.xwm.magicmaid.manager.IMagicFightManagerImpl;
+import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
 import com.xwm.magicmaid.util.Reference;
@@ -137,7 +137,7 @@ public class ItemNoSoulGhost extends ItemBase
             entity.writeToNBT(compound);
             compound.setInteger("entity", EntityRegistry.instance().lookupModSpawn(entity.getClass(), false).getModEntityId());
             if (!player.getEntityWorld().isRemote)
-                IMagicFightManagerImpl.getInstance().setDead((IEntityAvoidThingCreature) entity);
+                IMagicCreatureManagerImpl.getInstance().setDead((IEntityAvoidThingCreature) entity);
             compound.setInteger("cold", 0); //冷却
             stack.setTagInfo("soul", compound);
             if (player.getEntityWorld().isRemote) {

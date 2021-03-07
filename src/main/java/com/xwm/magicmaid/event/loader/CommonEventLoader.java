@@ -8,6 +8,7 @@ import com.xwm.magicmaid.init.DimensionInit;
 import com.xwm.magicmaid.init.EntityInit;
 import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.init.PotionInit;
+import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.manager.ISkillManagerImpl;
 import com.xwm.magicmaid.player.capability.*;
 import com.xwm.magicmaid.player.skill.IAttributeSkill;
@@ -21,7 +22,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
@@ -152,16 +152,18 @@ public class CommonEventLoader
         if (player.hasCapability(CapabilityLoader.CREATURE_CAPABILITY, null))
         {
             ICreatureCapability old = event.getOriginal().getCapability(CapabilityLoader.CREATURE_CAPABILITY, null);
-            NBTBase data = CapabilityLoader.CREATURE_CAPABILITY.getStorage().writeNBT(CapabilityLoader.CREATURE_CAPABILITY, old, null);
             ICreatureCapability ne = player.getCapability(CapabilityLoader.CREATURE_CAPABILITY, null);
-            CapabilityLoader.CREATURE_CAPABILITY.getStorage().readNBT(CapabilityLoader.CREATURE_CAPABILITY, ne, null, data);
+            if (ne != null && old != null) {
+                ne.fromCreatureCapability(old);
+            }
         }
     }
 
     @SubscribeEvent
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event)
     {
-        ISkillManagerImpl.instance.updateToClient(event.player);
+        ISkillManagerImpl.getInstance().updateToClient(event.player);
+        IMagicCreatureManagerImpl.getInstance().updateToClient(event.player);
     }
 
     /**
@@ -196,6 +198,15 @@ public class CommonEventLoader
                     performSkill.update();
                 }
                 // todo 被动技能可能也需要tick
+            }
+        }
+
+        if (player.hasCapability(CapabilityLoader.CREATURE_CAPABILITY, null))
+        {
+            ICreatureCapability creatureCapability = player.getCapability(CapabilityLoader.CREATURE_CAPABILITY, null);
+            if (creatureCapability != null)
+            {
+                creatureCapability.setEnergy(Math.min(creatureCapability.getMaxEnergy(), creatureCapability.getEnergy() + creatureCapability.getPerEnergy()));
             }
         }
     }
@@ -256,7 +267,7 @@ public class CommonEventLoader
                 EntityItem entityItem = new EntityItem(player.getEntityWorld(), player.posX, player.posY, player.posZ, new ItemStack(ItemInit.ITEME_INSTRUCCTION_BOOK));
                 world.spawnEntity(entityItem);
             }
-            ISkillManagerImpl.instance.updateToClient(player);
+            ISkillManagerImpl.getInstance().updateToClient(player);
         }
     }
 

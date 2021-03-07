@@ -38,10 +38,10 @@ public class GuiPlayerMenuAttribute extends GuiScreen
         this.addButton(new GuiNextPageButton(4, i + imageWidth / 2 - 10, j + imageHeight - 20, false));
         this.addButton(new GuiNextPageButton(5, i + imageWidth / 2 + 10, j + imageHeight - 20, true));
 
-        int offsetLeft = 10;
-        int offsetTop = 10;
+        int offsetLeft = 3;
+        int offsetTop = 5;
         int gapx = 20;
-        int gapy = 10;
+        int gapy = 16;
         int index = 6;
 
         EntityPlayer player = this.mc.player;
@@ -54,7 +54,7 @@ public class GuiPlayerMenuAttribute extends GuiScreen
                     int t = k % 4;
                     int x = offsetLeft + (t % 2) * (65 + gapx);
                     int y = offsetTop + (t/2) * (60 + gapy);
-                    GuiSkillButton skillButton = new GuiSkillButton(index + k , i + x, j + y, skill);
+                    GuiSkillButton skillButton = new GuiSkillButton(index + k , i + x, j + y, skill, true);
                     this.addButton(skillButton);
                     skillRects.add(skillButton);
                     k++;
@@ -117,7 +117,7 @@ public class GuiPlayerMenuAttribute extends GuiScreen
             else if (button.id > 5){
                 List<GuiSkillButton> skillButtons = skillPages.get(currPage);
                 int trueButtonId = (button.id - 6) % 4;
-                ISkillManagerImpl.instance.upSkillLevel(Minecraft.getMinecraft().player, skillButtons.get(trueButtonId).getSkill());
+                ISkillManagerImpl.getInstance().upSkillLevel(Minecraft.getMinecraft().player, skillButtons.get(trueButtonId).getSkill());
             }
         }
     }

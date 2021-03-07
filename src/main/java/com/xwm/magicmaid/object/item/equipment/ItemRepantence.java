@@ -2,7 +2,7 @@ package com.xwm.magicmaid.object.item.equipment;
 
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
-import com.xwm.magicmaid.manager.IMagicFightManagerImpl;
+import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.particle.SPacketParticle;
@@ -65,7 +65,7 @@ public class ItemRepantence extends ItemWeapon
                 continue;
 
             try {
-                IMagicFightManagerImpl.getInstance().attackEntityFrom(entityLiving, new EntityDamageSource("repantence_attack", playerIn).setDamageBypassesArmor(),
+                IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLiving, new EntityDamageSource("repantence_attack", playerIn).setDamageBypassesArmor(),
                         MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.REPANTENCE));
 
                 playParticle(entityLiving.getEntityBoundingBox(), worldIn);

@@ -3,7 +3,7 @@ package com.xwm.magicmaid.entity.mob.weapon;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityMultiHealthCreature;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.init.DimensionInit;
-import com.xwm.magicmaid.manager.IMagicFightManagerImpl;
+import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.entity.SPacketEntityData;
@@ -123,7 +123,7 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
                         else if (entityLivingBase instanceof EntityLiving){
                             if (((EntityLiving) entityLivingBase).getAttackTarget() == this.otherOwner || entityLivingBase instanceof EntityMob) {
                                 removeTasks((EntityLiving) entityLivingBase);
-                                IMagicFightManagerImpl.getInstance().setHealth(entityLivingBase, 1);
+                                IMagicCreatureManagerImpl.getInstance().setHealth(entityLivingBase, 1);
                                 //有罪
                                 NBTTagCompound entityData = entityLivingBase.getEntityData();
                                 entityData.setBoolean(Reference.EFFECT_CONVICTION, true);

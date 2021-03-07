@@ -3,7 +3,7 @@ package com.xwm.magicmaid.entity.mob.weapon;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
-import com.xwm.magicmaid.manager.IMagicFightManagerImpl;
+import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.particle.SPacketSixParamParticle;
@@ -87,7 +87,7 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
                         if (!this.maid.isEnemy(entityLivingBase))
                             continue;
 //                        float health = entityLivingBase.getHealth();
-                        IMagicFightManagerImpl.getInstance().attackEntityFrom(entityLivingBase, DamageSource.causeMobDamage(this.maid),
+                        IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLivingBase, DamageSource.causeMobDamage(this.maid),
                                 this.maid.getAttackDamage(EnumAttackType.PANDORA));
 //                        if (health == entityLivingBase.getHealth() && health > 0){
 //                            if (entityLivingBase instanceof EntityPlayerMP) {
@@ -138,7 +138,7 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
                     if (!MagicEquipmentUtils.checkEnemy(otherOwner, entityLivingBase))
                         continue;
                     int damage = MagicEquipmentUtils.getAttackDamage(otherOwner, itemPandoraBox, EnumAttackType.PANDORA);
-                    IMagicFightManagerImpl.getInstance().attackEntityFrom(entityLivingBase, DamageSource.causeMobDamage(otherOwner), damage);
+                    IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLivingBase, DamageSource.causeMobDamage(otherOwner), damage);
                     otherOwner.heal(damage); //吸血给自己
                     playParticle(entityLivingBase);
                 }

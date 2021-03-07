@@ -5,7 +5,7 @@ import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
-import com.xwm.magicmaid.manager.IMagicFightManagerImpl;
+import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.particle.SPacketParticle;
@@ -85,7 +85,7 @@ public class EntityAIRepantence extends EntityAIBase
                 if (!maid.isEnemy(entityLivingBase))
                     continue;
 //                float health = entityLivingBase.getHealth();
-                IMagicFightManagerImpl.getInstance().attackEntityFrom(entityLivingBase, new EntityDamageSource("repantence_attack", maid).setDamageBypassesArmor(),
+                IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLivingBase, new EntityDamageSource("repantence_attack", maid).setDamageBypassesArmor(),
                         maid.getAttackDamage(EnumAttackType.REPANTENCE));
 //                if (health == entityLivingBase.getHealth() && health > 0){
 //                    entityLivingBase.setHealth(0);

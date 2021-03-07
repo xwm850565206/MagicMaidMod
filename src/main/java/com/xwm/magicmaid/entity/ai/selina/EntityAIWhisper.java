@@ -8,7 +8,7 @@ import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumSelineState;
-import com.xwm.magicmaid.manager.IMagicFightManagerImpl;
+import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.particle.SPacketThreeParamParticle;
@@ -146,7 +146,7 @@ public class EntityAIWhisper extends EntityAIBase
                     if (!this.maid.isEnemy(entityLivingBase))
                         continue;
                     entityLivingBase.attackEntityFrom(DamageSource.LIGHTNING_BOLT, this.maid.getAttackDamage(EnumAttackType.WHISPER));
-                    IMagicFightManagerImpl.getInstance().setHealth(entityLivingBase, entityLivingBase.getHealth() - 10 * maid.getRank());
+                    IMagicCreatureManagerImpl.getInstance().setHealth(entityLivingBase, entityLivingBase.getHealth() - 10 * maid.getRank());
                     world.playEvent(3000, entityLivingBase.getPosition(), 10);
                     EntityLightningBolt bolt = new EntityLightningBolt(world, entityLivingBase.posX + random.nextInt(2* (int) radius) - radius, cpos.getY(), entityLivingBase.posZ + random.nextInt(2 * (int) radius) - radius, true);
                     world.addWeatherEffect(bolt);

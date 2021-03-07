@@ -1,6 +1,5 @@
 package com.xwm.magicmaid.network.entity;
 
-import com.xwm.magicmaid.event.SkillChangedEvent;
 import com.xwm.magicmaid.player.capability.CapabilityLoader;
 import com.xwm.magicmaid.player.capability.ICreatureCapability;
 import com.xwm.magicmaid.player.capability.ISkillCapability;
@@ -9,7 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -58,7 +56,7 @@ public class SPacketCapabilityUpdate implements IMessage
                     case 0:
                         ISkillCapability skillCapability = entity.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
                         CapabilityLoader.SKILL_CAPABILITY.getStorage().readNBT(CapabilityLoader.SKILL_CAPABILITY, skillCapability, null, message.compound);
-                        MinecraftForge.EVENT_BUS.post(new SkillChangedEvent(null, null, null)); // 客户端HUD更新
+//                        MinecraftForge.EVENT_BUS.post(new SkillChangedEvent(null, null, null)); // 客户端HUD更新
                         break;
                     case 1:
                         ICreatureCapability creatureCapability = entity.getCapability(CapabilityLoader.CREATURE_CAPABILITY, null);

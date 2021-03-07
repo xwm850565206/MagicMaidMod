@@ -2,8 +2,6 @@ package com.xwm.magicmaid.player.skill.perfomskill;
 
 import com.xwm.magicmaid.player.skill.IPerformSkill;
 import com.xwm.magicmaid.util.Reference;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -12,7 +10,7 @@ import net.minecraft.world.World;
 
 public class PerformSkillNone implements IPerformSkill
 {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.MODID, "textures/gui/icon/skill_icon.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.MODID, "textures/gui/icon/skill_icon_1.png");
 
     public static PerformSkillNone NONE = new PerformSkillNone();
 
@@ -39,6 +37,11 @@ public class PerformSkillNone implements IPerformSkill
     @Override
     public void perform(EntityLivingBase playerIn, World worldIn, BlockPos posIn) {
 
+    }
+
+    @Override
+    public boolean consumEnergy(EntityLivingBase playerIn, World worldIn, BlockPos posIn) {
+        return false;
     }
 
     @Override
@@ -82,18 +85,18 @@ public class PerformSkillNone implements IPerformSkill
     }
 
     @Override
-    public void drawIcon(int x, int y) {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
-
-        double scalex = 24.0 / 60.0;
-        double scaley = 29.0 / 49.0;
-
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, 90);
-        GlStateManager.scale(scalex, scaley, 1);
-
-        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 0, 41, 60, 49);
-        GlStateManager.popMatrix();
+    public void drawIcon(int x, int y, float scale) {
+//        Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
+//
+//        double scalex = 24.0 / 60.0;
+//        double scaley = 29.0 / 49.0;
+//
+//        GlStateManager.pushMatrix();
+//        GlStateManager.translate(x / scale, y / scale, 90);
+//        GlStateManager.scale(scalex, scaley, 1);
+//
+//        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 0, 41, 60, 49);
+//        GlStateManager.popMatrix();
     }
 
     @Override

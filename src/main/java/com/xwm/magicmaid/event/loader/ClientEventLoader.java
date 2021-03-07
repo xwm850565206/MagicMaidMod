@@ -12,6 +12,7 @@ import com.xwm.magicmaid.network.entity.CPacketEntityData;
 import com.xwm.magicmaid.network.gui.CPacketOpenGui;
 import com.xwm.magicmaid.network.skill.CPacketSkill;
 import com.xwm.magicmaid.player.capability.CapabilityLoader;
+import com.xwm.magicmaid.player.capability.ICreatureCapability;
 import com.xwm.magicmaid.player.capability.ISkillCapability;
 import com.xwm.magicmaid.player.skill.IPerformSkill;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
@@ -139,6 +140,7 @@ public class ClientEventLoader
     }
 
 
+    public static final ResourceLocation BACKGROUND = new ResourceLocation(Reference.MODID, "textures/gui/player_menu_main.png");
     /**
      * 控制技能冷却显示等的绘制
      */
@@ -150,6 +152,7 @@ public class ClientEventLoader
         {
             Minecraft mc = Minecraft.getMinecraft();
             EntityPlayer player = mc.player;
+            // 画技能
             if (player.hasCapability(CapabilityLoader.SKILL_CAPABILITY, null))
             {
                 ISkillCapability skillCapability = player.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
@@ -161,20 +164,36 @@ public class ClientEventLoader
                         skillHDUList = new ArrayList<>();
                         int i = 0;
                         for (IPerformSkill performSkill : performSkills) {
-                            skillHDUList.add(new GuiSkillHDU(performSkill, event.getResolution().getScaledWidth() - 40, event.getResolution().getScaledHeight() + ((i - performSkills.size()) * 50)));
+                            skillHDUList.add(new GuiSkillHDU(performSkill, event.getResolution().getScaledWidth() - 30, event.getResolution().getScaledHeight() - 10 + ((i - performSkills.size()) * 30)));
                             i++;
                         }
                         skillListDirt = false;
                     }
 
                     int i = 0;
+                    float scale = 0.5f;
+//                    GlStateManager.pushMatrix();
+//                    GlStateManager.scale(scale, scale, scale);
                     for (GuiSkillHDU skillHDU : skillHDUList) {
                         skillHDU.setiSkill(performSkills.get(i));
-                        skillHDU.setX(event.getResolution().getScaledWidth() - 40);
-                        skillHDU.setY(event.getResolution().getScaledHeight() + ((i - performSkills.size()) * 50));
-                        skillHDU.drawScreen(mc);
+                        skillHDU.setX(event.getResolution().getScaledWidth() - 30);
+                        skillHDU.setY(event.getResolution().getScaledHeight() - 10 + ((i - performSkills.size()) * 30));
+                        skillHDU.drawScreen(mc, scale);
                         i++;
                     }
+//                    GlStateManager.popMatrix();
+                }
+            }
+
+            if (player.hasCapability(CapabilityLoader.CREATURE_CAPABILITY, null)) {
+                ICreatureCapability creatureCapability = player.getCapability(CapabilityLoader.CREATURE_CAPABILITY, null);
+
+                if (creatureCapability != null) {
+                    double energy = creatureCapability.getEnergy();
+                    double progress = energy / creatureCapability.getMaxEnergy();
+                    mc.getTextureManager().bindTexture(BACKGROUND);
+                    mc.ingameGUI.drawTexturedModalRect(event.getResolution().getScaledWidth() - 65, event.getResolution().getScaledHeight() - 20, 0, 225, 61, 11);
+                    mc.ingameGUI.drawTexturedModalRect(event.getResolution().getScaledWidth() - 65 + 3, event.getResolution().getScaledHeight() - 20 + 3, 0,236, (int) (55 * progress), 5);
                 }
             }
         }

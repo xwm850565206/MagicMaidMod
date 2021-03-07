@@ -11,6 +11,7 @@ import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
@@ -43,11 +44,13 @@ public class GuiPlayerMenuSkill extends GuiScreen
         this.addButton(new GuiNextPageButton(4, i + imageWidth / 2 - 10, j + imageHeight - 20, false));
         this.addButton(new GuiNextPageButton(5, i + imageWidth / 2 + 10, j + imageHeight - 20, true));
 
-        int offsetLeft = 10;
-        int offsetTop = 10;
-        int gapx = 20;
-        int gapy = 10;
+        int offsetLeft = 3;
+        int offsetTop = 5;
+        int gapx = 0;
+        int gapy = 16;
         int index = 6;
+        int skillGuiWidth = 84;
+        int skillGuiHeight = 70;
 
         EntityPlayer player = this.mc.player;
         if (player.hasCapability(CapabilityLoader.SKILL_CAPABILITY, null)) {
@@ -58,9 +61,9 @@ public class GuiPlayerMenuSkill extends GuiScreen
                 List<GuiSkillButton> skillRects = new ArrayList<>();
                 for (ISkill skill : skillCapability.getPerformSkills()) {
                     int t = k % 4;
-                    int x = offsetLeft + (t % 2) * (65 + gapx);
-                    int y = offsetTop + (t/2) * (60 + gapy);
-                    GuiSkillButton skillButton = new GuiSkillButton(index + k , i + x, j + y, skill);
+                    int x = offsetLeft + (t % 2) * (skillGuiWidth + gapx);
+                    int y = offsetTop + (t/2) * (skillGuiHeight + gapy);
+                    GuiSkillButton skillButton = new GuiSkillButton(index + k , i + x, j + y, skill, true);
                     this.addButton(skillButton);
                     skillRects.add(skillButton);
                     k++;
@@ -73,9 +76,9 @@ public class GuiPlayerMenuSkill extends GuiScreen
                     skillPages.add(skillRects);
                 k = 0;
                 for (IPerformSkill skill : skillCapability.getActivePerformSkills()) {
-                    int x = -65 - offsetLeft / 2;
-                    int y = offsetTop + k * (60 + gapy);
-                    GuiSkillButton skillWidget = new GuiSkillButton(total + index + k, i + x, j + y, skill);
+                    int x = -skillGuiWidth - offsetLeft - 2 ;
+                    int y = offsetTop + k * (skillGuiHeight + gapy / 2);
+                    GuiSkillButton skillWidget = new GuiSkillButton(total + index + k, i + x, j + y, skill, false);
                     skillWidget.enabled = false;
                     activatePerformSkill.add(skillWidget);
                     k++;
@@ -87,23 +90,23 @@ public class GuiPlayerMenuSkill extends GuiScreen
                     SKILL_REC = new int[4 + skillCapability.getActivePerformSkills().size()][4];
                     for (k = 0; k < 4; k++)
                     {
-                        int x = offsetLeft + (k%2) * (65 + gapx);
-                        int y = offsetTop + (k/2) * (60 + gapy);
+                        int x = offsetLeft + (k%2) * (skillGuiWidth + gapx);
+                        int y = offsetTop + (k/2) * (skillGuiHeight + gapy);
                         SKILL_REC[k][0] = x;
                         SKILL_REC[k][1] = y;
-                        SKILL_REC[k][2] = x + 65;
-                        SKILL_REC[k][3] = y + 60;
+                        SKILL_REC[k][2] = x + skillGuiWidth;
+                        SKILL_REC[k][3] = y + skillGuiHeight;
                     }
 
                     // 记载gui 技能槽的位置
                     for (k = 0; k < skillCapability.getActivePerformSkills().size(); k++)
                     {
-                        int x = -65 - offsetLeft / 2;
-                        int y = offsetTop + k * (60 + gapy);
+                        int x = -skillGuiWidth - offsetLeft - 2;
+                        int y = offsetTop + k * (skillGuiHeight + gapy / 2);
                         SKILL_REC[k+4][0] = x;
                         SKILL_REC[k+4][1] = y;
-                        SKILL_REC[k+4][2] = x + 65;
-                        SKILL_REC[k+4][3] = y + 60;
+                        SKILL_REC[k+4][2] = x + skillGuiWidth;
+                        SKILL_REC[k+4][3] = y + skillGuiHeight;
                     }
                 }
             }
@@ -138,7 +141,7 @@ public class GuiPlayerMenuSkill extends GuiScreen
                 if (index < skillPages.get(currPage).size()) {
                     GuiSkillButton clickedWidget = skillPages.get(currPage).get(index);
                     if (!clickedWidget.mousePressed(mc, mouseX, mouseY)) { // 点到升级按钮不操作
-                        chooseSkill = new GuiSkillButton(-1, mouseX, mouseY, clickedWidget.getSkill());
+                        chooseSkill = new GuiSkillButton(-1, mouseX, mouseY, clickedWidget.getSkill(), false);
                         chooseSkill.enabled = false;
                     }
                 }
@@ -152,7 +155,7 @@ public class GuiPlayerMenuSkill extends GuiScreen
                     if (skillCapability == null) return;
 
 //                    MinecraftForge.EVENT_BUS.post(new SkillChangedEvent(player, skillCapability.getActivePerformSkill(index-4), chooseSkill.getSkill()));
-                    ISkillManagerImpl.instance.setActivePerformSkill(player, index-4, (IPerformSkill) chooseSkill.getSkill());
+                    ISkillManagerImpl.getInstance().setActivePerformSkill(player, index-4, (IPerformSkill) chooseSkill.getSkill());
 
                     // 客户端更新
 //                    skillCapability.setActivePerformSkill(index-4, (IPerformSkill) chooseSkill.getSkill());
@@ -224,7 +227,7 @@ public class GuiPlayerMenuSkill extends GuiScreen
             else if (button.id > 5){
                 List<GuiSkillButton> skillButtons = skillPages.get(currPage);
                 int trueButtonId = (button.id - 6) % 4;
-                ISkillManagerImpl.instance.upSkillLevel(Minecraft.getMinecraft().player, skillButtons.get(trueButtonId).getSkill());
+                ISkillManagerImpl.getInstance().upSkillLevel(Minecraft.getMinecraft().player, skillButtons.get(trueButtonId).getSkill());
             }
         }
     }
@@ -253,10 +256,14 @@ public class GuiPlayerMenuSkill extends GuiScreen
             skillRect.drawButton(mc, mouseX, mouseY, partialTicks);
         }
 
+        // 画悬浮技能
         if (chooseSkill != null) {
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(0, 0, 50);
             chooseSkill.x = mouseX - chooseSkill.width / 2;
             chooseSkill.y = mouseY - chooseSkill.height / 2;
             chooseSkill.drawButton(mc, mouseX, mouseY, partialTicks);
+            GlStateManager.popMatrix();
         }
         super.drawScreen(mouseX, mouseY, partialTicks);
     }

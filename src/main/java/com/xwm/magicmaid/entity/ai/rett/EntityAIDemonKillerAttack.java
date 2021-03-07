@@ -5,7 +5,7 @@ import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumRettState;
-import com.xwm.magicmaid.manager.IMagicFightManagerImpl;
+import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.particle.SPacketThreeParamParticle;
@@ -80,7 +80,7 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
                         continue;
 
                     entityLiving.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 400, 1 + maid.getRank()));
-                    IMagicFightManagerImpl.getInstance().attackEntityFrom(entityLiving, DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER));
+                    IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLiving, DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER));
                 }
             }
             else if (performTick == 10) {
@@ -90,7 +90,7 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
                         continue;
 
                     entityLiving.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 400, 1));
-                    IMagicFightManagerImpl.getInstance().attackEntityFrom(entityLiving, DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER));
+                    IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLiving, DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER));
 
                 }
             }
@@ -104,7 +104,7 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
                     if (!maid.isEnemy(entityLiving))
                         continue;
                     float health = entityLiving.getHealth();
-                    IMagicFightManagerImpl.getInstance().attackEntityFrom(entityLiving, DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER) * 2);
+                    IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLiving, DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER) * 2);
 //                    if (health == entityLiving.getHealth() && health > 0) {
 //                       entityLiving.setHealth(health - maid.getAttackDamage(EnumAttackType.DEMONKILLER) * 2);
 //                        if (entityLiving instanceof EntityPlayerMP) {

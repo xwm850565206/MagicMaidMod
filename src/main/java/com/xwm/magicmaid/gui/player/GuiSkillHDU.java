@@ -11,18 +11,19 @@ import net.minecraft.util.ResourceLocation;
 public class GuiSkillHDU extends Gui
 {
     private static final ResourceLocation BACKGROUND = new ResourceLocation(Reference.MODID, "textures/gui/player_menu_attribute.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.MODID, "textures/gui/icon/skill_icon.png");
     private ISkill iSkill;
     private String key;
     private int x;
     private int y;
-    private int width; //36
-    private int height; // 42
+    private int width; //36  new-46
+    private int height; // 42 new-46
 
-    // 技能图标位置 6 189 24 29
+    // 技能图标位置 6 189 24 29 | new 5 5 46 46
 
     public GuiSkillHDU(ISkill iSkill, int x, int y)
     {
-        this(iSkill, "", x, y, 36, 42);
+        this(iSkill, "", x, y, 56, 56);
     }
 
     public GuiSkillHDU(ISkill iSkill, String key, int x, int y, int width, int height) {
@@ -34,19 +35,20 @@ public class GuiSkillHDU extends Gui
         this.height = height;
     }
 
-    public void drawScreen(Minecraft mc)
+    public void drawScreen(Minecraft mc, float scale)
     {
         int i = 0;
-        int j = 182;
-        mc.getTextureManager().bindTexture(GuiSkillHDU.BACKGROUND);
+        int j = 0;
+        mc.getTextureManager().bindTexture(GuiSkillHDU.TEXTURE);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(scale, scale, 1);
         // 画背景
-        this.drawTexturedModalRect(this.x, this.y, i, j, this.width, this.height);
-
+        this.drawTexturedModalRect(this.x / scale, this.y / scale, i, j, this.width, this.height);
+        GlStateManager.popMatrix();
         try {
             // 画技能
-            iSkill.drawIcon(this.x + 6, this.y + 7);
+            iSkill.drawIcon(this.x+3, this.y+3, scale);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -55,18 +57,20 @@ public class GuiSkillHDU extends Gui
             // 画冷却
             GlStateManager.pushMatrix();
             GlStateManager.translate(0, 0, 90);
+            GlStateManager.scale(scale, scale, 1);
             if (iSkill instanceof IPerformSkill) {
                 if (((IPerformSkill) iSkill).getColdTime() == 0)
                     return;
                 double progress = ((IPerformSkill) iSkill).getCurColdTime() * 1.0 / ((IPerformSkill) iSkill).getColdTime();
                 GlStateManager.color(1, 1, 1, 0.8F);
-                this.drawTexturedModalRect(this.x + 6, this.y + 7, 76, 166, 24, (int)(29 * progress));
+                this.drawTexturedModalRect((this.x + 3) / scale, (this.y + 3) / scale, 76, 166, 46, (int)(46 * progress));
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             GlStateManager.popMatrix();
         }
+//        GlStateManager.popMatrix();
     }
 
     public ISkill getiSkill() {

@@ -38,7 +38,7 @@ public class CPacketSkillPoint implements IMessage
             World world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(message.dimension);
             Entity entity = world.getEntityByID(message.entityID);
             try {
-                ISkillManagerImpl.instance.addSkillPoint((EntityPlayer) entity);
+                ISkillManagerImpl.getInstance().addSkillPoint((EntityPlayer) entity);
             } catch (NullPointerException | ClassCastException e) {
                 ;
             }

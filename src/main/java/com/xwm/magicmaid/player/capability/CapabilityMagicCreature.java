@@ -20,13 +20,16 @@ public class CapabilityMagicCreature
         @Override
         public NBTBase writeNBT(Capability<ICreatureCapability> capability, ICreatureCapability instance, EnumFacing side)
         {
-            return SharedMonsterAttributes.writeBaseAttributeMapToNBT(instance.getAttributeMap());
+            NBTTagCompound compound = new NBTTagCompound();
+            compound.setTag("attributes", SharedMonsterAttributes.writeBaseAttributeMapToNBT(instance.getAttributeMap()));
+            return compound;
         }
 
         @Override
         public void readNBT(Capability<ICreatureCapability> capability, ICreatureCapability instance, EnumFacing side, NBTBase nbt)
         {
-            SharedMonsterAttributes.setAttributeModifiers(instance.getAttributeMap(), (NBTTagList) nbt);
+            NBTTagCompound compound = (NBTTagCompound) nbt;
+            SharedMonsterAttributes.setAttributeModifiers(instance.getAttributeMap(), (NBTTagList) compound.getTag("attributes"));
         }
     }
 
@@ -137,6 +140,11 @@ public class CapabilityMagicCreature
         public void setIgnoreReduction(double ignoreReduction) {
             this.getAttributeMap().getAttributeInstance(MagicCreatureAttributes.IGNORE_REDUCTION).setBaseValue(ignoreReduction);
         }
+
+        @Override
+        public void fromCreatureCapability(ICreatureCapability other) {
+            this.setAttributeMap(other.getAttributeMap());
+        }
     }
 
     public static class Provider implements ICapabilitySerializable<NBTTagCompound>
@@ -174,8 +182,8 @@ public class CapabilityMagicCreature
         @Override
         public void deserializeNBT(NBTTagCompound compound)
         {
-            NBTTagList list = (NBTTagList) compound.getTag("magic_creature");
-            storage.readNBT(CapabilityLoader.CREATURE_CAPABILITY, capability, null, list);
+            NBTTagCompound compound1 = (NBTTagCompound) compound.getTag("magic_creature");
+            storage.readNBT(CapabilityLoader.CREATURE_CAPABILITY, capability, null, compound1);
         }
     }
 

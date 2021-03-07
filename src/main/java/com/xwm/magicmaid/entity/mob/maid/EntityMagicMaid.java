@@ -265,13 +265,6 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
             super.setHealth(health);
     }
 
-
-    @Override
-    public void setNoAI(boolean disabled)
-    {
-        return; //不允许暂停ai
-    }
-
     public void debug(){
         System.out.println("state: " + EnumRettState.valueOf(this.getState())
                 + " mode: " + EnumMode.valueOf(this.getMode())

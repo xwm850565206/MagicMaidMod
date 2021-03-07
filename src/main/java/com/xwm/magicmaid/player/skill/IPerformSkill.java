@@ -42,4 +42,14 @@ public interface IPerformSkill extends ISkill, ITickable
      * @param posIn 释放技能的位置
      */
     void perform(EntityLivingBase playerIn, World worldIn, BlockPos posIn);
+
+
+    /**
+     * 释放技能时消耗能量
+     * @param playerIn
+     * @param worldIn
+     * @param posIn
+     * @return true表示成功消耗 false表示失败，失败就不会接着执行技能
+     */
+    boolean consumEnergy(EntityLivingBase playerIn, World worldIn, BlockPos posIn);
 }

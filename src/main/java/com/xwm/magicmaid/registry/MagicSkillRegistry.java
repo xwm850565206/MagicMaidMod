@@ -22,7 +22,7 @@ public class MagicSkillRegistry
     public static final ISkill ATTRIBUTE_SKILL_MAX_ENERGY = new AttributeSkillMaxEnergy();
     public static final ISkill ATTRIBUTE_SKILL_SKILL_SPEED = new AttributeSkillSkillSpeed();
     public static final ISkill ATTRIBUTE_SKILL_INJURY_REDUCTION = new AttributeSkillInjuryReduction();
-    public static final ISkill ATTRIBUTE_SKILL_IGNORE_REDUCTION = new AttributeSkillInjuryReduction();
+    public static final ISkill ATTRIBUTE_SKILL_IGNORE_REDUCTION = new AttributeSkillIgnoreReduction();
 
     public static final ISkill PERFORM_SKILL_NONE = new PerformSkillNone();
     public static final ISkill PERFORM_SKILL_FLASH = new PerformSkillFlash();

@@ -2,20 +2,27 @@ package com.xwm.magicmaid.manager;
 
 import com.xwm.magicmaid.entity.mob.basic.AbstractEntityMagicCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAvoidThingCreature;
+import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.network.entity.CPacketCapabilityUpdate;
+import com.xwm.magicmaid.network.entity.SPacketCapabilityUpdate;
 import com.xwm.magicmaid.player.capability.CapabilityLoader;
 import com.xwm.magicmaid.player.capability.ICreatureCapability;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 
 import javax.annotation.Nullable;
 
-public class IMagicFightManagerImpl implements IMagicFightManager {
+public class IMagicCreatureManagerImpl implements IMagicCreatureManager {
 
-    private static IMagicFightManager instance = null;
+    private static IMagicCreatureManager instance = null;
 
     @Override
     public void setDead(IEntityAvoidThingCreature creature) {
@@ -172,13 +179,68 @@ public class IMagicFightManagerImpl implements IMagicFightManager {
         }
     }
 
+    @Override
+    public void setNoAI(EntityLivingBase entityLivingBase, boolean disabled) {
+        if (entityLivingBase instanceof AbstractEntityMagicCreature)
+            ((AbstractEntityMagicCreature) entityLivingBase).setItNoAI(disabled);
+        else if (entityLivingBase instanceof EntityLiving)
+            ((EntityLiving) entityLivingBase).setNoAI(disabled);
+        else
+            ; // todo  可能还有其他情况
+    }
+
+
+    @Override
+    public void updateToOtherSide(EntityPlayer player) {
+        if (player.getEntityWorld().isRemote)
+            updateToServer(player);
+        else
+            updateToClient(player);
+    }
+
+    @Override
+    public void updateToServer(EntityPlayer player) {
+        if (player.hasCapability(CapabilityLoader.CREATURE_CAPABILITY, null))
+        {
+            updateToServer(player.getCapability(CapabilityLoader.CREATURE_CAPABILITY, null), player);
+        }
+    }
+
+    @Override
+    public void updateToClient(EntityPlayer player) {
+        if (player.hasCapability(CapabilityLoader.CREATURE_CAPABILITY, null))
+        {
+            updateToClient(player.getCapability(CapabilityLoader.CREATURE_CAPABILITY, null), player);
+        }
+    }
+
+    @Override
+    public void updateToServer(ICreatureCapability instance, EntityPlayer player) {
+        if (!player.world.isRemote) return;
+        CPacketCapabilityUpdate packet = new CPacketCapabilityUpdate(getCompound(instance), player.getEntityWorld().provider.getDimension(), player.getEntityId(), 1);
+        NetworkLoader.instance.sendToServer(packet);
+    }
+
+    @Override
+    public void updateToClient(ICreatureCapability instance, EntityPlayer player) {
+        if (player.world.isRemote) return;
+        SPacketCapabilityUpdate packet = new SPacketCapabilityUpdate(getCompound(instance), player.getEntityWorld().provider.getDimension(), player.getEntityId(), 1);
+        NetworkLoader.instance.sendTo(packet, (EntityPlayerMP) player);
+    }
+
+
+    private NBTTagCompound getCompound(ICreatureCapability instance)
+    {
+        return (NBTTagCompound) CapabilityLoader.CREATURE_CAPABILITY.getStorage().writeNBT(CapabilityLoader.CREATURE_CAPABILITY, instance, null);
+    }
+
     /**
      * 单例模式，用于魔法生物的战斗结算，在e构造函数中调用
      * @return 返回实例
      */
-    public static IMagicFightManager getInstance() {
+    public static IMagicCreatureManager getInstance() {
         if (instance == null)
-            instance = new IMagicFightManagerImpl();
+            instance = new IMagicCreatureManagerImpl();
         return instance;
     }
 }
