@@ -5,8 +5,17 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public abstract class AttributeSkillBase implements IAttributeSkill
 {
-    protected static final int MAX_LEVEL = 6;
+    protected static final int MAX_LEVEL = 5;
     protected int level = 0;
+
+    /**
+     * 更新技能的属性
+     */
+    public void updateAttribute()
+    {
+
+    }
+
     @Override
     public int getLevel() {
         return level;
@@ -15,6 +24,7 @@ public abstract class AttributeSkillBase implements IAttributeSkill
     @Override
     public void setLevel(int level) {
         this.level = level;
+        updateAttribute();
     }
 
     @Override
@@ -24,7 +34,7 @@ public abstract class AttributeSkillBase implements IAttributeSkill
 
     @Override
     public int getRequirePoint() {
-        return 10 * level;
+        return getLevel() < getMaxLevel() ? 10 * level : -1;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.xwm.magicmaid.event.loader;
 
+import com.xwm.magicmaid.Main;
 import com.xwm.magicmaid.event.SkillLevelUpEvent;
 import com.xwm.magicmaid.player.skill.IAttributeSkill;
 import com.xwm.magicmaid.player.skill.IPassiveSkill;
@@ -21,7 +22,7 @@ public class SkillEventLoader
         ISkill skill = event.getSkill();
         if (skill instanceof IAttributeSkill) {
             ((IAttributeSkill) skill).perform(event.getPlayer());
-            System.out.println("level up: " + skill.getName());
+            Main.logger.info("level up: " + skill.getName() + " level: " + skill.getLevel());
         }
         else if (skill instanceof IPassiveSkill) {
             ; //todo

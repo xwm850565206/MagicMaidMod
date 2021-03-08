@@ -37,8 +37,8 @@ public class GuiSkillButton extends GuiButton
      */
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY)
     {
-        int offsetx = 42;
-        int offsety = 231 - 182;
+        int offsetx = 59;
+        int offsety = 66;
         int width = 17;
         int height = 6;
         return this.enabled && this.visible && mouseX >= this.x + offsetx && mouseY >= this.y + offsety && mouseX < this.x + offsetx + width && mouseY < this.y + offsety + height;
@@ -149,7 +149,8 @@ public class GuiSkillButton extends GuiButton
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         this.drawTexturedModalRect(mouseX - this.width + 10, mouseY - this.height + 40, i, j, this.width - 10, this.height - 40);
         GlStateManager.enableTexture2D();
-        mc.fontRenderer.drawString("需要点数: " + this.iSkill.getRequirePoint(), mouseX - this.width + 10 + 2, mouseY - this.height + 40 + 2, 0xffffff);
+        int requirePoint = this.iSkill.getRequirePoint();
+        mc.fontRenderer.drawString("需要点数: " + (requirePoint == -1 ? "已满级" : requirePoint), mouseX - this.width + 10 + 2, mouseY - this.height + 40 + 2, 0xffffff);
         GlStateManager.disableBlend();
         GlStateManager.popMatrix();
     }

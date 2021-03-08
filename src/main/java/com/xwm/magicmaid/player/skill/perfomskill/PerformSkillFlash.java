@@ -57,7 +57,7 @@ public class PerformSkillFlash extends PerformSkillBase
 
     @Override
     public int getRequirePoint() {
-        return 20 + 20 * getLevel();
+        return getLevel() < getMaxLevel() ? 20 + 20 * getLevel() : -1;
     }
 
     @Override

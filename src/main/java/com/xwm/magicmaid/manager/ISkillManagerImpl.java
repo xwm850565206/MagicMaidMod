@@ -1,6 +1,7 @@
 package com.xwm.magicmaid.manager;
 
 import com.xwm.magicmaid.event.SkillChangedEvent;
+import com.xwm.magicmaid.event.SkillLevelUpEvent;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.entity.CPacketCapabilityUpdate;
 import com.xwm.magicmaid.network.entity.SPacketCapabilityUpdate;
@@ -81,7 +82,7 @@ public class ISkillManagerImpl implements ISkillManager {
             if (skillCapability != null) {
                 int skillPoint = skillCapability.getSkillPoint();
                 if (skillPoint >= iSkill.getRequirePoint() && iSkill.getLevel() < iSkill.getMaxLevel()) {
-//                    if (MinecraftForge.EVENT_BUS.post(new SkillLevelUpEvent<>(iSkill, player))) return false;
+                    if (MinecraftForge.EVENT_BUS.post(new SkillLevelUpEvent<>(iSkill, player))) return false;
                     iSkill.setLevel(iSkill.getLevel() + 1);
                     skillCapability.setSkillPoint(skillPoint - iSkill.getRequirePoint());
                     updateToOtherSide(player);

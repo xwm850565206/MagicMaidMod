@@ -41,13 +41,13 @@ public class GuiPlayerMenuSkill extends GuiScreen
         this.addButton(new GuiPlayerMenuMain.MenuButton(1, i + this.imageWidth, j + 16+1, "属性")).enabled = true;
         this.addButton(new GuiPlayerMenuMain.MenuButton(2, i + this.imageWidth, j + 16*2+1, "技能")).enabled = false;
         this.addButton(new GuiPlayerMenuMain.MenuButton(3, i + this.imageWidth, j + 16*3+1, "武器")).enabled = true;
-        this.addButton(new GuiNextPageButton(4, i + imageWidth / 2 - 10, j + imageHeight - 20, false));
-        this.addButton(new GuiNextPageButton(5, i + imageWidth / 2 + 10, j + imageHeight - 20, true));
+        this.addButton(new GuiNextPageButton(4, i + imageWidth / 2 - 10 - 3, j + imageHeight - 12, false));
+        this.addButton(new GuiNextPageButton(5, i + imageWidth / 2 + 10 - 3, j + imageHeight - 12, true));
 
         int offsetLeft = 3;
         int offsetTop = 5;
         int gapx = 0;
-        int gapy = 16;
+        int gapy = 6;
         int index = 6;
         int skillGuiWidth = 84;
         int skillGuiHeight = 70;
@@ -156,13 +156,6 @@ public class GuiPlayerMenuSkill extends GuiScreen
 
 //                    MinecraftForge.EVENT_BUS.post(new SkillChangedEvent(player, skillCapability.getActivePerformSkill(index-4), chooseSkill.getSkill()));
                     ISkillManagerImpl.getInstance().setActivePerformSkill(player, index-4, (IPerformSkill) chooseSkill.getSkill());
-
-                    // 客户端更新
-//                    skillCapability.setActivePerformSkill(index-4, (IPerformSkill) chooseSkill.getSkill());
-//
-//                    // 服务器更新
-//                    CPacketSkill packet = new CPacketSkill(player.getUniqueID(), chooseSkill.getSkill(), index - 4, player.getEntityWorld().provider.getDimension(), 1);
-//                    NetworkLoader.instance.sendToServer(packet);
 
                     // ui更新
                     activatePerformSkill.get(index - 4).setSkill(chooseSkill.getSkill());

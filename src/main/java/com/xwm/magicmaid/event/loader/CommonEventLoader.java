@@ -254,7 +254,6 @@ public class CommonEventLoader
 
     }
 
-
     @SubscribeEvent
     public void onPlayerLoggin(PlayerEvent.PlayerLoggedInEvent event)
     {

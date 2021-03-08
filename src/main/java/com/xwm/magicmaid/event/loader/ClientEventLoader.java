@@ -172,16 +172,13 @@ public class ClientEventLoader
 
                     int i = 0;
                     float scale = 0.5f;
-//                    GlStateManager.pushMatrix();
-//                    GlStateManager.scale(scale, scale, scale);
                     for (GuiSkillHDU skillHDU : skillHDUList) {
                         skillHDU.setiSkill(performSkills.get(i));
                         skillHDU.setX(event.getResolution().getScaledWidth() - 30);
-                        skillHDU.setY(event.getResolution().getScaledHeight() - 10 + ((i - performSkills.size()) * 30));
+                        skillHDU.setY(event.getResolution().getScaledHeight() - 20 + ((i - performSkills.size()) * 30));
                         skillHDU.drawScreen(mc, scale);
                         i++;
                     }
-//                    GlStateManager.popMatrix();
                 }
             }
 

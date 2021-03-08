@@ -9,6 +9,7 @@ import com.xwm.magicmaid.player.skill.ISkill;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -35,14 +36,16 @@ public class GuiPlayerMenuAttribute extends GuiScreen
         this.addButton(new GuiPlayerMenuMain.MenuButton(1, i + this.imageWidth, j + 16+1, "属性")).enabled = false;
         this.addButton(new GuiPlayerMenuMain.MenuButton(2, i + this.imageWidth, j + 16*2+1, "技能")).enabled = true;
         this.addButton(new GuiPlayerMenuMain.MenuButton(3, i + this.imageWidth, j + 16*3+1, "武器")).enabled = true;
-        this.addButton(new GuiNextPageButton(4, i + imageWidth / 2 - 10, j + imageHeight - 20, false));
-        this.addButton(new GuiNextPageButton(5, i + imageWidth / 2 + 10, j + imageHeight - 20, true));
+        this.addButton(new GuiNextPageButton(4, i + imageWidth / 2 - 10 - 3, j + imageHeight - 12, false));
+        this.addButton(new GuiNextPageButton(5, i + imageWidth / 2 + 10 - 3, j + imageHeight - 12, true));
 
         int offsetLeft = 3;
         int offsetTop = 5;
-        int gapx = 20;
-        int gapy = 16;
+        int gapx = 0;
+        int gapy = 6;
         int index = 6;
+        int skillGuiWidth = 84;
+        int skillGuiHeight = 70;
 
         EntityPlayer player = this.mc.player;
         if (player.hasCapability(CapabilityLoader.SKILL_CAPABILITY, null)) {
@@ -52,9 +55,10 @@ public class GuiPlayerMenuAttribute extends GuiScreen
                 List<GuiSkillButton> skillRects = new ArrayList<>();
                 for (ISkill skill : skillCapability.getAttributeSkills()) {
                     int t = k % 4;
-                    int x = offsetLeft + (t % 2) * (65 + gapx);
-                    int y = offsetTop + (t/2) * (60 + gapy);
+                    int x = offsetLeft + (t%2) * (skillGuiWidth + gapx);
+                    int y = offsetTop + (t/2) * (skillGuiHeight + gapy);
                     GuiSkillButton skillButton = new GuiSkillButton(index + k , i + x, j + y, skill, true);
+                    skillButton.enabled = false; // 初始化先全都把按钮设置为不可用
                     this.addButton(skillButton);
                     skillRects.add(skillButton);
                     k++;
@@ -68,23 +72,9 @@ public class GuiPlayerMenuAttribute extends GuiScreen
             }
         }
 
+        setLevelUpButtonEnable(true); // 第一页的按钮可用
+
         super.initGui();
-    }
-
-    /**
-     * Called from the main game loop to update the screen.
-     */
-    public void updateScreen()
-    {
-        super.updateScreen();
-    }
-
-    /**
-     * Called when the screen is unloaded. Used to disable keyboard repeat events
-     */
-    public void onGuiClosed()
-    {
-        super.onGuiClosed();
     }
 
     /**
@@ -107,12 +97,20 @@ public class GuiPlayerMenuAttribute extends GuiScreen
                 mc.displayGuiScreen(new GuiPlayerMenuSkill());
             }
             else if (button.id == 4) {
-                if (currPage > 0)
+                if (currPage > 0){
+                    setLevelUpButtonEnable(false);
                     currPage--;
+                    setLevelUpButtonEnable(true);
+                }
+
             }
             else if (button.id == 5) {
-                if (currPage < skillPages.size() - 1)
-                    currPage ++;
+                if (currPage < skillPages.size() - 1) {
+                    setLevelUpButtonEnable(false);
+                    currPage++;
+                    setLevelUpButtonEnable(true);
+                }
+
             }
             else if (button.id > 5){
                 List<GuiSkillButton> skillButtons = skillPages.get(currPage);
@@ -128,6 +126,7 @@ public class GuiPlayerMenuAttribute extends GuiScreen
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         this.drawDefaultBackground();
+
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
 
@@ -141,8 +140,21 @@ public class GuiPlayerMenuAttribute extends GuiScreen
             skillRect.drawButton(mc, mouseX, mouseY, partialTicks);
         }
 
-        super.drawScreen(mouseX, mouseY, partialTicks);
+        for (int t = 0; t < this.buttonList.size() && t < 6; ++t)
+        {
+            ((GuiButton)this.buttonList.get(t)).drawButton(this.mc, mouseX, mouseY, partialTicks);
+        }
+
+        for (int t = 0; t < this.labelList.size(); ++t)
+        {
+            ((GuiLabel)this.labelList.get(t)).drawLabel(this.mc, mouseX, mouseY);
+        }
     }
 
-//    public static
+    private void setLevelUpButtonEnable(boolean enable)
+    {
+        List<GuiSkillButton> buttonList = skillPages.get(currPage);
+        for (GuiSkillButton button : buttonList)
+            button.enabled = enable;
+    }
 }

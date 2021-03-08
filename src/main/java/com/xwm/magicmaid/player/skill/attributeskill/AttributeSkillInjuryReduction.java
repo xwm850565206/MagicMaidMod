@@ -17,9 +17,16 @@ public class AttributeSkillInjuryReduction extends AttributeSkillBase
     private double injury_reduction = MagicCreatureAttributes.INJURY_REDUCTION.getDefaultValue();
 
     @Override
+    public void updateAttribute()
+    {
+        injury_reduction = MagicCreatureAttributes.INJURY_REDUCTION.getDefaultValue() * (level + 1);
+    }
+
+    @Override
     public void perform(EntityLivingBase player) {
         if (player.hasCapability(CapabilityLoader.CREATURE_CAPABILITY, null))
         {
+
             ICreatureCapability capability = player.getCapability(CapabilityLoader.CREATURE_CAPABILITY, null);
             if (capability != null)
                 capability.setInjuryReduction(injury_reduction);
@@ -53,9 +60,9 @@ public class AttributeSkillInjuryReduction extends AttributeSkillBase
         double scaley = 46.0 / 46.0;
 
         GlStateManager.pushMatrix();
-        GlStateManager.translate(x / scale, y / scale, 90);
+        GlStateManager.translate(x, y, 90);
         GlStateManager.scale(scalex, scaley, 1);
-        GlStateManager.scale(scalex, scaley, 1);
+        GlStateManager.scale(scale, scale, 1);
 
         Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 0, 123, 46, 46);
         GlStateManager.popMatrix();

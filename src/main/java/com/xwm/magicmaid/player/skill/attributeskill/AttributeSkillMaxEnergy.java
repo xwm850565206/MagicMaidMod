@@ -17,9 +17,16 @@ public class AttributeSkillMaxEnergy extends AttributeSkillBase
     private double max_energy = MagicCreatureAttributes.MAX_ENERGY.getDefaultValue();
 
     @Override
+    public void updateAttribute()
+    {
+        max_energy = MagicCreatureAttributes.MAX_ENERGY.getDefaultValue() * (level + 1);
+    }
+
+    @Override
     public void perform(EntityLivingBase player) {
         if (player.hasCapability(CapabilityLoader.CREATURE_CAPABILITY, null))
         {
+
             ICreatureCapability capability = player.getCapability(CapabilityLoader.CREATURE_CAPABILITY, null);
             if (capability != null)
                 capability.setMaxEnergy(max_energy);
@@ -53,9 +60,9 @@ public class AttributeSkillMaxEnergy extends AttributeSkillBase
         double scaley = 46.0 / 46.0;
 
         GlStateManager.pushMatrix();
-        GlStateManager.translate(x / scale, y / scale, 90);
+        GlStateManager.translate(x, y, 90);
         GlStateManager.scale(scalex, scaley, 1);
-        GlStateManager.scale(scalex, scaley, 1);
+        GlStateManager.scale(scale, scale, 1);
 
         Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 87, 45, 46, 46);
         GlStateManager.popMatrix();
