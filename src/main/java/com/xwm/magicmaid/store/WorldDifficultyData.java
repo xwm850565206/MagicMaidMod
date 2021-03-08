@@ -42,8 +42,10 @@ public class WorldDifficultyData extends WorldSavedData
     }
 
     public void setWorldDifficulty(int worldDifficulty) {
-        this.worldDifficulty = worldDifficulty;
-        this.markDirty();
+        if(worldDifficulty >= 0 && worldDifficulty <= 2) {
+            this.worldDifficulty = worldDifficulty;
+            this.markDirty();
+        }
     }
 
     public static WorldDifficultyData get(World world)

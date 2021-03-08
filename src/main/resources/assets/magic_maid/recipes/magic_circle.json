@@ -10,7 +10,8 @@
   {
     "#":
     {
-      "item": "magic_maid:holystone"
+      "item": "magic_maid:holystone",
+      "data": 0
     },
     "*":
     {

@@ -45,6 +45,7 @@ public class NetworkLoader
         registerMessage(CPacketSkill.Handler.class, CPacketSkill.class, Side.SERVER);
         registerMessage(CPacketSkillPoint.Handler.class, CPacketSkillPoint.class, Side.SERVER);
         registerMessage(CPacketCapabilityUpdate.Handler.class, CPacketCapabilityUpdate.class, Side.SERVER);
+        registerMessage(CPacketChangeDifficulty.Handler.class, CPacketChangeDifficulty.class, Side.SERVER);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, GuiHandler.maidWindowHandler);
     }

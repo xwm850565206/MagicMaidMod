@@ -1,5 +1,6 @@
 package com.xwm.magicmaid.gui.player;
 
+import com.xwm.magicmaid.network.CPacketChangeDifficulty;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.skill.CPacketSkillPoint;
 import com.xwm.magicmaid.object.item.interfaces.ICanGetSkillPoint;
@@ -110,6 +111,22 @@ public class GuiPlayerMenuMain extends GuiContainer
             {
 //                ISkillManagerImpl.instance.addSkillPoint(player);
                 CPacketSkillPoint packet = new CPacketSkillPoint(player.getEntityWorld().provider.getDimension(), player.getEntityId());
+                NetworkLoader.instance.sendToServer(packet);
+            }
+            else if(button.id == 5)
+            {
+                WorldDifficultyData data = WorldDifficultyData.get(Minecraft.getMinecraft().world);
+                int difficulty = data.getWorldDifficulty() - 1;
+                data.setWorldDifficulty(difficulty); // client update
+                CPacketChangeDifficulty packet = new CPacketChangeDifficulty(difficulty); // server update
+                NetworkLoader.instance.sendToServer(packet);
+            }
+            else if (button.id == 6)
+            {
+                WorldDifficultyData data = WorldDifficultyData.get(Minecraft.getMinecraft().world);
+                int difficulty = data.getWorldDifficulty() + 1;
+                data.setWorldDifficulty(difficulty);
+                CPacketChangeDifficulty packet = new CPacketChangeDifficulty(difficulty);
                 NetworkLoader.instance.sendToServer(packet);
             }
         }

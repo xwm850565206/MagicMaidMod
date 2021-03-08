@@ -16,6 +16,7 @@ public class ItemHolyStone extends ItemBase
 {
     public ItemHolyStone(String name) {
         super(name);
+        this.setHasSubtypes(true);
         this.setMaxDamage(0); // This makes it so your item doesn't have the damage bar at the bottom of its icon, when "damaged" similar to the Tools.
     }
 
