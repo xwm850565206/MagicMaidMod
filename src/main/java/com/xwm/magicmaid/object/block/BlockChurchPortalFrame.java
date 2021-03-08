@@ -28,7 +28,6 @@ public class BlockChurchPortalFrame extends BlockBase
         this.setDefaultState(this.blockState.getBaseState().withProperty(GOSPELS, Boolean.valueOf(false)));
     }
 
-
     /**
      * Used to determine ambient occlusion and culling when rebuilding chunks for render
      */

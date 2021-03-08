@@ -6,12 +6,15 @@ import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
 import com.xwm.magicmaid.registry.MagicDimensionRegistry;
 import com.xwm.magicmaid.world.dimension.ChurchTeleporter;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.pattern.BlockPattern;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -39,7 +42,6 @@ public class BlockChurchPortal extends BlockContainer
         this.setLightLevel(1.0F);
 
         BlockInit.BLOCKS.add(this);
-//        ItemInit.ITEMS.add(new ItemBlock(this).setRegistryName(this.getRegistryName()));
     }
 
     /**
@@ -98,6 +100,16 @@ public class BlockChurchPortal extends BlockContainer
             entityIn.changeDimension(destination, new ChurchTeleporter(FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(destination)));
         }
     }
+
+    @Override
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
+    {
+        BlockPattern.PatternHelper blockpattern$patternhelper = BlockChurchPortalFrame.getOrCreatePortalShape().match(worldIn, pos);
+
+        if (blockpattern$patternhelper == null)
+            worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
+    }
+
 
     @SideOnly(Side.CLIENT)
     public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
