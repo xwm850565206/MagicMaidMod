@@ -135,9 +135,11 @@ public class GuiPlayerMenuAttribute extends GuiScreen
         this.drawTexturedModalRect(i, j, 0, 0, this.imageWidth, imageHeight);
 
         // 画技能
-        List<GuiSkillButton> page = skillPages.get(currPage);
-        for (GuiSkillButton skillRect : page) {
-            skillRect.drawButton(mc, mouseX, mouseY, partialTicks);
+        if (skillPages.size() > 0) {
+            List<GuiSkillButton> page = skillPages.get(currPage);
+            for (GuiSkillButton skillRect : page) {
+                skillRect.drawButton(mc, mouseX, mouseY, partialTicks);
+            }
         }
 
         for (int t = 0; t < this.buttonList.size() && t < 6; ++t)

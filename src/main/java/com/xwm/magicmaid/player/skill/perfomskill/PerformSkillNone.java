@@ -66,7 +66,7 @@ public class PerformSkillNone implements IPerformSkill
 
     @Override
     public String getName() {
-        return "perform.none";
+        return "perform.unreachable.none";
     }
 
     @Override

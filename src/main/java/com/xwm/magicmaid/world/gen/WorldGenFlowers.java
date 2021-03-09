@@ -66,15 +66,6 @@ public class WorldGenFlowers implements IWorldGenerator
                             world.setBlockState(blockpos, flower.getDefaultState(), 3);
                     }
                 }
-//                else
-//                {
-//                    blockpos = world.getHeight(blockpos);
-//                    if (world.isAirBlock(blockpos))
-//                    {
-//                        if (world.getBlockState(blockpos.down()).isSideSolid(world, blockpos, EnumFacing.UP) || world.getBlockState(blockpos.down()).getBlock() instanceof BlockLiquid)
-//                            world.setBlockState(blockpos, flower.getDefaultState(), 3);
-//                    }
-//                }
             }
         }
     }

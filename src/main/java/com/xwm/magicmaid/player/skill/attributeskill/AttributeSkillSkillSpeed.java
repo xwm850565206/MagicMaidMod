@@ -19,7 +19,7 @@ public class AttributeSkillSkillSpeed extends AttributeSkillBase
     @Override
     public void updateAttribute()
     {
-        skill_speed = MagicCreatureAttributes.SKILL_SPEED.getDefaultValue() * (level + 1);
+        skill_speed = 1 + 0.5 * (level - 1);
     }
 
     @Override

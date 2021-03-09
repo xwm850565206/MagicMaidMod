@@ -235,7 +235,7 @@ public class IMagicCreatureManagerImpl implements IMagicCreatureManager {
     }
 
     /**
-     * 单例模式，用于魔法生物的战斗结算，在e构造函数中调用
+     * 单例模式，用于魔法生物的战斗结算，在构造函数中调用
      * @return 返回实例
      */
     public static IMagicCreatureManager getInstance() {

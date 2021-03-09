@@ -19,7 +19,7 @@ public class AttributeSkillSkillDamageRate extends AttributeSkillBase
     @Override
     public void updateAttribute()
     {
-        skill_damage_rate = MagicCreatureAttributes.SKILL_DAMAGE_RATE.getDefaultValue() * (level + 1);
+        skill_damage_rate = level;
     }
 
     @Override

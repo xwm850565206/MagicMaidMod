@@ -2,8 +2,6 @@ package com.xwm.magicmaid.player.capability;
 
 import com.xwm.magicmaid.player.skill.*;
 import com.xwm.magicmaid.player.skill.attributeskill.*;
-import com.xwm.magicmaid.player.skill.perfomskill.PerformSkillBoost;
-import com.xwm.magicmaid.player.skill.perfomskill.PerformSkillFlash;
 import com.xwm.magicmaid.player.skill.perfomskill.PerformSkillNone;
 import com.xwm.magicmaid.registry.MagicSkillRegistry;
 import net.minecraft.inventory.IInventory;
@@ -161,13 +159,7 @@ public class CapabilitySkill
 
         private Map<String, IPassiveSkill> passiveSkillMap = new HashMap<>();
 
-        private Map<String, IPerformSkill> performSkillMap = new HashMap<String, IPerformSkill>(){{
-            IPerformSkill flash = new PerformSkillFlash();
-            put(flash.getName(), flash);
-
-            IPerformSkill boost = new PerformSkillBoost();
-            put(boost.getName(), boost);
-        }};
+        private Map<String, IPerformSkill> performSkillMap = new HashMap<>();
 
         private NonNullList<IPerformSkill> activePerformSkill =  NonNullList.withSize(2, PerformSkillNone.NONE); //同时持有两个技能
 

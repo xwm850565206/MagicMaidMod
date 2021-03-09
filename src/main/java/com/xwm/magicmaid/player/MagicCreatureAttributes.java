@@ -26,7 +26,7 @@ public class MagicCreatureAttributes
     public static final IAttribute INJURY_REDUCTION = new RangedAttribute(null, "magic_maid.creature.injury_reduction", 0.0D, 0.0D,
             1.0D).setDescription("Injury reduction").setShouldWatch(true); // 减伤率
 
-    public static final IAttribute IGNORE_REDUCTION = new RangedAttribute(null, "magic_maid.creature.ignore_reduction", 1.0D, 0.0D,
+    public static final IAttribute IGNORE_REDUCTION = new RangedAttribute(null, "magic_maid.creature.ignore_reduction", 0.0D, 0.0D,
             1.0D).setDescription("Ignore reduction").setShouldWatch(true); // 无视减伤率 damage = (damage_rate * damage) * (1 - (injury_reduction - ignore_reduction))
 
 

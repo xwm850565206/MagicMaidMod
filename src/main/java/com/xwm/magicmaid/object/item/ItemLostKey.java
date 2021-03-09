@@ -25,6 +25,6 @@ public class ItemLostKey extends ItemBase implements ICanGetSkillPoint
 
     @Override
     public int getSkillPoint(ItemStack stack, EntityPlayer player) {
-        return 5;
+        return 2;
     }
 }

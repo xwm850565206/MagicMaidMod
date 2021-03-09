@@ -34,6 +34,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -206,11 +207,15 @@ public class CommonEventLoader
             ICreatureCapability creatureCapability = player.getCapability(CapabilityLoader.CREATURE_CAPABILITY, null);
             if (creatureCapability != null)
             {
-                creatureCapability.setEnergy(Math.min(creatureCapability.getMaxEnergy(), creatureCapability.getEnergy() + creatureCapability.getPerEnergy()));
+                creatureCapability.setEnergy(Math.min(creatureCapability.getMaxEnergy(), creatureCapability.getEnergy() + creatureCapability.getPerEnergy() * creatureCapability.getSkillSpeed()));
             }
         }
     }
 
+    /**
+     * 掉落福音书 遗失之匙的逻辑
+     * @param event
+     */
     @SubscribeEvent
     public static void onZombieDieEvent(LivingDeathEvent event)
     {
@@ -240,6 +245,10 @@ public class CommonEventLoader
 
     }
 
+    /**
+     * 实现女仆打怪加经验的逻辑
+     * @param event
+     */
     @SubscribeEvent
     public static void getExpEvent(LivingDeathEvent event)
     {
@@ -253,6 +262,7 @@ public class CommonEventLoader
         }
 
     }
+
 
     @SubscribeEvent
     public void onPlayerLoggin(PlayerEvent.PlayerLoggedInEvent event)
@@ -270,6 +280,11 @@ public class CommonEventLoader
         }
     }
 
+
+    /**
+     * 掉落亡魂和执念的逻辑
+     * @param event
+     */
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onObsssionEntityDie(LivingDeathEvent event)
     {
@@ -303,6 +318,24 @@ public class CommonEventLoader
             if (!world.isRemote) {
                 EntityItem entityItem = new EntityItem(world, entityLivingBase.posX, entityLivingBase.posY, entityLivingBase.posZ, new ItemStack(ItemInit.ITEM_ELIMINATE_SOUL_NAIL));
                 world.spawnEntity(entityItem);
+            }
+        }
+    }
+
+    /**
+     * 战斗逻辑
+     * todo 攻击倍率和技能倍率还没实装
+     */
+    @SubscribeEvent()
+    public void onEntityAttacked(LivingDamageEvent event)
+    {
+        if (event.getEntityLiving() instanceof AbstractEntityMagicCreature)
+            return;
+        else {
+            try {
+                event.setAmount(IMagicCreatureManagerImpl.getInstance().caculateDamageAmount((EntityLivingBase) event.getSource().getImmediateSource(), event.getEntityLiving(), null, event.getAmount()));
+            } catch (Exception e ){
+                e.printStackTrace();
             }
         }
     }

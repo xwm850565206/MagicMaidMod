@@ -14,60 +14,49 @@ import net.minecraftforge.common.MinecraftForge;
 
 import java.util.Random;
 
-public class PerformSkillFlash extends PerformSkillBase
+public class PerformSkillJump extends PerformSkillBase
 {
     private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.MODID, "textures/gui/icon/skill_icon.png");
-    private Random random = new Random();
+    Random random = new Random();
 
     @Override
     public int getPerformEnergy() {
-        return 50;
+        return 200;
     }
 
     @Override
     public int getColdTime() {
-        return 60;
+        return 90 - 30 * level;
     }
 
     @Override
     public void perform(EntityLivingBase playerIn, World worldIn, BlockPos posIn) {
-
         if (curColdTime > 0) return;
         if (MinecraftForge.EVENT_BUS.post(new SkillPerformEvent<IPerformSkill>(this, playerIn, posIn))) return;
         if (!consumEnergy(playerIn, worldIn, posIn)) return;
 
-        if (worldIn.isRemote)
-        {
+        if (worldIn.isRemote) {
+            playerIn.addVelocity(0, 0.5, 0);
             for (int i = 0; i < 5; i++)
-                worldIn.spawnParticle(EnumParticleTypes.DRAGON_BREATH, playerIn.posX + random.nextDouble(), playerIn.posY + playerIn.height / 2.0 + random.nextDouble(), playerIn.posZ + random.nextDouble(), 0.1*(random.nextDouble()-0.5), 0.1*random.nextDouble(), 0.1*(random.nextDouble()-0.5));
+                worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, playerIn.posX + random.nextDouble(), playerIn.posY + playerIn.height / 2.0 + random.nextDouble(), playerIn.posZ + random.nextDouble(), 0.1*(random.nextDouble()-0.5), 0.1*random.nextDouble(), 0.1*(random.nextDouble()-0.5));
+
         }
-
-        int offset = 5 * (getLevel() + 1); //todo
-        BlockPos pos = posIn.offset(playerIn.getHorizontalFacing(), offset);
-        playerIn.setPosition(pos.getX(), pos.getY(), pos.getZ());
-
-        if (worldIn.isRemote)
-        {
-            for (int i = 0; i < 5; i++)
-                worldIn.spawnParticle(EnumParticleTypes.DRAGON_BREATH, playerIn.posX + random.nextDouble(), playerIn.posY + playerIn.height / 2.0 + random.nextDouble(), playerIn.posZ + random.nextDouble(), 0.1*(random.nextDouble()-0.5), 0.1*random.nextDouble(), 0.1*(random.nextDouble()-0.5));
-        }
-
         curColdTime = getColdTime();
     }
 
     @Override
     public int getRequirePoint() {
-        return getLevel() < getMaxLevel() ? 2000 * level * level : -1;
+        return getLevel() < getMaxLevel() ? 1000 * getLevel() : -1;
     }
 
     @Override
     public String getName() {
-        return super.getName() + ".normal.flash";
+        return super.getName() + ".normal.jump";
     }
 
     @Override
     public String getDescription() {
-        return "闪现";
+        return "上升";
     }
 
     @Override
@@ -82,7 +71,7 @@ public class PerformSkillFlash extends PerformSkillBase
         GlStateManager.scale(scalex, scaley, 1);
         GlStateManager.scale(scale, scale, 1);
 
-        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 134, 0, 46, 46);
+        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 134, 140, 46, 46);
         GlStateManager.popMatrix();
     }
 }

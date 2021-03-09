@@ -3,6 +3,7 @@ package com.xwm.magicmaid.init;
 import com.xwm.magicmaid.world.dimension.DimensionChurch;
 import com.xwm.magicmaid.world.gen.WorldGenFlowers;
 import com.xwm.magicmaid.world.gen.WorldGenHolyStone;
+import com.xwm.magicmaid.world.gen.WorldGenHut;
 import net.minecraft.world.DimensionType;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -30,5 +31,6 @@ public class DimensionInit
     {
         GameRegistry.registerWorldGenerator(new WorldGenHolyStone(), 10);
         GameRegistry.registerWorldGenerator(new WorldGenFlowers(), 10);
+        GameRegistry.registerWorldGenerator(new WorldGenHut(), 10);
     }
 }

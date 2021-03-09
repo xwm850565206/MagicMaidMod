@@ -82,9 +82,11 @@ public class ISkillManagerImpl implements ISkillManager {
             if (skillCapability != null) {
                 int skillPoint = skillCapability.getSkillPoint();
                 if (skillPoint >= iSkill.getRequirePoint() && iSkill.getLevel() < iSkill.getMaxLevel()) {
-                    if (MinecraftForge.EVENT_BUS.post(new SkillLevelUpEvent<>(iSkill, player))) return false;
+                    if (MinecraftForge.EVENT_BUS.post(new SkillLevelUpEvent.Pre(iSkill, player))) return false;
                     iSkill.setLevel(iSkill.getLevel() + 1);
                     skillCapability.setSkillPoint(skillPoint - iSkill.getRequirePoint());
+
+                    MinecraftForge.EVENT_BUS.post(new SkillLevelUpEvent.Post(iSkill, player));
                     updateToOtherSide(player);
                     return true;
                 }

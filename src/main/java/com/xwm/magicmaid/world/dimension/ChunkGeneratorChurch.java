@@ -155,7 +155,7 @@ public class ChunkGeneratorChurch implements IChunkGenerator
 
 //        System.out.println(x + " " + z);
 //        if (!hasBuildChurch) {
-//            WorldGenStructure church = new WorldGenStructure("church");
+//            WorldGeneratorSkillHut church = new WorldGeneratorSkillHut("church");
 //            church.generate(world, rand, new BlockPos(100, 60, 50));
 //            hasBuildChurch = true;
 //            System.out.println("build church");

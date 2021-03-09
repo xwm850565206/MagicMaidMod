@@ -31,7 +31,7 @@ public interface ISkill
     int getRequirePoint();
 
     /**
-     * 技能名字，技能的唯一标识符
+     * 技能名字，技能的唯一标识符，技能的名字通过'.'连接，第一个表示的是技能所属的类别{perform, attribute, passive}，第二个表示的是技能的稀有度{normal, rare, secret, unreachable}
      * @return
      */
     String getName();

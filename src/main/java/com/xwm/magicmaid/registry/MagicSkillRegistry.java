@@ -3,9 +3,7 @@ package com.xwm.magicmaid.registry;
 import com.xwm.magicmaid.Main;
 import com.xwm.magicmaid.player.skill.ISkill;
 import com.xwm.magicmaid.player.skill.attributeskill.*;
-import com.xwm.magicmaid.player.skill.perfomskill.PerformSkillBoost;
-import com.xwm.magicmaid.player.skill.perfomskill.PerformSkillFlash;
-import com.xwm.magicmaid.player.skill.perfomskill.PerformSkillNone;
+import com.xwm.magicmaid.player.skill.perfomskill.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +23,8 @@ public class MagicSkillRegistry
     public static final ISkill ATTRIBUTE_SKILL_IGNORE_REDUCTION = new AttributeSkillIgnoreReduction();
 
     public static final ISkill PERFORM_SKILL_NONE = new PerformSkillNone();
+    public static final ISkill PERFORM_SKILL_REPEL = new PerformSkillRepel();
+    public static final ISkill PERFORM_SKILL_JUMP = new PerformSkillJump();
     public static final ISkill PERFORM_SKILL_FLASH = new PerformSkillFlash();
     public static final ISkill PERFORM_SKILL_BOOST = new PerformSkillBoost();
 
@@ -60,6 +60,8 @@ public class MagicSkillRegistry
         register(ATTRIBUTE_SKILL_SKILL_SPEED.getName(), ATTRIBUTE_SKILL_SKILL_SPEED.getClass());
 
         register(PERFORM_SKILL_NONE.getName(), PERFORM_SKILL_NONE.getClass());
+        register(PERFORM_SKILL_REPEL.getName(), PERFORM_SKILL_REPEL.getClass());
+        register(PERFORM_SKILL_JUMP.getName(), PERFORM_SKILL_JUMP.getClass());
         register(PERFORM_SKILL_FLASH.getName(), PERFORM_SKILL_FLASH.getClass());
         register(PERFORM_SKILL_BOOST.getName(), PERFORM_SKILL_BOOST.getClass());
         // todo

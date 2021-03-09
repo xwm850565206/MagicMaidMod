@@ -19,7 +19,7 @@ public class AttributeSkillNormalDamageRate extends AttributeSkillBase
     @Override
     public void updateAttribute()
     {
-        normal_damage_rate = MagicCreatureAttributes.NORMAL_DAMAGE_RATE.getDefaultValue() * (level + 1);
+        normal_damage_rate = 1 + 0.5 * (level - 1);
     }
 
     @Override

@@ -19,8 +19,7 @@ public class AttributeSkillIgnoreReduction extends AttributeSkillBase
     @Override
     public void updateAttribute()
     {
-        ignore_reduction = MagicCreatureAttributes.IGNORE_REDUCTION.getDefaultValue() * (level + 1);
-
+        ignore_reduction = 0.05 * (level);
     }
 
     @Override

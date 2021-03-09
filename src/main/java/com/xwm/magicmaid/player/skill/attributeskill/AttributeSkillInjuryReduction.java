@@ -19,7 +19,7 @@ public class AttributeSkillInjuryReduction extends AttributeSkillBase
     @Override
     public void updateAttribute()
     {
-        injury_reduction = MagicCreatureAttributes.INJURY_REDUCTION.getDefaultValue() * (level + 1);
+        injury_reduction = 0.05 * level;
     }
 
     @Override

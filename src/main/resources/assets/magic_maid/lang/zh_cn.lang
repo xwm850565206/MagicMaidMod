@@ -54,6 +54,7 @@ item.no_soul_ghost_1.name=装满灵魂的魄
 item.justice_soul_piece.name=正义残魂
 item.evil_soul_piece.name=邪恶残魂
 item.absorb_soul_compass.name=吸魂磁石
+item.skill_book.name=技能书
 
 
 tile.oreholystone.name=圣痕矿石

@@ -35,4 +35,16 @@ public class SkillLevelUpEvent<T extends ISkill> extends Event
     public void setPlayer(EntityPlayer player) {
         this.player = player;
     }
+
+    public static class Pre extends SkillLevelUpEvent {
+        public Pre(ISkill skill, EntityPlayer player) {
+            super(skill, player);
+        }
+    }
+
+    public static class Post extends SkillLevelUpEvent {
+        public Post(ISkill skill, EntityPlayer player) {
+            super(skill, player);
+        }
+    }
 }

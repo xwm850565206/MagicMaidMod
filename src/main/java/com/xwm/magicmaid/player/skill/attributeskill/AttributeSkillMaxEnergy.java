@@ -13,13 +13,13 @@ import net.minecraft.util.ResourceLocation;
 public class AttributeSkillMaxEnergy extends AttributeSkillBase
 {
     private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.MODID, "textures/gui/icon/skill_icon.png");
-
+    private static final int[] ATTRIBUTE = new int[]{200, 400, 800, 1000, 1500};
     private double max_energy = MagicCreatureAttributes.MAX_ENERGY.getDefaultValue();
 
     @Override
     public void updateAttribute()
     {
-        max_energy = MagicCreatureAttributes.MAX_ENERGY.getDefaultValue() * (level + 1);
+        max_energy = ATTRIBUTE[level-1];
     }
 
     @Override

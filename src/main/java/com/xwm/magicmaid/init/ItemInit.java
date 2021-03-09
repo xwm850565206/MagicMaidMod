@@ -62,4 +62,6 @@ public class ItemInit
 
     public static final Item ITEM_JUSTICE = new ItemJustice("justice");
     public static final Item ITEM_EVIL = new ItemEvil("evil");
+
+    public static final Item SKILL_BOOK = new ItemSkillBook("skill_book");
 }

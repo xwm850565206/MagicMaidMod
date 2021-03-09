@@ -31,18 +31,6 @@ public class ItemTheGospels extends ItemBase implements ICanGetSkillPoint
         tooltip.add(TextFormatting.YELLOW + "对废墟图腾右键将福音书的魔法元素注入");
     }
 
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
-    {
-//        if (worldIn.isRemote)
-//            return super.onItemRightClick(worldIn, playerIn, handIn);
-//        else if (worldIn.provider.getDimension() != DimensionInit.DIMENSION_CHURCH){
-//            playerIn.changeDimension(DimensionInit.DIMENSION_CHURCH, new ChurchTeleporter((WorldServer) worldIn, DimensionInit.DIMENSION_CHURCH, playerIn.posX, playerIn.posY, playerIn.posZ));
-//            return super.onItemRightClick(worldIn, playerIn, handIn);
-//        }
-        return super.onItemRightClick(worldIn, playerIn, handIn);
-    }
-
 
     public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {

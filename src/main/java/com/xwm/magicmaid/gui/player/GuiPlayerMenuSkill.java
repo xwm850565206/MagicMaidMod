@@ -136,7 +136,7 @@ public class GuiPlayerMenuSkill extends GuiScreen
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
         int index = clickSkillRect(mouseX, mouseY);
-        if (index != -1) {
+        if (index != -1 && skillPages.size() > 0) {
             if (index < 4 && chooseSkill == null) {
                 if (index < skillPages.get(currPage).size()) {
                     GuiSkillButton clickedWidget = skillPages.get(currPage).get(index);
@@ -239,9 +239,11 @@ public class GuiPlayerMenuSkill extends GuiScreen
         this.drawTexturedModalRect(i, j, 0, 0, this.imageWidth, imageHeight);
 
         // 画技能
-        List<GuiSkillButton> page = skillPages.get(currPage);
-        for (GuiSkillButton skillRect : page) {
-            skillRect.drawButton(mc, mouseX, mouseY, partialTicks);
+        if (skillPages.size() > 0) {
+            List<GuiSkillButton> page = skillPages.get(currPage);
+            for (GuiSkillButton skillRect : page) {
+                skillRect.drawButton(mc, mouseX, mouseY, partialTicks);
+            }
         }
 
         // 画技能栏

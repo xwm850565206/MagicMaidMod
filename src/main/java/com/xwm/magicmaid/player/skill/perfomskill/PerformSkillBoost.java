@@ -19,12 +19,12 @@ public class PerformSkillBoost extends PerformSkillBase
 
     @Override
     public int getPerformEnergy() {
-        return 100;
+        return 100 * level;
     }
 
     @Override
     public int getColdTime() {
-        return 120;
+        return 200;
     }
 
     @Override
@@ -59,7 +59,12 @@ public class PerformSkillBoost extends PerformSkillBase
 
     @Override
     public int getRequirePoint() {
-        return getLevel() < getMaxLevel() ? 20 + 20 * getLevel() : -1;
+        return getLevel() < getMaxLevel() ? 1000 * level * level : -1;
+    }
+
+    @Override
+    public String getName() {
+        return super.getName() + ".rare.boost";
     }
 
     @Override

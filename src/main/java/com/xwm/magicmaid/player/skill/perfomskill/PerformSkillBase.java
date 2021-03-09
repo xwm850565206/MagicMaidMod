@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 public abstract class PerformSkillBase implements IPerformSkill
 {
     protected static final int MAX_LEVEL = 3;
-    protected int level = 0;
+    protected int level = 1;
     protected int curColdTime = 0; // 释放技能后，技能进入冷却 0表示冷却完毕
 
 
