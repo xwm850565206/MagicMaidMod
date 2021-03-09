@@ -40,16 +40,26 @@ public class ItemSkillBook extends ItemBase implements ICanGetSkillPoint
         if (!isInCreativeTab(tab))
             return;
 
-        ItemStack stack = new ItemStack(this);
-        items.add(stack);
+        for (Class<? extends ISkill> skillClazz : MagicSkillRegistry.SKILL_MAP.values()) {
+            try {
+                ISkill iSkill = skillClazz.newInstance();
+                String skillName = iSkill.getName();
+                String[] describeElements = skillName.split("\\.");
+                if (describeElements.length < 3)
+                    continue;
+                if (describeElements[0].equals("perform") && !describeElements[1].equals("unreachable"))
+                {
+                    ItemStack stack = new ItemStack(this);
+                    ItemSkillBook.setSkill(stack, skillName);
+                    items.add(stack);
+                }
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
 
-        ItemStack stack1 = new ItemStack(this);
-        ItemSkillBook.setSkill(stack1, "perform.normal.jump");
-        items.add(stack1);
-
-        ItemStack stack2 = new ItemStack(this);
-        ItemSkillBook.setSkill(stack2, "perform.normal.boost");
-        items.add(stack2);
+        }
     }
 
     @Override

@@ -41,10 +41,12 @@ public class SkillHutTemplate extends StructureComponentTemplate
             worldIn.setBlockState(pos, Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, this.placeSettings.getRotation().rotate(EnumFacing.valueOf(facing.toUpperCase()))));
             TileEntityChest chest = (TileEntityChest) worldIn.getTileEntity(pos);
             IItemHandler handler = chest.getSingleChestHandler();
-            ISkill skill = skillList.get(rand.nextInt(skillList.size()));;
-            ItemStack skillBook = new ItemStack(ItemInit.SKILL_BOOK);
-            ItemSkillBook.setSkill(skillBook, skill);
-            handler.insertItem(rand.nextInt(27), skillBook, worldIn.isRemote);
+            for (int i = 0; i < rand.nextInt(2); i++) { // 1 或 2 本书
+                ISkill skill = skillList.get(rand.nextInt(skillList.size()));
+                ItemStack skillBook = new ItemStack(ItemInit.SKILL_BOOK);
+                ItemSkillBook.setSkill(skillBook, skill);
+                handler.insertItem(rand.nextInt(27), skillBook, worldIn.isRemote);
+            }
         }
     }
 }

@@ -62,7 +62,7 @@ public class PerformSkillFlash extends PerformSkillBase
 
     @Override
     public String getName() {
-        return super.getName() + ".normal.flash";
+        return super.getName() + ".secret.flash";
     }
 
     @Override

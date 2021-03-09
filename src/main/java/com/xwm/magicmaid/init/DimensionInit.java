@@ -31,6 +31,6 @@ public class DimensionInit
     {
         GameRegistry.registerWorldGenerator(new WorldGenHolyStone(), 10);
         GameRegistry.registerWorldGenerator(new WorldGenFlowers(), 10);
-        GameRegistry.registerWorldGenerator(new WorldGenHut(), 10);
+        GameRegistry.registerWorldGenerator(new WorldGenHut(), 1);
     }
 }
