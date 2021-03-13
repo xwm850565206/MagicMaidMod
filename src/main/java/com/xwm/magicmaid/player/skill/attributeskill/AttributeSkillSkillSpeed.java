@@ -71,4 +71,10 @@ public class AttributeSkillSkillSpeed extends AttributeSkillBase
     public String getDescription() {
         return "技能急速" + ": " + skill_speed;
     }
+
+    @Override
+    public String getDetailDescription() {
+        return "";
+    }
+
 }

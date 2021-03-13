@@ -29,6 +29,8 @@ public class StructureChurchPieces
     {
         MapGenStructureIO.registerStructureComponent(StructureChurchPieces.ChurchTemplate.class, "RuinChurchComponent");
         MapGenStructureIO.registerStructure(MapGenChurch.Start.class, "RuinChurch");
+        // todo 暂时写在这
+
     }
 
     public static void startChurch(TemplateManager templateManager, BlockPos pos, Rotation rotation, List<StructureComponent> componentList, Random random)

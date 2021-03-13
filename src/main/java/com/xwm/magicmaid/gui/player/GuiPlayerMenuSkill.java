@@ -10,6 +10,7 @@ import com.xwm.magicmaid.player.skill.ISkill;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -210,12 +211,18 @@ public class GuiPlayerMenuSkill extends GuiScreen
 
             }
             else if (button.id == 4) {
-                if (currPage > 0)
+                if (currPage > 0){
+                    setLevelUpButtonEnable(false);
                     currPage--;
+                    setLevelUpButtonEnable(true);
+                }
             }
             else if (button.id == 5) {
-                if (currPage < skillPages.size() - 1)
-                    currPage ++;
+                if (currPage < skillPages.size() - 1) {
+                    setLevelUpButtonEnable(false);
+                    currPage++;
+                    setLevelUpButtonEnable(true);
+                }
             }
             else if (button.id > 5){
                 List<GuiSkillButton> skillButtons = skillPages.get(currPage);
@@ -260,7 +267,22 @@ public class GuiPlayerMenuSkill extends GuiScreen
             chooseSkill.drawButton(mc, mouseX, mouseY, partialTicks);
             GlStateManager.popMatrix();
         }
-        super.drawScreen(mouseX, mouseY, partialTicks);
+
+        for (int t = 0; t < this.buttonList.size() && t < 6; ++t)
+        {
+            ((GuiButton)this.buttonList.get(t)).drawButton(this.mc, mouseX, mouseY, partialTicks);
+        }
+
+        for (int t = 0; t < this.labelList.size(); ++t)
+        {
+            ((GuiLabel)this.labelList.get(t)).drawLabel(this.mc, mouseX, mouseY);
+        }
     }
 
+    private void setLevelUpButtonEnable(boolean enable)
+    {
+        List<GuiSkillButton> buttonList = skillPages.get(currPage);
+        for (GuiSkillButton button : buttonList)
+            button.enabled = enable;
+    }
 }

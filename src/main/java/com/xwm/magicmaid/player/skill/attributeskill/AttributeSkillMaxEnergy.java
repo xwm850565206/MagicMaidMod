@@ -72,4 +72,10 @@ public class AttributeSkillMaxEnergy extends AttributeSkillBase
     public String getDescription() {
         return "最大能量" + ": " + max_energy;
     }
+
+    @Override
+    public String getDetailDescription() {
+        return "";
+    }
+
 }

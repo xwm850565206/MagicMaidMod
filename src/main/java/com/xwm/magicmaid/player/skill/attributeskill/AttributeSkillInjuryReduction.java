@@ -72,4 +72,10 @@ public class AttributeSkillInjuryReduction extends AttributeSkillBase
     public String getDescription() {
         return "减伤率" + ": " + injury_reduction;
     }
+
+    @Override
+    public String getDetailDescription() {
+        return "";
+    }
+
 }

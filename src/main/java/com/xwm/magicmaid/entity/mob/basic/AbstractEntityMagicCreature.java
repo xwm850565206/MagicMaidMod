@@ -57,7 +57,7 @@ public abstract class AbstractEntityMagicCreature extends EntityCreature impleme
         this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityLiving.class, 8.0F));
         this.tasks.addTask(10, new EntityAILookIdle(this));
 
-        this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, false, new Class[0]));
+//        this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, false, new Class[0]));
     }
 
     @Override

@@ -108,7 +108,7 @@ public class GuiSkillButton extends GuiButton
             if (this.hovered)
             {
                 color = 16777120;
-                drawSkillPoint(mc, mouseX, mouseY, partialTicks);
+                drawSkillDetail(mc, mouseX, mouseY, partialTicks);
             }
 
             this.drawCenteredString(mc.fontRenderer, "+", this.x + 59 + 19 / 2, this.y + 74 - 11  , color);
@@ -138,19 +138,30 @@ public class GuiSkillButton extends GuiButton
         }
     }
 
-    private void drawSkillPoint(Minecraft mc, int mouseX, int mouseY, float partialTicks)
+    private void drawSkillDetail(Minecraft mc, int mouseX, int mouseY, float partialTicks)
     {
         int i = 0;
         int j = 182;
+        int bwidth = this.width - 10;
+        int bheight = this.height - 40;
+        String[] detailLines = this.iSkill.getDetailDescription().split("\n");
+        for (int t = 0; t < detailLines.length; t++)
+            bwidth = Math.max(bwidth, mc.fontRenderer.getStringWidth(detailLines[t]));
+        bheight = Math.max(bheight, 10 * detailLines.length + 30);
+
         GlStateManager.pushMatrix();
         GlStateManager.color(0F, 0F, 0F, 0.4F);
         GlStateManager.disableTexture2D();
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        this.drawTexturedModalRect(mouseX - this.width + 10, mouseY - this.height + 40, i, j, this.width - 10, this.height - 40);
+        GlStateManager.translate(0, 0, 50);
+        this.drawTexturedModalRect(mouseX - bwidth, mouseY - bheight, i, j, bwidth, bheight);
         GlStateManager.enableTexture2D();
         int requirePoint = this.iSkill.getRequirePoint();
-        mc.fontRenderer.drawString("需要点数: " + (requirePoint == -1 ? "已满级" : requirePoint), mouseX - this.width + 10 + 2, mouseY - this.height + 40 + 2, 0xffffff);
+        mc.fontRenderer.drawString("需要点数: " + (requirePoint == -1 ? "已满级" : requirePoint), mouseX - bwidth + 2, mouseY - bheight + 2, 0xffffff);
+
+        for (int t = 0; t < detailLines.length; t++)
+            mc.fontRenderer.drawString(detailLines[t], mouseX - bwidth + 2, mouseY - bheight + 20 + 10 * t + 2, 0xffffff);
         GlStateManager.disableBlend();
         GlStateManager.popMatrix();
     }

@@ -4,6 +4,7 @@ import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidMarthaBoss;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidRettBoss;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidSelinaBoss;
+import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.SPacketSound;
 import com.xwm.magicmaid.world.dimension.DimensionChurch;
@@ -63,6 +64,9 @@ public class BlockMemoryClock extends BlockBase
             return false;
 
         if (hand != EnumHand.MAIN_HAND)
+            return false;
+
+        if (playerIn.getHeldItem(hand).getItem() == ItemInit.ITEM_LOST_KEY)
             return false;
 
         //不在教堂世界，不生成女仆

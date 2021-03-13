@@ -75,6 +75,11 @@ public class PerformSkillNone implements IPerformSkill
     }
 
     @Override
+    public String getDetailDescription() {
+        return "";
+    }
+
+    @Override
     public void readFromNBTTagCompound(NBTTagCompound compound) {
 
     }

@@ -43,6 +43,12 @@ public interface ISkill
     String getDescription();
 
     /**
+     * 获得技能的详细说明
+     * @return 技能详细说明
+     */
+    String getDetailDescription();
+
+    /**
      * 从nbt中恢复对象
      * @param compound nbt数据
      */

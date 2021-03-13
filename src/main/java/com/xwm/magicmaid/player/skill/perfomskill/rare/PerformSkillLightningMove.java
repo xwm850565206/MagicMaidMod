@@ -1,4 +1,4 @@
-package com.xwm.magicmaid.player.skill.perfomskill;
+package com.xwm.magicmaid.player.skill.perfomskill.rare;
 
 import com.xwm.magicmaid.event.SkillPerformEvent;
 import com.xwm.magicmaid.player.skill.IPerformSkill;
@@ -6,43 +6,48 @@ import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
-import java.util.List;
-
-public class PerformSkillRepel extends PerformSkillBase
+public class PerformSkillLightningMove extends PerformSkillRareBase
 {
     private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.MODID, "textures/gui/icon/skill_icon.png");
 
     @Override
     public int getPerformEnergy() {
-        return 200;
+        return 100 - level * 10;
     }
 
     @Override
     public int getColdTime() {
-        return 100 - 20 * level;
+        return 10;
     }
 
     @Override
     public void perform(EntityLivingBase playerIn, World worldIn, BlockPos posIn) {
+
         if (curColdTime > 0) return;
         if (MinecraftForge.EVENT_BUS.post(new SkillPerformEvent<IPerformSkill>(this, playerIn, posIn))) return;
         if (!consumEnergy(playerIn, worldIn, posIn)) return;
+        if (worldIn.isRemote)
+        {
+            Vec3d vec3d = playerIn.getLook(0.8F);
+            playerIn.addVelocity(vec3d.x * level, 0.5 + 0.05 * level, vec3d.z * level);
+        }
 
-        List<EntityLivingBase> entityLivingBases = worldIn.getEntitiesWithinAABB(EntityLivingBase.class, playerIn.getEntityBoundingBox().grow(2+level, 1, 2+level));
-        for (EntityLivingBase entityLivingBase : entityLivingBases) {
-            if (entityLivingBase == playerIn) continue;
-            try {
-                double motionX = (entityLivingBase.posX - playerIn.posX) / Math.abs(entityLivingBase.posX - playerIn.posX) * Math.abs(2 - Math.abs(entityLivingBase.posX - playerIn.posX));
-                double motionY = 0.01;
-                double motionZ = (entityLivingBase.posZ - playerIn.posZ) / Math.abs(entityLivingBase.posZ - playerIn.posZ) * Math.abs(2 - Math.abs(entityLivingBase.posZ - playerIn.posZ));
-                entityLivingBase.addVelocity(motionX, motionY, motionZ);
-            } catch (Exception e) {
-                e.printStackTrace();
+        else {
+            Vec3d vec3d = playerIn.getLook(0.8F);
+            double d2 = vec3d.x * level;
+            double d3 = vec3d.y * level;
+            double d4 = vec3d.z * level;
+            for (int i = 0; i < 10; i++) {
+                EntityLightningBolt entityLightningBolt = new EntityLightningBolt(worldIn, playerIn.posX + d2 * i, playerIn.posY, playerIn.posZ + d4 * i, true);
+                worldIn.addWeatherEffect(entityLightningBolt);
+                worldIn.spawnEntity(entityLightningBolt);
             }
         }
 
@@ -51,21 +56,22 @@ public class PerformSkillRepel extends PerformSkillBase
 
     @Override
     public int getRequirePoint() {
-        return getLevel() < getMaxLevel() ? 100 * getLevel() : -1;
+        return getLevel() < getMaxLevel() ? 1000 * level * level : -1;
     }
 
     @Override
     public String getName() {
-        return super.getName() + ".normal.repel";
+        return super.getName() + ".lightning_move";
     }
 
     @Override
     public String getDescription() {
-        return "击退";
+        return "雷动";
     }
 
     @Override
     public void drawIcon(int x, int y, float scale) {
+        // 134 48 46 46
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
 
         double scalex = 46.0 / 46.0;
@@ -76,7 +82,13 @@ public class PerformSkillRepel extends PerformSkillBase
         GlStateManager.scale(scalex, scaley, 1);
         GlStateManager.scale(scale, scale, 1);
 
-        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 134, 93, 46, 46);
+        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 182, 48, 46, 46);
         GlStateManager.popMatrix();
     }
+
+    @Override
+    public String getDetailDescription() {
+        return "使用雷电的力量向前迅速突进\n升级可以降低蓝耗，提高突进距离";
+    }
+
 }

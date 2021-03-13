@@ -47,7 +47,7 @@ public class CapabilityMagicCreature
                 this.attributeMap.registerAttribute(MagicCreatureAttributes.SKILL_DAMAGE_RATE).setBaseValue(1);
                 this.attributeMap.registerAttribute(MagicCreatureAttributes.ENERGY).setBaseValue(0);
                 this.attributeMap.registerAttribute(MagicCreatureAttributes.PER_ENERGY).setBaseValue(1);
-                this.attributeMap.registerAttribute(MagicCreatureAttributes.MAX_ENERGY).setBaseValue(100);
+                this.attributeMap.registerAttribute(MagicCreatureAttributes.MAX_ENERGY).setBaseValue(200);
                 this.attributeMap.registerAttribute(MagicCreatureAttributes.SKILL_SPEED).setBaseValue(1);
                 this.attributeMap.registerAttribute(MagicCreatureAttributes.INJURY_REDUCTION).setBaseValue(0);
                 this.attributeMap.registerAttribute(MagicCreatureAttributes.IGNORE_REDUCTION).setBaseValue(0);

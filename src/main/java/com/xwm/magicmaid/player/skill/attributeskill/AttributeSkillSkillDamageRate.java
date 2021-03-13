@@ -71,4 +71,10 @@ public class AttributeSkillSkillDamageRate extends AttributeSkillBase
     public String getDescription() {
         return "技能倍率" + ": " + skill_damage_rate;
     }
+
+    @Override
+    public String getDetailDescription() {
+        return "";
+    }
+
 }

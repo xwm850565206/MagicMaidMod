@@ -16,6 +16,7 @@ import com.xwm.magicmaid.player.capability.ICreatureCapability;
 import com.xwm.magicmaid.player.capability.ISkillCapability;
 import com.xwm.magicmaid.player.skill.IPerformSkill;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
+import com.xwm.magicmaid.registry.MagicSkillRegistry;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -63,8 +64,19 @@ public class ClientEventLoader
 
     private Random random = new Random();
 
+    /**  右下角技能图标 **/
     private List<GuiSkillHDU> skillHDUList;
+    /** 技能列表是否需要更新，用于更新右下角的技能图标 **/
     public boolean skillListDirt = true;
+    /** toast **/
+    public String toast = "";
+    /** toast的剩余tick **/
+    public int toastTick = 0;
+
+    public void toastMessage(String message, int tick) {
+        this.toast = message;
+        this.toastTick = tick;
+    }
 
     private int reverseTick(int tick)
     {
@@ -98,6 +110,16 @@ public class ClientEventLoader
                 ISkillCapability skillCapability = player.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
                 if (skillCapability == null) return;
 
+                if (!skillCapability.getActivePerformSkill(0).getName().equals(MagicSkillRegistry.PERFORM_SKILL_NONE.getName())) {
+                    if (skillCapability.getActivePerformSkill(0).getCurColdTime() > 0) {
+                        toastMessage("技能冷却中", 40);
+                    } else {
+                        ICreatureCapability creatureCapability = player.getCapability(CapabilityLoader.CREATURE_CAPABILITY, null);
+                        if (creatureCapability != null && creatureCapability.getEnergy() < skillCapability.getActivePerformSkill(0).getPerformEnergy())
+                            toastMessage("蓝量不足", 40);
+                    }
+                }
+
                 // 服务端运行
                 CPacketSkill packet = new CPacketSkill(player.getUniqueID(), skillCapability.getActivePerformSkill(0).getName(), 0, player.getEntityWorld().provider.getDimension(), player.getPosition(), 0);
                 NetworkLoader.instance.sendToServer(packet);
@@ -110,6 +132,16 @@ public class ClientEventLoader
             if (player.hasCapability(CapabilityLoader.SKILL_CAPABILITY, null)) {
                 ISkillCapability skillCapability = player.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
                 if (skillCapability == null) return;
+
+                if (!skillCapability.getActivePerformSkill(0).getName().equals(MagicSkillRegistry.PERFORM_SKILL_NONE.getName())) {
+                    if (skillCapability.getActivePerformSkill(1).getCurColdTime() > 0) {
+                        toastMessage("技能冷却中", 40);
+                    } else {
+                        ICreatureCapability creatureCapability = player.getCapability(CapabilityLoader.CREATURE_CAPABILITY, null);
+                        if (creatureCapability != null && creatureCapability.getEnergy() < skillCapability.getActivePerformSkill(1).getPerformEnergy())
+                            toastMessage("蓝量不足", 40);
+                    }
+                }
 
                 // 服务端运行
                 CPacketSkill packet = new CPacketSkill(player.getUniqueID(), skillCapability.getActivePerformSkill(1).getName(), 1, player.getEntityWorld().provider.getDimension(), player.getPosition(), 0);
@@ -143,6 +175,7 @@ public class ClientEventLoader
     public static final ResourceLocation BACKGROUND = new ResourceLocation(Reference.MODID, "textures/gui/player_menu_main.png");
     /**
      * 控制技能冷却显示等的绘制
+     * toast的绘制
      */
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
@@ -182,17 +215,27 @@ public class ClientEventLoader
                 }
             }
 
-            if (player.hasCapability(CapabilityLoader.CREATURE_CAPABILITY, null)) {
+            // 画蓝条
+            if (player.hasCapability(CapabilityLoader.CREATURE_CAPABILITY, null))
+            {
                 ICreatureCapability creatureCapability = player.getCapability(CapabilityLoader.CREATURE_CAPABILITY, null);
 
                 if (creatureCapability != null) {
                     double energy = creatureCapability.getEnergy();
                     double progress = energy / creatureCapability.getMaxEnergy();
                     mc.getTextureManager().bindTexture(BACKGROUND);
-                    mc.ingameGUI.drawTexturedModalRect(event.getResolution().getScaledWidth() - 65, event.getResolution().getScaledHeight() - 20, 0, 225, 61, 11);
-                    mc.ingameGUI.drawTexturedModalRect(event.getResolution().getScaledWidth() - 65 + 3, event.getResolution().getScaledHeight() - 20 + 3, 0,236, (int) (55 * progress), 5);
+                    mc.ingameGUI.drawTexturedModalRect(event.getResolution().getScaledWidth() - 65, event.getResolution().getScaledHeight() - 15, 0, 225, 61, 11);
+                    mc.ingameGUI.drawTexturedModalRect(event.getResolution().getScaledWidth() - 65 + 3, event.getResolution().getScaledHeight() - 15 + 3, 0,236, (int) (55 * progress), 5);
                 }
             }
+
+            // 画toast
+            if (!toast.isEmpty() && toastTick > 0) {
+                GlStateManager.color(1.0f, 1.0f, 1.0f, toastTick < 20 ? toastTick / 20.0f : 1);
+                mc.fontRenderer.drawString(toast, (event.getResolution().getScaledWidth() / 2 - mc.fontRenderer.getStringWidth(toast) / 2), event.getResolution().getScaledHeight() - 40, 0xffffff);
+                GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+            }
+            if (toastTick > 0) toastTick--;
         }
     }
 

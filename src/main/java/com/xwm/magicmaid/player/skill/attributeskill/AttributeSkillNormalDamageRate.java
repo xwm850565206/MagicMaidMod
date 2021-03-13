@@ -71,4 +71,10 @@ public class AttributeSkillNormalDamageRate extends AttributeSkillBase
     public String getDescription() {
         return "攻击倍率" + ": " + normal_damage_rate;
     }
+
+    @Override
+    public String getDetailDescription() {
+        return "";
+    }
+
 }

@@ -1,8 +1,10 @@
 package com.xwm.magicmaid.object.item;
 
 import com.xwm.magicmaid.Main;
+import com.xwm.magicmaid.object.item.interfaces.ICanGetSkillPoint;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
@@ -12,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public class ItemHolyStone extends ItemBase
+public class ItemHolyStone extends ItemBase implements ICanGetSkillPoint
 {
     public ItemHolyStone(String name) {
         super(name);
@@ -67,5 +69,10 @@ public class ItemHolyStone extends ItemBase
     public boolean hasEffect(ItemStack stack)
     {
         return stack.getItemDamage() > 0 || stack.isItemEnchanted();
+    }
+
+    @Override
+    public int getSkillPoint(ItemStack stack, EntityPlayer player) {
+        return 5;
     }
 }

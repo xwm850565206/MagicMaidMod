@@ -48,6 +48,7 @@ public class ItemSkillBook extends ItemBase implements ICanGetSkillPoint
                 if (describeElements.length < 3)
                     continue;
                 if (describeElements[0].equals("perform") && !describeElements[1].equals("unreachable"))
+//                if (describeElements[0].equals("perform"))
                 {
                     ItemStack stack = new ItemStack(this);
                     ItemSkillBook.setSkill(stack, skillName);
@@ -72,7 +73,19 @@ public class ItemSkillBook extends ItemBase implements ICanGetSkillPoint
             tooltip.add("书页太过残破，无法从中学习到技能");
         }
         else {
-            tooltip.add("右键学习: " + TextFormatting.LIGHT_PURPLE + skill.getDescription());
+            String rarity = skill.getName().split("\\.")[1];
+            if (rarity.equals("normal")) {
+                tooltip.add("右键学习: " + TextFormatting.BLUE + skill.getDescription());
+            }
+            else if (rarity.equals("rare")) {
+                tooltip.add("右键学习: " + TextFormatting.LIGHT_PURPLE + skill.getDescription());
+            }
+            else if (rarity.equals("secret")) {
+                tooltip.add("右键学习: " + TextFormatting.DARK_RED + skill.getDescription());
+            }
+            else if (rarity.equals("unreachable")) {
+                tooltip.add("右键学习: " + TextFormatting.GREEN + skill.getDescription());
+            }
             tooltip.add("");
             tooltip.add("已学会的技能无法重复学习");
         }
@@ -155,6 +168,15 @@ public class ItemSkillBook extends ItemBase implements ICanGetSkillPoint
 
     @Override
     public int getSkillPoint(ItemStack stack, EntityPlayer player) {
-        return 5000;
+        ISkill skill = getSkill(stack);
+        if (skill == null)
+            return 200;
+        else if (skill.getName().split("\\.")[1].equals("normal"))
+            return 1500;
+        else if (skill.getName().split("\\.")[1].equals("rare"))
+            return 5000;
+        else if (skill.getName().split("\\.")[1].equals("secret"))
+            return 9000;
+        return 1000;
     }
 }

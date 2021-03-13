@@ -36,7 +36,9 @@ public class IMagicCreatureManagerImpl implements IMagicCreatureManager {
 
     @Override
     public void setDead(AbstractEntityMagicCreature creature) {
+        float j = creature.getHealth();
         creature.setHealth(0);
+        float i = creature.getHealth();
         creature.setDead();
     }
 

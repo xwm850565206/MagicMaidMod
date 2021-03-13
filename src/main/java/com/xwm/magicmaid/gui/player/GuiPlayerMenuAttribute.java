@@ -102,7 +102,6 @@ public class GuiPlayerMenuAttribute extends GuiScreen
                     currPage--;
                     setLevelUpButtonEnable(true);
                 }
-
             }
             else if (button.id == 5) {
                 if (currPage < skillPages.size() - 1) {
@@ -110,7 +109,6 @@ public class GuiPlayerMenuAttribute extends GuiScreen
                     currPage++;
                     setLevelUpButtonEnable(true);
                 }
-
             }
             else if (button.id > 5){
                 List<GuiSkillButton> skillButtons = skillPages.get(currPage);

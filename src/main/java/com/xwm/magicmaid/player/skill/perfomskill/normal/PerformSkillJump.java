@@ -1,4 +1,4 @@
-package com.xwm.magicmaid.player.skill.perfomskill;
+package com.xwm.magicmaid.player.skill.perfomskill.normal;
 
 import com.xwm.magicmaid.event.SkillPerformEvent;
 import com.xwm.magicmaid.player.skill.IPerformSkill;
@@ -6,75 +6,61 @@ import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.MobEffects;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
-public class PerformSkillBoost extends PerformSkillBase
+import java.util.Random;
+
+public class PerformSkillJump extends PerformSkillNormalBase
 {
     private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.MODID, "textures/gui/icon/skill_icon.png");
+    Random random = new Random();
 
     @Override
     public int getPerformEnergy() {
-        return 100 * level;
-    }
-
-    @Override
-    public int getColdTime() {
         return 200;
     }
 
     @Override
-    public void perform(EntityLivingBase playerIn, World worldIn, BlockPos posIn) {
+    public int getColdTime() {
+        return 90 - 30 * level;
+    }
 
+    @Override
+    public void perform(EntityLivingBase playerIn, World worldIn, BlockPos posIn) {
         if (curColdTime > 0) return;
         if (MinecraftForge.EVENT_BUS.post(new SkillPerformEvent<IPerformSkill>(this, playerIn, posIn))) return;
         if (!consumEnergy(playerIn, worldIn, posIn)) return;
 
-        if (getLevel() >= 0)
-        {
-            playerIn.addPotionEffect(new PotionEffect(MobEffects.SPEED, 120, 1 + getLevel()));
-        }
+        if (worldIn.isRemote) {
+            playerIn.addVelocity(0, 0.5, 0);
+            for (int i = 0; i < 5; i++)
+                worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, playerIn.posX + random.nextDouble(), playerIn.posY + playerIn.height / 2.0 + random.nextDouble(), playerIn.posZ + random.nextDouble(), 0.1*(random.nextDouble()-0.5), 0.1*random.nextDouble(), 0.1*(random.nextDouble()-0.5));
 
-        if (getLevel() >= 1)
-        {
-            playerIn.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 120, 1 + getLevel()));
         }
-
-        if (getLevel() >= 2)
-        {
-            playerIn.addPotionEffect(new PotionEffect(MobEffects.HEALTH_BOOST, 120, 1 + getLevel()));
-        }
-
-        if (getLevel() >= 3)
-        {
-            playerIn.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 120, 1 + getLevel()));
-        }
-
         curColdTime = getColdTime();
     }
 
     @Override
     public int getRequirePoint() {
-        return getLevel() < getMaxLevel() ? 1000 * level * level : -1;
+        return getLevel() < getMaxLevel() ? 1000 * getLevel() : -1;
     }
 
     @Override
     public String getName() {
-        return super.getName() + ".rare.boost";
+        return super.getName() + ".jump";
     }
 
     @Override
     public String getDescription() {
-        return "潜能激发";
+        return "上升";
     }
 
     @Override
     public void drawIcon(int x, int y, float scale) {
-        // 134 48 46 46
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
 
         double scalex = 46.0 / 46.0;
@@ -85,7 +71,12 @@ public class PerformSkillBoost extends PerformSkillBase
         GlStateManager.scale(scalex, scaley, 1);
         GlStateManager.scale(scale, scale, 1);
 
-        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 134, 48, 46, 46);
+        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 134, 140, 46, 46);
         GlStateManager.popMatrix();
     }
+    @Override
+    public String getDetailDescription() {
+        return "向上升起一小段距离\n升级会降低技能冷却";
+    }
+
 }

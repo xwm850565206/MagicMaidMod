@@ -4,10 +4,7 @@ package com.xwm.magicmaid.entity.mob.maid;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.xwm.magicmaid.Main;
-import com.xwm.magicmaid.entity.ai.EntityAIMagicCreatureOwerHurtTarget;
-import com.xwm.magicmaid.entity.ai.EntityAIMagicCreatureOwnerHurtByTarget;
-import com.xwm.magicmaid.entity.ai.EntityAIMaidFollow;
-import com.xwm.magicmaid.entity.ai.EntityAINearestAttackableTargetAvoidOwner;
+import com.xwm.magicmaid.entity.ai.*;
 import com.xwm.magicmaid.entity.mob.basic.EntityEquipmentCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityTameableCreature;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
@@ -58,7 +55,7 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
     public EntityMagicMaid(World worldIn)
     {
         super(worldIn);
-        this.setSize(0.6F, 1.2F);
+        this.setSize(0.6F, 1.6F);
     }
 
     @Override
@@ -76,6 +73,7 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
         this.targetTasks.addTask(2, new EntityAINearestAttackableTargetAvoidOwner(this, EntityMob.class, true, new EnemySelect(this)));
         this.targetTasks.addTask(1, new EntityAIMagicCreatureOwnerHurtByTarget(this));
         this.targetTasks.addTask(2, new EntityAIMagicCreatureOwerHurtTarget(this));
+        this.targetTasks.addTask(3, new EntityAIMagicTameableHurtByTarget(this, false, new Class[0]));
     }
 
     @Override
@@ -153,9 +151,15 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
     {
         super.onLivingUpdate();
 
-        // 版本6.5，拔刀剑攻击女仆(因为没继承原版的宠物类)，女仆会攻击主人(原因不明)，修改为在待命和服侍模式下把攻击目标清空
-        if (this.getAttackTarget() != null && (!this.isEnemy(this.getAttackTarget()) || EnumMode.valueOf(this.getMode()) == EnumMode.SITTING || EnumMode.valueOf(this.getMode()) == EnumMode.SERVE))
+        // 版本6.5，拔刀剑攻击女仆(因为没继承原版的宠物类)，女仆会攻击主人(原版的受击反击ai的问题)，修改为在待命和服侍模式下把攻击目标清空
+        if (EnumMode.valueOf(this.getMode()) == EnumMode.SITTING || EnumMode.valueOf(this.getMode()) == EnumMode.SERVE) {
+            this.setRevengeTarget(null);
             this.setAttackTarget(null);
+        }
+
+        if (this.hasOwner() &&  this.getAttackTarget() != null && this.getOwnerID().equals(this.getAttackTarget().getUniqueID()))
+            this.setAttackTarget(null);
+
         if (hasWeapon() && !(this instanceof EntityMagicMaidRett)){
             if (weapon == null)
                 weapon = EntityMaidWeapon.getWeaponFromUUID(world, getWeaponID());

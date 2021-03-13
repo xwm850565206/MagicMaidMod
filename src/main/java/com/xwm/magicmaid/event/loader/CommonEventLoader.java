@@ -13,6 +13,7 @@ import com.xwm.magicmaid.manager.ISkillManagerImpl;
 import com.xwm.magicmaid.player.capability.*;
 import com.xwm.magicmaid.player.skill.IAttributeSkill;
 import com.xwm.magicmaid.player.skill.IPerformSkill;
+import com.xwm.magicmaid.registry.MagicSkillRegistry;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -38,7 +39,9 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -68,10 +71,6 @@ public class CommonEventLoader
             if (event.getObject() instanceof EntityPlayer && !event.getObject().hasCapability(CapabilityLoader.SKILL_CAPABILITY, null)) {
                 ICapabilitySerializable<NBTTagCompound> provider = new CapabilitySkill.Provider();
                 event.addCapability(new ResourceLocation(Reference.MODID + ":" + "magic_skill"), provider);
-                ISkillCapability skillCapability = provider.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
-                for (IAttributeSkill skill : skillCapability.getAttributeSkills()) {
-                    MinecraftForge.EVENT_BUS.post(new SkillLevelUpEvent<IAttributeSkill>(skill, (EntityPlayer) event.getObject()));
-                }
             }
         }
     }
@@ -163,6 +162,10 @@ public class CommonEventLoader
     @SubscribeEvent
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event)
     {
+        ISkillCapability skillCapability = event.player.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
+        for (IAttributeSkill skill : skillCapability.getAttributeSkills()) {
+            MinecraftForge.EVENT_BUS.post(new SkillLevelUpEvent.Post(skill, event.player));
+        }
         ISkillManagerImpl.getInstance().updateToClient(event.player);
         IMagicCreatureManagerImpl.getInstance().updateToClient(event.player);
     }
@@ -263,7 +266,10 @@ public class CommonEventLoader
 
     }
 
-
+    /**
+     * 给终焉记事，更新技能和属性，给礼物技能
+     * @param event
+     */
     @SubscribeEvent
     public void onPlayerLoggin(PlayerEvent.PlayerLoggedInEvent event)
     {
@@ -272,10 +278,29 @@ public class CommonEventLoader
         if (!world.isRemote) {
             if (player.getHeldItemOffhand().isEmpty())
                 player.setHeldItem(EnumHand.OFF_HAND, new ItemStack(ItemInit.ITEME_INSTRUCCTION_BOOK));
-            else {
+            else if (player.getHeldItemOffhand().getItem() != ItemInit.ITEME_INSTRUCCTION_BOOK){
                 EntityItem entityItem = new EntityItem(player.getEntityWorld(), player.posX, player.posY, player.posZ, new ItemStack(ItemInit.ITEME_INSTRUCCTION_BOOK));
                 world.spawnEntity(entityItem);
             }
+
+            ISkillCapability skillCapability = event.player.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
+            for (IAttributeSkill skill : skillCapability.getAttributeSkills()) {
+                MinecraftForge.EVENT_BUS.post(new SkillLevelUpEvent.Post(skill, event.player));
+            }
+
+            // todo 暂时只能给主动技能，之后可以改成根据名字判断，然后给对应的技能
+            for (ModContainer modContainer : Loader.instance().getModList()) {
+                String modid = modContainer.getModId();
+                if (MagicSkillRegistry.GIFTED_MAP.containsKey(modid)) {
+                    String giftedSkillName = MagicSkillRegistry.GIFTED_MAP.get(modid);
+                    if (skillCapability.getPerformSkill(giftedSkillName) == null || skillCapability.getPerformSkill(giftedSkillName).equals(MagicSkillRegistry.PERFORM_SKILL_NONE))
+                    {
+                        skillCapability.setPerformSkill(giftedSkillName, (IPerformSkill) MagicSkillRegistry.getSkill(giftedSkillName));
+                    }
+                }
+            }
+
+            IMagicCreatureManagerImpl.getInstance().updateToClient(player);
             ISkillManagerImpl.getInstance().updateToClient(player);
         }
     }

@@ -45,21 +45,23 @@ public class WorldGeneratorSkillHut extends WorldGenerator
         TemplateManager manager = worldServer.getStructureTemplateManager();
         ResourceLocation location = new ResourceLocation(Reference.MODID , structureName);
         Template template = manager.get(worldServer.getMinecraftServer(), location);
-
         if (template != null)
         {
             IBlockState state = world.getBlockState(pos);
             world.notifyBlockUpdate(pos, state, state, 3);
-
+            Rotation rotation = Rotation.values()[random.nextInt(4)];
+            if (structureName.startsWith("hut/desert_secret_hut"))
+                rotation = Rotation.values()[0];
             PlacementSettings settings = new PlacementSettings().setMirror(Mirror.NONE).
                     setIgnoreEntities(false).
-                    setRotation(Rotation.values()[random.nextInt(4)]).
+                    setRotation(rotation).
                     setChunk(world.getChunkFromBlockCoords(pos).getPos());
 
             List<ISkill> skillList = getSkillList();
-
+            BlockPos sizePos = template.getSize();
+            sizePos = Template.transformedBlockPos(settings, sizePos);
             SkillHutTemplate hutTemplate = new SkillHutTemplate(skillList, template, pos, settings);
-            hutTemplate.addComponentParts(world, random, new StructureBoundingBox(pos.getX(), pos.getZ(), pos.getX() + template.getSize().getX(), pos.getZ() + template.getSize().getZ()));
+            hutTemplate.addComponentParts(world, random, new StructureBoundingBox(pos.getX(), pos.getZ(), pos.getX() + sizePos.getX(), pos.getZ() + sizePos.getZ()));
         }
     }
 

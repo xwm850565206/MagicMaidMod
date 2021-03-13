@@ -17,7 +17,6 @@ import org.apache.logging.log4j.Logger;
 @Mod(modid = Reference.MODID, name = Reference.NAME, version = Reference.VERSION)
 public class Main
 {
-
     public static Logger logger;
 
     @Mod.Instance(Reference.MODID)

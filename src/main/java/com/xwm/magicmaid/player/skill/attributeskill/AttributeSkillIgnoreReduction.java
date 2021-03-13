@@ -72,4 +72,9 @@ public class AttributeSkillIgnoreReduction extends AttributeSkillBase
         return "减伤无视" + ": " + ignore_reduction;
     }
 
+    @Override
+    public String getDetailDescription() {
+        return "";
+    }
+
 }

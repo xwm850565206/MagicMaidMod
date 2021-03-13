@@ -47,6 +47,8 @@ public class GuiInstructionBook extends GuiScreen
     private final int bookImageHeight = 216;
     private int bookTotalPages = 1;
     private int currPage;
+    private Map<String, Integer> catalogIndexMap; // 储存标题对应的页码
+    private List<String> catalogList;  // 储存标题
     private List<List<InstructElement>> bookPages;
     private List<InstructElement> cachedComponents;
     private GuiInstructionBook.NextPageButton buttonNextPage;
@@ -54,19 +56,26 @@ public class GuiInstructionBook extends GuiScreen
 
     public GuiInstructionBook() {
         this.bookPages = new ArrayList<>();
+        this.catalogIndexMap = new HashMap<>();
+        this.catalogList = new ArrayList<>();
+
     }
 
     public void initGui()
     {
         this.buttonList.clear();
         this.bookPages.clear();
-        int i = (this.width - this.bookImageWidth) / 2 + bookImageWidth / 2;
-        this.buttonNextPage = this.addButton(new GuiInstructionBook.NextPageButton(0, i + 30, bookImageHeight - 20, true));
-        this.buttonPreviousPage = this.addButton(new GuiInstructionBook.NextPageButton(1, i - 30, bookImageHeight - 20, false));
-
+        this.catalogIndexMap.clear();
+        this.catalogList.clear();
+        int i = (this.width - this.bookImageWidth) / 2 + bookImageWidth / 2 - 12;
+        this.buttonNextPage = this.addButton(new GuiInstructionBook.NextPageButton(0, i + 50, bookImageHeight - 20, true));
+        this.buttonPreviousPage = this.addButton(new GuiInstructionBook.NextPageButton(1, i, bookImageHeight - 20, false));
         initContent();
-
+        for (int t = 0; t < catalogList.size(); t++)
+            this.addButton(new GuiButton(2+t, 5, 20 + t * 20, 40, 20, catalogList.get(t)));
         bookTotalPages = bookPages.size();
+
+        this.updateScreen();
     }
 
     private void initContent()
@@ -86,6 +95,8 @@ public class GuiInstructionBook extends GuiScreen
              }
 
             //从json中读入
+            catalogIndexMap.put("公告", 0);
+            catalogList.add("公告");
             JsonArray jsonArray = gson.fromJson(s.toString(), JsonArray.class);
             for (int i = 0; i < jsonArray.size(); i++)
             {
@@ -97,12 +108,20 @@ public class GuiInstructionBook extends GuiScreen
                     InstructElement element = InstructElement.create(rawInstructElement, this.bookImageWidth - 60, this.fontRenderer);
                     instructElements.add(element);
 
-//                    System.out.println(element.toString());
+                    // 第一次出现的title就添加到目录
+                    if (element instanceof TitleElement)
+                    {
+                        if (!catalogIndexMap.containsKey(element.getNameCached().getFormattedText())){
+                            catalogIndexMap.put(element.getNameCached().getFormattedText(), bookPages.size());
+                            catalogList.add(element.getNameCached().getFormattedText());
+                        }
+                    }
                 }
                 bookPages.add(instructElements);
             }
             // 读取formula 和 recipe
-
+            catalogIndexMap.put("石板公式", bookPages.size());
+            catalogList.add("石板公式");
             HashMap<ResourceLocation, Formula> formulaMap = MagicFormulaRegistry.getFormulaMap();
             List<InstructElement> instructElements = new ArrayList<InstructElement>(){{add(new TitleElement(EnumInstructElement.TITLE, new TextComponentString("石板公式")));}};
             int i = 0;
@@ -127,18 +146,13 @@ public class GuiInstructionBook extends GuiScreen
             {
                 bookPages.add(instructElements);
             }
-//            HashMap<ResourceLocation, Formula> formulaMap = MagicFormulaRegistry.getFormulaMap();
-//            Iterator<Formula> iterator = formulaMap.values().iterator();
-//            while (iterator.hasNext())
-//            {
-//                Formula formula = iterator.next();
-//                System.out.println(formula.toString());
-//            }
 
         } catch (IOException e) {
             bookPages.add(Lists.newArrayList(new InstructElement(EnumInstructElement.CONTENT, new TextComponentString("读取说明书出错"))));
+            e.printStackTrace();
         } catch (Exception e) {
             bookPages.add(Lists.newArrayList(new InstructElement(EnumInstructElement.CONTENT, new TextComponentString("一个未知错误导致读取说明书失败"))));
+            e.printStackTrace();
         }
     }
 
@@ -170,6 +184,9 @@ public class GuiInstructionBook extends GuiScreen
                     --this.currPage;
                 }
             }
+            else {
+                this.currPage = catalogIndexMap.get(catalogList.get(button.id - 2));
+            }
         }
     }
 
@@ -179,7 +196,7 @@ public class GuiInstructionBook extends GuiScreen
      */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        int i = (this.width - this.bookImageWidth) / 2;
+        int i = 20 + (this.width - this.bookImageWidth) / 2;
         int j = 2;
 
         //画背景
@@ -236,7 +253,8 @@ public class GuiInstructionBook extends GuiScreen
     private int drawInstructionEntry(InstructElement instructElement, int x, int y)
     {
         EnumInstructElement enumInstructElement = instructElement.type;
-        RenderHelper.enableGUIStandardItemLighting();
+//        RenderHelper.enableGUIStandardItemLighting();
+//        RenderHelper.enableStandardItemLighting();
         switch (enumInstructElement)
         {
             case NONE:
@@ -259,6 +277,7 @@ public class GuiInstructionBook extends GuiScreen
                 GlStateManager.enableRescaleNormal();
                 GlStateManager.enableBlend(); //Forge: Make sure blend is enabled else tabs show a white border.
                 GlStateManager.color(1, 1, 1, 1);
+                RenderHelper.enableGUIStandardItemLighting();
                 Item item = Item.getByNameOrId(itemElement.resourceLocation.toString());
                 this.itemRender.renderItemAndEffectIntoGUI(item == null ? ItemStack.EMPTY : new ItemStack(item), x - 3, y  + this.fontRenderer.FONT_HEIGHT / 2);
                 GlStateManager.disableRescaleNormal();
@@ -280,6 +299,7 @@ public class GuiInstructionBook extends GuiScreen
                 GlStateManager.translate((float)x + 5, (float)y + this.fontRenderer.FONT_HEIGHT, 50.0F);
                 GlStateManager.scale((float)(-1), (float)1, (float)1);
                 GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+                RenderHelper.enableGUIStandardItemLighting();
                 RenderHelper.enableStandardItemLighting();
                 mc.getTextureManager().bindTexture(MagicModelRegistry.getTexture(entityElement.getResourceLocation()));
                 ModelBase modelBase = MagicModelRegistry.getModel(entityElement.getResourceLocation());
@@ -323,23 +343,18 @@ public class GuiInstructionBook extends GuiScreen
                     System.out.println("formula error");
                     break;
                 }
+                RenderHelper.enableGUIStandardItemLighting();
                 GlStateManager.pushMatrix();
                 GlStateManager.enableRescaleNormal();
-
-//                GlStateManager.enableBlend();
-                GlStateManager.translate(x + 14, y + 2 * this.fontRenderer.FONT_HEIGHT, 0);
-                GlStateManager.scale(0.8, 0.8, 0);
+                GlStateManager.translate(x + 4, y + 2 * this.fontRenderer.FONT_HEIGHT, 0);
                 this.mc.getTextureManager().bindTexture(GuiMagicCircle.TEXTURE);
                 this.drawTexturedModalRect(0, 0, 0, 0, 170, 75);
-//                RenderHelper.enableStandardItemLighting();
                 for (int i = 0; i < allItems.size(); i++)
                 {
                     Vector2d vector2d = ContainerMagicCircle.SLOT_POSITION.get(i);
                     ItemStack stack = allItems.get(i);
                     this.itemRender.renderItemAndEffectIntoGUI(stack, (int)vector2d.x, (int)vector2d.y);
                 }
-//                RenderHelper.disableStandardItemLighting();
-//                GlStateManager.disableBlend();
                 GlStateManager.disableRescaleNormal();
                 GlStateManager.popMatrix();
                 return y + 2 * this.fontRenderer.FONT_HEIGHT + (int)(75 * 0.8);

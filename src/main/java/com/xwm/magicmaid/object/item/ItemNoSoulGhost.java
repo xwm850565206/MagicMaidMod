@@ -4,6 +4,7 @@ import com.xwm.magicmaid.Main;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAvoidThingCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityTameableCreature;
 import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
+import com.xwm.magicmaid.object.item.interfaces.ICanGetSkillPoint;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
 import com.xwm.magicmaid.util.Reference;
@@ -28,7 +29,7 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 import java.util.List;
 
-public class ItemNoSoulGhost extends ItemBase
+public class ItemNoSoulGhost extends ItemBase implements ICanGetSkillPoint
 {
     public ItemNoSoulGhost(String name) {
         super(name);
@@ -167,5 +168,10 @@ public class ItemNoSoulGhost extends ItemBase
                 compound1.setInteger("cold", cold);
             }
         }
+    }
+
+    @Override
+    public int getSkillPoint(ItemStack stack, EntityPlayer player) {
+        return 10;
     }
 }
