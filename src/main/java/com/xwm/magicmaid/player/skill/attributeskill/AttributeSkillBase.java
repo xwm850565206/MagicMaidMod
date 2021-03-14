@@ -34,7 +34,7 @@ public abstract class AttributeSkillBase implements IAttributeSkill
 
     @Override
     public int getRequirePoint() {
-        return getLevel() < getMaxLevel() ? 100 * level * level : -1;
+        return getLevel() < getMaxLevel() ? 500 * level : -1;
     }
 
     @Override

@@ -20,6 +20,8 @@ public class ItemObsession extends ItemBase implements ICanGetSkillPoint
     {
         tooltip.add(TextFormatting.YELLOW + "在那个黑暗的时代，仍不乏有纯粹的灵魂");
         tooltip.add(TextFormatting.YELLOW + "他们受到教会的审判后，灵魂不得解脱，化作执念");
+        tooltip.add("");
+        tooltip.add(TextFormatting.GREEN + "可以吸收点数: " + getSkillPoint(stack, null));
     }
 
     @Override

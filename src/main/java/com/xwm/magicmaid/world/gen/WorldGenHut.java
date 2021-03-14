@@ -121,7 +121,7 @@ public class WorldGenHut implements IWorldGenerator
         int maxHeight = 80;
         boolean flag = false;
         BlockPos position = new BlockPos(chunkX * 16, minHeight + random.nextInt(maxHeight - minHeight), chunkZ * 16);
-        if (random.nextFloat() <= 1 && chunkX % 2 == 0 && chunkZ % 2 == 0) {
+        if (random.nextFloat() <= 0.01 && chunkX % 2 == 0 && chunkZ % 2 == 0) {
             for (int i = 0; i < 8 && !flag; i++) {
                 for (int j = 0; j < 8 && !flag; j++) {
                     BlockPos pos = position.add(i, 0, j);

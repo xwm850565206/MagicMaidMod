@@ -18,6 +18,8 @@ public class ItemGhost extends ItemBase implements ICanGetSkillPoint
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn)
     {
         tooltip.add(TextFormatting.YELLOW + "逝者的灵魂，徘徊在彼岸");
+        tooltip.add("");
+        tooltip.add(TextFormatting.GREEN + "可以吸收点数: " + getSkillPoint(stack, null));
     }
 
     @Override

@@ -41,6 +41,9 @@ public class ItemHolyStone extends ItemBase implements ICanGetSkillPoint
     {
         tooltip.add(TextFormatting.YELLOW + "这块石头里蕴含着非凡的能量");
 
+        tooltip.add("");
+        tooltip.add(TextFormatting.GREEN + "可以吸收点数: " + getSkillPoint(stack, null));
+
         if (stack.getItemDamage() > 0)
         {
             int level = stack.getItemDamage();
@@ -73,6 +76,6 @@ public class ItemHolyStone extends ItemBase implements ICanGetSkillPoint
 
     @Override
     public int getSkillPoint(ItemStack stack, EntityPlayer player) {
-        return 5;
+        return 5 * stack.getItemDamage() * stack.getItemDamage();
     }
 }

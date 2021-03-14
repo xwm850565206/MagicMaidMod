@@ -20,6 +20,8 @@ public class ItemRemainingSoft extends ItemBase implements ICanGetSkillPoint
     {
         tooltip.add(TextFormatting.YELLOW + "残破的记忆中还有些许余温");
         tooltip.add(TextFormatting.YELLOW + "对女仆右键使用升阶");
+        tooltip.add("");
+        tooltip.add(TextFormatting.GREEN + "可以吸收点数: " + getSkillPoint(stack, null));
     }
 
     @Override

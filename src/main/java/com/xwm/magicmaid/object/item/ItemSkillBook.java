@@ -89,6 +89,9 @@ public class ItemSkillBook extends ItemBase implements ICanGetSkillPoint
             tooltip.add("");
             tooltip.add("已学会的技能无法重复学习");
         }
+
+        tooltip.add("");
+        tooltip.add(TextFormatting.GREEN + "可以吸收点数: " + getSkillPoint(stack, null));
     }
 
     @Override

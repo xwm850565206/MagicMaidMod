@@ -44,6 +44,8 @@ public class ItemNoSoulGhost extends ItemBase implements ICanGetSkillPoint
         if (metadata == 0) {
             tooltip.add(TextFormatting.YELLOW + "被提炼走灵魂的魂魄，是最好的容器");
             tooltip.add(TextFormatting.YELLOW + "左键来吸取宠物的灵魂");
+            tooltip.add("");
+            tooltip.add(TextFormatting.GREEN + "可以吸收点数: " + getSkillPoint(stack, null));
         }
 
         else

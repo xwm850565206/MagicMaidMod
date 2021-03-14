@@ -30,6 +30,8 @@ public class ItemLostKey extends ItemBase implements ICanGetSkillPoint
         tooltip.add(TextFormatting.YELLOW + "这把钥匙上,为什么会这样？");
         tooltip.add("");
         tooltip.add("可以用它右键记忆铜钟，来重置boss的击杀判定(用于解决无法召唤boss的问题)");
+        tooltip.add("");
+        tooltip.add(TextFormatting.GREEN + "可以吸收点数: " + getSkillPoint(stack, null));
     }
 
     public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)

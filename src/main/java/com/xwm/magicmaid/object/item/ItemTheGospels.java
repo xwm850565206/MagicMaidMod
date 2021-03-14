@@ -29,6 +29,8 @@ public class ItemTheGospels extends ItemBase implements ICanGetSkillPoint
     {
         tooltip.add(TextFormatting.YELLOW + "歌颂神的福音书，为什么会在僵尸身上？");
         tooltip.add(TextFormatting.YELLOW + "对废墟图腾右键将福音书的魔法元素注入");
+        tooltip.add("");
+        tooltip.add(TextFormatting.GREEN + "可以吸收点数: " + getSkillPoint(stack, null));
     }
 
 
