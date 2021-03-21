@@ -88,7 +88,7 @@ public class PerformSkillSteal extends PerformSkillSecretBase
     }
 
     @Override
-    public void drawIcon(int x, int y, float scale) {
+    public void drawIcon(float x, float y, float scale) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
 
         double scalex = 46.0 / 46.0;
@@ -99,7 +99,7 @@ public class PerformSkillSteal extends PerformSkillSecretBase
         GlStateManager.scale(scalex, scaley, 1);
         GlStateManager.scale(scale, scale, 1);
 
-        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 86, 141, 46, 46);
+        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 87, 141, 46, 46);
         GlStateManager.popMatrix();
     }
 

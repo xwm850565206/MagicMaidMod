@@ -48,7 +48,7 @@ public class GuiSkillHDU extends Gui
         GlStateManager.popMatrix();
         try {
             // 画技能
-            iSkill.drawIcon(this.x+3, this.y+3, scale);
+            iSkill.drawIcon(this.x+2.5f, this.y+2.5f, scale);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,7 +63,7 @@ public class GuiSkillHDU extends Gui
                     return;
                 double progress = ((IPerformSkill) iSkill).getCurColdTime() * 1.0 / ((IPerformSkill) iSkill).getColdTime();
                 GlStateManager.color(1, 1, 1, 0.8F);
-                this.drawTexturedModalRect((this.x + 3) / scale, (this.y + 3) / scale, 76, 166, 46, (int)(46 * progress));
+                this.drawTexturedModalRect((this.x + 2.5f) / scale, (this.y + 2.5f) / scale, 76, 166, 46, (int)(46 * progress));
             }
         } catch (Exception e) {
             e.printStackTrace();

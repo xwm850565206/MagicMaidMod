@@ -70,7 +70,7 @@ public class PerformSkillLightningMove extends PerformSkillRareBase
     }
 
     @Override
-    public void drawIcon(int x, int y, float scale) {
+    public void drawIcon(float x, float y, float scale) {
         // 134 48 46 46
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
 
@@ -82,7 +82,7 @@ public class PerformSkillLightningMove extends PerformSkillRareBase
         GlStateManager.scale(scalex, scaley, 1);
         GlStateManager.scale(scale, scale, 1);
 
-        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 182, 48, 46, 46);
+        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 181, 47, 46, 46);
         GlStateManager.popMatrix();
     }
 

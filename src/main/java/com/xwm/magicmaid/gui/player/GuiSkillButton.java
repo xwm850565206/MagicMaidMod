@@ -75,7 +75,7 @@ public class GuiSkillButton extends GuiButton
             this.drawTexturedModalRect(this.x, this.y, i, j, this.width, this.height);
 
             // 画技能
-            iSkill.drawIcon(this.x + 6, this.y + 6, 1.0f);
+            iSkill.drawIcon(this.x + 5, this.y + 5, 1.0f);
 
             // 画按钮
             mc.getTextureManager().bindTexture(GuiSkillButton.BUTTON);
@@ -130,7 +130,7 @@ public class GuiSkillButton extends GuiButton
             // 画技能
             GlStateManager.pushMatrix();
             GlStateManager.translate(0, 0, 50);
-            iSkill.drawIcon(this.x + 6, this.y + 6, 1.0f);
+            iSkill.drawIcon(this.x + 5, this.y + 5, 1.0f);
             GlStateManager.popMatrix();
 
             // 画等级

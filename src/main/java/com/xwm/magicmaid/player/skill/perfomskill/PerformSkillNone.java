@@ -90,7 +90,7 @@ public class PerformSkillNone implements IPerformSkill
     }
 
     @Override
-    public void drawIcon(int x, int y, float scale) {
+    public void drawIcon(float x, float y, float scale) {
 //        Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
 //
 //        double scalex = 24.0 / 60.0;

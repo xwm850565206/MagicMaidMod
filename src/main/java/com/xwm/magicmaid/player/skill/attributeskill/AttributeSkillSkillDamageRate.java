@@ -51,7 +51,7 @@ public class AttributeSkillSkillDamageRate extends AttributeSkillBase
     }
 
     @Override
-    public void drawIcon(int x, int y, float scale) {
+    public void drawIcon(float x, float y, float scale) {
         // 87 0 46 46
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
 

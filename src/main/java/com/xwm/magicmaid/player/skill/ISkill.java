@@ -68,5 +68,5 @@ public interface ISkill
      * 绘制技能图标
      */
     @SideOnly(Side.CLIENT)
-    void drawIcon(int x, int y, float scale);
+    void drawIcon(float x, float y, float scale);
 }

@@ -75,7 +75,7 @@ public class PerformSkillFireBall extends PerformSkillNormalBase
     }
 
     @Override
-    public void drawIcon(int x, int y, float scale) {
+    public void drawIcon(float x, float y, float scale) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
 
         double scalex = 46.0 / 46.0;
@@ -86,7 +86,7 @@ public class PerformSkillFireBall extends PerformSkillNormalBase
         GlStateManager.scale(scalex, scaley, 1);
         GlStateManager.scale(scale, scale, 1);
 
-        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 134, 187, 46, 46);
+        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 134, 188, 46, 46);
         GlStateManager.popMatrix();
     }
 

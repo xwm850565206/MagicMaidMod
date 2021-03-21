@@ -52,7 +52,7 @@ public class AttributeSkillMaxEnergy extends AttributeSkillBase
     }
 
     @Override
-    public void drawIcon(int x, int y, float scale) {
+    public void drawIcon(float x, float y, float scale) {
         // 87 45 46 46
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
 
@@ -64,7 +64,7 @@ public class AttributeSkillMaxEnergy extends AttributeSkillBase
         GlStateManager.scale(scalex, scaley, 1);
         GlStateManager.scale(scale, scale, 1);
 
-        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 87, 45, 46, 46);
+        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 87, 47, 46, 46);
         GlStateManager.popMatrix();
     }
 

@@ -51,7 +51,7 @@ public class AttributeSkillSkillSpeed extends AttributeSkillBase
     }
 
     @Override
-    public void drawIcon(int x, int y, float scale) {
+    public void drawIcon(float x, float y, float scale) {
         // 87 45 46 46
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
 
@@ -63,7 +63,7 @@ public class AttributeSkillSkillSpeed extends AttributeSkillBase
         GlStateManager.scale(scalex, scaley, 1);
         GlStateManager.scale(scale, scale, 1);
 
-        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 0, 171, 46, 46);
+        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 0, 169, 46, 46);
         GlStateManager.popMatrix();
     }
 

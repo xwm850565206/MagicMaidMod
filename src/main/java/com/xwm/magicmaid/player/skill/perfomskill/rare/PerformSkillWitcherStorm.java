@@ -72,7 +72,7 @@ public class PerformSkillWitcherStorm extends PerformSkillRareBase
     }
 
     @Override
-    public void drawIcon(int x, int y, float scale) {
+    public void drawIcon(float x, float y, float scale) {
         // 134 48 46 46
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
 
@@ -84,7 +84,7 @@ public class PerformSkillWitcherStorm extends PerformSkillRareBase
         GlStateManager.scale(scalex, scaley, 1);
         GlStateManager.scale(scale, scale, 1);
 
-        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 182, 189, 46, 46);
+        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, 181, 188, 46, 46);
         GlStateManager.popMatrix();
     }
 
