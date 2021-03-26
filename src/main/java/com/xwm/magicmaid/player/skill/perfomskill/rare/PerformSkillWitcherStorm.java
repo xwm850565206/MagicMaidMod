@@ -42,8 +42,8 @@ public class PerformSkillWitcherStorm extends PerformSkillRareBase
 
         else {
             double radius = 2.0f;
-            for (int i = 0; i < 4 * level; i++) {
-                double angle = i * (360 / (4*level));
+            for (int i = 0; i < 6 * level; i++) {
+                double angle = i * (360.0 / (6*level));
                 double tx = Math.sin(angle);
                 double tz = Math.cos(angle);
                 EntityWitherSkull witherSkull = new EntityWitherSkull(worldIn, playerIn, tx, 0, tz);

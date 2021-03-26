@@ -45,6 +45,7 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -88,6 +89,64 @@ public class ClientEventLoader
             return 120;
 
         return 120 - tick;
+    }
+
+    private void drawBlurBackground(float x, float y, float width, float height)
+    {
+        GlStateManager.pushMatrix();
+        GlStateManager.disableTexture2D();
+//        GlStateManager.disableLighting();
+        GlStateManager.enableBlend();
+        GlStateManager.enableAlpha();
+        GlStateManager.enableDepth();
+        GlStateManager.depthFunc(GL11.GL_LEQUAL);
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+
+//        GL11.glLineWidth(10f);
+//        GlStateManager.translate(0, 0, 50);
+//        Tessellator tessellator = Tessellator.getInstance();
+//        BufferBuilder bufferbuilder = tessellator.getBuffer();
+//        bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+//        bufferbuilder.pos(x, y, 0).color(1, 1, 1, 1).endVertex();
+//        bufferbuilder.pos(x+w, y, 0).color(1, 1, 1, 0).endVertex();
+//        bufferbuilder.pos(x+w, y+h, 0).color(1, 1, 1, 0).endVertex();
+//        bufferbuilder.pos(x, y+h, 0).color(1, 1, 1, 1).endVertex();
+//        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect();
+//        bufferbuilder.pos(0, 0, 0).color(1, 1, 1, 1).endVertex();
+//        bufferbuilder.pos(0+w, 0, 0).color(1, 1, 1, 1).endVertex();
+//        bufferbuilder.pos(0+w, 0+h, 0).color(1, 1, 1, 1).endVertex();
+//        bufferbuilder.pos(0, 0+h, 0).color(1, 1, 1, 1).endVertex();
+//        bufferbuilder.endVertex();
+//        tessellator.draw();
+
+//        int zLevel = 50;
+//        GlStateManager.color(1, 1, 1, 0.6f);
+//        Tessellator tessellator = Tessellator.getInstance();
+//        BufferBuilder bufferbuilder = tessellator.getBuffer();
+//        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR);
+//        bufferbuilder.pos((double)(x + 0), (double)(y + height), (double)zLevel).color(1F, 1F, 1F, 1F).endVertex();
+//        bufferbuilder.pos((double)(x + width), (double)(y + height), (double)zLevel).color(1F, 1F, 1F, 1F).endVertex();
+//        bufferbuilder.pos((double)(x + width), (double)(y + 0), (double)zLevel).color(1F, 1F, 1F, 1F).endVertex();
+//        bufferbuilder.pos((double)(x + 0), (double)(y + 0), (double)zLevel).color(1F, 1F, 1F, 1F).endVertex();
+//        tessellator.draw();
+//        bufferbuilder.pos(0.5, 0.5, -0.5).endVertex();
+//        bufferbuilder.pos(0.5, 0.5, 0.5).endVertex();
+//
+//        bufferbuilder.pos(0.5, -0.5, -0.5).endVertex();
+//        bufferbuilder.pos(0.5, -0.5, 0.5).endVertex();
+//
+//        bufferbuilder.pos(-0.5, -0.5, -0.5).endVertex();
+//        bufferbuilder.pos(-0.5, -0.5, 0.5).endVertex();
+//
+//        bufferbuilder.pos(-0.5, 0.5, -0.5).endVertex();
+//        bufferbuilder.pos(-0.5, 0.5, 0.5).endVertex();
+
+//        bufferbuilder.endVertex();
+//        tessellator.draw();
+//        GlStateManager.enableLighting();
+        GlStateManager.disableBlend();
+        GlStateManager.enableTexture2D();
+        GlStateManager.popMatrix();
     }
 
     /**
@@ -185,6 +244,21 @@ public class ClientEventLoader
         {
             Minecraft mc = Minecraft.getMinecraft();
             EntityPlayer player = mc.player;
+
+            // 画技能的背景
+            if (player.hasCapability(CapabilityLoader.SKILL_CAPABILITY, null))
+            {
+                ISkillCapability skillCapability = player.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
+                if (skillCapability != null)
+                {
+                    List<IPerformSkill> performSkills = skillCapability.getActivePerformSkills();
+                    for (int i = 0; i < performSkills.size(); i++) {
+                        drawBlurBackground(event.getResolution().getScaledWidth() - 60,event.getResolution().getScaledHeight() - 20 + ((i - performSkills.size()) * 30), 80, 40);
+                        i++;
+                    }
+                }
+            }
+
             // 画技能
             if (player.hasCapability(CapabilityLoader.SKILL_CAPABILITY, null))
             {
