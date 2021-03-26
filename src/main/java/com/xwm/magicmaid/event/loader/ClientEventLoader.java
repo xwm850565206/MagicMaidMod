@@ -19,7 +19,9 @@ import com.xwm.magicmaid.registry.MagicRenderRegistry;
 import com.xwm.magicmaid.registry.MagicSkillRegistry;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -74,6 +76,14 @@ public class ClientEventLoader
     /** toast的剩余tick **/
     public int toastTick = 0;
 
+    /** 绘制技能按键图标变量 **/
+    private static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation("textures/gui/widgets.png");
+
+
+    public ClientEventLoader() {
+
+    }
+
     public void toastMessage(String message, int tick) {
         this.toast = message;
         this.toastTick = tick;
@@ -102,50 +112,51 @@ public class ClientEventLoader
         GlStateManager.depthFunc(GL11.GL_LEQUAL);
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
-//        GL11.glLineWidth(10f);
-//        GlStateManager.translate(0, 0, 50);
-//        Tessellator tessellator = Tessellator.getInstance();
-//        BufferBuilder bufferbuilder = tessellator.getBuffer();
-//        bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-//        bufferbuilder.pos(x, y, 0).color(1, 1, 1, 1).endVertex();
-//        bufferbuilder.pos(x+w, y, 0).color(1, 1, 1, 0).endVertex();
-//        bufferbuilder.pos(x+w, y+h, 0).color(1, 1, 1, 0).endVertex();
-//        bufferbuilder.pos(x, y+h, 0).color(1, 1, 1, 1).endVertex();
-//        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect();
-//        bufferbuilder.pos(0, 0, 0).color(1, 1, 1, 1).endVertex();
-//        bufferbuilder.pos(0+w, 0, 0).color(1, 1, 1, 1).endVertex();
-//        bufferbuilder.pos(0+w, 0+h, 0).color(1, 1, 1, 1).endVertex();
-//        bufferbuilder.pos(0, 0+h, 0).color(1, 1, 1, 1).endVertex();
-//        bufferbuilder.endVertex();
-//        tessellator.draw();
+        GL11.glShadeModel(GL11.GL_SMOOTH);
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glColor4f(1, 1, 1, 0);
+        GL11.glVertex2d(x, y);
+        GL11.glColor4f(1, 1, 1, 0);
+        GL11.glVertex2d(x, y+height);
+        GL11.glColor4f(1, 1, 1, 0.6f);
+        GL11.glVertex2d(x+width/2, y+height);
+        GL11.glColor4f(1, 1, 1, 0.6f);
+        GL11.glVertex2d(x+width/2, y);
+        GL11.glEnd();
 
-//        int zLevel = 50;
-//        GlStateManager.color(1, 1, 1, 0.6f);
-//        Tessellator tessellator = Tessellator.getInstance();
-//        BufferBuilder bufferbuilder = tessellator.getBuffer();
-//        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR);
-//        bufferbuilder.pos((double)(x + 0), (double)(y + height), (double)zLevel).color(1F, 1F, 1F, 1F).endVertex();
-//        bufferbuilder.pos((double)(x + width), (double)(y + height), (double)zLevel).color(1F, 1F, 1F, 1F).endVertex();
-//        bufferbuilder.pos((double)(x + width), (double)(y + 0), (double)zLevel).color(1F, 1F, 1F, 1F).endVertex();
-//        bufferbuilder.pos((double)(x + 0), (double)(y + 0), (double)zLevel).color(1F, 1F, 1F, 1F).endVertex();
-//        tessellator.draw();
-//        bufferbuilder.pos(0.5, 0.5, -0.5).endVertex();
-//        bufferbuilder.pos(0.5, 0.5, 0.5).endVertex();
-//
-//        bufferbuilder.pos(0.5, -0.5, -0.5).endVertex();
-//        bufferbuilder.pos(0.5, -0.5, 0.5).endVertex();
-//
-//        bufferbuilder.pos(-0.5, -0.5, -0.5).endVertex();
-//        bufferbuilder.pos(-0.5, -0.5, 0.5).endVertex();
-//
-//        bufferbuilder.pos(-0.5, 0.5, -0.5).endVertex();
-//        bufferbuilder.pos(-0.5, 0.5, 0.5).endVertex();
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glColor4f(1, 1, 1, 0.6f);
+        GL11.glVertex2d(x+width/2, y);
+        GL11.glColor4f(1, 1, 1, 0.6f);
+        GL11.glVertex2d(x+width/2, y+height);
+        GL11.glColor4f(1, 1, 1, 0);
+        GL11.glVertex2d(x+width, y+height);
+        GL11.glColor4f(1, 1, 1, 0);
+        GL11.glVertex2d(x+width, y);
+        GL11.glEnd();
 
-//        bufferbuilder.endVertex();
-//        tessellator.draw();
-//        GlStateManager.enableLighting();
         GlStateManager.disableBlend();
+        GlStateManager.disableAlpha();
         GlStateManager.enableTexture2D();
+
+        GlStateManager.popMatrix();
+    }
+
+    // 技能按键图标
+    private void drawSkillPerformButtion(float x, float y, String key) {
+        int width = 20;
+        int height = 20;
+        Minecraft mc = Minecraft.getMinecraft();
+        FontRenderer fontrenderer = mc.fontRenderer;
+        mc.getTextureManager().bindTexture(BUTTON_TEXTURES);
+        GlStateManager.pushMatrix();
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.translate(0, 0, 100);
+        GlStateManager.color(1, 1, 1);
+        RenderHelper.disableStandardItemLighting();
+        mc.ingameGUI.drawTexturedModalRect(x, y, 0, 66, width, height);
+        mc.ingameGUI.drawTexturedModalRect(x + width / 2.0f, y, 200 - width / 2, 66, width / 2, height);
+        mc.ingameGUI.drawCenteredString(fontrenderer, key, (int)x + width / 2, (int)y + (height - 8) / 2, 14737632);
         GlStateManager.popMatrix();
     }
 
@@ -253,8 +264,11 @@ public class ClientEventLoader
                 {
                     List<IPerformSkill> performSkills = skillCapability.getActivePerformSkills();
                     for (int i = 0; i < performSkills.size(); i++) {
-                        drawBlurBackground(event.getResolution().getScaledWidth() - 60,event.getResolution().getScaledHeight() - 20 + ((i - performSkills.size()) * 30), 80, 40);
-                        i++;
+                        drawBlurBackground(event.getResolution().getScaledWidth() - 70,event.getResolution().getScaledHeight() - 19 + ((i - performSkills.size()) * 30), 100, 26);
+                    }
+                    for (int i = 0; i < performSkills.size(); i++) {
+                        String key = i == 0 ? KeyLoader.SKILL_1.getDisplayName() : KeyLoader.SKILL_2.getDisplayName();
+                        drawSkillPerformButtion(event.getResolution().getScaledWidth() - 55, event.getResolution().getScaledHeight() - 16 + ((i - performSkills.size()) * 30), key);
                     }
                 }
             }
@@ -271,7 +285,7 @@ public class ClientEventLoader
                         skillHDUList = new ArrayList<>();
                         int i = 0;
                         for (IPerformSkill performSkill : performSkills) {
-                            skillHDUList.add(new GuiSkillHDU(performSkill, event.getResolution().getScaledWidth() - 30, event.getResolution().getScaledHeight() - 10 + ((i - performSkills.size()) * 30)));
+                            skillHDUList.add(new GuiSkillHDU(performSkill, event.getResolution().getScaledWidth() - 30, event.getResolution().getScaledHeight() - 20 + ((i - performSkills.size()) * 30)));
                             i++;
                         }
                         skillListDirt = false;
@@ -298,8 +312,8 @@ public class ClientEventLoader
                     double energy = creatureCapability.getEnergy();
                     double progress = energy / creatureCapability.getMaxEnergy();
                     mc.getTextureManager().bindTexture(BACKGROUND);
-                    mc.ingameGUI.drawTexturedModalRect(event.getResolution().getScaledWidth() - 65, event.getResolution().getScaledHeight() - 15, 0, 225, 61, 11);
-                    mc.ingameGUI.drawTexturedModalRect(event.getResolution().getScaledWidth() - 65 + 3, event.getResolution().getScaledHeight() - 15 + 3, 0,236, (int) (55 * progress), 5);
+                    mc.ingameGUI.drawTexturedModalRect(event.getResolution().getScaledWidth() - 62, event.getResolution().getScaledHeight() - 15, 0, 225, 61, 11);
+                    mc.ingameGUI.drawTexturedModalRect(event.getResolution().getScaledWidth() - 62 + 3, event.getResolution().getScaledHeight() - 15 + 3, 0,236, (int) (55 * progress), 5);
                 }
             }
 

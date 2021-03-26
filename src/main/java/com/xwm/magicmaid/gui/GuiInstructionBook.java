@@ -44,7 +44,7 @@ public class GuiInstructionBook extends GuiScreen
 {
     private static final ResourceLocation BOOK_GUI_TEXTURES = new ResourceLocation("minecraft:textures/gui/book.png");
     private final int bookImageWidth = 384;
-    private final int bookImageHeight = 216;
+    private final int bookImageHeight = 236;
     private int bookTotalPages = 1;
     private int currPage;
     private Map<String, Integer> catalogIndexMap; // 储存标题对应的页码
@@ -67,12 +67,12 @@ public class GuiInstructionBook extends GuiScreen
         this.bookPages.clear();
         this.catalogIndexMap.clear();
         this.catalogList.clear();
-        int i = (this.width - this.bookImageWidth) / 2 + bookImageWidth / 2 - 12;
-        this.buttonNextPage = this.addButton(new GuiInstructionBook.NextPageButton(0, i + 50, bookImageHeight - 20, true));
-        this.buttonPreviousPage = this.addButton(new GuiInstructionBook.NextPageButton(1, i, bookImageHeight - 20, false));
+        int i = 20 + (this.width - this.bookImageWidth) / 2;
+        this.buttonNextPage = this.addButton(new GuiInstructionBook.NextPageButton(0, i + this.bookImageWidth - 23 - 65, bookImageHeight - 15, true));
+        this.buttonPreviousPage = this.addButton(new GuiInstructionBook.NextPageButton(1, i + 65 , bookImageHeight - 15, false));
         initContent();
         for (int t = 0; t < catalogList.size(); t++)
-            this.addButton(new GuiButton(2+t, 5, 20 + t * 20, 40, 20, catalogList.get(t)));
+            this.addButton(new GuiButton(2+t, 20 + (this.width - this.bookImageWidth) / 2 - 40, 20 + t * 20, 40, 20, catalogList.get(t)));
         bookTotalPages = bookPages.size();
 
         this.updateScreen();

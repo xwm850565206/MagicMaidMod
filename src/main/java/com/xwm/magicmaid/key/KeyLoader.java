@@ -16,5 +16,7 @@ public class KeyLoader
         KeyLoader.SKILL_1 = new KeyBinding("key.magic_maid.skill_1", Keyboard.KEY_R, "key.categories.magic_maid");
         KeyLoader.SKILL_2 = new KeyBinding("key.magic_maid.skill_2", Keyboard.KEY_T, "key.categories.magic_maid");
         ClientRegistry.registerKeyBinding(KeyLoader.OPEN_MENU);
+        ClientRegistry.registerKeyBinding(KeyLoader.SKILL_1);
+        ClientRegistry.registerKeyBinding(KeyLoader.SKILL_2);
     }
 }

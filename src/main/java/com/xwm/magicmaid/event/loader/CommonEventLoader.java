@@ -181,10 +181,10 @@ public class CommonEventLoader
         PotionEffect effect = player.getActivePotionEffect(PotionInit.WISE_BLESS_EFFECT);
         if (effect != null && effect.getDuration() > 1)
         {
-            if (!player.capabilities.isFlying) {
+            if (!player.capabilities.allowFlying) {
                 player.capabilities.allowFlying = true;
-                player.motionY += 1.0;
-                player.capabilities.isFlying = true;
+//                player.motionY += 1.0;
+//                player.capabilities.isFlying = true;
             }
         }
         else if (effect != null && effect.getDuration() == 1){
@@ -214,6 +214,7 @@ public class CommonEventLoader
             }
         }
     }
+
 
     /**
      * 掉落福音书 遗失之匙的逻辑
@@ -302,6 +303,21 @@ public class CommonEventLoader
 
             IMagicCreatureManagerImpl.getInstance().updateToClient(player);
             ISkillManagerImpl.getInstance().updateToClient(player);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event)
+    {
+        EntityPlayer player = event.player;
+        if (player.hasCapability(CapabilityLoader.SKILL_CAPABILITY, null))
+        {
+           ISkillManagerImpl.getInstance().updateToClient(player);
+        }
+
+        if (player.hasCapability(CapabilityLoader.CREATURE_CAPABILITY, null))
+        {
+            IMagicCreatureManagerImpl.getInstance().updateToClient(player);
         }
     }
 

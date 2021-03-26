@@ -93,4 +93,9 @@ splash_potion.effect.ghost=喷溅型亡魂水
 lingering_potion.effect.ghost=滞留型亡魂水
 tipped_arrow.effect.ghost=亡魂之箭
 
+key.categories.magic_maid=魔法女仆
+key.magic_maid.open=打开菜单
+key.magic_maid.skill_1=技能1
+key.magic_maid.skill_2=技能2
+
 itemGroup.creative_tab_maid=魔法女仆
