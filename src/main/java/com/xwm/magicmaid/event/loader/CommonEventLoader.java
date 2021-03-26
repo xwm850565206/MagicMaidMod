@@ -183,6 +183,7 @@ public class CommonEventLoader
         {
             if (!player.capabilities.allowFlying) {
                 player.capabilities.allowFlying = true;
+                //  note: 7.5版本，修改强制飞行
 //                player.motionY += 1.0;
 //                player.capabilities.isFlying = true;
             }

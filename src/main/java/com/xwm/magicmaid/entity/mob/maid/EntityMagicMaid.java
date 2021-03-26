@@ -82,7 +82,7 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30000000298023224D);
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(20);
-        MagicCreatureUtils.setCreatureMaxHealth(this, 1000);
+        MagicCreatureUtils.setCreatureMaxHealth(this, 100);
     }
 
     @Override
@@ -166,6 +166,17 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
             if (weapon == null || weapon.isDead){
                 getEquipment(ItemEquipment.valueOf(EnumEquipment.valueOf(getWeaponType())));
             }
+        }
+    }
+
+    @Override
+    public void onEntityUpdate()
+    {
+        super.onEntityUpdate();
+
+        if (!world.isRemote && this.getTrueHealth() > 0){
+            if (this.isDead) this.isDead = false;
+            if (this.deathTime > 0) this.deathTime = 0;
         }
     }
 

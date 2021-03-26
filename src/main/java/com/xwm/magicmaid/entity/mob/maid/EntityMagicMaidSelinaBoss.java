@@ -27,7 +27,7 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
 {
     protected IMagicBossManager fightManager = null;
 
-    private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName().appendText(" 剩余血量: " + getHealth()), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenSky(false);
+    private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenSky(false);
     private int factor = 1;
 
     public EntityMagicMaidSelinaBoss(World worldIn) {
@@ -73,7 +73,7 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
             this.setInventorySlotContents(1, new ItemStack(ItemInit.ITEM_WISE));
         }
 
-        this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealth()));
+        this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));
         this.bossInfo.setPercent(getHealth() / getMaxHealth());
 
         if (fightManager != null)
@@ -232,4 +232,9 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
             NetworkLoader.instance.sendToAll(packet);
         }
     }
+
+    protected boolean shouldDropEquipment() {
+        return false;
+    }
+
 }

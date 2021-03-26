@@ -3,6 +3,7 @@ package com.xwm.magicmaid.entity.throwable;
 import com.xwm.magicmaid.entity.mob.basic.AbstractEntityMagicCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityEquipmentCreature;
+import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityMultiHealthCreature;
 import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import net.minecraft.entity.Entity;
@@ -95,6 +96,11 @@ public abstract class EntityBossBall extends EntityThrowable
             camp = ((IEntityBossCreature) entity).getBossCamp();
             if (camp == getCamp())
             {
+                if (entity instanceof IEntityMultiHealthCreature) {
+                    int healthBarNum = ((IEntityMultiHealthCreature) entity).getMaxHealthBarnum() / 4;
+                    int minus = ((IEntityMultiHealthCreature) entity).getHealthBarNum() - healthBarNum;
+                    ((IEntityMultiHealthCreature) entity).setHealthbarnum(Math.max(0, minus));
+                }
                 if (entity instanceof AbstractEntityMagicCreature) {
                     float f = ((AbstractEntityMagicCreature) entity).getMaxHealth() / 4;
                     IMagicCreatureManagerImpl.getInstance().attackEntityFrom((EntityLivingBase) entity, DamageSource.causeMobDamage(thrower), f);

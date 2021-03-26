@@ -28,7 +28,7 @@ public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements 
     protected IMagicBossManager fightManager = null;
     private int factor = 1;
 
-    private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName().appendText(" 剩余血量: " + getHealth()), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenSky(false);
+    private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenSky(false);
 
     public EntityMagicMaidMarthaBoss(World worldIn) {
         super(worldIn);
@@ -75,7 +75,7 @@ public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements 
             this.setInventorySlotContents(1, new ItemStack(ItemInit.ITEM_PROTECTOR));
         }
 
-        this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血量: " + getHealth()));
+        this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血量: " + getHealthBarNum()));
         this.bossInfo.setPercent(getHealth() / getMaxHealth());
 
 
@@ -233,4 +233,8 @@ public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements 
             NetworkLoader.instance.sendToAll(packet);
         }
     }
+    protected boolean shouldDropEquipment() {
+        return false;
+    }
+
 }

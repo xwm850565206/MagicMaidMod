@@ -7,12 +7,14 @@ import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.entity.SPacketEntityData;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
@@ -75,6 +77,13 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
         ItemStackHelper.loadAllItems(compound, this.inventory);
     }
 
+    @Override
+    public void onDeath(DamageSource cause)
+    {
+        super.onDeath(cause);
+        if (getTrueHealth() <= 0 && !world.isRemote && shouldDropEquipment())
+            InventoryHelper.dropInventoryItems(world, this, this);
+    }
 
     @Override
     public void setHasWeapon(boolean hasWeapon) {
@@ -306,6 +315,10 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
     @Override
     public void clear() {
         this.inventory.clear();
+    }
+
+    protected boolean shouldDropEquipment() {
+        return true;
     }
 
 }
