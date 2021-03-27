@@ -2,6 +2,7 @@ package com.xwm.magicmaid.object.item;
 
 import com.xwm.magicmaid.Main;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAvoidThingCreature;
+import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityRankCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityTameableCreature;
 import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.object.item.interfaces.ICanGetSkillPoint;
@@ -139,6 +140,8 @@ public class ItemNoSoulGhost extends ItemBase implements ICanGetSkillPoint
             entity.getEntityData().setBoolean(Reference.EFFECT_ABSORB, true);
             entity.writeToNBT(compound);
             compound.setInteger("entity", EntityRegistry.instance().lookupModSpawn(entity.getClass(), false).getModEntityId());
+            if (entity instanceof IEntityRankCreature)
+                compound.setInteger("level", ((IEntityRankCreature) entity).getRank());
             if (!player.getEntityWorld().isRemote)
                 IMagicCreatureManagerImpl.getInstance().setDead((IEntityAvoidThingCreature) entity);
             compound.setInteger("cold", 0); //冷却

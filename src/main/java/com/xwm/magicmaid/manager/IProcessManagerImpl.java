@@ -1,11 +1,11 @@
 package com.xwm.magicmaid.manager;
 
 import com.xwm.magicmaid.util.process.ProcessTask;
-import scala.actors.threadpool.LinkedBlockingQueue;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class IProcessManagerImpl implements IProcessManager {
 
