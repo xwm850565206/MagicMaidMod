@@ -9,6 +9,7 @@ import com.xwm.magicmaid.init.EntityInit;
 import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.init.PotionInit;
 import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
+import com.xwm.magicmaid.manager.IProcessManagerImpl;
 import com.xwm.magicmaid.manager.ISkillManagerImpl;
 import com.xwm.magicmaid.player.capability.*;
 import com.xwm.magicmaid.player.skill.IAttributeSkill;
@@ -54,6 +55,12 @@ import java.util.Random;
 public class CommonEventLoader
 {
     private static final Random rand =  new Random();
+
+    @SubscribeEvent
+    public static void onWorldTick(TickEvent.WorldTickEvent event)
+    {
+        IProcessManagerImpl.getInstance().worldTick();
+    }
 
     /**
      * 添加magic creature的capability

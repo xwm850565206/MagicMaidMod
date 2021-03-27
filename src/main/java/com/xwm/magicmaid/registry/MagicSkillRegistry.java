@@ -12,6 +12,7 @@ import com.xwm.magicmaid.player.skill.perfomskill.rare.PerformSkillBoost;
 import com.xwm.magicmaid.player.skill.perfomskill.rare.PerformSkillFireBallRain;
 import com.xwm.magicmaid.player.skill.perfomskill.rare.PerformSkillLightningMove;
 import com.xwm.magicmaid.player.skill.perfomskill.rare.PerformSkillWitcherStorm;
+import com.xwm.magicmaid.player.skill.perfomskill.secret.PerformProcessSkillMercy;
 import com.xwm.magicmaid.player.skill.perfomskill.secret.PerformSkillFlash;
 import com.xwm.magicmaid.player.skill.perfomskill.secret.PerformSkillSteal;
 import com.xwm.magicmaid.player.skill.perfomskill.unreachable.PerformSkillWaterPrison;
@@ -50,6 +51,7 @@ public class MagicSkillRegistry
 
     public static final ISkill PERFORM_SKILL_FLASH = new PerformSkillFlash();
     public static final ISkill PERFORM_SKILL_STEAL = new PerformSkillSteal();
+    public static final ISkill PERFORM_SKILL_MERCY = new PerformProcessSkillMercy();
 
     public static final ISkill PERFORM_SKILL_WATER_PRISON = new PerformSkillWaterPrison();
 
@@ -87,7 +89,7 @@ public class MagicSkillRegistry
 
     public static void registerAll()
     {
-        // perform skill
+        // attribute skill
         register(ATTRIBUTE_SKILL_NORMAL_DAMAGE_RATE.getName(), ATTRIBUTE_SKILL_NORMAL_DAMAGE_RATE.getClass());
         register(ATTRIBUTE_SKILL_SKILL_DAMAGE_RATE.getName(), ATTRIBUTE_SKILL_SKILL_DAMAGE_RATE.getClass());
         register(ATTRIBUTE_SKILL_MAX_ENERGY.getName(), ATTRIBUTE_SKILL_MAX_ENERGY.getClass());
@@ -95,6 +97,7 @@ public class MagicSkillRegistry
         register(ATTRIBUTE_SKILL_IGNORE_REDUCTION.getName(), ATTRIBUTE_SKILL_IGNORE_REDUCTION.getClass());
         register(ATTRIBUTE_SKILL_SKILL_SPEED.getName(), ATTRIBUTE_SKILL_SKILL_SPEED.getClass());
 
+        // perform skill
         register(PERFORM_SKILL_NONE.getName(), PERFORM_SKILL_NONE.getClass());
         register(PERFORM_SKILL_REPEL.getName(), PERFORM_SKILL_REPEL.getClass());
         register(PERFORM_SKILL_JUMP.getName(), PERFORM_SKILL_JUMP.getClass());
@@ -108,6 +111,7 @@ public class MagicSkillRegistry
 
         register(PERFORM_SKILL_FLASH.getName(), PERFORM_SKILL_FLASH.getClass());
         register(PERFORM_SKILL_STEAL.getName(), PERFORM_SKILL_STEAL.getClass());
+        register(PERFORM_SKILL_MERCY.getName(), PERFORM_SKILL_MERCY.getClass());
 
         register(PERFORM_SKILL_WATER_PRISON.getName(), PERFORM_SKILL_WATER_PRISON.getClass());
 

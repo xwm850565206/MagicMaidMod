@@ -1,15 +1,10 @@
 package com.xwm.magicmaid.particle;
 
 import com.xwm.magicmaid.init.TextureInit;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleSmokeLarge;
 import net.minecraft.world.World;
-
-import java.awt.*;
 
 public class SoulParticle extends MoveUpParticle
 {
-
     protected SoulParticle(World worldIn, double posXIn, double posYIn, double posZIn) {
         super(worldIn, posXIn, posYIn, posZIn);
     }
@@ -22,6 +17,4 @@ public class SoulParticle extends MoveUpParticle
     protected void bindTexture() {
         this.setParticleTexture(TextureInit.SOUL);
     }
-
-
 }
