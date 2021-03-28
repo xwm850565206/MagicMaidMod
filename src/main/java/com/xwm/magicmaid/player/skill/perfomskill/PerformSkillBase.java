@@ -3,6 +3,7 @@ package com.xwm.magicmaid.player.skill.perfomskill;
 import com.xwm.magicmaid.player.capability.CapabilityLoader;
 import com.xwm.magicmaid.player.capability.ICreatureCapability;
 import com.xwm.magicmaid.player.skill.IPerformSkill;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -75,6 +76,11 @@ public abstract class PerformSkillBase implements IPerformSkill
     @Override
     public String getName() {
         return "perform";
+    }
+
+    public String getDescription(){
+        String[] nameElement = getName().split("\\.");
+        return I18n.format("skill." + nameElement[nameElement.length-1] + ".name");
     }
 
     @Override

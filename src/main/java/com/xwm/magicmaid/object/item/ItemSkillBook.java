@@ -47,8 +47,8 @@ public class ItemSkillBook extends ItemBase implements ICanGetSkillPoint
                 String[] describeElements = skillName.split("\\.");
                 if (describeElements.length < 3)
                     continue;
-//                if (describeElements[0].equals("perform") && !describeElements[1].equals("unreachable"))
-                if (describeElements[0].equals("perform"))
+                if (describeElements[0].equals("perform") && !describeElements[1].equals("unreachable"))
+//                if (describeElements[0].equals("perform"))
                 {
                     ItemStack stack = new ItemStack(this);
                     ItemSkillBook.setSkill(stack, skillName);

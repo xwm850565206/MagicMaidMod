@@ -70,11 +70,6 @@ public class PerformSkillFireBall extends PerformSkillNormalBase
     }
 
     @Override
-    public String getDescription() {
-        return "火球术";
-    }
-
-    @Override
     public void drawIcon(float x, float y, float scale) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
 

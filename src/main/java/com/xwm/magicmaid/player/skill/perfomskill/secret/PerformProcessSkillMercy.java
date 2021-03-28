@@ -68,12 +68,6 @@ public class PerformProcessSkillMercy extends PerformProcessSkillBase
         return super.getName() + ".secret.mercy";
     }
 
-
-    @Override
-    public String getDescription() {
-        return "慈悲";
-    }
-
     @Override
     public String getDetailDescription() {
         return "在短暂的祷告后，给予敌人慈悲\n升级提高攻击范围和伤害，降低冷却";

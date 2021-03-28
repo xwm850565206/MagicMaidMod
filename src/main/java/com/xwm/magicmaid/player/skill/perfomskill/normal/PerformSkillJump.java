@@ -55,11 +55,6 @@ public class PerformSkillJump extends PerformSkillNormalBase
     }
 
     @Override
-    public String getDescription() {
-        return "上升";
-    }
-
-    @Override
     public void drawIcon(float x, float y, float scale) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
 

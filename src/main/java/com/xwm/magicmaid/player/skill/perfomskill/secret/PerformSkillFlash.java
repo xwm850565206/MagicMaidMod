@@ -66,11 +66,6 @@ public class PerformSkillFlash extends PerformSkillSecretBase
     }
 
     @Override
-    public String getDescription() {
-        return "闪现";
-    }
-
-    @Override
     public void drawIcon(float x, float y, float scale) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
 

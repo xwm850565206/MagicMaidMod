@@ -65,11 +65,6 @@ public class PerformSkillLightningMove extends PerformSkillRareBase
     }
 
     @Override
-    public String getDescription() {
-        return "雷动";
-    }
-
-    @Override
     public void drawIcon(float x, float y, float scale) {
         // 134 48 46 46
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);

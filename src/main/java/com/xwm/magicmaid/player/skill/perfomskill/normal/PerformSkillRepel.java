@@ -60,11 +60,6 @@ public class PerformSkillRepel extends PerformSkillNormalBase
     }
 
     @Override
-    public String getDescription() {
-        return "击退";
-    }
-
-    @Override
     public void drawIcon(float x, float y, float scale) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
 

@@ -98,4 +98,17 @@ key.magic_maid.open=打开菜单
 key.magic_maid.skill_1=技能1
 key.magic_maid.skill_2=技能2
 
+skill.fireball.name=火球术
+skill.jump.name=上升
+skill.lightning.name=落雷术
+skill.repel.name=击退
+skill.boost.name=潜能激发
+skill.fireball_rain.name=火球雨
+skill.lightning_move.name=雷动
+skill.witch_storm.name=弱者退散
+skill.mercy.name=慈悲
+skill.flash.name=闪现
+skill.steal.name=偷窃
+
+
 itemGroup.creative_tab_maid=魔法女仆

@@ -83,11 +83,6 @@ public class PerformSkillSteal extends PerformSkillSecretBase
     }
 
     @Override
-    public String getDescription() {
-        return "偷窃";
-    }
-
-    @Override
     public void drawIcon(float x, float y, float scale) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
 

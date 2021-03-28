@@ -66,10 +66,6 @@ public class PerformSkillLightning extends PerformSkillNormalBase
         return super.getName() + ".lightning";
     }
 
-    @Override
-    public String getDescription() {
-        return "落雷术";
-    }
 
     @Override
     public void drawIcon(float x, float y, float scale) {
