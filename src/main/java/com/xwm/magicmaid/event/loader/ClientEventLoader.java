@@ -420,7 +420,6 @@ public class ClientEventLoader {
     @SubscribeEvent
     public void onFirstPersonRender(EntityViewRenderEvent.RenderFogEvent event)
     {
-
         Minecraft mc = Minecraft.getMinecraft();
         EntityPlayer player = mc.player;
 

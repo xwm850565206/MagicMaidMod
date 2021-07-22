@@ -3,6 +3,7 @@ package com.xwm.magicmaid.proxy;
 import com.xwm.magicmaid.event.loader.ClientEventLoader;
 import com.xwm.magicmaid.key.KeyLoader;
 import com.xwm.magicmaid.object.tileentity.TileEntityChurchPortal;
+import com.xwm.magicmaid.registry.MagicMenuElementRegistry;
 import com.xwm.magicmaid.render.portal.TileEntityChurchPortalRenderer;
 import com.xwm.magicmaid.util.handlers.RenderHandler;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -23,6 +24,7 @@ public class ClientProxy extends CommonProxy
         super.preInit(event);
         RenderHandler.registerEntityRenders();
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChurchPortal.class, new TileEntityChurchPortalRenderer());
+        MagicMenuElementRegistry.registerAll();
         new KeyLoader();
     }
 

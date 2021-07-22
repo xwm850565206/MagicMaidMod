@@ -89,7 +89,6 @@ public class RegistryHandler
     {
 //        EntityInit.registerEntities();
         MagicSkillRegistry.registerAll();
-        MagicMenuElementRegistry.registerAll();
         new CapabilityLoader(event);
         BiomeInit.registerBiomes();
         DimensionInit.registerDimensions();

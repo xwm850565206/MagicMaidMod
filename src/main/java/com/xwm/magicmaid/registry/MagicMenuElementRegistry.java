@@ -39,7 +39,7 @@ public class MagicMenuElementRegistry
     {
         try {
             return MENU_SCREEN.get(getMenuIndex(name)).newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException | NullPointerException e) {
             return null;
         }
     }
@@ -48,7 +48,7 @@ public class MagicMenuElementRegistry
     {
         try {
             return MENU_SCREEN.get(index).newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException | NullPointerException e) {
             return null;
         }
     }

@@ -4,7 +4,6 @@ package com.xwm.magicmaid;
 import com.xwm.magicmaid.proxy.CommonProxy;
 import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.handlers.RegistryHandler;
-import com.xwm.magicmaid.manager.MagicCreatureUtils;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -32,7 +31,7 @@ public class Main
         RegistryHandler.preInitRegistries(event);
         proxy.preInit(event);
 
-        MagicCreatureUtils.setCreatureMaxHealthLimit(1024 << 8);
+//        MagicCreatureUtils.setCreatureMaxHealthLimit(1024 << 8);
 
     }
 
