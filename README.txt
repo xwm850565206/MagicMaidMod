@@ -1,62 +1,23 @@
--------------------------------------------
-Source installation information for modders
--------------------------------------------
-This code follows the Minecraft Forge installation methodology. It will apply
-some small patches to the vanilla MCP source code, giving you and it access 
-to some of the data and functions you need to build a successful mod.
+第一章教堂前殿
 
-Note also that the patches are built against "unrenamed" MCP source code (aka
-srgnames) - this means that you will not be able to read them directly against
-normal code.
+当教堂圣洁的光芒被污染，在那场浩劫中似乎无人生还。
+仅存的记忆使她们依然留在这片废墟。
+是被黑暗吞噬，还是重新焕发荣光？
+不朽的气息，绝对的审判力量，试着唤醒还有着残存温柔的她们。
 
-Source pack installation information:
 
-Standalone source installation
-==============================
+模组有3条线，分别是故事线，挑战线，养成线。
 
-See the Forge Documentation online for more detailed rawInstructElements:
-http://mcforge.readthedocs.io/en/latest/gettingstarted/
+    故事线：模组是第一章，故事主要通过模组的各种设定，以及收集到的物品和[记忆]查看。
 
-Step 1: Open your command-line and browse to the folder where you extracted the zip file.
+    挑战线：主要是一步步发育，最后挑战boss。
 
-Step 2: Once you have a command window up in the folder that the downloaded material was placed, type:
+    养成线：养成线主要是对女仆的养成和玩家自身能力系统的养成。
 
-Windows: "gradlew setupDecompWorkspace"
-Linux/Mac OS: "./gradlew setupDecompWorkspace"
+在3条线中，玩家需要通过探险，收集，技巧，最终达成目的。
 
-Step 3: After all that finished, you're left with a choice.
-For eclipse, run "gradlew eclipse" (./gradlew eclipse if you are on Mac/Linux)
+注意事项：本模组有防作弊机制，在模组难度为[困难]时，对boss进行高额伤害，高额穿透伤害，清除时，将会触发惩罚，具体可以查看[终焉记事]的说明
 
-If you prefer to use IntelliJ, steps are a little different.
-1. Open IDEA, and import project.
-2. Select your build.gradle file and have it import.
-3. Once it's finished you must close IntelliJ and run the following command:
+模组的具体玩法写在[终焉记事]中，玩家每次进入游戏，如果副手没有拿东西会自动获得一本。
 
-"gradlew genIntellijRuns" (./gradlew genIntellijRuns if you are on Mac/Linux)
-
-Step 4: The final step is to open Eclipse and switch your workspace to /eclipse/ (if you use IDEA, it should automatically start on your project)
-
-If at any point you are missing libraries in your IDE, or you've run into problems you can run "gradlew --refresh-dependencies" to refresh the local cache. "gradlew clean" to reset everything {this does not affect your code} and then start the processs again.
-
-Should it still not work, 
-Refer to #ForgeGradle on EsperNet for more information about the gradle environment.
-
-Tip:
-If you do not care about seeing Minecraft's source code you can replace "setupDecompWorkspace" with one of the following:
-"setupDevWorkspace": Will patch, deobfuscate, and gather required assets to run minecraft, but will not generate human readable source code.
-"setupCIWorkspace": Same as Dev but will not download any assets. This is useful in build servers as it is the fastest because it does the least work.
-
-Tip:
-When using Decomp workspace, the Minecraft source code is NOT added to your workspace in a editable way. Minecraft is treated like a normal Library. Sources are there for documentation and research purposes and usually can be accessed under the 'referenced libraries' section of your IDE.
-
-Forge source installation
-=========================
-MinecraftForge ships with this code and installs it as part of the forge
-installation process, no further action is required on your part.
-
-LexManos' Install Video
-=======================
-https://www.youtube.com/watch?v=8VEdtQLuLO0&feature=youtu.be
-
-For more details update more often refer to the Forge Forums:
-http://www.minecraftforge.net/forum/index.php/topic,14048.0.html
+模组没有提供合成表，合成方式需要自行用其他辅助模组查看。
