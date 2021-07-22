@@ -100,8 +100,13 @@ public class ItemWhisper extends ItemWeapon
             try{
                 if (playerIn instanceof EntityPlayer && !MagicEquipmentUtils.checkEnemy((EntityPlayer) playerIn, entityLiving1))
                     continue;
-                //造成20点伤害 和 10点真实伤害
-                IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLiving1, DamageSource.LIGHTNING_BOLT, MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.WHISPER));
+                // 造成大量伤害伤害 和 10点真实伤害
+                if (playerIn instanceof EntityPlayer)
+                    IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLiving1, DamageSource.causePlayerDamage((EntityPlayer) playerIn), MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.WHISPER));
+                else
+                    IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLiving1, DamageSource.causeMobDamage(playerIn), MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.WHISPER));
+
+                entityLiving1.getCombatTracker().trackDamage(DamageSource.LIGHTNING_BOLT, entityLiving1.getHealth(), 0);
                 IMagicCreatureManagerImpl.getInstance().setHealth(entityLiving1, entityLiving1.getHealth() - 10);
                 playerIn.getEntityWorld().playEvent(3000, entityLiving1.getPosition(), 10);
                 float radius = (float) MagicEquipmentUtils.getRadiusFromAxisAlignedBB(MagicEquipmentUtils.getUsingArea(playerIn.getHeldItem(handIn), null, null));

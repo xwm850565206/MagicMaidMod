@@ -3,10 +3,7 @@ package com.xwm.magicmaid.util.handlers;
 import com.xwm.magicmaid.init.*;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.player.capability.CapabilityLoader;
-import com.xwm.magicmaid.registry.MagicDimensionRegistry;
-import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
-import com.xwm.magicmaid.registry.MagicFormulaRegistry;
-import com.xwm.magicmaid.registry.MagicSkillRegistry;
+import com.xwm.magicmaid.registry.*;
 import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.interfaces.IHasModel;
 import com.xwm.magicmaid.world.gen.StructureChurchPieces;
@@ -92,6 +89,7 @@ public class RegistryHandler
     {
 //        EntityInit.registerEntities();
         MagicSkillRegistry.registerAll();
+        MagicMenuElementRegistry.registerAll();
         new CapabilityLoader(event);
         BiomeInit.registerBiomes();
         DimensionInit.registerDimensions();

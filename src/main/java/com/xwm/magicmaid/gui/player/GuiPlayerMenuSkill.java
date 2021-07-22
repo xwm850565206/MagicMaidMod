@@ -7,12 +7,14 @@ import com.xwm.magicmaid.player.capability.CapabilityLoader;
 import com.xwm.magicmaid.player.capability.ISkillCapability;
 import com.xwm.magicmaid.player.skill.IPerformSkill;
 import com.xwm.magicmaid.player.skill.ISkill;
+import com.xwm.magicmaid.registry.MagicMenuElementRegistry;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
@@ -22,6 +24,7 @@ import java.util.List;
 
 public class GuiPlayerMenuSkill extends GuiScreen
 {
+    public static final String NAME = "技能";
     private static final ResourceLocation BACKGROUND = new ResourceLocation(Reference.MODID, "textures/gui/player_menu_attribute.png");
     private final int imageWidth = 176;
     private final int imageHeight = 166;
@@ -38,19 +41,23 @@ public class GuiPlayerMenuSkill extends GuiScreen
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
 
-        this.addButton(new GuiPlayerMenuMain.MenuButton(0, i + this.imageWidth, j, "主菜单")).enabled = true;
-        this.addButton(new GuiPlayerMenuMain.MenuButton(1, i + this.imageWidth, j + 16+1, "属性")).enabled = true;
-        this.addButton(new GuiPlayerMenuMain.MenuButton(2, i + this.imageWidth, j + 16*2+1, "技能")).enabled = false;
-        this.addButton(new GuiPlayerMenuMain.MenuButton(3, i + this.imageWidth, j + 16*3+1, "武器")).enabled = true;
-        this.addButton(new GuiNextPageButton(4, i + imageWidth / 2 - 10 - 3, j + imageHeight - 12, false));
-        this.addButton(new GuiNextPageButton(5, i + imageWidth / 2 + 10 - 3, j + imageHeight - 12, true));
+        for (String value : MagicMenuElementRegistry.MENU_INDEX.values())
+        {
+            int index = MagicMenuElementRegistry.getMenuIndex(value);
+            this.addButton(new GuiPlayerMenuMain.MenuButton(index, i + this.imageWidth, j + 16 * index, value)).enabled = (!value.equals(NAME));
+        }
+        int menuSize = MagicMenuElementRegistry.MENU_INDEX.size();
+
+        this.addButton(new GuiNextPageButton(menuSize, i + imageWidth / 2 - 10 - 3, j + imageHeight - 12, false));
+        this.addButton(new GuiNextPageButton(menuSize+1, i + imageWidth / 2 + 10 - 3, j + imageHeight - 12, true));
 
         int offsetLeft = 3;
         int offsetTop = 5;
         int gapx = 0;
         int gapy = 6;
-        int index = 6;
+        int index = menuSize+2;
         int skillGuiWidth = 84;
+        int noDetailSkillGuiWidth = 52;
         int skillGuiHeight = 70;
 
         EntityPlayer player = this.mc.player;
@@ -75,10 +82,11 @@ public class GuiPlayerMenuSkill extends GuiScreen
                 }
                 if (skillRects.size() > 0)
                     skillPages.add(skillRects);
+
                 k = 0;
                 for (IPerformSkill skill : skillCapability.getActivePerformSkills()) {
-                    int x = -skillGuiWidth - offsetLeft - 2 ;
-                    int y = offsetTop + k * (skillGuiHeight + gapy / 2);
+                    int x = -skillGuiWidth - offsetLeft - 2 - (k / 2) * (noDetailSkillGuiWidth + 4);
+                    int y = offsetTop + (k % 2) * (skillGuiHeight + gapy / 2);
                     GuiSkillButton skillWidget = new GuiSkillButton(total + index + k, i + x, j + y, skill, false);
                     skillWidget.enabled = false;
                     activatePerformSkill.add(skillWidget);
@@ -102,11 +110,11 @@ public class GuiPlayerMenuSkill extends GuiScreen
                     // 记载gui 技能槽的位置
                     for (k = 0; k < skillCapability.getActivePerformSkills().size(); k++)
                     {
-                        int x = -skillGuiWidth - offsetLeft - 2;
-                        int y = offsetTop + k * (skillGuiHeight + gapy / 2);
+                        int x = -noDetailSkillGuiWidth - offsetLeft - 2 - (k / 2) * (noDetailSkillGuiWidth + 4); // note: no detail skill gui的技能位置与渲染位置不一样
+                        int y = offsetTop + (k % 2) * (skillGuiHeight + gapy / 2);
                         SKILL_REC[k+4][0] = x;
                         SKILL_REC[k+4][1] = y;
-                        SKILL_REC[k+4][2] = x + skillGuiWidth;
+                        SKILL_REC[k+4][2] = x + noDetailSkillGuiWidth;
                         SKILL_REC[k+4][3] = y + skillGuiHeight;
                     }
                 }
@@ -184,7 +192,7 @@ public class GuiPlayerMenuSkill extends GuiScreen
             int y = SKILL_REC[k][1] + j;
             int xx = SKILL_REC[k][2] + i;
             int yy = SKILL_REC[k][3] + j;
-            if (x <= mouseX && mouseX <= xx && y <= mouseY && mouseY <= yy) {
+            if (x <= mouseX && mouseX < xx && y <= mouseY && mouseY < yy) {
                 return k;
             }
         }
@@ -196,35 +204,39 @@ public class GuiPlayerMenuSkill extends GuiScreen
      */
     protected void actionPerformed(GuiButton button) throws IOException
     {
+        int menuSize = MagicMenuElementRegistry.MENU_INDEX.size();
         if (button.enabled)
         {
             if (button.id == 0)
             {
                 this.mc.player.openGui(Main.instance, Reference.GUI_PLAYER_MENU_MAIN, this.mc.world, (int)this.mc.player.posX, (int)this.mc.player.posY, (int)this.mc.player.posZ);
             }
-            else if (button.id == 1)
+            else if (button.id < menuSize)
             {
-                mc.displayGuiScreen(new GuiPlayerMenuAttribute());
+                String name = MagicMenuElementRegistry.getIndexMenu(button.id);
+                if (!name.equals(NAME))
+                {
+                    GuiScreen screen = MagicMenuElementRegistry.getIndexGui(button.id);
+                    if (screen != null)
+                        mc.displayGuiScreen(screen);
+                }
             }
-            else if (button.id == 2)
-            {
 
-            }
-            else if (button.id == 4) {
+            else if (button.id == menuSize) {
                 if (currPage > 0){
                     setLevelUpButtonEnable(false);
                     currPage--;
                     setLevelUpButtonEnable(true);
                 }
             }
-            else if (button.id == 5) {
+            else if (button.id == menuSize + 1) {
                 if (currPage < skillPages.size() - 1) {
                     setLevelUpButtonEnable(false);
                     currPage++;
                     setLevelUpButtonEnable(true);
                 }
             }
-            else if (button.id > 5){
+            else if (button.id > menuSize + 1){
                 List<GuiSkillButton> skillButtons = skillPages.get(currPage);
                 int trueButtonId = (button.id - 6) % 4;
                 ISkillManagerImpl.getInstance().upSkillLevel(Minecraft.getMinecraft().player, skillButtons.get(trueButtonId).getSkill());
@@ -258,6 +270,23 @@ public class GuiPlayerMenuSkill extends GuiScreen
             skillRect.drawButton(mc, mouseX, mouseY, partialTicks);
         }
 
+        // 画技能栏提示
+        GlStateManager.pushMatrix();
+        float scale = 2;
+        GlStateManager.scale(scale, scale , 1);
+        GlStateManager.translate(0, 0, this.zLevel + 100);
+        for (int k = 0; k < 2; k++)
+        {
+            int x = i + -52 - 3 - 2 - (52 + 4) + 60 / 2; // note: no detail skill gui的技能位置与渲染位置不一样
+            int y = j + 5 + k * (72) + 44 / 2;
+//            GlStateManager.scale(4, 4, 1);
+
+            this.drawCenteredString(this.fontRenderer, I18n.format("gui.maid.ctrl_info"), (int)(x / scale), (int)(y / scale), 0xffff00);
+
+//            GlStateManager.scale(0.25, 0.25, 1);
+        }
+        GlStateManager.popMatrix();
+
         // 画悬浮技能
         if (chooseSkill != null) {
             GlStateManager.pushMatrix();
@@ -267,6 +296,8 @@ public class GuiPlayerMenuSkill extends GuiScreen
             chooseSkill.drawButton(mc, mouseX, mouseY, partialTicks);
             GlStateManager.popMatrix();
         }
+
+
 
         for (int t = 0; t < this.buttonList.size() && t < 6; ++t)
         {

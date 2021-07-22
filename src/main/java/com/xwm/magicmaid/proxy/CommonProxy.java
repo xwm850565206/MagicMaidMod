@@ -38,4 +38,8 @@ public class CommonProxy
     {
         new CommandLoader(event);
     }
+
+    public void changeSkillSwitch(){
+
+    }
 }

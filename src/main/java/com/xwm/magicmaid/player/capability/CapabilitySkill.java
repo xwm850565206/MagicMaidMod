@@ -161,7 +161,7 @@ public class CapabilitySkill
 
         private Map<String, IPerformSkill> performSkillMap = new HashMap<>();
 
-        private NonNullList<IPerformSkill> activePerformSkill =  NonNullList.withSize(2, PerformSkillNone.NONE); //同时持有两个技能
+        private NonNullList<IPerformSkill> activePerformSkill =  NonNullList.withSize(4, PerformSkillNone.NONE); // note: 8.0版本 同时持有两个技能 按ctrl后释放另外两个技能
 
         private int skillPoint = 0;
 

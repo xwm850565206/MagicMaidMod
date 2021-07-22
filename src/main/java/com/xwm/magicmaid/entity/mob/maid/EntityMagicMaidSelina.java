@@ -14,6 +14,7 @@ import com.xwm.magicmaid.enumstorage.EnumSelineState;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.object.item.equipment.ItemWhisper;
+import com.xwm.magicmaid.util.handlers.LootTableHandler;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
@@ -21,6 +22,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -224,5 +226,12 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
         }
         else
             this.setState(EnumSelineState.toInt(EnumSelineState.SERVE));
+    }
+
+    @Override
+    protected ResourceLocation getLootTable()
+    {
+        if (getHealth() > 0) return null;
+        return LootTableHandler.HOLY_FRUIT_SELINA;
     }
 }

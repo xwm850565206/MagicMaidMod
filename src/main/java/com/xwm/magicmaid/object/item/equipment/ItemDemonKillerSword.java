@@ -8,6 +8,7 @@ import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.particle.SPacketSixParamParticle;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
+import com.xwm.magicmaid.player.capability.CapabilityLoader;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
@@ -61,24 +62,28 @@ public class ItemDemonKillerSword extends ItemWeapon
             return;
 
         int attackTime = getAttackTime(playerIn.getHeldItem(handIn));
+        float modifier = 1.0f;
+        if (playerIn.hasCapability(CapabilityLoader.CREATURE_CAPABILITY, null))
+            modifier = (float) playerIn.getCapability(CapabilityLoader.CREATURE_CAPABILITY, null).getNormalDamageRate();
+
         EntityLivingBase target = entityLivingBases.get(0);
         if (playerIn instanceof EntityPlayer) {
             if (attackTime == 0) {
                 target.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 400, 1));
                 IMagicCreatureManagerImpl.getInstance().attackEntityFrom(target, DamageSource.causePlayerDamage((EntityPlayer) playerIn),
-                        MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.DEMONKILLER));
+                        modifier * MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.DEMONKILLER));
                 this.spawnSweepParticles(playerIn.getEntityWorld(), playerIn,30);
             }
             else if (attackTime == 1) {
                 target.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 400, 1));
                 IMagicCreatureManagerImpl.getInstance().attackEntityFrom(target, DamageSource.causePlayerDamage((EntityPlayer) playerIn),
-                        MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.DEMONKILLER));
+                        modifier * MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.DEMONKILLER));
                 this.spawnSweepParticles(playerIn.getEntityWorld(), playerIn,330);
             }
             else if (attackTime == 2) {
 //                target.setDead();
                 IMagicCreatureManagerImpl.getInstance().attackEntityFrom(target, DamageSource.causePlayerDamage((EntityPlayer) playerIn),
-                        MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.DEMONKILLER) * 40);
+                        modifier * MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.DEMONKILLER) * 10);
                 this.spawnSweepParticles(playerIn.getEntityWorld(), playerIn,90);
             }
             else

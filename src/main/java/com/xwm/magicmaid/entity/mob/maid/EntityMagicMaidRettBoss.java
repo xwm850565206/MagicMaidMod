@@ -24,7 +24,6 @@ import net.minecraft.world.World;
 
 public class EntityMagicMaidRettBoss extends EntityMagicMaidRett implements IEntityBossCreature
 {
-    protected IMagicBossManager fightManager = null;
 
     private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenSky(false);
     private int factor = 1;

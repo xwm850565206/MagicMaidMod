@@ -12,12 +12,13 @@ import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumRettState;
 import com.xwm.magicmaid.init.ItemInit;
+import com.xwm.magicmaid.manager.IMagicBossManager;
+import com.xwm.magicmaid.manager.MagicCreatureUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.particle.SPacketParticle;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
-import com.xwm.magicmaid.manager.MagicCreatureUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
@@ -51,6 +52,9 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
 
     protected EntityMaidWeapon weapon = null;
     public BlockPos weaponStandbyPos = new BlockPos(0, this.height+1, 0);
+
+    /** boss creature need to use, I declare here but it was used in sub class such as @see{EntityMagicMaidMarthaBoss} **/
+    protected IMagicBossManager fightManager = null;
 
     public EntityMagicMaid(World worldIn)
     {
@@ -264,17 +268,22 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
         if (minus < 0)
             super.setHealth(health);
         else if (EnumMode.valueOf(getMode()) == EnumMode.BOSS && shouldAvoidSetHealth((int) minus)){
-            World world = getEntityWorld();
-            if (!world.isRemote) {
-                EntityPlayer player = world.getClosestPlayerToEntity(this, 20);
-                try {
-                    player.sendMessage(new TextComponentString("检测到高额穿透伤害，尝试清除玩家物品"));
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-                if (player != null)
-                    PunishOperationHandler.punishPlayer((EntityPlayerMP) player, 3, "");
-            }
+           World world = getEntityWorld();
+           if (!world.isRemote) {
+               if (fightManager != null) // 没有fightManager不进行惩罚操作
+               {
+                   EntityPlayer player = world.getClosestPlayerToEntity(this, 20);
+                   if (player != null && this.getDistance(player) < 0.01) // 玩家离的非常近就认为是使用变形模组
+                   {
+                       try {
+                           player.sendMessage(new TextComponentString("检测到高额穿透伤害，尝试清除玩家物品"));
+                       } catch (Exception e){
+                           e.printStackTrace();
+                       }
+                       PunishOperationHandler.punishPlayer((EntityPlayerMP) player, 3, "");
+                   }
+               }
+           }
         }
         else
             super.setHealth(health);

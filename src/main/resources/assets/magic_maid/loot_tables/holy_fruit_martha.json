@@ -1,0 +1,16 @@
+{
+  "pools": [
+    {
+      "name": "holy_fruit_martha",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "weight": 1,
+          "name": "magic_maid:holy_fruit_martha",
+          "quality": 1
+        }
+      ]
+    }
+  ]
+}

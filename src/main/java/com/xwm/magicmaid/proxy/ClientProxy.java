@@ -16,6 +16,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class ClientProxy extends CommonProxy
 {
+    private ClientEventLoader clientEventLoader;
+
     public void preInit(FMLPreInitializationEvent event)
     {
         super.preInit(event);
@@ -26,7 +28,8 @@ public class ClientProxy extends CommonProxy
 
     public void init(FMLInitializationEvent event){
         super.init(event);
-        MinecraftForge.EVENT_BUS.register(new ClientEventLoader());
+        this.clientEventLoader = new ClientEventLoader();
+        MinecraftForge.EVENT_BUS.register(clientEventLoader);
     }
 
     public void postInit(FMLPostInitializationEvent event){
@@ -43,5 +46,11 @@ public class ClientProxy extends CommonProxy
     public void registerOBJRenderer(Item item, int meta, String id)
     {
         ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName(), id));
+    }
+
+    @Override
+    public void changeSkillSwitch(){
+        if (clientEventLoader != null)
+            clientEventLoader.showSkillWidget = !clientEventLoader.showSkillWidget;
     }
 }

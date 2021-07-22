@@ -11,7 +11,12 @@ public class ParticleSpawner
     private static Minecraft mc = Minecraft.getMinecraft();
 
     @SideOnly(Side.CLIENT)
-    public static Particle spawnParticle(EnumCustomParticles type, double par2, double par4, double par6, double par8, double par10, double par12)
+    public static Particle spawnParticle(EnumCustomParticles type, double par0, double par1, double par2, double par3, double par4, double par5)
+    {
+        return spawnParticle(type, par0, par1, par2, par3, par4, par5, 0, 0, 0);
+    }
+    @SideOnly(Side.CLIENT)
+    public static Particle spawnParticle(EnumCustomParticles type, double par0, double par1, double par2, double par3, double par4, double par5, double par6, double par7, double par8)
     {
         if (mc != null && mc.getRenderViewEntity() != null && mc.effectRenderer != null)
         {
@@ -22,9 +27,9 @@ public class ParticleSpawner
                 var14 = 2;
             }
 
-            double var15 = mc.getRenderViewEntity().posX - par2;
-            double var17 = mc.getRenderViewEntity().posY - par4;
-            double var19 = mc.getRenderViewEntity().posZ - par6;
+            double var15 = mc.getRenderViewEntity().posX - par0;
+            double var17 = mc.getRenderViewEntity().posY - par1;
+            double var19 = mc.getRenderViewEntity().posZ - par2;
             double var22 = DISTANCE;
             Particle var21 = null;
 
@@ -38,7 +43,7 @@ public class ParticleSpawner
             }
             else
             {
-                var21 = getParticleFromEnumParticels(type, par2, par4, par6, par8, par10, par12);
+                var21 = getParticleFromEnumParticels(type, par0, par1, par2, par3, par4, par5, par6, par7, par8);
                 mc.effectRenderer.addEffect(var21);
                 return var21;
             }
@@ -46,7 +51,7 @@ public class ParticleSpawner
         return null;
     }
 
-    private static Particle getParticleFromEnumParticels(EnumCustomParticles type, double d0, double d1, double d2, double d3, double d4, double d5)
+    private static Particle getParticleFromEnumParticels(EnumCustomParticles type, double d0, double d1, double d2, double d3, double d4, double d5, double d6, double d7, double d8)
     {
         switch (type) {
             case SOUL:
@@ -63,14 +68,9 @@ public class ParticleSpawner
                 return new WhisperParticle(mc.world, d0, d1, d2);
             case SWEEP:
                 return new SweepAttackParticle(mc.world, d0, d1, d2, d3, (float) d4);
-//            case RED_STRIP: return new SuperHimAttackParticle(mc.world, d0, d1, d2, 0xDC143C);
-//            case ORANGE_STRIP: return new SuperHimAttackParticle(mc.world, d0, d1, d2, 0xFFA500);
-//            case PURPLE_STRIP: return new SuperHimAttackParticle(mc.world, d0, d1, d2, 0xD15FEE);
-//            case WIND: return new WindParticle(mc.world, d0, d1, d2, d3);
-//            case BRILLIANT: return new BrilliantParticle(mc.world, d0, d1, d2);
-//            case GRAY_SOUL: return new DistinationParticle(mc.world, d0, d1, d2, d3, d4, d5, 0xA3A3A3);
-//            case YELLO_SOUL: return new DistinationParticle(mc.world, d0, d1, d2, d3, d4, d5, 0xFFC125);
-//            default:return new SuperHimAttackParticle(mc.world, d0, d1, d2, 0xD15FEE);
+            case MAGIC:
+                return new WispParticle(mc.world, d0, d1, d2, d3, d4, d5, d6, d7, d8);
+
             default: return new SoulParticle(mc.world, d0, d1, d2);
         }
     }

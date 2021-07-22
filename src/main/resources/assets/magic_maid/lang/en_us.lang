@@ -7,6 +7,8 @@ container.maid.sitting=Sitting
 container.maid.serve=Serve
 container.maid.fight=Fight
 
+gui.maid.ctrl_info=Ctrl
+
 item.repantence.name=Repantence
 item.conviction.name=Conviction
 item.protector.name=Protector

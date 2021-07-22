@@ -12,6 +12,7 @@ public class TextureInit
     public static TextureAtlasSprite CONVICTION;
     public static TextureAtlasSprite STAR;
     public static TextureAtlasSprite ATOM;
+    public static TextureAtlasSprite WISP;
 
     public static void register(TextureMap map)
     {
@@ -20,5 +21,6 @@ public class TextureInit
         CONVICTION = map.registerSprite(new ResourceLocation(Reference.MODID, "particle/conviction"));
         STAR = map.registerSprite(new ResourceLocation(Reference.MODID, "particle/star"));
         ATOM = map.registerSprite(new ResourceLocation(Reference.MODID, "particle/atom"));
+        WISP = map.registerSprite(new ResourceLocation(Reference.MODID, "particle/wisp"));
     }
 }

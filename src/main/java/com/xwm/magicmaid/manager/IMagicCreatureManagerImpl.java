@@ -86,6 +86,21 @@ public class IMagicCreatureManagerImpl implements IMagicCreatureManager {
     }
 
     @Override
+    public float caculateSkillDamageAmount(@Nullable EntityLivingBase performer, float amount) {
+
+        if(performer == null)
+            return amount;
+        else if (performer.hasCapability(CapabilityLoader.CREATURE_CAPABILITY, null))
+        {
+            ICreatureCapability creatureCapability = performer.getCapability(CapabilityLoader.CREATURE_CAPABILITY, null);
+            float modifier = (float) creatureCapability.getSkillDamageRate();
+            return amount * modifier;
+        }
+        else
+            return amount;
+    }
+
+    @Override
     public void applyAttribute(AbstractEntityMagicCreature creature, IAttribute attribute, AttributeModifier modifier, boolean overwrite) {
         try {
             if (!creature.hasCapability(CapabilityLoader.CREATURE_CAPABILITY, null))
@@ -133,6 +148,11 @@ public class IMagicCreatureManagerImpl implements IMagicCreatureManager {
 
     @Override
     public boolean attackEntityFrom(EntityLivingBase entityLivingBase, DamageSource source, float amount) {
+
+        if (source.getImmediateSource() != null && source.getImmediateSource() instanceof EntityLivingBase)
+            amount = caculateSkillDamageAmount((EntityLivingBase) source.getImmediateSource(), amount); // 计算技能伤害率，调用这个方法默认是使用技能伤害率，普通伤害率指的是玩家左击生物
+        else if (source.getTrueSource() != null && source.getTrueSource() instanceof EntityLivingBase)
+            amount = caculateSkillDamageAmount((EntityLivingBase) source.getTrueSource(), amount); // 计算技能伤害率，调用这个方法默认是使用技能伤害率，普通伤害率指的是玩家左击生物
 
         int lock = 0;
         if (entityLivingBase instanceof IEntityAvoidThingCreature) {

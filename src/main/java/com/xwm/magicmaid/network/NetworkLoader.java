@@ -3,6 +3,7 @@ package com.xwm.magicmaid.network;
 import com.xwm.magicmaid.Main;
 import com.xwm.magicmaid.network.entity.*;
 import com.xwm.magicmaid.network.gui.CPacketOpenGui;
+import com.xwm.magicmaid.network.particle.SPacketNineParamParticle;
 import com.xwm.magicmaid.network.particle.SPacketParticle;
 import com.xwm.magicmaid.network.particle.SPacketSixParamParticle;
 import com.xwm.magicmaid.network.particle.SPacketThreeParamParticle;
@@ -29,6 +30,7 @@ public class NetworkLoader
         registerMessage(SPacketParticle.Handler.class, SPacketParticle.class, Side.CLIENT);
         registerMessage(SPacketThreeParamParticle.Handler.class, SPacketThreeParamParticle.class, Side.CLIENT);
         registerMessage(SPacketSixParamParticle.Handler.class, SPacketSixParamParticle.class, Side.CLIENT);
+        registerMessage(SPacketNineParamParticle.Handler.class, SPacketNineParamParticle.class, Side.CLIENT);
         registerMessage(SPacketSound.Handler.class, SPacketSound.class, Side.CLIENT);
         registerMessage(SPacketVelocity.Handler.class, SPacketVelocity.class, Side.CLIENT);
         registerMessage(SPacketPunish.Handler.class, SPacketPunish.class, Side.CLIENT);

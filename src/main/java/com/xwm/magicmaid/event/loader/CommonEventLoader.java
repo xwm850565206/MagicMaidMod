@@ -36,7 +36,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -371,21 +370,4 @@ public class CommonEventLoader
         }
     }
 
-    /**
-     * 战斗逻辑
-     * todo 攻击倍率和技能倍率还没实装
-     */
-    @SubscribeEvent()
-    public void onEntityAttacked(LivingDamageEvent event)
-    {
-        if (event.getEntityLiving() instanceof AbstractEntityMagicCreature)
-            return;
-        else {
-            try {
-                event.setAmount(IMagicCreatureManagerImpl.getInstance().caculateDamageAmount((EntityLivingBase) event.getSource().getImmediateSource(), event.getEntityLiving(), null, event.getAmount()));
-            } catch (Exception e ){
-                e.printStackTrace();
-            }
-        }
-    }
 }

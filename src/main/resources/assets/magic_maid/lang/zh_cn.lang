@@ -7,6 +7,8 @@ container.maid.sitting=待命模式
 container.maid.serve=服侍模式
 container.maid.fight=战斗模式
 
+gui.maid.ctrl_info=Ctrl
+
 item.repantence.name=忏悔
 item.conviction.name=定罪
 item.protector.name=守护者

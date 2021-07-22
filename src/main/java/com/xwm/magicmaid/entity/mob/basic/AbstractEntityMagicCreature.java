@@ -9,6 +9,8 @@ import com.xwm.magicmaid.manager.IMagicCreatureManager;
 import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.manager.MagicCreatureUtils;
 import com.xwm.magicmaid.manager.MagicDamageSource;
+import com.xwm.magicmaid.player.capability.CapabilityLoader;
+import com.xwm.magicmaid.player.capability.ICreatureCapability;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAISwimming;
@@ -40,8 +42,8 @@ public abstract class AbstractEntityMagicCreature extends EntityCreature impleme
     /**
      * avoid thing creature
      */
-    protected static int max_set_health = 50;
-    protected static int max_damage_health = 50;
+    protected static int max_set_health = 80;
+    protected static int max_damage_health = 80;
     private static final DataParameter<Integer> MAX_SET_HEALTH = EntityDataManager.<Integer>createKey(AbstractEntityMagicCreature.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> MAX_DAMAGE_HEALTH = EntityDataManager.<Integer>createKey(AbstractEntityMagicCreature.class, DataSerializers.VARINT);
 
@@ -172,6 +174,8 @@ public abstract class AbstractEntityMagicCreature extends EntityCreature impleme
             super.setHealth(health);
     }
 
+
+    // note: 8.0 添加了因为普通攻击倍率过高导致超过伤害上限的检测
     @Override
     public boolean attackEntityFrom(DamageSource source, float amount)
     {
@@ -187,12 +191,41 @@ public abstract class AbstractEntityMagicCreature extends EntityCreature impleme
             return super.attackEntityFrom(source, amount);
         }
         else {
-            if (source.getImmediateSource() != null && source.getImmediateSource() instanceof EntityLivingBase)
-                amount = magicFightManager.caculateDamageAmount((EntityLivingBase) source.getImmediateSource(), this, null, amount);
-            else if (source.getTrueSource() != null && source.getTrueSource() instanceof EntityLivingBase)
-                amount = magicFightManager.caculateDamageAmount((EntityLivingBase) source.getTrueSource(), this, null, amount);
 
-            return super.attackEntityFrom(source, amount);
+            float originAmount = amount;
+            int lockValue = -1;
+
+            if (source.getImmediateSource() != null && source.getImmediateSource() instanceof EntityLivingBase) {
+                EntityLivingBase entityLivingBase = (EntityLivingBase) source.getImmediateSource();
+                if (entityLivingBase.hasCapability(CapabilityLoader.CREATURE_CAPABILITY, null))
+                {
+                    ICreatureCapability creatureCapability = entityLivingBase.getCapability(CapabilityLoader.CREATURE_CAPABILITY, null);
+                    float modifier = (float) creatureCapability.getNormalDamageRate();
+                    originAmount = originAmount / modifier;
+                    if (!shouldAvoidSetHealth((int) originAmount))
+                        lockValue = magicFightManager.unlock(this);
+                }
+                amount = magicFightManager.caculateDamageAmount((EntityLivingBase) source.getImmediateSource(), this, null, amount);
+            }
+            else if (source.getTrueSource() != null && source.getTrueSource() instanceof EntityLivingBase) {
+                EntityLivingBase entityLivingBase = (EntityLivingBase) source.getTrueSource();
+                if (entityLivingBase.hasCapability(CapabilityLoader.CREATURE_CAPABILITY, null))
+                {
+                    ICreatureCapability creatureCapability = entityLivingBase.getCapability(CapabilityLoader.CREATURE_CAPABILITY, null);
+                    float modifier = (float) creatureCapability.getNormalDamageRate();
+                    originAmount = originAmount / modifier;
+                    if (!shouldAvoidSetHealth((int) originAmount))
+                        lockValue = magicFightManager.unlock(this);
+                }
+                amount = magicFightManager.caculateDamageAmount((EntityLivingBase) source.getTrueSource(), this, null, amount);
+            }
+
+            boolean flag = super.attackEntityFrom(source, amount);
+
+            if (lockValue != -1)
+                magicFightManager.lock(this, lockValue);
+
+            return flag;
         }
     }
 

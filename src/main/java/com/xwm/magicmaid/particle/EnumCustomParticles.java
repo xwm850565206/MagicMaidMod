@@ -15,7 +15,8 @@ public enum EnumCustomParticles
     STAR("star", 3, false),
     PANDORA("pandora", 4, false),
     WHISPER("whisper", 5, false),
-    SWEEP("sweep", 6, false);
+    SWEEP("sweep", 6, false),
+    MAGIC("magic", 7, false);
 
     private final String particleName;
     private final int particleID;

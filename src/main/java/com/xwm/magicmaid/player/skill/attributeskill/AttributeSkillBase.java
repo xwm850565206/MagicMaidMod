@@ -3,10 +3,14 @@ package com.xwm.magicmaid.player.skill.attributeskill;
 import com.xwm.magicmaid.player.skill.IAttributeSkill;
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.util.UUID;
+
 public abstract class AttributeSkillBase implements IAttributeSkill
 {
     protected static final int MAX_LEVEL = 5;
     protected int level = 1;
+    protected final UUID SKILL_UUID = UUID.nameUUIDFromBytes(getName().getBytes());
+
 
     /**
      * 更新技能的属性

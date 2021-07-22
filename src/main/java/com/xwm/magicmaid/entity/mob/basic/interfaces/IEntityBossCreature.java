@@ -7,8 +7,6 @@ import net.minecraft.world.World;
 
 public interface IEntityBossCreature
 {
-    IMagicBossManager fightManager = null;
-
     /**
      * 提供斩杀接口
      * @param player

@@ -7,11 +7,14 @@ import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 public class AttributeSkillNormalDamageRate extends AttributeSkillBase
 {
+
     private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.MODID, "textures/gui/icon/skill_icon.png");
 
     private double normal_damage_rate = MagicCreatureAttributes.NORMAL_DAMAGE_RATE.getDefaultValue();
@@ -29,6 +32,9 @@ public class AttributeSkillNormalDamageRate extends AttributeSkillBase
             ICreatureCapability capability = player.getCapability(CapabilityLoader.CREATURE_CAPABILITY, null);
             if (capability != null)
                 capability.setNormalDamageRate(normal_damage_rate);
+
+            player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_DAMAGE).removeModifier(SKILL_UUID);
+            player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(new AttributeModifier(SKILL_UUID, getName(), normal_damage_rate - 1.0, 2).setSaved(true));
         }
     }
 

@@ -12,12 +12,14 @@ import com.xwm.magicmaid.object.item.equipment.ItemConviction;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemRepantence;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
+import com.xwm.magicmaid.util.handlers.LootTableHandler;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
@@ -236,4 +238,12 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
         else
             this.setState(1);
     }
+
+    @Override
+    protected ResourceLocation getLootTable()
+    {
+        if (getHealth() > 0) return null;
+        return LootTableHandler.HOLY_FRUIT_MARTHA;
+    }
+
 }

@@ -6,6 +6,7 @@ import com.xwm.magicmaid.manager.ISkillManagerImpl;
 import com.xwm.magicmaid.player.capability.CapabilityLoader;
 import com.xwm.magicmaid.player.capability.ISkillCapability;
 import com.xwm.magicmaid.player.skill.ISkill;
+import com.xwm.magicmaid.registry.MagicMenuElementRegistry;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -20,6 +21,7 @@ import java.util.List;
 
 public class GuiPlayerMenuAttribute extends GuiScreen
 {
+    public static final String NAME = "属性";
     private static final ResourceLocation BACKGROUND = new ResourceLocation(Reference.MODID, "textures/gui/player_menu_attribute.png");
     private final int imageWidth = 176;
     private final int imageHeight = 166;
@@ -32,18 +34,22 @@ public class GuiPlayerMenuAttribute extends GuiScreen
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
 
-        this.addButton(new GuiPlayerMenuMain.MenuButton(0, i + this.imageWidth, j, "主菜单")).enabled = true;
-        this.addButton(new GuiPlayerMenuMain.MenuButton(1, i + this.imageWidth, j + 16+1, "属性")).enabled = false;
-        this.addButton(new GuiPlayerMenuMain.MenuButton(2, i + this.imageWidth, j + 16*2+1, "技能")).enabled = true;
-        this.addButton(new GuiPlayerMenuMain.MenuButton(3, i + this.imageWidth, j + 16*3+1, "武器")).enabled = true;
-        this.addButton(new GuiNextPageButton(4, i + imageWidth / 2 - 10 - 3, j + imageHeight - 12, false));
-        this.addButton(new GuiNextPageButton(5, i + imageWidth / 2 + 10 - 3, j + imageHeight - 12, true));
+        for (String value : MagicMenuElementRegistry.MENU_INDEX.values())
+        {
+            int index = MagicMenuElementRegistry.getMenuIndex(value);
+            this.addButton(new GuiPlayerMenuMain.MenuButton(index, i + this.imageWidth, j + 16 * index, value)).enabled = (!value.equals(NAME));
+        }
+
+        int menuSize = MagicMenuElementRegistry.MENU_INDEX.size();
+
+        this.addButton(new GuiNextPageButton(menuSize, i + imageWidth / 2 - 10 - 3, j + imageHeight - 12, false));
+        this.addButton(new GuiNextPageButton(menuSize + 1, i + imageWidth / 2 + 10 - 3, j + imageHeight - 12, true));
 
         int offsetLeft = 3;
         int offsetTop = 5;
         int gapx = 0;
         int gapy = 6;
-        int index = 6;
+        int index = menuSize + 2;
         int skillGuiWidth = 84;
         int skillGuiHeight = 70;
 
@@ -82,35 +88,38 @@ public class GuiPlayerMenuAttribute extends GuiScreen
      */
     protected void actionPerformed(GuiButton button) throws IOException
     {
+        int menuSize = MagicMenuElementRegistry.MENU_INDEX.size();
         if (button.enabled)
         {
             if (button.id == 0)
             {
                 this.mc.player.openGui(Main.instance, Reference.GUI_PLAYER_MENU_MAIN, this.mc.world, (int)this.mc.player.posX, (int)this.mc.player.posY, (int)this.mc.player.posZ);
             }
-            else if (button.id == 1)
+            else if (button.id < menuSize)
             {
-
+                String name = MagicMenuElementRegistry.getIndexMenu(button.id);
+                if (!name.equals(NAME))
+                {
+                    GuiScreen screen = MagicMenuElementRegistry.getIndexGui(button.id);
+                    if (screen != null)
+                        mc.displayGuiScreen(screen);
+                }
             }
-            else if (button.id == 2)
-            {
-                mc.displayGuiScreen(new GuiPlayerMenuSkill());
-            }
-            else if (button.id == 4) {
+            else if (button.id == menuSize) {
                 if (currPage > 0){
                     setLevelUpButtonEnable(false);
                     currPage--;
                     setLevelUpButtonEnable(true);
                 }
             }
-            else if (button.id == 5) {
+            else if (button.id == menuSize + 1) {
                 if (currPage < skillPages.size() - 1) {
                     setLevelUpButtonEnable(false);
                     currPage++;
                     setLevelUpButtonEnable(true);
                 }
             }
-            else if (button.id > 5){
+            else if (button.id > menuSize + 1){
                 List<GuiSkillButton> skillButtons = skillPages.get(currPage);
                 int trueButtonId = (button.id - 6) % 4;
                 ISkillManagerImpl.getInstance().upSkillLevel(Minecraft.getMinecraft().player, skillButtons.get(trueButtonId).getSkill());

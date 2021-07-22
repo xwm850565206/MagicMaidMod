@@ -2,9 +2,11 @@ package com.xwm.magicmaid.player.skill.perfomskill.secret;
 
 import com.google.common.base.Predicate;
 import com.xwm.magicmaid.event.SkillPerformEvent;
+import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.manager.IProcessManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.network.particle.SPacketNineParamParticle;
 import com.xwm.magicmaid.network.particle.SPacketThreeParamParticle;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.player.skill.IPerformSkill;
@@ -26,6 +28,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Random;
 
 public class PerformProcessSkillMercy extends PerformProcessSkillBase
 {
@@ -99,6 +102,7 @@ public class PerformProcessSkillMercy extends PerformProcessSkillBase
         private double z;
         private World world;
         private List<Entity> targets;
+        private Random random = new Random();
 
         public ProcessSkillTaskMercy(int priority, EntityLivingBase taskOwner, int maxAge, int skillLevel, double x, double y, double z) {
             super(priority, taskOwner, maxAge);
@@ -166,7 +170,7 @@ public class PerformProcessSkillMercy extends PerformProcessSkillBase
                     if (entity.getDistance(x, y, z) < skillLevel * 4)
                     {
                         try {
-                            entity.attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) taskOwner), skillLevel * 7);
+                            IMagicCreatureManagerImpl.getInstance().attackEntityFrom((EntityLivingBase) entity, DamageSource.causeMobDamage((EntityLivingBase) taskOwner), skillLevel * 7);
                         } catch (Exception e) {
                             ;
                         }
@@ -186,10 +190,21 @@ public class PerformProcessSkillMercy extends PerformProcessSkillBase
             double f2 = entity.posZ;
 
             for (double p = 0; p < progress; p += 0.05) {
-                SPacketThreeParamParticle particlePacket = new SPacketThreeParamParticle(
+//                SPacketThreeParamParticle particlePacket = new SPacketThreeParamParticle(
+//                        d0 + (f0-d0)*p,
+//                        d1 + (f1-d1)*p,
+//                        d2 + (f2-d2)*p, EnumCustomParticles.SOUL);
+//                NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(taskOwner.getEntityWorld().provider.getDimension(), d0, d1, d2, 40.0D);
+//                NetworkLoader.instance.sendToAllAround(particlePacket, target);
+                SPacketNineParamParticle particlePacket = new SPacketNineParamParticle(
                         d0 + (f0-d0)*p,
                         d1 + (f1-d1)*p,
-                        d2 + (f2-d2)*p, EnumCustomParticles.SOUL);
+                        d2 + (f2-d2)*p,
+                        0,
+                        0,
+                        0,
+                        0, 1, 0,
+                        EnumCustomParticles.MAGIC);
                 NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(taskOwner.getEntityWorld().provider.getDimension(), d0, d1, d2, 40.0D);
                 NetworkLoader.instance.sendToAllAround(particlePacket, target);
             }

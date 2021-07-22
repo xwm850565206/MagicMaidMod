@@ -10,6 +10,7 @@ import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumRettState;
 import com.xwm.magicmaid.object.item.equipment.ItemDemonKillerSword;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
+import com.xwm.magicmaid.util.handlers.LootTableHandler;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,6 +20,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
@@ -197,4 +199,10 @@ public class EntityMagicMaidRett extends EntityMagicMaid
         return false;
     }
 
+    @Override
+    protected ResourceLocation getLootTable()
+    {
+        if (getHealth() > 0) return null;
+        return LootTableHandler.HOLY_FRUIT_RETT;
+    }
 }

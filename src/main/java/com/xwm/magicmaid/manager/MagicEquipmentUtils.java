@@ -1,12 +1,12 @@
 package com.xwm.magicmaid.manager;
 
-import com.xwm.magicmaid.entity.mob.basic.EntityTameableCreature;
-import com.xwm.magicmaid.player.MagicCreatureAttributes;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityEquipmentCreature;
+import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityTameableCreature;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
+import com.xwm.magicmaid.player.MagicCreatureAttributes;
 import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.Entity;
@@ -42,14 +42,19 @@ public class MagicEquipmentUtils
         if (entityLivingBase == player)
             return false;
 
+        if (player != null && entityLivingBase != null)
+            if(player.getTeam() != null && entityLivingBase.getTeam() != null)
+                if(player.getTeam().equals(entityLivingBase.getTeam()))
+                    return false;
+
         if (entityLivingBase instanceof EntityTameable)
             if (((EntityTameable) entityLivingBase).getOwnerId() != null)
                 if (((EntityTameable) entityLivingBase).getOwnerId().equals(player.getUniqueID()))
                     return false;
 
-        if (entityLivingBase instanceof EntityTameableCreature)
-            if (((EntityTameableCreature) entityLivingBase).getOwnerID() != null)
-                if (((EntityTameableCreature) entityLivingBase).getOwnerID().equals(player.getUniqueID()))
+        if (entityLivingBase instanceof IEntityTameableCreature)
+            if (((IEntityTameableCreature) entityLivingBase).getOwnerID() != null)
+                if (((IEntityTameableCreature) entityLivingBase).getOwnerID().equals(player.getUniqueID()))
                     return false;
 
         return true;

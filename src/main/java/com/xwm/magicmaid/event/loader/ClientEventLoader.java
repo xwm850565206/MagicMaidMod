@@ -25,6 +25,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySkeleton;
@@ -57,9 +58,8 @@ import java.util.Random;
 
 //控制各种渲染
 @Mod.EventBusSubscriber
-public class ClientEventLoader
-{
-    private List<List<Integer>> biancolor = new ArrayList<List<Integer>>(){{
+public class ClientEventLoader {
+    private List<List<Integer>> biancolor = new ArrayList<List<Integer>>() {{
         add(Arrays.asList(67, 235, 217));
         add(Arrays.asList(255, 253, 100));
         add(Arrays.asList(231, 25, 171));
@@ -67,16 +67,34 @@ public class ClientEventLoader
 
     private Random random = new Random();
 
-    /**  右下角技能图标 **/
+    /**
+     * 右下角技能图标
+     **/
     private List<GuiSkillHDU> skillHDUList;
-    /** 技能列表是否需要更新，用于更新右下角的技能图标 **/
+    /**
+     * ctrl释放的另外两个技能图标
+     **/
+    private List<GuiSkillHDU> ctrlSkillHDUList;
+    /**
+     * 技能列表是否需要更新，用于更新右下角的技能图标
+     **/
     public boolean skillListDirt = true;
-    /** toast **/
+    /**
+     * toast
+     **/
     public String toast = "";
-    /** toast的剩余tick **/
+    /**
+     * toast的剩余tick
+     **/
     public int toastTick = 0;
 
-    /** 绘制技能按键图标变量 **/
+    /**
+     * 是否渲染技能图标
+     **/
+    public boolean showSkillWidget = true;
+    /**
+     * 绘制技能按键图标变量
+     **/
     private static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation("textures/gui/widgets.png");
 
 
@@ -89,8 +107,7 @@ public class ClientEventLoader
         this.toastTick = tick;
     }
 
-    private int reverseTick(int tick)
-    {
+    private int reverseTick(int tick) {
         if (tick < 0)
             return 0;
         if (tick < 60)
@@ -101,8 +118,7 @@ public class ClientEventLoader
         return 120 - tick;
     }
 
-    private void drawBlurBackground(float x, float y, float width, float height)
-    {
+    private void drawBlurBackground(float x, float y, float width, float height) {
         GlStateManager.pushMatrix();
         GlStateManager.disableTexture2D();
 //        GlStateManager.disableLighting();
@@ -117,22 +133,22 @@ public class ClientEventLoader
         GL11.glColor4f(1, 1, 1, 0);
         GL11.glVertex2d(x, y);
         GL11.glColor4f(1, 1, 1, 0);
-        GL11.glVertex2d(x, y+height);
+        GL11.glVertex2d(x, y + height);
         GL11.glColor4f(1, 1, 1, 0.6f);
-        GL11.glVertex2d(x+width/2, y+height);
+        GL11.glVertex2d(x + width / 2, y + height);
         GL11.glColor4f(1, 1, 1, 0.6f);
-        GL11.glVertex2d(x+width/2, y);
+        GL11.glVertex2d(x + width / 2, y);
         GL11.glEnd();
 
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glColor4f(1, 1, 1, 0.6f);
-        GL11.glVertex2d(x+width/2, y);
+        GL11.glVertex2d(x + width / 2, y);
         GL11.glColor4f(1, 1, 1, 0.6f);
-        GL11.glVertex2d(x+width/2, y+height);
+        GL11.glVertex2d(x + width / 2, y + height);
         GL11.glColor4f(1, 1, 1, 0);
-        GL11.glVertex2d(x+width, y+height);
+        GL11.glVertex2d(x + width, y + height);
         GL11.glColor4f(1, 1, 1, 0);
-        GL11.glVertex2d(x+width, y);
+        GL11.glVertex2d(x + width, y);
         GL11.glEnd();
 
         GlStateManager.disableBlend();
@@ -156,46 +172,63 @@ public class ClientEventLoader
         RenderHelper.disableStandardItemLighting();
         mc.ingameGUI.drawTexturedModalRect(x, y, 0, 66, width, height);
         mc.ingameGUI.drawTexturedModalRect(x + width / 2.0f, y, 200 - width / 2, 66, width / 2, height);
-        mc.ingameGUI.drawCenteredString(fontrenderer, key, (int)x + width / 2, (int)y + (height - 8) / 2, 14737632);
+        mc.ingameGUI.drawCenteredString(fontrenderer, key, (int) x + width / 2, (int) y + (height - 8) / 2, 14737632);
         GlStateManager.popMatrix();
     }
 
     /**
      * 控制打开player menu的事宜
      * 控制技能的释放
+     *
      * @param event
      */
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void onKeyInput(InputEvent.KeyInputEvent event)
-    {
+    public void onKeyInput(InputEvent.KeyInputEvent event) {
+
         EntityPlayer player = Minecraft.getMinecraft().player;
         if (KeyLoader.OPEN_MENU.isPressed()) {
-            player.openGui(Main.instance, Reference.GUI_PLAYER_MENU_MAIN, player.getEntityWorld(), (int)player.posX, (int)player.posY, (int)player.posZ);
-            CPacketOpenGui packet = new CPacketOpenGui(player.getEntityId(), Reference.GUI_PLAYER_MENU_MAIN, player.getEntityWorld().provider.getDimension(), (int)player.posX, (int)player.posY, (int)player.posZ);
+            player.openGui(Main.instance, Reference.GUI_PLAYER_MENU_MAIN, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
+            CPacketOpenGui packet = new CPacketOpenGui(player.getEntityId(), Reference.GUI_PLAYER_MENU_MAIN, player.getEntityWorld().provider.getDimension(), (int) player.posX, (int) player.posY, (int) player.posZ);
             NetworkLoader.instance.sendToServer(packet);
         }
+
+        // 判断是否按下ctrl键
+        GameSettings gameSettings = Minecraft.getMinecraft().gameSettings;
+        boolean flag = false;
+        if (gameSettings.keyBindSprint.isKeyDown())
+        {
+            flag = true;
+            skillListDirt = true;
+        }
+        else if (gameSettings.keyBindSprint.isPressed())
+        {
+            skillListDirt = true;
+        }
+
+
+        int begin = flag ? 2 : 0;
         if (KeyLoader.SKILL_1.isPressed()) {
             if (player.hasCapability(CapabilityLoader.SKILL_CAPABILITY, null)) {
                 ISkillCapability skillCapability = player.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
                 if (skillCapability == null) return;
 
-                if (!skillCapability.getActivePerformSkill(0).getName().equals(MagicSkillRegistry.PERFORM_SKILL_NONE.getName())) {
-                    if (skillCapability.getActivePerformSkill(0).getCurColdTime() > 0) {
+                if (!skillCapability.getActivePerformSkill(begin).getName().equals(MagicSkillRegistry.PERFORM_SKILL_NONE.getName())) {
+                    if (skillCapability.getActivePerformSkill(begin).getCurColdTime() > 0) {
                         toastMessage("技能冷却中", 40);
                     } else {
                         ICreatureCapability creatureCapability = player.getCapability(CapabilityLoader.CREATURE_CAPABILITY, null);
-                        if (creatureCapability != null && creatureCapability.getEnergy() < skillCapability.getActivePerformSkill(0).getPerformEnergy())
+                        if (creatureCapability != null && creatureCapability.getEnergy() < skillCapability.getActivePerformSkill(begin).getPerformEnergy())
                             toastMessage("蓝量不足", 40);
                     }
                 }
 
                 // 服务端运行
-                CPacketSkill packet = new CPacketSkill(player.getUniqueID(), skillCapability.getActivePerformSkill(0).getName(), 0, player.getEntityWorld().provider.getDimension(), player.getPosition(), 0);
+                CPacketSkill packet = new CPacketSkill(player.getUniqueID(), skillCapability.getActivePerformSkill(begin).getName(), begin, player.getEntityWorld().provider.getDimension(), player.getPosition(), 0);
                 NetworkLoader.instance.sendToServer(packet);
 
                 // 客户端运行
-                skillCapability.getActivePerformSkill(0).perform(player, player.getEntityWorld(), player.getPosition());
+                skillCapability.getActivePerformSkill(begin).perform(player, player.getEntityWorld(), player.getPosition());
             }
         }
         if (KeyLoader.SKILL_2.isPressed()) {
@@ -203,8 +236,8 @@ public class ClientEventLoader
                 ISkillCapability skillCapability = player.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
                 if (skillCapability == null) return;
 
-                if (!skillCapability.getActivePerformSkill(0).getName().equals(MagicSkillRegistry.PERFORM_SKILL_NONE.getName())) {
-                    if (skillCapability.getActivePerformSkill(1).getCurColdTime() > 0) {
+                if (!skillCapability.getActivePerformSkill(begin + 1).getName().equals(MagicSkillRegistry.PERFORM_SKILL_NONE.getName())) {
+                    if (skillCapability.getActivePerformSkill(begin + 1).getCurColdTime() > 0) {
                         toastMessage("技能冷却中", 40);
                     } else {
                         ICreatureCapability creatureCapability = player.getCapability(CapabilityLoader.CREATURE_CAPABILITY, null);
@@ -214,78 +247,82 @@ public class ClientEventLoader
                 }
 
                 // 服务端运行
-                CPacketSkill packet = new CPacketSkill(player.getUniqueID(), skillCapability.getActivePerformSkill(1).getName(), 1, player.getEntityWorld().provider.getDimension(), player.getPosition(), 0);
+                CPacketSkill packet = new CPacketSkill(player.getUniqueID(), skillCapability.getActivePerformSkill(begin + 1).getName(), begin + 1, player.getEntityWorld().provider.getDimension(), player.getPosition(), 0);
                 NetworkLoader.instance.sendToServer(packet);
 
                 // 客户端运行
-                skillCapability.getActivePerformSkill(1).perform(player, player.getEntityWorld(), player.getPosition());
+                skillCapability.getActivePerformSkill(begin + 1).perform(player, player.getEntityWorld(), player.getPosition());
             }
         }
+
     }
 
     /**
      * 监听技能是否变化，目前主要是用来修改客户端渲染
+     *
      * @param event
      */
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void onPlayerActiveSkillChanged(SkillChangedEvent event)
-    {
+    public void onPlayerActiveSkillChanged(SkillChangedEvent event) {
         skillListDirt = true;
     }
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void onPlayerLoggin(PlayerEvent.PlayerLoggedInEvent event)
-    {
+    public void onPlayerLoggin(PlayerEvent.PlayerLoggedInEvent event) {
         skillListDirt = true;
     }
 
 
     public static final ResourceLocation BACKGROUND = new ResourceLocation(Reference.MODID, "textures/gui/player_menu_main.png");
+
     /**
      * 控制技能冷却显示等的绘制
      * toast的绘制
      */
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void onPlayerScreenRender(RenderGameOverlayEvent event)
-    {
-        if (event.getType() == RenderGameOverlayEvent.ElementType.ALL)
-        {
+    public void onPlayerScreenRender(RenderGameOverlayEvent event) {
+        if (event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
             Minecraft mc = Minecraft.getMinecraft();
             EntityPlayer player = mc.player;
 
+            int totalDrawToken = 2;
             // 画技能的背景
-            if (player.hasCapability(CapabilityLoader.SKILL_CAPABILITY, null))
-            {
+            if (showSkillWidget && player.hasCapability(CapabilityLoader.SKILL_CAPABILITY, null)) {
                 ISkillCapability skillCapability = player.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
-                if (skillCapability != null)
-                {
+                if (skillCapability != null) {
                     List<IPerformSkill> performSkills = skillCapability.getActivePerformSkills();
-                    for (int i = 0; i < performSkills.size(); i++) {
-                        drawBlurBackground(event.getResolution().getScaledWidth() - 70,event.getResolution().getScaledHeight() - 19 + ((i - performSkills.size()) * 30), 100, 26);
+                    for (int i = 0; i < totalDrawToken; i++) {
+                        drawBlurBackground(event.getResolution().getScaledWidth() - 70, event.getResolution().getScaledHeight() - 19 + ((i - totalDrawToken) * 30), 100, 26);
                     }
-                    for (int i = 0; i < performSkills.size(); i++) {
+                    for (int i = 0; i < totalDrawToken; i++) {
                         String key = i == 0 ? KeyLoader.SKILL_1.getDisplayName() : KeyLoader.SKILL_2.getDisplayName();
-                        drawSkillPerformButtion(event.getResolution().getScaledWidth() - 55, event.getResolution().getScaledHeight() - 16 + ((i - performSkills.size()) * 30), key);
+                        drawSkillPerformButtion(event.getResolution().getScaledWidth() - 55, event.getResolution().getScaledHeight() - 16 + ((i - totalDrawToken) * 30), key);
                     }
                 }
             }
 
+            GameSettings gameSettings = Minecraft.getMinecraft().gameSettings;
             // 画技能
-            if (player.hasCapability(CapabilityLoader.SKILL_CAPABILITY, null))
-            {
+            if (showSkillWidget && player.hasCapability(CapabilityLoader.SKILL_CAPABILITY, null)) {
                 ISkillCapability skillCapability = player.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
-                if (skillCapability != null)
-                {
+                if (skillCapability != null) {
                     List<IPerformSkill> performSkills = skillCapability.getActivePerformSkills();
-                    if (skillHDUList == null || skillListDirt)
-                    {
+
+                    // 画ctrl的技能
+                    int begin = 0;
+                    if (gameSettings.keyBindSprint.isKeyDown()) {
+                        begin = 2;
+                    }
+
+                    if (skillHDUList == null || skillListDirt) {
                         skillHDUList = new ArrayList<>();
                         int i = 0;
-                        for (IPerformSkill performSkill : performSkills) {
-                            skillHDUList.add(new GuiSkillHDU(performSkill, event.getResolution().getScaledWidth() - 30, event.getResolution().getScaledHeight() - 20 + ((i - performSkills.size()) * 30)));
+                        for (int t = 0; t < totalDrawToken; t++) {
+                            IPerformSkill performSkill = performSkills.get(begin + t);
+                            skillHDUList.add(new GuiSkillHDU(performSkill, event.getResolution().getScaledWidth() - 30, event.getResolution().getScaledHeight() - 20 + ((i - totalDrawToken) * 30)));
                             i++;
                         }
                         skillListDirt = false;
@@ -294,9 +331,9 @@ public class ClientEventLoader
                     int i = 0;
                     float scale = 0.5f;
                     for (GuiSkillHDU skillHDU : skillHDUList) {
-                        skillHDU.setiSkill(performSkills.get(i));
+                        skillHDU.setiSkill(performSkills.get(i + begin));
                         skillHDU.setX(event.getResolution().getScaledWidth() - 30);
-                        skillHDU.setY(event.getResolution().getScaledHeight() - 20 + ((i - performSkills.size()) * 30));
+                        skillHDU.setY(event.getResolution().getScaledHeight() - 20 + ((i - totalDrawToken) * 30));
                         skillHDU.drawScreen(mc, scale);
                         i++;
                     }
@@ -304,8 +341,7 @@ public class ClientEventLoader
             }
 
             // 画蓝条
-            if (player.hasCapability(CapabilityLoader.CREATURE_CAPABILITY, null))
-            {
+            if (showSkillWidget && player.hasCapability(CapabilityLoader.CREATURE_CAPABILITY, null)) {
                 ICreatureCapability creatureCapability = player.getCapability(CapabilityLoader.CREATURE_CAPABILITY, null);
 
                 if (creatureCapability != null) {
@@ -313,7 +349,7 @@ public class ClientEventLoader
                     double progress = energy / creatureCapability.getMaxEnergy();
                     mc.getTextureManager().bindTexture(BACKGROUND);
                     mc.ingameGUI.drawTexturedModalRect(event.getResolution().getScaledWidth() - 62, event.getResolution().getScaledHeight() - 15, 0, 225, 61, 11);
-                    mc.ingameGUI.drawTexturedModalRect(event.getResolution().getScaledWidth() - 62 + 3, event.getResolution().getScaledHeight() - 15 + 3, 0,236, (int) (55 * progress), 5);
+                    mc.ingameGUI.drawTexturedModalRect(event.getResolution().getScaledWidth() - 62 + 3, event.getResolution().getScaledHeight() - 15 + 3, 0, 236, (int) (55 * progress), 5);
                 }
             }
 

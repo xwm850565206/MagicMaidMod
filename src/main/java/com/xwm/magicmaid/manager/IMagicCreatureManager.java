@@ -53,6 +53,14 @@ public interface IMagicCreatureManager
     float caculateDamageAmount(@Nullable EntityLivingBase attacker, EntityLivingBase target, @Nullable ItemStack stack, float amount);
 
     /**
+     * 计算技能的伤害值
+     * @param performer 释放技能者
+     * @param amount 初始伤害值
+     * @return 计算过后的伤害值(目前主要是技能倍率)
+     */
+    float caculateSkillDamageAmount(@Nullable EntityLivingBase performer, float amount);
+
+    /**
      * 对 magic creature capability 固有属性进行增减(提高减伤率 降低减伤率 等等)
      * @param creature 被影响的生物
      * @param attribute 被增减的属性

@@ -67,14 +67,20 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
     @Override
     public void readEntityFromNBT(NBTTagCompound compound)
     {
-        super.readEntityFromNBT(compound);
         this.setHasWeapon(compound.getBoolean("hasWeapon"));
         this.setHasArmor(compound.getBoolean("hasArmor"));
-        this.setFirstGetArmor(compound.getBoolean("isFirstGetArmor"));
         this.setWeaponType(compound.getInteger("weaponType"));
         this.setArmorType(compound.getInteger("armorType"));
         this.inventory = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, this.inventory);
+
+        if (hasWeapon())
+            this.getEquipment(ItemEquipment.valueOf(EnumEquipment.valueOf(getWeaponType())));
+
+        if (hasArmor())
+            this.getEquipment(ItemEquipment.valueOf(EnumEquipment.valueOf(getArmorType())));
+
+        super.readEntityFromNBT(compound);
     }
 
     @Override

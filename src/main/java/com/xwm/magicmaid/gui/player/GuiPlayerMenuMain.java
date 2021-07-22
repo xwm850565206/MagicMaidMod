@@ -1,15 +1,18 @@
 package com.xwm.magicmaid.gui.player;
 
+import com.xwm.magicmaid.Main;
 import com.xwm.magicmaid.network.CPacketChangeDifficulty;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.skill.CPacketSkillPoint;
 import com.xwm.magicmaid.object.item.interfaces.ICanGetSkillPoint;
 import com.xwm.magicmaid.player.capability.CapabilityLoader;
 import com.xwm.magicmaid.player.capability.ISkillCapability;
+import com.xwm.magicmaid.registry.MagicMenuElementRegistry;
 import com.xwm.magicmaid.store.WorldDifficultyData;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -29,6 +32,7 @@ import java.io.IOException;
 
 public class GuiPlayerMenuMain extends GuiContainer
 {
+    public static final String NAME = "主菜单";
     private static final String[] DIFFICULT = {"简单", "普通", "困难"};
     private static final ResourceLocation BACKGROUND = new ResourceLocation(Reference.MODID, "textures/gui/player_menu_main.png");
     private final int imageWidth = 176;
@@ -54,14 +58,20 @@ public class GuiPlayerMenuMain extends GuiContainer
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
 
-        this.addButton(new MenuButton(0, i + this.imageWidth, j, "主菜单")).enabled = false;
-        this.addButton(new MenuButton(1, i + this.imageWidth, j + 16+1, "属性")).enabled = true;
-        this.addButton(new MenuButton(2, i + this.imageWidth, j + 16*2+1, "技能")).enabled = true;
-        this.addButton(new MenuButton(3, i + this.imageWidth, j + 16*3+1, "武器")).enabled = true;
+        for (String value : MagicMenuElementRegistry.MENU_INDEX.values())
+        {
+            int index = MagicMenuElementRegistry.getMenuIndex(value);
+            this.addButton(new MenuButton(index, i + this.imageWidth, j + 16 * index, value)).enabled = (!value.equals(NAME));
+        }
 
-        this.addButton(new GuiButton(4, i + 97, j + 10, 20, 11, "吸收"));
-        backward = this.addButton(new SelectButton(5, i + 145, j + 66, false));
-        forward = this.addButton(new SelectButton(6, i + 145 + 9 + 5, j + 66, true));
+        int menuSize = MagicMenuElementRegistry.MENU_INDEX.size();
+
+        this.addButton(new GuiButton(menuSize, i + 97, j + 10, 20, 11, "吸收"));
+
+        backward = this.addButton(new SelectButton(menuSize+1, i + 145, j + 66, false));
+        forward = this.addButton(new SelectButton(menuSize+2, i + 145 + 9 + 5, j + 66, true));
+
+        this.addButton(new GuiButton(menuSize+3, i + 145, j + 49, 26, 11, "ON/OFF"));
 
         backward.enabled = true;
         forward.enabled = true;
@@ -89,31 +99,26 @@ public class GuiPlayerMenuMain extends GuiContainer
      */
     protected void actionPerformed(GuiButton button) throws IOException
     {
+        int menuSize = MagicMenuElementRegistry.MENU_INDEX.size();
         if (button.enabled)
         {
-            if (button.id == 0)
+            if (button.id < menuSize)
             {
-                // todo
+                String name = MagicMenuElementRegistry.getIndexMenu(button.id);
+                if (!name.equals(NAME))
+                {
+                    GuiScreen screen = MagicMenuElementRegistry.getIndexGui(button.id);
+                    if (screen != null)
+                        mc.displayGuiScreen(screen);
+                }
             }
-            else if (button.id == 1)
-            {
-                mc.displayGuiScreen(new GuiPlayerMenuAttribute());
-            }
-            else if (button.id == 2)
-            {
-                mc.displayGuiScreen(new GuiPlayerMenuSkill());
-            }
-            else if (button.id == 3)
-            {
-                ; // todo
-            }
-            else if (button.id == 4)
+            else if (button.id == menuSize)
             {
 //                ISkillManagerImpl.instance.addSkillPoint(player);
                 CPacketSkillPoint packet = new CPacketSkillPoint(player.getEntityWorld().provider.getDimension(), player.getEntityId());
                 NetworkLoader.instance.sendToServer(packet);
             }
-            else if(button.id == 5)
+            else if(button.id == menuSize + 1)
             {
                 WorldDifficultyData data = WorldDifficultyData.get(Minecraft.getMinecraft().world);
                 int difficulty = data.getWorldDifficulty() - 1;
@@ -121,13 +126,17 @@ public class GuiPlayerMenuMain extends GuiContainer
                 CPacketChangeDifficulty packet = new CPacketChangeDifficulty(difficulty); // server update
                 NetworkLoader.instance.sendToServer(packet);
             }
-            else if (button.id == 6)
+            else if (button.id == menuSize + 2)
             {
                 WorldDifficultyData data = WorldDifficultyData.get(Minecraft.getMinecraft().world);
                 int difficulty = data.getWorldDifficulty() + 1;
                 data.setWorldDifficulty(difficulty);
                 CPacketChangeDifficulty packet = new CPacketChangeDifficulty(difficulty);
                 NetworkLoader.instance.sendToServer(packet);
+            }
+            else if (button.id == menuSize + 3)
+            {
+                Main.proxy.changeSkillSwitch();
             }
         }
     }
@@ -206,6 +215,8 @@ public class GuiPlayerMenuMain extends GuiContainer
     {
         String tmp = DIFFICULT[WorldDifficultyData.get(mc.world).getWorldDifficulty()];
         fontRenderer.drawString(tmp, 125,  68, 0x000000);
+
+        fontRenderer.drawString("技能", 125, 50, 0x000000);
 
         ItemStack stack = this.singleSlot.getStackInSlot(0);
         if (stack.getItem() instanceof ICanGetSkillPoint) {
