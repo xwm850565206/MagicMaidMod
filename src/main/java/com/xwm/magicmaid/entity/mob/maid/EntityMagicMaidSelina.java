@@ -129,10 +129,10 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
                 break;
             case WISE:
                 this.setHasArmor(true);
-                this.setMaxHealthbarnum(200);
+                this.setMaxHealthbarnum(50);
                 this.setArmorType(EnumEquipment.toInt(EnumEquipment.WISE));
                 if (this.isFirstGetArmor()) {
-                    this.setHealthbarnum(200);
+                    this.setHealthbarnum(50);
                     this.setFirstGetArmor(false);
                 }
                 break;

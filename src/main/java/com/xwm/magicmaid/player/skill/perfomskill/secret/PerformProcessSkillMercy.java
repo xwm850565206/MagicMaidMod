@@ -203,7 +203,7 @@ public class PerformProcessSkillMercy extends PerformProcessSkillBase
                         0,
                         0,
                         0,
-                        0, 1, 0,
+                        0.33, 0.33, 0.33,
                         EnumCustomParticles.MAGIC);
                 NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(taskOwner.getEntityWorld().provider.getDimension(), d0, d1, d2, 40.0D);
                 NetworkLoader.instance.sendToAllAround(particlePacket, target);

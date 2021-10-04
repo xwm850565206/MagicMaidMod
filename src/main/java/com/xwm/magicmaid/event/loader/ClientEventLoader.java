@@ -404,7 +404,7 @@ public class ClientEventLoader {
         if (effect != null && effect.getDuration() > 0){
             event.setBlue(0);
             event.setGreen(0);
-            event.setRed(158.0f / 255.0f);
+            event.setRed(120.0f / 255.0f);
             return;
         }
 
@@ -427,8 +427,8 @@ public class ClientEventLoader {
         if (effect != null && effect.getDuration() > 0) {
             GlStateManager.setFog(GlStateManager.FogMode.EXP);
             GlStateManager.setFogStart(0.0F);
-            GlStateManager.setFogEnd(7 * 0.8F);
-            GlStateManager.setFogDensity(0.3F);
+            GlStateManager.setFogEnd(8 * 0.8F);
+            GlStateManager.setFogDensity(0.1F);
             return;
         }
 
@@ -542,7 +542,7 @@ public class ClientEventLoader {
             if (entityData.hasKey(Reference.MODID + "obsession"))
                 flag = entityData.getBoolean(Reference.MODID + "obsession");
             else {
-                flag = random.nextDouble() < 0.2;
+                flag = random.nextDouble() < 0.4;
                 entityData.setBoolean(Reference.MODID + "obsession", flag);
                 CPacketEntityData packet = new CPacketEntityData(entityLivingBase.getEntityId(),
                         entityLivingBase.getEntityWorld().provider.getDimension(),

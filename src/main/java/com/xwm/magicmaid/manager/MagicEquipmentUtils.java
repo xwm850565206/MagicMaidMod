@@ -33,8 +33,19 @@ public class MagicEquipmentUtils
      */
     public static boolean checkEnemy(EntityLivingBase player, EntityLivingBase entityLivingBase)
     {
-        if (!(player instanceof EntityPlayer))
+        if (!(player instanceof EntityPlayer)) {
+            if (player == entityLivingBase)
+                return false;
+            else if (player instanceof IEntityTameableCreature)
+                if(((IEntityTameableCreature) player).hasOwner())
+                {
+                    if (((IEntityTameableCreature) player).getOwnerID().equals(entityLivingBase.getUniqueID())) // 主人ID
+                        return false;
+                    else if (entityLivingBase instanceof EntityTameable && ((IEntityTameableCreature) player).getOwnerID().equals(((EntityTameable) entityLivingBase).getOwnerId())) // 主人的宠物ID
+                        return false;
+                }
             return true;
+        }
 
         if (entityLivingBase instanceof EntityMaidWeapon)
             return false;

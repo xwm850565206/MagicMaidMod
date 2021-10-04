@@ -39,7 +39,7 @@ public class PunishOperationHandler
     }
 
     //todo
-    private static void changeGameMode(EntityPlayerMP entityPlayer){
+    private static void changeGameMode(EntityPlayerMP entityPlayer) {
         if (entityPlayer.world.isRemote)
             return;
 //        FMLCommonHandler.instance().getMinecraftServerInstance().setForceGamemode(true);
@@ -49,6 +49,13 @@ public class PunishOperationHandler
 //        FMLCommonHandler.instance().getMinecraftServerInstance().setForceGamemode(true);
     }
 
+    private static void killPlayer(EntityPlayerMP entityPlayer) {
+        int difficulty = WorldDifficultyData.get(entityPlayer.getEntityWorld()).getWorldDifficulty();
+        if (difficulty == 2) {// 只有难度2击杀玩家
+            entityPlayer.setHealth(0);
+        }
+    }
+
     public static void punishPlayer(EntityPlayerMP entityPlayer, int punishLevel, String message){
         if ((punishLevel & 1) == 1)
             clearPlayerInv(entityPlayer);
@@ -56,9 +63,11 @@ public class PunishOperationHandler
             kickPlayer(entityPlayer);
         if ((punishLevel & 4) == 4)
             changeGameMode(entityPlayer);
+        if ((punishLevel & 8) == 8)
+            killPlayer(entityPlayer);
 
         int difficulty = WorldDifficultyData.get(entityPlayer.getEntityWorld()).getWorldDifficulty();
         if (message != null && !message.equals(""))
-            entityPlayer.sendMessage(new TextComponentString("当前难度:" + difficulty + " 触发惩罚: " + message));
+            entityPlayer.sendMessage(new TextComponentString("当前难度:" + difficulty + " 触发惩罚: " + message + ",惩罚将根据难度变动。"));
     }
 }

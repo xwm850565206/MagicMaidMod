@@ -18,6 +18,7 @@ import com.xwm.magicmaid.registry.MagicSkillRegistry;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
@@ -284,12 +285,8 @@ public class CommonEventLoader
         EntityPlayer player = event.player;
         World world = player.getEntityWorld();
         if (!world.isRemote) {
-            if (player.getHeldItemOffhand().isEmpty())
-                player.setHeldItem(EnumHand.OFF_HAND, new ItemStack(ItemInit.ITEME_INSTRUCCTION_BOOK));
-            else if (player.getHeldItemOffhand().getItem() != ItemInit.ITEME_INSTRUCCTION_BOOK){
-                EntityItem entityItem = new EntityItem(player.getEntityWorld(), player.posX, player.posY, player.posZ, new ItemStack(ItemInit.ITEME_INSTRUCCTION_BOOK));
-                world.spawnEntity(entityItem);
-            }
+            if (player.getHeldItemMainhand().isEmpty()) // note: 8.5 现在只在玩家主手为空的时候给书
+                player.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(ItemInit.ITEME_INSTRUCCTION_BOOK));
 
             ISkillCapability skillCapability = event.player.getCapability(CapabilityLoader.SKILL_CAPABILITY, null);
             for (IAttributeSkill skill : skillCapability.getAttributeSkills()) {

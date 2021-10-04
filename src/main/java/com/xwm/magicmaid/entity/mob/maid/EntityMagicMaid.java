@@ -171,6 +171,32 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
                 getEquipment(ItemEquipment.valueOf(EnumEquipment.valueOf(getWeaponType())));
             }
         }
+
+        // 版本8.5，添加最大血量被减少检测机制
+        if (getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getAttributeValue() <= 0) {
+            getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).removeAllModifiers();
+
+            if (!world.isRemote) {
+                EntityPlayer player = world.getClosestPlayer(posX, posY, posZ, 20, true);
+                if (player != null) {
+                    PunishOperationHandler.punishPlayer((EntityPlayerMP) player, 9, "检测到血量上限被减少到0以下，尝试斩杀玩家");
+                }
+            }
+
+        }
+        if (getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue() <= 0) {
+            getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(100);
+
+            EntityPlayer player = world.getClosestPlayer(posX, posY, posZ, 20, true);
+            if (player != null) {
+                PunishOperationHandler.punishPlayer((EntityPlayerMP) player, 9, "检测到血量上限被减少到0以下，尝试斩杀玩家");
+            }
+        }
+
+//        if (!this.isAddedToWorld() && this.getTrueMaxHealth() > 0) // add to world机制  如果被从世界移除，但是没死
+//        {
+//            this.onAddedToWorld();
+//        }
     }
 
     @Override

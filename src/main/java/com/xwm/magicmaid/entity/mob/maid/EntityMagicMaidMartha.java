@@ -119,10 +119,10 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
                 break;
             case PROTECTOR:
                 this.setHasArmor(true);
-                this.setMaxHealthbarnum(200); //提高血量上限
+                this.setMaxHealthbarnum(50); //提高血量上限
                 this.setArmorType(EnumEquipment.toInt(EnumEquipment.PROTECTOR));
                 if (this.isFirstGetArmor()) {
-                    this.setHealthbarnum(200);
+                    this.setHealthbarnum(50);
                     this.setFirstGetArmor(false);
                 }
                 break;

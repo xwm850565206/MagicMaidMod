@@ -95,10 +95,10 @@ public class EntityMagicMaidRett extends EntityMagicMaid
                 break;
             case IMMORTAL:
                 this.setHasArmor(true);
-                this.setMaxHealthbarnum(1000);
+                this.setMaxHealthbarnum(200);
                 this.setArmorType(EnumEquipment.toInt(EnumEquipment.IMMORTAL));
                 if (this.isFirstGetArmor()) {
-                    this.setHealthbarnum(1000);
+                    this.setHealthbarnum(200);
                     this.setFirstGetArmor(false);
                 }
                 break;

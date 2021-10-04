@@ -2,11 +2,13 @@ package com.xwm.magicmaid.manager;
 
 import com.xwm.magicmaid.entity.mob.basic.AbstractEntityMagicCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAvoidThingCreature;
+import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.entity.CPacketCapabilityUpdate;
 import com.xwm.magicmaid.network.entity.SPacketCapabilityUpdate;
 import com.xwm.magicmaid.player.capability.CapabilityLoader;
 import com.xwm.magicmaid.player.capability.ICreatureCapability;
+import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -160,6 +162,9 @@ public class IMagicCreatureManagerImpl implements IMagicCreatureManager {
         }
         boolean flag = false;
         try {
+            if (entityLivingBase instanceof EntityPlayerMP && entityLivingBase.getTotalArmorValue() > 29)
+                source = source.setDamageBypassesArmor(); // 如果护甲过高会变成穿透伤害
+
             if (entityLivingBase instanceof AbstractEntityMagicCreature)
                 flag = entityLivingBase.attackEntityFrom(source, amount);
             else if (source.getImmediateSource() != null && source.getImmediateSource() instanceof EntityLivingBase)
@@ -168,6 +173,16 @@ public class IMagicCreatureManagerImpl implements IMagicCreatureManager {
                 flag = entityLivingBase.attackEntityFrom(source, caculateDamageAmount((EntityLivingBase) source.getTrueSource(), entityLivingBase, null, amount));
             else
                 flag = entityLivingBase.attackEntityFrom(source, caculateDamageAmount(null, entityLivingBase, null, amount));
+
+            if (entityLivingBase instanceof EntityPlayerMP && !flag)
+            {
+                if ((source.getTrueSource() != null && source.getTrueSource() instanceof IEntityBossCreature)
+                    || (source.getImmediateSource() != null && source.getImmediateSource() instanceof IEntityBossCreature))
+                {
+                    PunishOperationHandler.punishPlayer((EntityPlayerMP) entityLivingBase, 8, "检测到玩家免伤机制过强，尝试斩杀");
+                }
+            }
+
         }
         catch (Exception e) {
             return false;

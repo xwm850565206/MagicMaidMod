@@ -124,7 +124,6 @@ public class TileEntityMagicCircle extends TileEntity implements IInventory, ITi
         if (compound.hasKey("CustomName", 8))
             this.setCustomName(compound.getString("CustomName"));
     }
-
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
@@ -141,6 +140,7 @@ public class TileEntityMagicCircle extends TileEntity implements IInventory, ITi
             compound.setString("CustomName", this.customName);
         return compound;
     }
+
 
 
     public boolean isCooking()

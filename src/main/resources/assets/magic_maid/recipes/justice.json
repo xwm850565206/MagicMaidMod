@@ -1,18 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern":
-  [
-    "***",
-    "***",
-    "***"
-  ],
-  "key":
-  {
-    "*":
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "magic_maid:justice_soul_piece"
+    },
     {
       "item": "magic_maid:justice_soul_piece"
     }
-  },
+  ],
 
   "result":
   {
