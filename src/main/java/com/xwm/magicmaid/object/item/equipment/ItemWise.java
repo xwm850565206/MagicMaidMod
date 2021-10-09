@@ -1,6 +1,6 @@
 package com.xwm.magicmaid.object.item.equipment;
 
-import com.xwm.magicmaid.enumstorage.EnumEquipment;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
@@ -12,7 +12,7 @@ public class ItemWise extends ItemArmor
 {
     public ItemWise(String name) {
         super(name);
-        enumEquipment = EnumEquipment.WISE;
+        this.setEquipmentAttribute(MagicEquipmentRegistry.WISE);
     }
 
     @Override

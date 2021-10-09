@@ -1,11 +1,10 @@
 package com.xwm.magicmaid.object.item.equipment;
 
-import com.xwm.magicmaid.enumstorage.EnumAttackType;
-import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -33,7 +32,7 @@ public class ItemWhisper extends ItemWeapon
 
     public ItemWhisper(String name) {
         super(name);
-        enumEquipment = EnumEquipment.WHISPER;
+        this.setEquipmentAttribute(MagicEquipmentRegistry.WHISPER);
     }
 
     @Override
@@ -46,22 +45,6 @@ public class ItemWhisper extends ItemWeapon
         tooltip.add("");
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
-
-
-//    public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
-//    {
-//        if (target.getEntityWorld().isRemote)
-//            return true;
-////
-////        if (target instanceof EntityMagicMaidMartha)
-////            target.attackEntityFrom(new EntityDamageSource("killed_martha", attacker), 0);
-////        else if (target instanceof EntityMagicMaidRett)
-////            target.attackEntityFrom(new EntityDamageSource("killed_rett", attacker), 0);
-////        else
-////            target.attackEntityFrom(new EntityDamageSource("killed_selina", attacker), 0);
-//
-//        return true;
-//    }
 
     /**
      * How long it takes to use or consume an item
@@ -102,9 +85,9 @@ public class ItemWhisper extends ItemWeapon
                     continue;
                 // 造成大量伤害伤害 和 10点真实伤害
                 if (playerIn instanceof EntityPlayer)
-                    IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLiving1, DamageSource.causePlayerDamage((EntityPlayer) playerIn), MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.WHISPER));
+                    IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLiving1, DamageSource.causePlayerDamage((EntityPlayer) playerIn), MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), getEquipmentAttribute()));
                 else
-                    IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLiving1, DamageSource.causeMobDamage(playerIn), MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.WHISPER));
+                    IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLiving1, DamageSource.causeMobDamage(playerIn), MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), getEquipmentAttribute()));
 
                 entityLiving1.getCombatTracker().trackDamage(DamageSource.LIGHTNING_BOLT, entityLiving1.getHealth(), 0);
                 IMagicCreatureManagerImpl.getInstance().setHealth(entityLiving1, entityLiving1.getHealth() - 10);
@@ -238,12 +221,8 @@ public class ItemWhisper extends ItemWeapon
         }
     }
 
-    public EnumAttackType getAttackType() {
-        return EnumAttackType.WHISPER;
-    }
-
     //基础伤害
-    public int getBaseDamage() {
+    public static int getBaseDamage() {
         return 20;
     }
 }

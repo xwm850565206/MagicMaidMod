@@ -2,8 +2,6 @@ package com.xwm.magicmaid.entity.ai.martha;
 
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
-import com.xwm.magicmaid.enumstorage.EnumAttackType;
-import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
@@ -11,6 +9,7 @@ import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.particle.SPacketParticle;
 import com.xwm.magicmaid.network.particle.SPacketThreeParamParticle;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -22,6 +21,8 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.util.List;
 import java.util.Random;
+
+import static com.xwm.magicmaid.registry.MagicEquipmentRegistry.REPANTENCE;
 
 public class EntityAIRepantence extends EntityAIBase
 {
@@ -45,12 +46,12 @@ public class EntityAIRepantence extends EntityAIBase
 
         if (!maid.hasOwner() && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS) //如果没有主人又不是boss就不放技能
             return false;
-        if (EnumEquipment.valueOf(maid.getWeaponType()) != EnumEquipment.REPATENCE)
+        if (MagicEquipmentRegistry.getAttribute(maid.getWeaponType()) != REPANTENCE)
             return false;
         if (EnumMode.valueOf(maid.getMode()) != EnumMode.FIGHT && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS)
             return false;
 
-        return tick++ >= this.maid.getAttackColdTime(EnumAttackType.CONVICTION);
+        return tick++ >= this.maid.getAttackColdTime(REPANTENCE);
     }
 
     public boolean shouldContinueExecuting(){
@@ -86,7 +87,7 @@ public class EntityAIRepantence extends EntityAIBase
                     continue;
 //                float health = entityLivingBase.getHealth();
                 IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLivingBase, new EntityDamageSource("repantence_attack", maid).setDamageBypassesArmor(),
-                        maid.getAttackDamage(EnumAttackType.REPANTENCE));
+                        maid.getAttackDamage(REPANTENCE));
 //                if (health == entityLivingBase.getHealth() && health > 0){
 //                    entityLivingBase.setHealth(0);
 //                    if (entityLivingBase instanceof EntityPlayerMP) {
@@ -96,7 +97,7 @@ public class EntityAIRepantence extends EntityAIBase
                 playParticle(entityLivingBase.getEntityBoundingBox());
 
                 if (maid.getRank() >= 2) //2阶造成伤害回血
-                    maid.heal(maid.getAttackDamage(EnumAttackType.REPANTENCE));
+                    maid.heal(maid.getAttackDamage(REPANTENCE));
 
                 if (entityLivingBase.getHealth() <= 0){
                     playDeathParticle(entityLivingBase.getEntityBoundingBox());

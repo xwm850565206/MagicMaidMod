@@ -163,7 +163,7 @@ public class DimensionChurch extends WorldProvider
             this.fightManager.tick();
         }
 
-        if (this.getWorldTime() == 1 && this.world.loadedEntityList.size() > 50) {
+        if (this.getWorldTime() % 2000 == 0 && this.world.loadedEntityList.size() > 50) {
             for (Entity entity : this.world.loadedEntityList)
             {
                 if (entity instanceof EntityVillager)

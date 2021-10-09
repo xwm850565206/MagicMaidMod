@@ -1,16 +1,16 @@
 package com.xwm.magicmaid.entity.mob.maid;
 
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
-import com.xwm.magicmaid.enumstorage.EnumAttackType;
-import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.init.ItemInit;
+import com.xwm.magicmaid.manager.IMagicBossManager;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.RenderAreaPacket;
+import com.xwm.magicmaid.object.item.equipment.EquipmentAttribute;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
 import com.xwm.magicmaid.util.handlers.LootTableHandler;
 import com.xwm.magicmaid.world.dimension.DimensionChurch;
-import com.xwm.magicmaid.manager.IMagicBossManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -22,6 +22,8 @@ import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+
+import static com.xwm.magicmaid.registry.MagicEquipmentRegistry.NONE;
 
 public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements IEntityBossCreature
 {
@@ -61,7 +63,7 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
     {
         super.onLivingUpdate();
 
-        if (EnumEquipment.valueOf(this.getWeaponType()) == EnumEquipment.NONE){
+        if (MagicEquipmentRegistry.getAttribute(this.getWeaponType()) == NONE){
             double f = rand.nextDouble();
             if (f < 0.5)
                 this.setInventorySlotContents(0, new ItemStack(ItemInit.ITEM_PANDORA));
@@ -95,8 +97,8 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
     protected ResourceLocation getLootTable()
     {
         if (getHealth() > 0) return null;
-        EnumEquipment equipment = EnumEquipment.valueOf(getWeaponType());
-        return equipment == EnumEquipment.PANDORA ? LootTableHandler.PANDORA : LootTableHandler.WHISPER;
+        EquipmentAttribute equipment = MagicEquipmentRegistry.getAttribute(getWeaponType());
+        return equipment == MagicEquipmentRegistry.PANDORA ? LootTableHandler.PANDORA : LootTableHandler.WHISPER;
     }
 
 
@@ -173,7 +175,7 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
     }
 
     @Override
-    public int getAttackDamage(EnumAttackType type)
+    public int getAttackDamage(EquipmentAttribute type)
     {
         return factor * super.getAttackDamage(type);
     }

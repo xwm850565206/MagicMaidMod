@@ -1,7 +1,5 @@
 package com.xwm.magicmaid.object.item.equipment;
 
-import com.xwm.magicmaid.enumstorage.EnumAttackType;
-import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
@@ -9,6 +7,7 @@ import com.xwm.magicmaid.network.particle.SPacketParticle;
 import com.xwm.magicmaid.network.particle.SPacketThreeParamParticle;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -33,7 +32,7 @@ public class ItemRepantence extends ItemWeapon
 
     public ItemRepantence(String name) {
         super(name);
-        enumEquipment = EnumEquipment.REPATENCE;
+        this.setEquipmentAttribute(MagicEquipmentRegistry.REPANTENCE);
     }
 
     /**
@@ -66,7 +65,7 @@ public class ItemRepantence extends ItemWeapon
 
             try {
                 IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLiving, new EntityDamageSource("repantence_attack", playerIn).setDamageBypassesArmor(),
-                        MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), EnumAttackType.REPANTENCE));
+                        MagicEquipmentUtils.getAttackDamage(playerIn, playerIn.getHeldItem(handIn), getEquipmentAttribute()));
 
                 playParticle(entityLiving.getEntityBoundingBox(), worldIn);
                 if (entityLiving.getHealth() <= 0)
@@ -177,12 +176,8 @@ public class ItemRepantence extends ItemWeapon
         }
     }
 
-    public EnumAttackType getAttackType() {
-        return EnumAttackType.REPANTENCE;
-    }
-
     //基础伤害
-    public int getBaseDamage() {
+    public static int getBaseDamage() {
         return 15;
     }
 }

@@ -1,6 +1,6 @@
 package com.xwm.magicmaid.entity.mob.basic.interfaces;
 
-import com.xwm.magicmaid.enumstorage.EnumAttackType;
+import com.xwm.magicmaid.object.item.equipment.EquipmentAttribute;
 import net.minecraft.entity.EntityLivingBase;
 
 /**
@@ -8,9 +8,9 @@ import net.minecraft.entity.EntityLivingBase;
  */
 public interface IEntityAttackableCreature
 {
-    int getAttackDamage(EnumAttackType type);
+    int getAttackDamage(EquipmentAttribute type);
 
-    int getAttackColdTime(EnumAttackType type);
+    int getAttackColdTime(EquipmentAttribute type);
 
     boolean isEnemy(EntityLivingBase entityLivingBase);
 

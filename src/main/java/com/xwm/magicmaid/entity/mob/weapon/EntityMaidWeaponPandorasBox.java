@@ -1,8 +1,6 @@
 package com.xwm.magicmaid.entity.mob.weapon;
 
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
-import com.xwm.magicmaid.enumstorage.EnumAttackType;
-import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
@@ -23,6 +21,8 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.util.List;
 
+import static com.xwm.magicmaid.registry.MagicEquipmentRegistry.PANDORA;
+
 public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
 {
     private static final DataParameter<Boolean> ISOPEN = EntityDataManager.<Boolean>createKey(EntityMaidWeaponPandorasBox.class, DataSerializers.BOOLEAN);
@@ -34,13 +34,13 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
 
     public EntityMaidWeaponPandorasBox(World worldIn) {
         super(worldIn);
-        enumEquipment = EnumEquipment.PANDORA;
+        equipmentAttribute = PANDORA;
     }
 
     public EntityMaidWeaponPandorasBox(World worldIn, ItemStack stack) {
         super(worldIn);
         this.itemPandoraBox = stack.copy();
-        this.enumEquipment = EnumEquipment.PANDORA;
+        equipmentAttribute = PANDORA;
         this.radius = (int) MagicEquipmentUtils.getRadiusFromAxisAlignedBB(MagicEquipmentUtils.getUsingArea(stack, null, null));
     }
 
@@ -88,14 +88,14 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
                             continue;
 //                        float health = entityLivingBase.getHealth();
                         IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLivingBase, DamageSource.causeMobDamage(this.maid),
-                                this.maid.getAttackDamage(EnumAttackType.PANDORA));
+                                this.maid.getAttackDamage(PANDORA));
 //                        if (health == entityLivingBase.getHealth() && health > 0){
 //                            if (entityLivingBase instanceof EntityPlayerMP) {
 //                                entityLivingBase.sendMessage(new TextComponentString("攻击不生效，尝试直接斩杀(原因见说终焉记事)"));
 //                            }
 //                            entityLivingBase.setHealth(0);
 //                        }
-                        this.maid.heal(this.maid.getAttackDamage(EnumAttackType.PANDORA)); //吸血给自己
+                        this.maid.heal(this.maid.getAttackDamage(PANDORA)); //吸血给自己
                         playParticle(entityLivingBase);
                     }
                 }catch (Exception e){
@@ -137,7 +137,7 @@ public class EntityMaidWeaponPandorasBox extends EntityMaidWeapon
                 for (EntityLivingBase entityLivingBase : entityLivingBases) {
                     if (!MagicEquipmentUtils.checkEnemy(otherOwner, entityLivingBase))
                         continue;
-                    int damage = MagicEquipmentUtils.getAttackDamage(otherOwner, itemPandoraBox, EnumAttackType.PANDORA);
+                    int damage = MagicEquipmentUtils.getAttackDamage(otherOwner, itemPandoraBox, PANDORA);
                     IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLivingBase, DamageSource.causeMobDamage(otherOwner), damage);
                     otherOwner.heal(damage); //吸血给自己
                     playParticle(entityLivingBase);

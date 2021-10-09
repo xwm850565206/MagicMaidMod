@@ -3,11 +3,9 @@ package com.xwm.magicmaid.manager;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityEquipmentCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityTameableCreature;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
-import com.xwm.magicmaid.enumstorage.EnumAttackType;
-import com.xwm.magicmaid.enumstorage.EnumEquipment;
+import com.xwm.magicmaid.object.item.equipment.EquipmentAttribute;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.player.MagicCreatureAttributes;
-import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -21,6 +19,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class MagicEquipmentUtils
@@ -71,17 +70,18 @@ public class MagicEquipmentUtils
         return true;
     }
 
-    public static int getAttackDamage(ItemStack stack, EnumAttackType type)
+    public static int getAttackDamage(ItemStack stack, EquipmentAttribute attribute)
     {
         ItemWeapon weapon = (ItemWeapon) stack.getItem();
         int level = weapon.getLevel(stack);
 
-        int damage = MagicEquipmentRegistry.getEquipmentAttack(type, level);
+        level = Math.min(Math.max(level, 0), 7);
+        int damage = attribute.getAttackDamage().get(level);
 
         return weapon.getBaseDamage() + damage;//todo 还有很多没写进来
     }
 
-    public static int getAttackDamage(EntityLivingBase player, ItemStack stack, EnumAttackType type)
+    public static int getAttackDamage(EntityLivingBase player, ItemStack stack, EquipmentAttribute attribute)
     {
         if (!(player instanceof EntityPlayer))
             return 10;
@@ -99,20 +99,20 @@ public class MagicEquipmentUtils
         ItemWeapon weapon = (ItemWeapon) stack.getItem();
         int level = weapon.getLevel(stack);
 
-        int damage = MagicEquipmentRegistry.getEquipmentAttack(type, level);
+        level = Math.min(Math.max(level, 0), 7);
+        int damage = attribute.getAttackDamage().get(level);
 
         return weapon.getBaseDamage() + damage;//todo 还有很多没写进来
     }
 
-    public static void dropEquipment(int equipment, int count, World world, BlockPos pos)
+    public static void dropEquipment(EquipmentAttribute attribute, int count, World world, BlockPos pos)
     {
         if (world.isRemote)
             return;
-        EnumEquipment enumEquipment = EnumEquipment.valueOf(equipment);
-        Item item = MagicEquipmentRegistry.getPiece(enumEquipment);
+        Item item = attribute.getPiece();
         if (item != null)
         {
-            EntityItem entityItem = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(item));
+            EntityItem entityItem = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(item, count));
             world.spawnEntity(entityItem);
         }
     }
@@ -141,23 +141,13 @@ public class MagicEquipmentUtils
                 return originBB;
 
             ItemWeapon weapon = (ItemWeapon) stack.getItem();
-            EnumEquipment enumEquipment = weapon.enumEquipment;
+            EquipmentAttribute attribute = weapon.getEquipmentAttribute();
             int level = weapon.getLevel(stack);
-            switch (enumEquipment){
-                case NONE:
-                    break;
-                case PANDORA:
-                    originBB = originBB.grow(4 + 0.5 * level, 4 +  0.5 * level, 4 +  0.5 * level); break;
-                case WHISPER:
-                    originBB = originBB.grow(4 + 0.75 * level, 2, 4 + 0.75 * level); break;
-                case REPATENCE:
-                    originBB = originBB.grow(6 + 0.5 * level, 6 + 0.5 * level, 6 + 0.5 * level); break;
-                case CONVICTION:
-                    originBB = originBB.grow(4 + level, 3, 4 + level); break;
-                case DEMONKILLINGSWORD:
-                    originBB = originBB.grow(1);
+            Vec3d baseArea = attribute.getBaseArea();
+            Vec3d growArea = attribute.getGrowArea();
 
-            }
+            if (baseArea != null && growArea != null)
+                originBB = originBB.grow(baseArea.x + growArea.x * level, baseArea.y + growArea.y * level, baseArea.z + growArea.z * level);
 
             return originBB;
         }

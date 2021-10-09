@@ -8,7 +8,6 @@ import com.xwm.magicmaid.entity.ai.*;
 import com.xwm.magicmaid.entity.mob.basic.EntityEquipmentCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityTameableCreature;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
-import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumRettState;
 import com.xwm.magicmaid.init.ItemInit;
@@ -17,6 +16,7 @@ import com.xwm.magicmaid.manager.MagicCreatureUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.particle.SPacketParticle;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
 import net.minecraft.entity.EntityLivingBase;
@@ -168,7 +168,7 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
             if (weapon == null)
                 weapon = EntityMaidWeapon.getWeaponFromUUID(world, getWeaponID());
             if (weapon == null || weapon.isDead){
-                getEquipment(ItemEquipment.valueOf(EnumEquipment.valueOf(getWeaponType())));
+                getEquipment(MagicEquipmentRegistry.getAttribute(getWeaponType()).getEquipment());
             }
         }
 
@@ -318,7 +318,7 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
     public void debug(){
         System.out.println("state: " + EnumRettState.valueOf(this.getState())
                 + " mode: " + EnumMode.valueOf(this.getMode())
-                + " owner: " + this.hasOwner() + " Equipment: " + EnumEquipment.valueOf(this.getWeaponType())
+                + " owner: " + this.hasOwner() + " Equipment: " + this.getWeaponType()
                 + " rank: " + this.getRank() + " health: " + this.getHealth());
     }
 

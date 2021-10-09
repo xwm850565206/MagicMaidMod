@@ -32,6 +32,6 @@ public class BiomeRuins extends Biome
      */
     public float getSpawningChance()
     {
-        return 0.01F;
+        return 0.001F;
     }
 }

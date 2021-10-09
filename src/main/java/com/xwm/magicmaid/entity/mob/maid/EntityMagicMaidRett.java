@@ -4,12 +4,12 @@ import com.xwm.magicmaid.entity.ai.EntityAIMaidAttackMelee;
 import com.xwm.magicmaid.entity.ai.rett.EntityAIDemonKillerAttack;
 import com.xwm.magicmaid.entity.ai.rett.EntityAIRettServe;
 import com.xwm.magicmaid.entity.ai.rett.EntityAITeleportAttack;
-import com.xwm.magicmaid.enumstorage.EnumAttackType;
-import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumRettState;
+import com.xwm.magicmaid.object.item.equipment.EquipmentAttribute;
 import com.xwm.magicmaid.object.item.equipment.ItemDemonKillerSword;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.util.handlers.LootTableHandler;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
 import net.minecraft.entity.Entity;
@@ -24,6 +24,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+
+import static com.xwm.magicmaid.registry.MagicEquipmentRegistry.*;
 
 public class EntityMagicMaidRett extends EntityMagicMaid
 {
@@ -59,7 +61,7 @@ public class EntityMagicMaidRett extends EntityMagicMaid
 
 
     @Override
-    public int getAttackDamage(EnumAttackType type){
+    public int getAttackDamage(EquipmentAttribute type){
 
         return 5 + 5 * getRank();
     }
@@ -69,12 +71,12 @@ public class EntityMagicMaidRett extends EntityMagicMaid
         if (!world.isRemote){
             EnumRettState state = EnumRettState.valueOf(this.getState());
             EnumMode mode = EnumMode.valueOf(this.getMode());
-            EnumEquipment equipment = EnumEquipment.valueOf(this.getWeaponType());
-            if (equipment == EnumEquipment.DEMONKILLINGSWORD
+            EquipmentAttribute equipment = MagicEquipmentRegistry.getAttribute(this.getWeaponType());
+            if (equipment == DEMONKILLINGSWORD
                     && (mode == EnumMode.FIGHT || mode == EnumMode.BOSS) && !isAttackState()){
                 this.setState(EnumRettState.toInt(EnumRettState.DEMON_KILLER_STANDARD));
             }
-            else if (equipment == EnumEquipment.NONE)
+            else if (equipment == NONE)
             {
                 if (mode == EnumMode.SITTING && state != EnumRettState.SITTING)
                     this.setState(EnumRettState.toInt(EnumRettState.SITTING));
@@ -87,22 +89,18 @@ public class EntityMagicMaidRett extends EntityMagicMaid
 
     public void getEquipment(ItemEquipment equipment){
 
-        EnumEquipment equipment1 = equipment.enumEquipment;
-        switch (equipment1){
-            case DEMONKILLINGSWORD:
-                this.setWeaponType(EnumEquipment.toInt(equipment.enumEquipment));
-                this.setHasWeapon(true);
-                break;
-            case IMMORTAL:
-                this.setHasArmor(true);
-                this.setMaxHealthbarnum(200);
-                this.setArmorType(EnumEquipment.toInt(EnumEquipment.IMMORTAL));
-                if (this.isFirstGetArmor()) {
-                    this.setHealthbarnum(200);
-                    this.setFirstGetArmor(false);
-                }
-                break;
-
+        EquipmentAttribute equipment1 = equipment.getEquipmentAttribute();
+        if (DEMONKILLINGSWORD.equals(equipment1)) {
+            this.setWeaponType(equipment1.getName());
+            this.setHasWeapon(true);
+        } else if (IMMORTAL.equals(equipment1)) {
+            this.setHasArmor(true);
+            this.setMaxHealthbarnum(200);
+            this.setArmorType(equipment1.getName());
+            if (this.isFirstGetArmor()) {
+                this.setHealthbarnum(200);
+                this.setFirstGetArmor(false);
+            }
         }
 
     }
@@ -112,17 +110,14 @@ public class EntityMagicMaidRett extends EntityMagicMaid
         if (world.isRemote)
             return;
 
-        EnumEquipment equipment1 = equipment.enumEquipment;
-        switch (equipment1) {
-            case DEMONKILLINGSWORD:
-                this.setWeaponType(EnumEquipment.toInt(EnumEquipment.NONE));
-                this.setHasWeapon(false);
-                break;
-            case IMMORTAL:
-                this.setHasArmor(false);
-                this.setArmorType(EnumEquipment.toInt(EnumEquipment.NONE));
-                this.setMaxHealthbarnum(20);
-                break;
+        EquipmentAttribute equipment1 = equipment.getEquipmentAttribute();
+        if (DEMONKILLINGSWORD.equals(equipment1)) {
+            this.setWeaponType(NONE.getName());
+            this.setHasWeapon(false);
+        } else if (IMMORTAL.equals(equipment1)) {
+            this.setHasArmor(false);
+            this.setArmorType(NONE.getName());
+            this.setMaxHealthbarnum(20);
         }
     }
 

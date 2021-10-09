@@ -6,6 +6,7 @@ import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityEquipmentCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityMultiHealthCreature;
 import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
@@ -109,8 +110,8 @@ public abstract class EntityBossBall extends EntityThrowable
 
             if (entity instanceof IEntityEquipmentCreature)
             {
-                MagicEquipmentUtils.dropEquipment(((IEntityEquipmentCreature) entity).getWeaponType(), 1, world, getPosition());
-                MagicEquipmentUtils.dropEquipment(((IEntityEquipmentCreature) entity).getArmorType(), 1, world, getPosition());
+                MagicEquipmentUtils.dropEquipment(MagicEquipmentRegistry.getAttribute(((IEntityEquipmentCreature) entity).getWeaponType()), 1, world, getPosition());
+                MagicEquipmentUtils.dropEquipment(MagicEquipmentRegistry.getAttribute(((IEntityEquipmentCreature) entity).getArmorType()), 1, world, getPosition());
             }
         }
         else {

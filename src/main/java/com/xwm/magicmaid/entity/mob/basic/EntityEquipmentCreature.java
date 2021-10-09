@@ -2,10 +2,10 @@ package com.xwm.magicmaid.entity.mob.basic;
 
 import com.google.common.base.Optional;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityEquipmentCreature;
-import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.entity.SPacketEntityData;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.ItemStackHelper;
@@ -28,8 +28,8 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
     private static final DataParameter<Boolean> HAS_ARMOR = EntityDataManager.<Boolean>createKey(EntityEquipmentCreature.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> IS_FIRST_GET_ARMOR = EntityDataManager.createKey(EntityEquipmentCreature.class, DataSerializers.BOOLEAN); //第一次获得防具血量调整
     private static final DataParameter<Optional<UUID>> WEAPON_ID = EntityDataManager.<Optional<UUID>>createKey(EntityEquipmentCreature.class, DataSerializers.OPTIONAL_UNIQUE_ID);
-    private static final DataParameter<Integer> WEAPON_TYPE = EntityDataManager.<Integer>createKey(EntityEquipmentCreature.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> ARMOR_TYPE = EntityDataManager.<Integer>createKey(EntityEquipmentCreature.class, DataSerializers.VARINT);
+    private static final DataParameter<String> WEAPON_TYPE = EntityDataManager.<String>createKey(EntityEquipmentCreature.class, DataSerializers.STRING);
+    private static final DataParameter<String> ARMOR_TYPE = EntityDataManager.<String>createKey(EntityEquipmentCreature.class, DataSerializers.STRING);
 
     public EntityEquipmentCreature(World worldIn) {
         super(worldIn);
@@ -42,8 +42,8 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
         this.dataManager.register(HAS_ARMOR, false);
         this.dataManager.register(IS_FIRST_GET_ARMOR, true);
         this.dataManager.register(WEAPON_ID, Optional.fromNullable(null));
-        this.dataManager.register(WEAPON_TYPE, EnumEquipment.toInt(EnumEquipment.NONE));
-        this.dataManager.register(ARMOR_TYPE, EnumEquipment.toInt(EnumEquipment.NONE));
+        this.dataManager.register(WEAPON_TYPE, MagicEquipmentRegistry.NONE.getName());
+        this.dataManager.register(ARMOR_TYPE, MagicEquipmentRegistry.NONE.getName());
     }
 
     @Override
@@ -53,8 +53,8 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
         compound.setBoolean("hasWeapon", this.hasWeapon());
         compound.setBoolean("hasArmor", this.hasArmor());
         compound.setBoolean("isFirstGetArmor", this.isFirstGetArmor());
-        compound.setInteger("weaponType", this.getWeaponType());
-        compound.setInteger("armorType", this.getArmorType());
+        compound.setString("weaponType", this.getWeaponType());
+        compound.setString("armorType", this.getArmorType());
 
         if (this.getWeaponID() == null)
             compound.setString("weaponID", "");
@@ -69,16 +69,16 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
     {
         this.setHasWeapon(compound.getBoolean("hasWeapon"));
         this.setHasArmor(compound.getBoolean("hasArmor"));
-        this.setWeaponType(compound.getInteger("weaponType"));
-        this.setArmorType(compound.getInteger("armorType"));
+        this.setWeaponType(compound.getString("weaponType"));
+        this.setArmorType(compound.getString("armorType"));
         this.inventory = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, this.inventory);
 
         if (hasWeapon())
-            this.getEquipment(ItemEquipment.valueOf(EnumEquipment.valueOf(getWeaponType())));
+            this.getEquipment(MagicEquipmentRegistry.getAttribute(getWeaponType()).getEquipment());
 
         if (hasArmor())
-            this.getEquipment(ItemEquipment.valueOf(EnumEquipment.valueOf(getArmorType())));
+            this.getEquipment(MagicEquipmentRegistry.getAttribute(getArmorType()).getEquipment());
 
         super.readEntityFromNBT(compound);
     }
@@ -133,22 +133,22 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
     }
 
     @Override
-    public void setWeaponType(int type) {
+    public void setWeaponType(String type) {
         this.dataManager.set(WEAPON_TYPE, type);
     }
 
     @Override
-    public int getWeaponType() {
+    public String getWeaponType() {
         return this.dataManager.get(WEAPON_TYPE);
     }
 
     @Override
-    public void setArmorType(int type) {
+    public void setArmorType(String type) {
         this.dataManager.set(ARMOR_TYPE, type);
     }
 
     @Override
-    public int getArmorType() {
+    public String getArmorType() {
         return this.dataManager.get(ARMOR_TYPE);
     }
 

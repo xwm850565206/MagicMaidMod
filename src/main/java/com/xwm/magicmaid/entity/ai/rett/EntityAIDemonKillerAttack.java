@@ -1,16 +1,15 @@
 package com.xwm.magicmaid.entity.ai.rett;
 
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidRett;
-import com.xwm.magicmaid.enumstorage.EnumAttackType;
-import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumRettState;
 import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
-import com.xwm.magicmaid.network.particle.SPacketThreeParamParticle;
 import com.xwm.magicmaid.network.SPacketVelocity;
+import com.xwm.magicmaid.network.particle.SPacketThreeParamParticle;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.init.MobEffects;
@@ -23,6 +22,8 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.util.List;
 import java.util.Random;
+
+import static com.xwm.magicmaid.registry.MagicEquipmentRegistry.DEMONKILLINGSWORD;
 
 public class EntityAIDemonKillerAttack extends EntityAIBase
 {
@@ -43,7 +44,7 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
     public  boolean shouldExecute(){
         if (!maid.hasOwner() && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS) //如果没有主人又不是boss就不放技能
             return false;
-        if (EnumEquipment.valueOf(maid.getWeaponType()) != EnumEquipment.DEMONKILLINGSWORD)
+        if (MagicEquipmentRegistry.getAttribute(maid.getWeaponType()) != DEMONKILLINGSWORD)
             return false;
         if (EnumMode.valueOf(maid.getMode()) != EnumMode.FIGHT && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS)
             return false;
@@ -80,7 +81,7 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
                         continue;
 
                     entityLiving.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 400, 1 + maid.getRank()));
-                    IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLiving, DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER));
+                    IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLiving, DamageSource.causeMobDamage(maid), maid.getAttackDamage(DEMONKILLINGSWORD));
                 }
             }
             else if (performTick == 10) {
@@ -90,7 +91,7 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
                         continue;
 
                     entityLiving.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 400, 1));
-                    IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLiving, DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER));
+                    IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLiving, DamageSource.causeMobDamage(maid), maid.getAttackDamage(DEMONKILLINGSWORD));
 
                 }
             }
@@ -104,7 +105,7 @@ public class EntityAIDemonKillerAttack extends EntityAIBase
                     if (!maid.isEnemy(entityLiving))
                         continue;
                     float health = entityLiving.getHealth();
-                    IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLiving, DamageSource.causeMobDamage(maid), maid.getAttackDamage(EnumAttackType.DEMONKILLER) * 2);
+                    IMagicCreatureManagerImpl.getInstance().attackEntityFrom(entityLiving, DamageSource.causeMobDamage(maid), maid.getAttackDamage(DEMONKILLINGSWORD) * 2);
 //                    if (health == entityLiving.getHealth() && health > 0) {
 //                       entityLiving.setHealth(health - maid.getAttackDamage(EnumAttackType.DEMONKILLER) * 2);
 //                        if (entityLiving instanceof EntityPlayerMP) {

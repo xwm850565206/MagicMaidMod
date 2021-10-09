@@ -18,7 +18,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = ""
 group = "creeper.xwm.magic_maid" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "[1.12.2]magic_maid-8.0测试版"
+archivesBaseName = "[1.12.2]magic_maid-8.5测试版"
 
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 compileJava {

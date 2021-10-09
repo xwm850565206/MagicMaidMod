@@ -1,9 +1,10 @@
 package com.xwm.magicmaid.util.handlers;
 
 import com.xwm.magicmaid.init.*;
-import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.player.capability.CapabilityLoader;
-import com.xwm.magicmaid.registry.*;
+import com.xwm.magicmaid.registry.MagicDimensionRegistry;
+import com.xwm.magicmaid.registry.MagicFormulaRegistry;
+import com.xwm.magicmaid.registry.MagicSkillRegistry;
 import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.interfaces.IHasModel;
 import com.xwm.magicmaid.world.gen.StructureChurchPieces;
@@ -28,15 +29,6 @@ public class RegistryHandler
     public static void onItemRegister(RegistryEvent.Register<Item> event)
     {
         event.getRegistry().registerAll(ItemInit.ITEMS.toArray(new Item[0]));
-        MagicEquipmentRegistry.registerAllEquipment();
-
-        for (Item item : ItemInit.ITEMS)
-        {
-            if (item instanceof ItemWeapon)
-            {
-                ((ItemWeapon)item).registerAttackDamage();
-            }
-        }
     }
 
     @SubscribeEvent

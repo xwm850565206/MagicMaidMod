@@ -1,4 +1,4 @@
-package com.xwm.magicmaid.object.item.equipment;
+package com.xwm.magicmaid.object.item;
 
 import com.xwm.magicmaid.object.item.ItemBase;
 import net.minecraft.client.util.ITooltipFlag;

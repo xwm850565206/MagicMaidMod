@@ -1,10 +1,9 @@
 package com.xwm.magicmaid.entity.mob.weapon;
 
-import com.xwm.magicmaid.enumstorage.EnumEquipment;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class EntityMaidWeaponWhisper extends EntityMaidWeapon
@@ -14,7 +13,7 @@ public class EntityMaidWeaponWhisper extends EntityMaidWeapon
 
     public EntityMaidWeaponWhisper(World worldIn) {
         super(worldIn);
-        enumEquipment = EnumEquipment.WHISPER;
+        equipmentAttribute = MagicEquipmentRegistry.WHISPER;
 
     }
 

@@ -4,8 +4,6 @@ import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidSelina;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponWhisper;
-import com.xwm.magicmaid.enumstorage.EnumAttackType;
-import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumSelineState;
 import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
@@ -13,6 +11,7 @@ import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.particle.SPacketThreeParamParticle;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -25,6 +24,8 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.util.List;
 import java.util.Random;
+
+import static com.xwm.magicmaid.registry.MagicEquipmentRegistry.WHISPER;
 
 public class EntityAIWhisper extends EntityAIBase
 {
@@ -59,14 +60,14 @@ public class EntityAIWhisper extends EntityAIBase
 
         if (!maid.hasOwner() && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS)
             return false;
-        if (EnumEquipment.valueOf(maid.getWeaponType()) != EnumEquipment.WHISPER)
+        if (MagicEquipmentRegistry.getAttribute(maid.getWeaponType()) != WHISPER)
             return false;
         if (EnumMode.valueOf(maid.getMode()) != EnumMode.FIGHT && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS)
             return false;
         tick++;
         if (this.maid.getAttackTarget() == null)
             return false;
-        return tick >= maid.getAttackColdTime(EnumAttackType.WHISPER);
+        return tick >= maid.getAttackColdTime(WHISPER);
     }
 
     public boolean shouldContinueExecuting(){
@@ -145,7 +146,7 @@ public class EntityAIWhisper extends EntityAIBase
                 try{
                     if (!this.maid.isEnemy(entityLivingBase))
                         continue;
-                    entityLivingBase.attackEntityFrom(DamageSource.LIGHTNING_BOLT, this.maid.getAttackDamage(EnumAttackType.WHISPER));
+                    entityLivingBase.attackEntityFrom(DamageSource.LIGHTNING_BOLT, this.maid.getAttackDamage(WHISPER));
                     IMagicCreatureManagerImpl.getInstance().setHealth(entityLivingBase, entityLivingBase.getHealth() - 10 * maid.getRank());
                     world.playEvent(3000, entityLivingBase.getPosition(), 10);
                     EntityLightningBolt bolt = new EntityLightningBolt(world, entityLivingBase.posX + random.nextInt(2* (int) radius) - radius, cpos.getY(), entityLivingBase.posZ + random.nextInt(2 * (int) radius) - radius, true);

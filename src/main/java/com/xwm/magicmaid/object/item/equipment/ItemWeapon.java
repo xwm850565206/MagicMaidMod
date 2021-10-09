@@ -1,15 +1,11 @@
 package com.xwm.magicmaid.object.item.equipment;
 
-import com.xwm.magicmaid.enumstorage.EnumAttackType;
-import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
-import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -30,22 +26,22 @@ public abstract class ItemWeapon extends ItemEquipment
         this.setMaxDamage(100);
     }
 
-    public EnumAttackType getAttackType() {
-        return EnumAttackType.NORMAL;
+    public EquipmentAttribute getAttackType() {
+        return getEquipmentAttribute();
     }
 
-    public void registerAttackDamage() {
+    public static List<Integer> getAttackDamage() {
         List<Integer> attackList = new ArrayList<>();
         for (int i = 0; i <= 7; i++)
         {
             attackList.add((int) Math.ceil(Math.sqrt(getBaseDamage() * i * 7 * Math.log(1 + i * i))));
         }
 
-        MagicEquipmentRegistry.registerEquipmentAttack(getAttackType(), attackList);
+        return attackList;
     }
 
     //基础伤害
-    public int getBaseDamage() {
+    public static int getBaseDamage() {
         return 0;
     }
 
@@ -82,6 +78,7 @@ public abstract class ItemWeapon extends ItemEquipment
         else
             return super.getItemUseAction(stack);
     }
+
     /**
      * 是否是需要蓄力的武器
      * @return
@@ -91,7 +88,10 @@ public abstract class ItemWeapon extends ItemEquipment
     /**
      * 不用蓄力的武器调用这个函数
      */
-    public abstract void onUse(World worldIn, EntityLivingBase playerIn, EnumHand handIn, @Nullable List<EntityLivingBase> entityLivingBases);
+    public void onUse(World worldIn, EntityLivingBase playerIn, EnumHand handIn, @Nullable List<EntityLivingBase> entityLivingBases)
+    {
+
+    }
 
     /**
      * 蓄力时调用这个函数
@@ -114,8 +114,4 @@ public abstract class ItemWeapon extends ItemEquipment
         return MagicEquipmentUtils.getUsingArea(stack, player, bb);
     }
 
-    /**
-     * How long it takes to use or consume an item
-     */
-    public abstract int getMaxItemUseDuration(ItemStack stack);
 }

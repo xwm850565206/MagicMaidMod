@@ -5,15 +5,11 @@ import com.xwm.magicmaid.entity.ai.martha.EntityAIConviction;
 import com.xwm.magicmaid.entity.ai.martha.EntityAIMarthaServe;
 import com.xwm.magicmaid.entity.ai.martha.EntityAIRepantence;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
-import com.xwm.magicmaid.enumstorage.EnumAttackType;
-import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
-import com.xwm.magicmaid.object.item.equipment.ItemConviction;
-import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
-import com.xwm.magicmaid.object.item.equipment.ItemRepantence;
-import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
+import com.xwm.magicmaid.object.item.equipment.*;
 import com.xwm.magicmaid.util.handlers.LootTableHandler;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -23,6 +19,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+
+import java.lang.reflect.InvocationTargetException;
+
+import static com.xwm.magicmaid.registry.MagicEquipmentRegistry.*;
 
 public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAttackMob
 {
@@ -54,24 +54,28 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
     }
 
     @Override
-    public int getAttackDamage(EnumAttackType type){
+    public int getAttackDamage(EquipmentAttribute type){
 
-        switch(type){
-            case NORMAL: return 5 + 5 * this.getRank();
-            case REPANTENCE: return this.getRank() > 0 ? 10 : 15;
-            case CONVICTION: return this.getRank() > 0 ? 0 : 1;
-            default: return super.getAttackDamage(type);
+        if (NONE.equals(type)) {
+            return 5 + 5 * this.getRank();
+        } else if (REPANTENCE.equals(type)) {
+            return this.getRank() > 0 ? 10 : 15;
+        } else if (CONVICTION.equals(type)) {
+            return this.getRank() > 0 ? 0 : 1;
         }
+        return super.getAttackDamage(type);
     }
 
     @Override
-    public int getAttackColdTime(EnumAttackType type){
-        switch(type){
-            case NORMAL: return 20;
-            case REPANTENCE: return 100 - 30 * this.getRank();
-            case CONVICTION: return 100 - 10 * this.getRank();
-            default: return super.getAttackColdTime(type);
+    public int getAttackColdTime(EquipmentAttribute type){
+        if (NONE.equals(type)) {
+            return 20;
+        } else if (REPANTENCE.equals(type)) {
+            return 100 - 30 * this.getRank();
+        } else if (CONVICTION.equals(type)) {
+            return 100 - 10 * this.getRank();
         }
+        return super.getAttackColdTime(type);
     }
 
     @Override
@@ -92,44 +96,45 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
 
     public void getEquipment(ItemEquipment equipment){
 
-        EnumEquipment equipment1 = equipment.enumEquipment;
-        switch (equipment1){
-            case NONE: return;
-            case REPATENCE:
-                EntityMaidWeapon weapon1 = EnumEquipment.toEntityMaidWeapon(equipment1, world);
-                weapon1.setMaid(this);
-                weapon1.setPosition(this.posX, this.posY + height + 1, this.posZ);
-                this.setWeaponID(weapon1.getUniqueID());
-                this.setWeaponType(EnumEquipment.toInt(equipment1));
+        EquipmentAttribute attribute = equipment.getEquipmentAttribute();
+        if (attribute.getType() == EquipmentAttribute.EquipmentType.NONE)
+            return;
+        else if (attribute.getType() == EquipmentAttribute.EquipmentType.WEAPON)
+        {
+            Class<? extends Entity> clazz = attribute.getEntityClass();
+            try {
+                EntityMaidWeapon weapon = (EntityMaidWeapon) clazz.getConstructor(World.class).newInstance(world);
+                weapon.setMaid(this);
+                weapon.setPosition(posX, posY + height + 1, posZ);
+                this.setWeaponID(weapon.getUniqueID());
+                this.setWeaponType(attribute.getName());
                 this.setHasWeapon(true);
-                if (!world.isRemote)
-                    this.world.spawnEntity(weapon1);
-                this.weapon = weapon1;
-                break;
-            case CONVICTION:
-                EntityMaidWeapon weapon2 = EnumEquipment.toEntityMaidWeapon(equipment1, world);
-                weapon2.setMaid(this);
-                weapon2.setPosition(this.posX, this.posY + height + 1, this.posZ);
-                this.setWeaponID(weapon2.getUniqueID());
-                this.setWeaponType(EnumEquipment.toInt(equipment1));
-                this.setHasWeapon(true);
-                if (!world.isRemote)
-                    this.world.spawnEntity(weapon2);
-                this.weapon = weapon2;
-                break;
-            case PROTECTOR:
-                this.setHasArmor(true);
-                this.setMaxHealthbarnum(50); //提高血量上限
-                this.setArmorType(EnumEquipment.toInt(EnumEquipment.PROTECTOR));
-                if (this.isFirstGetArmor()) {
-                    this.setHealthbarnum(50);
-                    this.setFirstGetArmor(false);
-                }
-                break;
+                if (!this.world.isRemote)
+                    this.world.spawnEntity(weapon);
+                this.weapon = weapon;
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+        }
+        else if (attribute.getType() == EquipmentAttribute.EquipmentType.ARMOR)
+        {
+            this.setHasArmor(true);
+            this.setMaxHealthbarnum(50);
+            this.setArmorType(attribute.getName());
+            if (this.isFirstGetArmor()) {
+                this.setHealthbarnum(50);
+                this.setFirstGetArmor(false);
+            }
         }
     }
 
-    public void loseEquipment(ItemEquipment equipment){
+    public void loseEquipment(ItemEquipment equipment) {
 
         if (world.isRemote)
             return;
@@ -138,9 +143,8 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
             try {
                 EntityMaidWeapon weapon1 = EntityMaidWeapon.getWeaponFromUUID(world, getWeaponID());
                 weapon1.setDead();
-                weapon.setDead();
                 setWeaponID(null);
-                setWeaponType(0);
+                setWeaponType(NONE.getName());
                 setHasWeapon(false);
                 this.weapon = null;
             } catch (Exception e){
@@ -149,7 +153,7 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
         }
         else {
             this.setHasArmor(false);
-            this.setArmorType(EnumEquipment.toInt(EnumEquipment.NONE));
+            this.setArmorType(NONE.getName());
             this.setMaxHealthbarnum(10);
         }
 
@@ -228,7 +232,7 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
     @Override
     public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) {
         setSwingingArms(true);
-        target.attackEntityFrom(DamageSource.causeMobDamage(this), this.getAttackDamage(EnumAttackType.NORMAL));
+        target.attackEntityFrom(DamageSource.causeMobDamage(this), this.getAttackDamage(NONE));
     }
 
     @Override

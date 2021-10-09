@@ -1,8 +1,7 @@
 package com.xwm.magicmaid.object.item.equipment;
 
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponConviction;
-import com.xwm.magicmaid.enumstorage.EnumAttackType;
-import com.xwm.magicmaid.enumstorage.EnumEquipment;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +22,7 @@ public class ItemConviction extends ItemWeapon
 {
     public ItemConviction(String name) {
         super(name);
-        enumEquipment = EnumEquipment.CONVICTION;
+        this.setEquipmentAttribute(MagicEquipmentRegistry.CONVICTION);
     }
 
     /**
@@ -52,8 +51,6 @@ public class ItemConviction extends ItemWeapon
             return;
 
         ItemStack itemstack = playerIn.getHeldItem(handIn);
-//        if (!(itemstack.getItem() instanceof ItemPandora))
-//            return;
 
         itemstack.damageItem(1, playerIn);
         EntityMaidWeaponConviction conviction = new EntityMaidWeaponConviction(worldIn, itemstack);
@@ -78,18 +75,6 @@ public class ItemConviction extends ItemWeapon
         itemstack.shrink(1);
     }
 
-
-    /**
-     * 蓄力时调用这个函数
-     *
-     * @param stack
-     * @param player
-     * @param count
-     */
-    @Override
-    public void onUsing(ItemStack stack, EntityLivingBase player, int count) {
-        //todo
-    }
 
     /**
      * How long it takes to use or consume an item
@@ -127,14 +112,8 @@ public class ItemConviction extends ItemWeapon
         return new ActionResult<>(EnumActionResult.SUCCESS, ItemStack.EMPTY);
     }
 
-
-
-    public EnumAttackType getAttackType() {
-        return EnumAttackType.CONVICTION;
-    }
-
     //基础伤害
-    public int getBaseDamage() {
+    public static int getBaseDamage() {
         return 50;
     }
 }

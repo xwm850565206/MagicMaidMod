@@ -4,13 +4,14 @@ import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAttackableCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAvoidThingCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityMultiHealthCreature;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
-import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.manager.IMagicCreatureManager;
 import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.manager.MagicCreatureUtils;
 import com.xwm.magicmaid.manager.MagicDamageSource;
+import com.xwm.magicmaid.object.item.equipment.EquipmentAttribute;
 import com.xwm.magicmaid.player.capability.CapabilityLoader;
 import com.xwm.magicmaid.player.capability.ICreatureCapability;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAISwimming;
@@ -109,10 +110,10 @@ public abstract class AbstractEntityMagicCreature extends EntityCreature impleme
     }
 
     @Override
-    public abstract int getAttackDamage(EnumAttackType type);
+    public abstract int getAttackDamage(EquipmentAttribute type);
 
     @Override
-    public abstract int getAttackColdTime(EnumAttackType type);
+    public abstract int getAttackColdTime(EquipmentAttribute type);
 
     @Override
     public boolean isEnemy(EntityLivingBase entityLivingBase) {
@@ -349,7 +350,7 @@ public abstract class AbstractEntityMagicCreature extends EntityCreature impleme
     {
         super.attackEntityAsMob(entityIn);
         try{
-            entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), this.getAttackDamage(EnumAttackType.NORMAL));
+            entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), this.getAttackDamage(MagicEquipmentRegistry.NONE));
         } catch (Exception e){
             return false;
         }

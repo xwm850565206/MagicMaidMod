@@ -1,8 +1,8 @@
 package com.xwm.magicmaid.entity.mob.basic;
 
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityMultiModeCreature;
-import com.xwm.magicmaid.enumstorage.EnumAttackType;
 import com.xwm.magicmaid.enumstorage.EnumMode;
+import com.xwm.magicmaid.object.item.equipment.EquipmentAttribute;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -57,12 +57,12 @@ public class EntityMagicModeCreature extends AbstractEntityMagicCreature impleme
     }
 
     @Override
-    public int getAttackDamage(EnumAttackType type) {
+    public int getAttackDamage(EquipmentAttribute type) {
         return 1;
     }
 
     @Override
-    public int getAttackColdTime(EnumAttackType type) {
+    public int getAttackColdTime(EquipmentAttribute type) {
         return 20;
     }
 

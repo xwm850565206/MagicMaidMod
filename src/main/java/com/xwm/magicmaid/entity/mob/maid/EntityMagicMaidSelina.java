@@ -5,17 +5,15 @@ import com.xwm.magicmaid.entity.ai.selina.EntityAIPandora;
 import com.xwm.magicmaid.entity.ai.selina.EntityAISelinaServe;
 import com.xwm.magicmaid.entity.ai.selina.EntityAIWhisper;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
-import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponPandorasBox;
-import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponWhisper;
-import com.xwm.magicmaid.enumstorage.EnumAttackType;
-import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumSelineState;
+import com.xwm.magicmaid.object.item.equipment.EquipmentAttribute;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.object.item.equipment.ItemWhisper;
 import com.xwm.magicmaid.util.handlers.LootTableHandler;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -27,6 +25,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+
+import java.lang.reflect.InvocationTargetException;
+
+import static com.xwm.magicmaid.registry.MagicEquipmentRegistry.*;
 
 public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAttackMob
 {
@@ -62,24 +64,28 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
 
 
     @Override
-    public int getAttackDamage(EnumAttackType type){
+    public int getAttackDamage(EquipmentAttribute type){
 
-        switch(type){
-            case NORMAL: return 10;
-            case PANDORA: return 1 + getRank();
-            case WHISPER: return 10 + 10 * getRank();
-            default: return super.getAttackDamage(type);
+        if (NONE.equals(type)) {
+            return 10;
+        } else if (PANDORA.equals(type)) {
+            return 1 + getRank();
+        } else if (WHISPER.equals(type)) {
+            return 10 + 10 * getRank();
         }
+        return super.getAttackDamage(type);
     }
 
     @Override
-    public int getAttackColdTime(EnumAttackType type){
-        switch(type){
-            case NORMAL: return 20;
-            case PANDORA: return 60 - 5 * this.getRank();
-            case WHISPER: return 100 - 10 * this.getRank();
-            default: return super.getAttackColdTime(type);
+    public int getAttackColdTime(EquipmentAttribute type){
+        if (NORMAL.equals(type)) {
+            return 20;
+        } else if (PANDORA.equals(type)) {
+            return 60 - 5 * this.getRank();
+        } else if (WHISPER.equals(type)) {
+            return 100 - 10 * this.getRank();
         }
+        return super.getAttackColdTime(type);
     }
     @Override
     public void onLivingUpdate() {
@@ -103,39 +109,41 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
 
     public void getEquipment(ItemEquipment equipment){
 
-        EnumEquipment equipment1 = equipment.enumEquipment;
-        switch (equipment1){
-            case PANDORA:
-                EntityMaidWeaponPandorasBox pandorasBox = new EntityMaidWeaponPandorasBox(world);
-                pandorasBox.setMaid(this);
-                pandorasBox.setPosition(posX, posY + height + 1, posZ);
-                if (!world.isRemote)
-                    world.spawnEntity(pandorasBox);
-                this.setWeaponID(pandorasBox.getUniqueID());
-                this.setWeaponType(EnumEquipment.toInt(equipment1));
+        EquipmentAttribute attribute = equipment.getEquipmentAttribute();
+        if (attribute.getType() == EquipmentAttribute.EquipmentType.NONE)
+            return;
+        else if (attribute.getType() == EquipmentAttribute.EquipmentType.WEAPON)
+        {
+            Class<? extends Entity> clazz = attribute.getEntityClass();
+            try {
+                EntityMaidWeapon weapon = (EntityMaidWeapon) clazz.getConstructor(World.class).newInstance(world);
+                weapon.setMaid(this);
+                weapon.setPosition(posX, posY + height + 1, posZ);
+                this.setWeaponID(weapon.getUniqueID());
+                this.setWeaponType(attribute.getName());
                 this.setHasWeapon(true);
-                this.weapon = pandorasBox;
-                break;
-            case WHISPER:
-                EntityMaidWeaponWhisper whisper = new EntityMaidWeaponWhisper(world);
-                whisper.setMaid(this);
-                whisper.setPosition(posX, posY + height + 1, posZ);
-                if (!world.isRemote)
-                    world.spawnEntity(whisper);
-                this.setWeaponID(whisper.getUniqueID());
-                this.setWeaponType(EnumEquipment.toInt(equipment1));
-                this.setHasWeapon(true);
-                this.weapon = whisper;
-                break;
-            case WISE:
-                this.setHasArmor(true);
-                this.setMaxHealthbarnum(50);
-                this.setArmorType(EnumEquipment.toInt(EnumEquipment.WISE));
-                if (this.isFirstGetArmor()) {
-                    this.setHealthbarnum(50);
-                    this.setFirstGetArmor(false);
-                }
-                break;
+                if (!this.world.isRemote)
+                    this.world.spawnEntity(weapon);
+                this.weapon = weapon;
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+        }
+        else if (attribute.getType() == EquipmentAttribute.EquipmentType.ARMOR)
+        {
+            this.setHasArmor(true);
+            this.setMaxHealthbarnum(50);
+            this.setArmorType(attribute.getName());
+            if (this.isFirstGetArmor()) {
+                this.setHealthbarnum(50);
+                this.setFirstGetArmor(false);
+            }
         }
     }
 
@@ -144,20 +152,20 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
         if (world.isRemote)
             return;
 
-        if (equipment instanceof  ItemWeapon){
+        if (equipment instanceof ItemWeapon){
             try {
                 EntityMaidWeapon.getWeaponFromUUID(world, this.getWeaponID()).setDead();
             }catch (Exception e){
                 ;
             }
-            this.setWeaponType(EnumEquipment.toInt(EnumEquipment.NONE));
+            this.setWeaponType(NONE.getName());
             this.setWeaponID(null);
             this.setHasWeapon(false);
             this.weapon = null;
         }
         else {
             this.setHasArmor(false);
-            this.setArmorType(EnumEquipment.toInt(EnumEquipment.NONE));
+            this.setArmorType(NONE.getName());
             this.setMaxHealthbarnum(10);
         }
     }
@@ -216,7 +224,7 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
     @Override
     public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) {
         setSwingingArms(true);
-        target.attackEntityFrom(DamageSource.causeMobDamage(this), this.getAttackDamage(EnumAttackType.NORMAL));
+        target.attackEntityFrom(DamageSource.causeMobDamage(this), this.getAttackDamage(NONE));
     }
 
     @Override

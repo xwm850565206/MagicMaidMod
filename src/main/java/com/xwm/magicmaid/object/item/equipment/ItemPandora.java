@@ -1,8 +1,7 @@
 package com.xwm.magicmaid.object.item.equipment;
 
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponPandorasBox;
-import com.xwm.magicmaid.enumstorage.EnumAttackType;
-import com.xwm.magicmaid.enumstorage.EnumEquipment;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +22,7 @@ public class ItemPandora extends ItemWeapon
 {
     public ItemPandora(String name) {
         super(name);
-        enumEquipment = EnumEquipment.PANDORA;
+        this.setEquipmentAttribute(MagicEquipmentRegistry.PANDORA);
     }
 
     @Override
@@ -106,18 +105,6 @@ public class ItemPandora extends ItemWeapon
     }
 
     /**
-     * 蓄力时调用这个函数
-     *
-     * @param stack
-     * @param player
-     * @param count
-     */
-    @Override
-    public void onUsing(ItemStack stack, EntityLivingBase player, int count) {
-
-    }
-
-    /**
      * How long it takes to use or consume an item
      *
      * @param stack
@@ -127,12 +114,8 @@ public class ItemPandora extends ItemWeapon
         return 0;
     }
 
-    public EnumAttackType getAttackType() {
-        return EnumAttackType.PANDORA;
-    }
-
     //基础伤害
-    public int getBaseDamage() {
+    public static int getBaseDamage() {
         return 1;
     }
 }

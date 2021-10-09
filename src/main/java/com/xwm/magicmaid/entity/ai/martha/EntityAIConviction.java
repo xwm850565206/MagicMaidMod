@@ -2,8 +2,6 @@ package com.xwm.magicmaid.entity.ai.martha;
 
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
-import com.xwm.magicmaid.enumstorage.EnumAttackType;
-import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.init.PotionInit;
 import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
@@ -11,6 +9,7 @@ import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.particle.SPacketThreeParamParticle;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,6 +24,8 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import static com.xwm.magicmaid.registry.MagicEquipmentRegistry.CONVICTION;
 
 
 public class EntityAIConviction extends EntityAIBase
@@ -50,12 +51,12 @@ public class EntityAIConviction extends EntityAIBase
 
         if (!maid.hasOwner() && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS)
             return false;
-        if (EnumEquipment.valueOf(maid.getWeaponType()) != EnumEquipment.CONVICTION)
+        if (MagicEquipmentRegistry.getAttribute(maid.getWeaponType()) != CONVICTION)
             return false;
         if (EnumMode.valueOf(maid.getMode()) != EnumMode.FIGHT && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS)
             return false;
 
-        return tick++ >= this.maid.getAttackColdTime(EnumAttackType.CONVICTION);
+        return tick++ >= this.maid.getAttackColdTime(CONVICTION);
     }
 
     public boolean shouldContinueExecuting(){

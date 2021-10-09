@@ -30,13 +30,13 @@ public interface IEntityEquipmentCreature extends IInventory
 
     UUID getWeaponID();
 
-    void setWeaponType(int type);
+    void setWeaponType(String type);
 
-    int getWeaponType();
+    String getWeaponType();
 
-    void setArmorType(int type);
+    void setArmorType(String type);
 
-    int getArmorType();
+    String getArmorType();
 
     void getEquipment(ItemEquipment equipment);
 

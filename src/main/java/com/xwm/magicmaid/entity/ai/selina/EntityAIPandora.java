@@ -1,21 +1,17 @@
 package com.xwm.magicmaid.entity.ai.selina;
 
-import com.xwm.magicmaid.entity.ai.EntityAINearestAttackableTargetAvoidOwner;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidSelina;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponPandorasBox;
-import com.xwm.magicmaid.enumstorage.EnumAttackType;
-import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.enumstorage.EnumSelineState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.passive.EntityBat;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 import java.util.Random;
+
+import static com.xwm.magicmaid.registry.MagicEquipmentRegistry.PANDORA;
 
 public class EntityAIPandora extends EntityAIBase
 {
@@ -42,12 +38,12 @@ public class EntityAIPandora extends EntityAIBase
 
         if (!maid.hasOwner() && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS)
             return false;
-        if (EnumEquipment.valueOf(maid.getWeaponType()) != EnumEquipment.PANDORA)
+        if (MagicEquipmentRegistry.getAttribute(maid.getWeaponType()) != PANDORA)
             return false;
         if (EnumMode.valueOf(maid.getMode()) != EnumMode.FIGHT && EnumMode.valueOf(maid.getMode()) != EnumMode.BOSS)
             return false;
 
-        return tick++ >= maid.getAttackColdTime(EnumAttackType.PANDORA);
+        return tick++ >= maid.getAttackColdTime(PANDORA);
     }
 
     public boolean shouldContinueExecuting(){

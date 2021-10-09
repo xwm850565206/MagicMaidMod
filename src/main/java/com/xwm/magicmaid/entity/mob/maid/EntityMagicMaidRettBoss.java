@@ -1,16 +1,16 @@
 package com.xwm.magicmaid.entity.mob.maid;
 
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
-import com.xwm.magicmaid.enumstorage.EnumAttackType;
-import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.init.ItemInit;
+import com.xwm.magicmaid.manager.IMagicBossManager;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.RenderAreaPacket;
+import com.xwm.magicmaid.object.item.equipment.EquipmentAttribute;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
 import com.xwm.magicmaid.util.handlers.LootTableHandler;
 import com.xwm.magicmaid.world.dimension.DimensionChurch;
-import com.xwm.magicmaid.manager.IMagicBossManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -21,6 +21,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.World;
+
+import static com.xwm.magicmaid.registry.MagicEquipmentRegistry.NONE;
 
 public class EntityMagicMaidRettBoss extends EntityMagicMaidRett implements IEntityBossCreature
 {
@@ -62,8 +64,7 @@ public class EntityMagicMaidRettBoss extends EntityMagicMaidRett implements IEnt
     {
         super.onLivingUpdate();
 
-
-        if (EnumEquipment.valueOf(this.getWeaponType()) == EnumEquipment.NONE) {
+        if (MagicEquipmentRegistry.getAttribute(this.getWeaponType()) == NONE) {
             this.setInventorySlotContents(0, new ItemStack(ItemInit.ITEM_DEMON_KILLER_SWORD));
             this.setInventorySlotContents(1, new ItemStack(ItemInit.ITEM_IMMORTAL));
         }
@@ -171,7 +172,7 @@ public class EntityMagicMaidRettBoss extends EntityMagicMaidRett implements IEnt
     }
 
     @Override
-    public int getAttackDamage(EnumAttackType type)
+    public int getAttackDamage(EquipmentAttribute type)
     {
         return factor * super.getAttackDamage(type);
     }

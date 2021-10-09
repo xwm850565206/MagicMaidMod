@@ -1,8 +1,6 @@
 package com.xwm.magicmaid.object.item.equipment;
 
-import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.object.item.ItemBase;
-import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,25 +8,20 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class ItemEquipment extends ItemBase
 {
-
-    public EnumEquipment enumEquipment;
+    protected EquipmentAttribute equipmentAttribute;
 
     public ItemEquipment(String name) {
         super(name);
         setMaxStackSize(1);
     }
 
-    public static ItemEquipment valueOf(EnumEquipment equipment)
-    {
-        return EnumEquipment.toItemEquipment(equipment);
-    }
 
     @Override
     public boolean getIsRepairable(ItemStack toRepair, ItemStack repair)
     {
         ItemEquipment equipment = (ItemEquipment) toRepair.getItem();
-        Item piece = MagicEquipmentRegistry.getPiece(equipment.enumEquipment);
-        return repair.getItem() == piece;
+        Item piece = equipment.getEquipmentAttribute().getPiece();
+        return piece != null && repair.getItem() == piece;
     }
 
 
@@ -65,4 +58,14 @@ public class ItemEquipment extends ItemBase
     {
 
     }
+
+    public EquipmentAttribute getEquipmentAttribute() {
+        return equipmentAttribute;
+    }
+
+    protected void setEquipmentAttribute(EquipmentAttribute equipmentAttribute)
+    {
+        this.equipmentAttribute = equipmentAttribute;
+    }
+
 }

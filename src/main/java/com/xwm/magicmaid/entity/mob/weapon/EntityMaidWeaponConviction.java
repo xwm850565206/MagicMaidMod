@@ -1,7 +1,6 @@
 package com.xwm.magicmaid.entity.mob.weapon;
 
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityMultiHealthCreature;
-import com.xwm.magicmaid.enumstorage.EnumEquipment;
 import com.xwm.magicmaid.init.DimensionInit;
 import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
@@ -11,6 +10,7 @@ import com.xwm.magicmaid.network.particle.SPacketThreeParamParticle;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -44,7 +44,7 @@ public class EntityMaidWeaponConviction extends EntityMaidWeapon
 
     public EntityMaidWeaponConviction(World worldIn) {
         super(worldIn);
-        enumEquipment = EnumEquipment.CONVICTION;
+        equipmentAttribute = MagicEquipmentRegistry.CONVICTION;
     }
 
     public EntityMaidWeaponConviction(World world, ItemStack stack)
