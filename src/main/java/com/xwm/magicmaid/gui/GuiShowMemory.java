@@ -1,11 +1,6 @@
 package com.xwm.magicmaid.gui;
 
 import com.google.common.collect.Lists;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidMartha;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidRett;
-import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaidSelina;
-import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -23,12 +18,16 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @SideOnly(Side.CLIENT)
 public class GuiShowMemory extends GuiScreen
 {
+    public static Map<Integer, ResourceLocation> MEMORY_POEM = new HashMap<>();
+
     private static final Logger LOGGER = LogManager.getLogger();
     private final boolean poem;
     private float time;
@@ -106,19 +105,7 @@ public class GuiShowMemory extends GuiScreen
 
                 if (this.poem)
                 {
-                    String filename = "texts/";
-                    switch (maid) {
-                       case 0:
-                           filename += "memory_martha.txt";
-                           break;
-                       case 1:
-                           filename += "memory_rett.txt";
-                           break;
-                       case 2:
-                           filename += "memory_selina.txt";
-                           break;
-                    }
-                    iresource = this.mc.getResourceManager().getResource(new ResourceLocation(Reference.MODID, filename));
+                    iresource = this.mc.getResourceManager().getResource(MEMORY_POEM.get(maid));
                     InputStream inputstream = iresource.getInputStream();
                     BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(inputstream, StandardCharsets.UTF_8));
                     Random random = new Random(8124371L);

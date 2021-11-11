@@ -11,6 +11,7 @@ import com.xwm.magicmaid.object.item.equipment.EquipmentAttribute;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.object.item.equipment.ItemWeapon;
 import com.xwm.magicmaid.object.item.equipment.ItemWhisper;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.util.handlers.LootTableHandler;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
 import net.minecraft.entity.Entity;
@@ -58,8 +59,6 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
     {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(40);
-        this.setMaxHealthbarnum(10);
-        this.setHealthbarnum(10);
     }
 
 
@@ -109,64 +108,59 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
 
     public void getEquipment(ItemEquipment equipment){
 
-        EquipmentAttribute attribute = equipment.getEquipmentAttribute();
-        if (attribute.getType() == EquipmentAttribute.EquipmentType.NONE)
-            return;
-        else if (attribute.getType() == EquipmentAttribute.EquipmentType.WEAPON)
-        {
-            Class<? extends Entity> clazz = attribute.getEntityClass();
-            try {
-                EntityMaidWeapon weapon = (EntityMaidWeapon) clazz.getConstructor(World.class).newInstance(world);
-                weapon.setMaid(this);
-                weapon.setPosition(posX, posY + height + 1, posZ);
-                this.setWeaponID(weapon.getUniqueID());
-                this.setWeaponType(attribute.getName());
-                this.setHasWeapon(true);
-                if (!this.world.isRemote)
-                    this.world.spawnEntity(weapon);
-                this.weapon = weapon;
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            }
-        }
-        else if (attribute.getType() == EquipmentAttribute.EquipmentType.ARMOR)
-        {
-            this.setHasArmor(true);
-            this.setMaxHealthbarnum(50);
-            this.setArmorType(attribute.getName());
-            if (this.isFirstGetArmor()) {
-                this.setHealthbarnum(50);
-                this.setFirstGetArmor(false);
+        super.getEquipment(equipment);
+
+        if (equipment != null) {
+            EquipmentAttribute attribute = equipment.getEquipmentAttribute();
+            if (attribute.getType() == EquipmentAttribute.EquipmentType.NONE)
+                return;
+            else if (attribute.getType() == EquipmentAttribute.EquipmentType.WEAPON) {
+                Class<? extends Entity> clazz = attribute.getEntityClass();
+                try {
+                    EntityMaidWeapon weapon = (EntityMaidWeapon) clazz.getConstructor(World.class).newInstance(world);
+                    weapon.setMaid(this);
+                    weapon.setPosition(posX, posY + height + 1, posZ);
+                    this.setWeaponID(weapon.getUniqueID());
+                    if (!this.world.isRemote)
+                        this.world.spawnEntity(weapon);
+                    this.weapon = weapon;
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                }
+            } else if (attribute.getType() == EquipmentAttribute.EquipmentType.ARMOR) {
+                this.setMaxHealthbarnum(40);
+                if (this.isFirstGetArmor()) {
+                    this.setHealthbarnum(40);
+                    this.setFirstGetArmor(false);
+                }
             }
         }
     }
 
     public void loseEquipment(ItemEquipment equipment){
 
-        if (world.isRemote)
-            return;
+        super.loseEquipment(equipment);
+        if (equipment != null) {
+            if (world.isRemote)
+                return;
 
-        if (equipment instanceof ItemWeapon){
-            try {
-                EntityMaidWeapon.getWeaponFromUUID(world, this.getWeaponID()).setDead();
-            }catch (Exception e){
-                ;
+            if (equipment instanceof ItemWeapon) {
+                try {
+                    EntityMaidWeapon.getWeaponFromUUID(world, this.getWeaponID()).setDead();
+                } catch (Exception e) {
+                    ;
+                }
+                this.setWeaponID(null);
+                this.weapon = null;
+            } else {
+                this.setMaxHealthbarnum(10);
             }
-            this.setWeaponType(NONE.getName());
-            this.setWeaponID(null);
-            this.setHasWeapon(false);
-            this.weapon = null;
-        }
-        else {
-            this.setHasArmor(false);
-            this.setArmorType(NONE.getName());
-            this.setMaxHealthbarnum(10);
         }
     }
 
@@ -207,7 +201,7 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
     public boolean shouldAvoidDamage(int damage, DamageSource source)
     {
         //等级2时候不会受到过高伤害的攻击
-        if (!hasArmor())
+        if (MagicEquipmentRegistry.getAttribute(getArmorType()) == NONE)
             return false;
         if (getRank() < 2)
             return false;
@@ -239,7 +233,7 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
     @Override
     protected ResourceLocation getLootTable()
     {
-        if (getHealth() > 0) return null;
+        if (getTrueHealth() > 0) return null;
         return LootTableHandler.HOLY_FRUIT_SELINA;
     }
 }

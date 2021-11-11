@@ -11,14 +11,15 @@ import com.xwm.magicmaid.network.particle.SPacketThreeParamParticle;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
+import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.util.ArrayList;
@@ -100,10 +101,11 @@ public class EntityAIConviction extends EntityAIBase
 
                 if (maid.getRank() >= 1)
                     entityLivingBase.setHealth(1);
-                if (EnumMode.valueOf(maid.getMode()) == EnumMode.BOSS ) {
+                if (EnumMode.valueOf(maid.getMode()) == EnumMode.BOSS) {
                     if (entityLivingBase instanceof EntityPlayer){
                         entityLivingBase.sendMessage(new TextComponentString("定罪之力，定夺世间一切罪恶"));
-                        FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(this.maid, "clear " + entityLivingBase.getName());
+                        PunishOperationHandler.punishPlayer((EntityPlayerMP) entityLivingBase, 1, "");
+//                        FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(this.maid, "clear " + entityLivingBase.getName());
                         IMagicCreatureManagerImpl.getInstance().setHealth(entityLivingBase, 0);
                     }
                     entityLivingBase.setDead();

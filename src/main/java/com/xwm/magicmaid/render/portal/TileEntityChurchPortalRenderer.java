@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.tileentity.TileEntityEndPortal;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -29,6 +28,8 @@ public class TileEntityChurchPortalRenderer extends TileEntitySpecialRenderer<Ti
     private static final FloatBuffer MODELVIEW = GLAllocation.createDirectFloatBuffer(16);
     private static final FloatBuffer PROJECTION = GLAllocation.createDirectFloatBuffer(16);
     private final FloatBuffer buffer = GLAllocation.createDirectFloatBuffer(16);
+    private double d = 1;
+
 
     public void render(TileEntityChurchPortal te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
     {
@@ -108,6 +109,21 @@ public class TileEntityChurchPortalRenderer extends TileEntitySpecialRenderer<Ti
             bufferbuilder.pos(x + 0.5D, y + 1.0D, z).color(f3, f4, f5, 1.0F).endVertex();
         }
 
+        if (te.shouldRenderFace(EnumFacing.DOWN))
+        {
+            bufferbuilder.pos(x, y - 0.5, z).color(f3, f4, f5, 1.0F).endVertex();
+            bufferbuilder.pos(x + 1.0D, y - 0.5, z).color(f3, f4, f5, 1.0F).endVertex();
+            bufferbuilder.pos(x + 1.0D, y - 0.5, z + 1.0D).color(f3, f4, f5, 1.0F).endVertex();
+            bufferbuilder.pos(x, y - 0.5, z + 1.0D).color(f3, f4, f5, 1.0F).endVertex();
+        }
+
+        if (te.shouldRenderFace(EnumFacing.UP))
+        {
+            bufferbuilder.pos(x, y + 0.5, z + 1.0D).color(f3, f4, f5, 1.0F).endVertex();
+            bufferbuilder.pos(x + 1.0D, y + 0.5, z + 1.0D).color(f3, f4, f5, 1.0F).endVertex();
+            bufferbuilder.pos(x + 1.0D,  y + 0.5, z).color(f3, f4, f5, 1.0F).endVertex();
+            bufferbuilder.pos(x, y + 0.5, z).color(f3, f4, f5, 1.0F).endVertex();
+        }
 
         tessellator.draw();
         GlStateManager.popMatrix();
@@ -160,28 +176,57 @@ public class TileEntityChurchPortalRenderer extends TileEntitySpecialRenderer<Ti
         GlStateManager.glLineWidth(4);
         bufferbuilder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
 
-        if (te.shouldRenderFace(EnumFacing.SOUTH))
-        {
-            bufferbuilder.pos(x + RANDOM.nextDouble(), y + RANDOM.nextDouble(), z + 0.5D).endVertex();
-            bufferbuilder.pos(x  + RANDOM.nextDouble(), y + RANDOM.nextDouble(), z + 0.5D).endVertex();
-        }
+        d += 0.005;
+        if (d > 2) d = 0;
+        for (int t = 0; t <= 4; t++) {
+            double ta = 0, tb = 0, tc = 0, td = 0;
+            double d2 = d + 0.5 * t;
+            if (d2 > 2)
+                d2 -= 2;
+            d2 -= 1;
 
-        if (te.shouldRenderFace(EnumFacing.NORTH))
-        {
-            bufferbuilder.pos(x + RANDOM.nextDouble(), y + RANDOM.nextDouble(), z + 0.5D).endVertex();
-            bufferbuilder.pos(x + RANDOM.nextDouble(), y + RANDOM.nextDouble(), z + 0.5D).endVertex();
-        }
+            if (d2 >= 0) {
+                ta = 0;
+                tb = d2;
+                tc = 1 - d2;
+                td = 1;
+            } else {
+                ta = -d2;
+                tb = 0;
+                tc = 1;
+                td = 1 + d2;
+            }
 
-        if (te.shouldRenderFace(EnumFacing.EAST))
-        {
-            bufferbuilder.pos(x + 0.5D, y + RANDOM.nextDouble(), z + RANDOM.nextDouble()).endVertex();
-            bufferbuilder.pos(x + 0.5D, y + RANDOM.nextDouble(), z + + RANDOM.nextDouble()).endVertex();
-        }
 
-        if (te.shouldRenderFace(EnumFacing.WEST))
-        {
-            bufferbuilder.pos(x + 0.5D, y + RANDOM.nextDouble(), z + RANDOM.nextDouble()).endVertex();
-            bufferbuilder.pos(x + 0.5D, y + RANDOM.nextDouble(), z + RANDOM.nextDouble()).endVertex();
+            if (te.shouldRenderFace(EnumFacing.SOUTH)) {
+                bufferbuilder.pos(x + ta, y + tb, z + 0.5D).endVertex();
+                bufferbuilder.pos(x + tc, y + td, z + 0.5D).endVertex();
+            }
+
+            if (te.shouldRenderFace(EnumFacing.NORTH)) {
+                bufferbuilder.pos(x + ta, y + tb, z + 0.5D).endVertex();
+                bufferbuilder.pos(x + tc, y + td, z + 0.5D).endVertex();
+            }
+
+            if (te.shouldRenderFace(EnumFacing.EAST)) {
+                bufferbuilder.pos(x + 0.5D, y + ta, z + tb).endVertex();
+                bufferbuilder.pos(x + 0.5D, y + tc, z + td).endVertex();
+            }
+
+            if (te.shouldRenderFace(EnumFacing.WEST)) {
+                bufferbuilder.pos(x + 0.5D, y + ta, z + tb).endVertex();
+                bufferbuilder.pos(x + 0.5D, y + tc, z + td).endVertex();
+            }
+
+            if (te.shouldRenderFace(EnumFacing.DOWN)) {
+                bufferbuilder.pos(x + ta, y - 0.5D, z + tb).endVertex();
+                bufferbuilder.pos(x + tc, y - 0.5F, z + td).endVertex();
+            }
+
+            if (te.shouldRenderFace(EnumFacing.UP)) {
+                bufferbuilder.pos(x + ta, y + 0.5D, z + tb).endVertex();
+                bufferbuilder.pos(x + tc, y + 0.5F, z + td).endVertex();
+            }
         }
 
 

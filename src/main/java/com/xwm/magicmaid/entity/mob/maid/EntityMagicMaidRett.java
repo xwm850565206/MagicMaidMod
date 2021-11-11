@@ -39,6 +39,8 @@ public class EntityMagicMaidRett extends EntityMagicMaid
     protected void entityInit(){
         super.entityInit();
         this.dataManager.register(PERFORMTICK, 0);
+        this.setMaxHealthbarnum(20);
+        this.setHealthbarnum(20);
     }
 
     @Override
@@ -55,8 +57,6 @@ public class EntityMagicMaidRett extends EntityMagicMaid
     protected void applyEntityAttributes()
     {
         super.applyEntityAttributes();
-        this.setMaxHealthbarnum(20);
-        this.setHealthbarnum(20);
     }
 
 
@@ -89,35 +89,35 @@ public class EntityMagicMaidRett extends EntityMagicMaid
 
     public void getEquipment(ItemEquipment equipment){
 
-        EquipmentAttribute equipment1 = equipment.getEquipmentAttribute();
-        if (DEMONKILLINGSWORD.equals(equipment1)) {
-            this.setWeaponType(equipment1.getName());
-            this.setHasWeapon(true);
-        } else if (IMMORTAL.equals(equipment1)) {
-            this.setHasArmor(true);
-            this.setMaxHealthbarnum(200);
-            this.setArmorType(equipment1.getName());
-            if (this.isFirstGetArmor()) {
-                this.setHealthbarnum(200);
-                this.setFirstGetArmor(false);
+        super.getEquipment(equipment);
+
+        if (equipment != null) {
+            EquipmentAttribute equipment1 = equipment.getEquipmentAttribute();
+            if (DEMONKILLINGSWORD.equals(equipment1)) {
+
+            } else if (IMMORTAL.equals(equipment1)) {
+                this.setMaxHealthbarnum(200);
+                this.setArmorType(equipment1.getName());
+                if (this.isFirstGetArmor()) {
+                    this.setHealthbarnum(200);
+                    this.setFirstGetArmor(false);
+                }
             }
         }
-
     }
 
     public void loseEquipment(ItemEquipment equipment){
 
-        if (world.isRemote)
-            return;
+        super.loseEquipment(equipment);
+        if (equipment != null) {
+            if (world.isRemote)
+                return;
+            EquipmentAttribute equipment1 = equipment.getEquipmentAttribute();
+            if (DEMONKILLINGSWORD.equals(equipment1)) {
 
-        EquipmentAttribute equipment1 = equipment.getEquipmentAttribute();
-        if (DEMONKILLINGSWORD.equals(equipment1)) {
-            this.setWeaponType(NONE.getName());
-            this.setHasWeapon(false);
-        } else if (IMMORTAL.equals(equipment1)) {
-            this.setHasArmor(false);
-            this.setArmorType(NONE.getName());
-            this.setMaxHealthbarnum(20);
+            } else if (IMMORTAL.equals(equipment1)) {
+                this.setMaxHealthbarnum(20);
+            }
         }
     }
 
@@ -155,7 +155,7 @@ public class EntityMagicMaidRett extends EntityMagicMaid
         if (source.damageType.equals("drown") || source.damageType.equals("fall"))
             return false;
 
-        if (getRank() >= 1 && hasArmor()) {
+        if (getRank() >= 1 && MagicEquipmentRegistry.getAttribute(getArmorType()) != NONE) {
             if (EnumMode.valueOf(getMode()) != EnumMode.BOSS)
                 return false;
             else super.attackEntityFrom(source, amount / 10);
@@ -181,7 +181,7 @@ public class EntityMagicMaidRett extends EntityMagicMaid
     public boolean shouldAvoidDamage(int damage, DamageSource source)
     {
         //等级2时候不会受到过高伤害的攻击
-        if (!hasArmor())
+        if (MagicEquipmentRegistry.getAttribute(getArmorType()) == NONE)
             return false;
         if (getRank() < 2)
             return false;
@@ -197,7 +197,7 @@ public class EntityMagicMaidRett extends EntityMagicMaid
     @Override
     protected ResourceLocation getLootTable()
     {
-        if (getHealth() > 0) return null;
+        if (getTrueHealth() > 0) return null;
         return LootTableHandler.HOLY_FRUIT_RETT;
     }
 }

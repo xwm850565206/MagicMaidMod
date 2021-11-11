@@ -33,10 +33,14 @@ public class EntityMagicMaidRettBoss extends EntityMagicMaidRett implements IEnt
 
     public EntityMagicMaidRettBoss(World worldIn) {
         super(worldIn);
+        this.initFightManager(worldIn);
+    }
+
+    @Override
+    protected void entityInit() {
+        super.entityInit();
         this.setMode(EnumMode.toInt(EnumMode.BOSS));
         this.setRank(2);
-
-        this.initFightManager(worldIn);
     }
 
     @Override
@@ -82,11 +86,11 @@ public class EntityMagicMaidRettBoss extends EntityMagicMaidRett implements IEnt
     public void onDeathUpdate()
     {
         super.onDeathUpdate();
-        if (this.deathTime == 20) {
-            if (fightManager != null) {
+        if (getMaxHealth() > 0 && getTrueHealth() <= 0 && fightManager != null) {
+            if (this.deathTime == 20) {
                 fightManager.setBossAlive(false); //boss真实死亡
-                fightManager.setBossKilled(true);
             }
+            fightManager.setBossKilled(true);
         }
     }
 
@@ -94,7 +98,7 @@ public class EntityMagicMaidRettBoss extends EntityMagicMaidRett implements IEnt
     @Override
     protected ResourceLocation getLootTable()
     {
-        if (getHealth() > 0) return null;
+        if (getTrueHealth() > 0) return null;
         return LootTableHandler.DEMONKILLER;
     }
 

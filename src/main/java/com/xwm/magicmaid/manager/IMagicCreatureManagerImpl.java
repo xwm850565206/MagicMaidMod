@@ -2,13 +2,11 @@ package com.xwm.magicmaid.manager;
 
 import com.xwm.magicmaid.entity.mob.basic.AbstractEntityMagicCreature;
 import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityAvoidThingCreature;
-import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityBossCreature;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.entity.CPacketCapabilityUpdate;
 import com.xwm.magicmaid.network.entity.SPacketCapabilityUpdate;
 import com.xwm.magicmaid.player.capability.CapabilityLoader;
 import com.xwm.magicmaid.player.capability.ICreatureCapability;
-import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -174,14 +172,15 @@ public class IMagicCreatureManagerImpl implements IMagicCreatureManager {
             else
                 flag = entityLivingBase.attackEntityFrom(source, caculateDamageAmount(null, entityLivingBase, null, amount));
 
-            if (entityLivingBase instanceof EntityPlayerMP && !flag)
-            {
-                if ((source.getTrueSource() != null && source.getTrueSource() instanceof IEntityBossCreature)
-                    || (source.getImmediateSource() != null && source.getImmediateSource() instanceof IEntityBossCreature))
-                {
-                    PunishOperationHandler.punishPlayer((EntityPlayerMP) entityLivingBase, 8, "检测到玩家免伤机制过强，尝试斩杀");
-                }
-            }
+            // 9.0版本移除 因为这个判定一直有问题
+//            if (entityLivingBase instanceof EntityPlayerMP && !flag && entityLivingBase.getActivePotionEffect(PotionInit.BOSS_ANGRY_EFFECT) != null)
+//            {
+//                if ((source.getTrueSource() != null && source.getTrueSource() instanceof IEntityBossCreature)
+//                    || (source.getImmediateSource() != null && source.getImmediateSource() instanceof IEntityBossCreature))
+//                {
+//                    PunishOperationHandler.punishPlayer((EntityPlayerMP) entityLivingBase, 8, "检测到玩家免伤机制过强(和平、创造、无法掉血等情况)，尝试斩杀");
+//                }
+//            }
 
         }
         catch (Exception e) {

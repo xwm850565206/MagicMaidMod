@@ -14,14 +14,14 @@ public class ItemInit
 
     public static final Item ITEME_INSTRUCCTION_BOOK = new ItemInstructionBook("instruction_book");
 
-    public static final Item ITEM_REPANTENCE = new ItemRepantence("repantence");
-    public static final Item ITEM_CONVICTION = new ItemConviction("conviction");
-    public static final Item ITEM_DEMON_KILLER_SWORD = new ItemDemonKillerSword("demonkiller");
-    public static final Item ITEM_PANDORA = new ItemPandora("pandorasbox");
-    public static final Item ITEM_WHISPER = new ItemWhisper("whisper");
-    public static final Item ITEM_PROTECTOR = new ItemProtector("protector");
-    public static final Item ITEM_IMMORTAL = new ItemImmortal("immortal");
-    public static final Item ITEM_WISE = new ItemWise("wise");
+    public static final ItemWeapon ITEM_REPANTENCE = new ItemRepantence("repantence");
+    public static final ItemWeapon ITEM_CONVICTION = new ItemConviction("conviction");
+    public static final ItemWeapon ITEM_DEMON_KILLER_SWORD = new ItemDemonKillerSword("demonkiller");
+    public static final ItemWeapon ITEM_PANDORA = new ItemPandora("pandorasbox");
+    public static final ItemWeapon ITEM_WHISPER = new ItemWhisper("whisper");
+    public static final ItemArmor ITEM_PROTECTOR = new ItemProtector("protector");
+    public static final ItemArmor ITEM_IMMORTAL = new ItemImmortal("immortal");
+    public static final ItemArmor ITEM_WISE = new ItemWise("wise");
 
     public static final Item itemMemoryPieceMartha = new ItemMemoryPieceMartha("memorypiecemartha");
     public static final Item itemMemoryPieceSelina = new ItemMemoryPieceMartha("memorypieceselina");

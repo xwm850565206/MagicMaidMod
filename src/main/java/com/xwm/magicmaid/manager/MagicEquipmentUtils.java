@@ -109,6 +109,7 @@ public class MagicEquipmentUtils
     {
         if (world.isRemote)
             return;
+
         Item item = attribute.getPiece();
         if (item != null)
         {
@@ -142,6 +143,7 @@ public class MagicEquipmentUtils
 
             ItemWeapon weapon = (ItemWeapon) stack.getItem();
             EquipmentAttribute attribute = weapon.getEquipmentAttribute();
+
             int level = weapon.getLevel(stack);
             Vec3d baseArea = attribute.getBaseArea();
             Vec3d growArea = attribute.getGrowArea();

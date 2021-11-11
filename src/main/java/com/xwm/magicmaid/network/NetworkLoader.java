@@ -38,6 +38,7 @@ public class NetworkLoader
         registerMessage(SPacketEntityData.Handler.class, SPacketEntityData.class, Side.CLIENT);
         registerMessage(RenderAreaPacket.Handler.class, RenderAreaPacket.class, Side.CLIENT);
         registerMessage(SPacketCapabilityUpdate.Handler.class, SPacketCapabilityUpdate.class, Side.CLIENT);
+        registerMessage(SPacketMaidInventoryUpdate.Handler.class, SPacketMaidInventoryUpdate.class, Side.CLIENT);
 
 
         registerMessage(CPacketEntityData.Handler.class, CPacketEntityData.class, Side.SERVER);

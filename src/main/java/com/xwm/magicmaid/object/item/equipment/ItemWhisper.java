@@ -4,7 +4,6 @@ import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
-import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -32,7 +31,6 @@ public class ItemWhisper extends ItemWeapon
 
     public ItemWhisper(String name) {
         super(name);
-        this.setEquipmentAttribute(MagicEquipmentRegistry.WHISPER);
     }
 
     @Override
@@ -222,7 +220,7 @@ public class ItemWhisper extends ItemWeapon
     }
 
     //基础伤害
-    public static int getBaseDamage() {
+    public int getBaseDamage() {
         return 20;
     }
 }

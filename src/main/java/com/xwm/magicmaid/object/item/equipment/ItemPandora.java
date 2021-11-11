@@ -1,7 +1,6 @@
 package com.xwm.magicmaid.object.item.equipment;
 
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponPandorasBox;
-import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,7 +21,6 @@ public class ItemPandora extends ItemWeapon
 {
     public ItemPandora(String name) {
         super(name);
-        this.setEquipmentAttribute(MagicEquipmentRegistry.PANDORA);
     }
 
     @Override
@@ -115,7 +113,7 @@ public class ItemPandora extends ItemWeapon
     }
 
     //基础伤害
-    public static int getBaseDamage() {
+    public int getBaseDamage() {
         return 1;
     }
 }

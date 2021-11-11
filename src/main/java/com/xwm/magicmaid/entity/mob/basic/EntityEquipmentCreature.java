@@ -24,8 +24,6 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
 {
     public NonNullList<ItemStack> inventory = NonNullList.<ItemStack>withSize(getSizeInventory(), ItemStack.EMPTY); //保存背包里的信息
 
-    private static final DataParameter<Boolean> HAS_WEAPON = EntityDataManager.<Boolean>createKey(EntityEquipmentCreature.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> HAS_ARMOR = EntityDataManager.<Boolean>createKey(EntityEquipmentCreature.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> IS_FIRST_GET_ARMOR = EntityDataManager.createKey(EntityEquipmentCreature.class, DataSerializers.BOOLEAN); //第一次获得防具血量调整
     private static final DataParameter<Optional<UUID>> WEAPON_ID = EntityDataManager.<Optional<UUID>>createKey(EntityEquipmentCreature.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     private static final DataParameter<String> WEAPON_TYPE = EntityDataManager.<String>createKey(EntityEquipmentCreature.class, DataSerializers.STRING);
@@ -38,8 +36,6 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataManager.register(HAS_WEAPON, false);
-        this.dataManager.register(HAS_ARMOR, false);
         this.dataManager.register(IS_FIRST_GET_ARMOR, true);
         this.dataManager.register(WEAPON_ID, Optional.fromNullable(null));
         this.dataManager.register(WEAPON_TYPE, MagicEquipmentRegistry.NONE.getName());
@@ -50,8 +46,6 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
     public void writeEntityToNBT(NBTTagCompound compound)
     {
         super.writeEntityToNBT(compound);
-        compound.setBoolean("hasWeapon", this.hasWeapon());
-        compound.setBoolean("hasArmor", this.hasArmor());
         compound.setBoolean("isFirstGetArmor", this.isFirstGetArmor());
         compound.setString("weaponType", this.getWeaponType());
         compound.setString("armorType", this.getArmorType());
@@ -67,18 +61,18 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
     @Override
     public void readEntityFromNBT(NBTTagCompound compound)
     {
-        this.setHasWeapon(compound.getBoolean("hasWeapon"));
-        this.setHasArmor(compound.getBoolean("hasArmor"));
+        this.setFirstGetArmor(compound.getBoolean("isFirstGetArmor"));
         this.setWeaponType(compound.getString("weaponType"));
         this.setArmorType(compound.getString("armorType"));
         this.inventory = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, this.inventory);
+        for (ItemStack itemStack : inventory) {
+            if (itemStack.getItem() instanceof ItemEquipment)
+                this.getEquipment((ItemEquipment) itemStack.getItem());
+        }
 
-        if (hasWeapon())
-            this.getEquipment(MagicEquipmentRegistry.getAttribute(getWeaponType()).getEquipment());
-
-        if (hasArmor())
-            this.getEquipment(MagicEquipmentRegistry.getAttribute(getArmorType()).getEquipment());
+        this.getEquipment(MagicEquipmentRegistry.getAttribute(getWeaponType()).getEquipment());
+        this.getEquipment(MagicEquipmentRegistry.getAttribute(getArmorType()).getEquipment());
 
         super.readEntityFromNBT(compound);
     }
@@ -90,27 +84,6 @@ public abstract class EntityEquipmentCreature extends EntityMagicRankCreature im
         if (getTrueHealth() <= 0 && !world.isRemote && shouldDropEquipment())
             InventoryHelper.dropInventoryItems(world, this, this);
     }
-
-    @Override
-    public void setHasWeapon(boolean hasWeapon) {
-        this.dataManager.set(HAS_WEAPON, hasWeapon);
-    }
-
-    @Override
-    public boolean hasWeapon() {
-        return this.dataManager.get(HAS_WEAPON);
-    }
-
-    @Override
-    public void setHasArmor(boolean hasArmor) {
-        this.dataManager.set(HAS_ARMOR, hasArmor);
-    }
-
-    @Override
-    public boolean hasArmor() {
-        return this.dataManager.get(HAS_ARMOR);
-    }
-
 
     @Override
     public boolean isFirstGetArmor() {

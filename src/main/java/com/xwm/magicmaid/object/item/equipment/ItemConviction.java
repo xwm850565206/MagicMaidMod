@@ -1,7 +1,6 @@
 package com.xwm.magicmaid.object.item.equipment;
 
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponConviction;
-import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,7 +21,6 @@ public class ItemConviction extends ItemWeapon
 {
     public ItemConviction(String name) {
         super(name);
-        this.setEquipmentAttribute(MagicEquipmentRegistry.CONVICTION);
     }
 
     /**
@@ -113,7 +111,7 @@ public class ItemConviction extends ItemWeapon
     }
 
     //基础伤害
-    public static int getBaseDamage() {
+    public int getBaseDamage() {
         return 50;
     }
 }

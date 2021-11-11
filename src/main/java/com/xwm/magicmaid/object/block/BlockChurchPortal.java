@@ -5,6 +5,7 @@ import com.xwm.magicmaid.object.tileentity.TileEntityChurchPortal;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
 import com.xwm.magicmaid.registry.MagicDimensionRegistry;
+import com.xwm.magicmaid.util.interfaces.IRegistrable;
 import com.xwm.magicmaid.world.dimension.ChurchTeleporter;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -30,7 +31,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-public class BlockChurchPortal extends BlockContainer
+public class BlockChurchPortal extends BlockContainer implements IRegistrable
 {
     protected static final AxisAlignedBB CHURCH_PORTAL_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.75D, 1.0D);
 
@@ -41,7 +42,7 @@ public class BlockChurchPortal extends BlockContainer
         this.setUnlocalizedName(name);
         this.setLightLevel(1.0F);
 
-        BlockInit.BLOCKS.add(this);
+        doRegister();
     }
 
     /**
@@ -149,5 +150,10 @@ public class BlockChurchPortal extends BlockContainer
     public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
     {
         return BlockFaceShape.UNDEFINED;
+    }
+
+    @Override
+    public void doRegister() {
+        BlockInit.BLOCKS.add(this);
     }
 }

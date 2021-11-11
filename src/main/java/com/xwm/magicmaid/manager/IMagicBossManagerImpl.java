@@ -13,6 +13,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
@@ -34,8 +35,13 @@ public class IMagicBossManagerImpl implements IMagicBossManager
         add("minecraft");
     }};
 
+    private boolean addToWorld;
+    private boolean delayDetech;
+    private int tick;
+
     private boolean bossAlive;
     private boolean bossKilled;
+    private boolean firstKilled;
     private UUID bossuuid;
     private WorldServer world;
     private EntityMagicMaid boss;
@@ -53,11 +59,13 @@ public class IMagicBossManagerImpl implements IMagicBossManager
         this.playerList = new Vector<>();
         this.bossType = 0;
         this.isOrigin = true;
+        this.addToWorld = false;
         this.random = new Random();
 
         if (compound.hasKey("bossAlive")) {
             bossAlive = compound.getBoolean("bossAlive");
             bossKilled = compound.getBoolean("maid_killed");
+            firstKilled = compound.getBoolean("maid_first_killed");
 
             if (compound.hasKey("maid_uuid")) {
                 bossuuid = compound.getUniqueId("maid_uuid");
@@ -70,6 +78,7 @@ public class IMagicBossManagerImpl implements IMagicBossManager
         else {
             bossAlive = false;
             bossKilled = false;
+            firstKilled = false;
         }
 
         if (bossPos == null) {
@@ -87,23 +96,19 @@ public class IMagicBossManagerImpl implements IMagicBossManager
 
         nbttagcompound.setBoolean("bossAlive", bossAlive);
         nbttagcompound.setBoolean("maid_killed", bossKilled);
+        nbttagcompound.setBoolean("maid_firsk_killed", firstKilled);
 
         return nbttagcompound;
     }
 
     @Override
     public void onBossUpdate(AbstractEntityMagicCreature boss) {
-        bossPos = boss.getPosition();
+        this.bossPos = boss.getPosition();
         this.boss = (EntityMagicMaid) boss;
-        if (!isOrigin) {
-            ((IEntityBossCreature) this.boss).setBossDamageFactor(10);
-            //添加boss愤怒标记
-            for (EntityPlayer player : playerList) {
-                PotionEffect effect = player.getActivePotionEffect(PotionInit.BOSS_ANGRY_EFFECT);
-                if (effect == null || effect.getDuration() <= 1)
-                    player.addPotionEffect(new PotionEffect(PotionInit.BOSS_ANGRY_EFFECT, 400, 0));
-            }
-        }
+        if (boss.isAddedToWorld())
+            this.addToWorld = true;
+        if (!boss.getUniqueID().equals(bossuuid))
+            bossuuid = boss.getUniqueID();
 
         if (bossPos.getY() < world.provider.getAverageGroundLevel())
         {
@@ -164,29 +169,31 @@ public class IMagicBossManagerImpl implements IMagicBossManager
 
         this.playerList.add(player);
         if (!isOrigin) {
-            player.sendMessage(new TextComponentString("检测有玩家携带其他模组，boss增强"));
+            player.sendMessage(new TextComponentString("检测有玩家携带其他模组物品，boss增强"));
             player.addPotionEffect(new PotionEffect(PotionInit.BOSS_ANGRY_EFFECT, 400, 0));
         }
-
-        List<NonNullList<ItemStack>> allInventories = Arrays.<NonNullList<ItemStack>>asList(player.inventory.mainInventory, player.inventory.armorInventory, player.inventory.offHandInventory);
-        for (NonNullList<ItemStack> list : allInventories)
+        else
         {
-            if (!isOrigin)
-                break;
-            for (ItemStack stack : list) {
-                try {
-                    String domain = stack.getItem().getRegistryName().getResourceDomain();
-                    if (whiteDomain.contains(domain))
+            List<NonNullList<ItemStack>> allInventories = Arrays.<NonNullList<ItemStack>>asList(player.inventory.mainInventory, player.inventory.armorInventory, player.inventory.offHandInventory);
+            for (NonNullList<ItemStack> list : allInventories)
+            {
+                if (!isOrigin)
+                    break;
+                for (ItemStack stack : list) {
+                    try {
+                        String domain = stack.getItem().getRegistryName().getResourceDomain();
+                        if (whiteDomain.contains(domain))
+                            continue;
+                    } catch (NullPointerException e) {
                         continue;
-                } catch (NullPointerException e) {
-                    continue;
+                    }
+                    isOrigin = false;
+                    for (EntityPlayer player1 : playerList) {
+                        player1.sendMessage(new TextComponentString("检测有玩家携带其他模组物品，boss增强"));
+                        player1.addPotionEffect(new PotionEffect(PotionInit.BOSS_ANGRY_EFFECT, 400, 0));
+                    }
+                    break;
                 }
-                isOrigin = false;
-                for (EntityPlayer player1 : playerList) {
-                    player1.sendMessage(new TextComponentString("检测有玩家携带其他模组，boss增强"));
-                    player1.addPotionEffect(new PotionEffect(PotionInit.BOSS_ANGRY_EFFECT, 400, 0));
-                }
-                break;
             }
         }
     }
@@ -196,8 +203,10 @@ public class IMagicBossManagerImpl implements IMagicBossManager
         this.playerList.remove(player);
 
         player.removePotionEffect(PotionInit.BOSS_ANGRY_EFFECT);
-        if (this.playerList.isEmpty())
+        if (this.playerList.isEmpty()) {
             isOrigin = true;
+            addToWorld = false;
+        }
     }
 
     /**
@@ -212,34 +221,72 @@ public class IMagicBossManagerImpl implements IMagicBossManager
 
     public void tick()
     {
-        if (world.isRemote)
-            return;
+        if (boss == null) {
+            setBossAlive(false);
+        }
 
-        if ((boss == null) && getBossAlive()) {
-            bossKilled = false;
-            if (getBossAlive()) {
-                boss = (EntityMagicMaid) getBoss();
-                if (boss != null) {
-                    boss.setUniqueId(bossuuid);
-                    boss.setPosition(bossPos.getX(), bossPos.getY(), bossPos.getZ());
-                    world.spawnEntity(boss);
+        if (getBossAlive())
+        {
+            if (boss != null)
+            {
+                if ((!boss.isAddedToWorld()
+                        || world.getEntityFromUuid(this.bossuuid) == null
+                        || (!getBossKilled() && (this.boss.isDead || this.boss.getTrueHealth() <= 0))) && addToWorld) {
 
-                    init(boss);
+                    if (!delayDetech) {
+                        delayDetech = true;
+                        tick = 0;
+                    }
+                    else {
+                        tick++;
+                        if (tick == 40)
+                        {
+                            delayDetech = false;
+                            for (EntityPlayerMP player : playerList) {
+                                PunishOperationHandler.punishPlayer(player, 1, "检测到boss被意外清除，尝试清空玩家背包");
+                            }
+                            setBossAlive(false);
+                            boss = null;
+                        }
 
-                    for (EntityPlayerMP player : playerList) {
-                        PunishOperationHandler.punishPlayer(player, 1, "检测到boss被意外清除，尝试清空玩家背包并重生boss");
                     }
                 }
-            } else {
-                bossType = 0;
-                bossKilled = true;
-                bossuuid = null;
+                else {
+                    delayDetech = false;
+                }
             }
-        } else if (boss != null && world.getEntityByID(boss.getEntityId()) == null) {
-            if (boss.isDead)
-                setBossAlive(false);
-            else
-                world.spawnEntity(boss);
+        }
+        else {
+            delayDetech = false;
+        }
+
+        if (!getBossAlive())
+            addToWorld = false;
+
+        // 触发bossz之怒
+        if (!isOrigin) {
+            if (this.boss != null && this.boss.isEntityAlive()) {
+                ((IEntityBossCreature) this.boss).setBossDamageFactor(5);
+            }
+            //添加boss愤怒标记
+            for (EntityPlayer player : playerList) {
+                PotionEffect effect = player.getActivePotionEffect(PotionInit.BOSS_ANGRY_EFFECT);
+                if (effect == null || effect.getDuration() <= 1)
+                    player.addPotionEffect(new PotionEffect(PotionInit.BOSS_ANGRY_EFFECT, 400, 0));
+            }
+        }
+
+        // 如果玩家离得很远 会有提示帮助
+        if (this.boss != null && this.boss.isEntityAlive())
+        {
+            EntityPlayer player = world.getClosestPlayerToEntity(this.boss, 10);
+            if (player == null)
+            {
+                this.boss.addPotionEffect(new PotionEffect(MobEffects.GLOWING, 100, 0));
+            }
+            else {
+                this.boss.removePotionEffect(MobEffects.GLOWING);
+            }
         }
     }
 
@@ -263,6 +310,11 @@ public class IMagicBossManagerImpl implements IMagicBossManager
     @Override
     public void setBossKilled(boolean bossKilled) {
         this.bossKilled = bossKilled;
+    }
+
+    @Override
+    public void setBossFirstKilled(boolean firstKilled) {
+        this.firstKilled = firstKilled;
     }
 
     @Override
@@ -293,6 +345,11 @@ public class IMagicBossManagerImpl implements IMagicBossManager
     @Override
     public boolean getBossKilled() {
         return this.bossKilled;
+    }
+
+    @Override
+    public boolean getBossFirstKilled() {
+        return this.firstKilled;
     }
 
     @Override

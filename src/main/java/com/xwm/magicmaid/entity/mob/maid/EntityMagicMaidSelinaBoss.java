@@ -6,6 +6,7 @@ import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.manager.IMagicBossManager;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.RenderAreaPacket;
+import com.xwm.magicmaid.network.entity.SPacketMaidInventoryUpdate;
 import com.xwm.magicmaid.object.item.equipment.EquipmentAttribute;
 import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
@@ -32,10 +33,14 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
 
     public EntityMagicMaidSelinaBoss(World worldIn) {
         super(worldIn);
+        this.initFightManager(worldIn);
+    }
+
+    @Override
+    protected void entityInit() {
+        super.entityInit();
         this.setMode(EnumMode.toInt(EnumMode.BOSS));
         this.setRank(2);
-
-        this.initFightManager(worldIn);
     }
 
     @Override
@@ -63,12 +68,17 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
     {
         super.onLivingUpdate();
 
-        if (MagicEquipmentRegistry.getAttribute(this.getWeaponType()) == NONE){
+        if (MagicEquipmentRegistry.getAttribute(this.getWeaponType()) == NONE && !world.isRemote){
+            ItemStack stack = ItemStack.EMPTY;
             double f = rand.nextDouble();
             if (f < 0.5)
-                this.setInventorySlotContents(0, new ItemStack(ItemInit.ITEM_PANDORA));
+                stack = new ItemStack(ItemInit.ITEM_PANDORA);
             else
-                this.setInventorySlotContents(0, new ItemStack(ItemInit.ITEM_WHISPER));
+                stack = new ItemStack(ItemInit.ITEM_WHISPER);
+
+            this.setInventorySlotContents(0, stack);
+            SPacketMaidInventoryUpdate packet = new SPacketMaidInventoryUpdate(getEntityId(), dimension, 0, stack);
+            NetworkLoader.instance.sendToDimension(packet, dimension);
 
             this.setInventorySlotContents(1, new ItemStack(ItemInit.ITEM_WISE));
         }
@@ -84,11 +94,11 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
     public void onDeathUpdate()
     {
         super.onDeathUpdate();
-        if (this.deathTime == 20) {
-            if (fightManager != null) {
+        if (getMaxHealth() > 0 && getTrueHealth() <= 0 && fightManager != null) {
+            if (this.deathTime == 20) {
                 fightManager.setBossAlive(false); //boss真实死亡
-                fightManager.setBossKilled(true);
             }
+            fightManager.setBossKilled(true);
         }
     }
 
@@ -96,7 +106,7 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
     @Override
     protected ResourceLocation getLootTable()
     {
-        if (getHealth() > 0) return null;
+        if (getTrueHealth() > 0) return null;
         EquipmentAttribute equipment = MagicEquipmentRegistry.getAttribute(getWeaponType());
         return equipment == MagicEquipmentRegistry.PANDORA ? LootTableHandler.PANDORA : LootTableHandler.WHISPER;
     }

@@ -19,7 +19,6 @@ import java.util.List;
 
 public abstract class ItemWeapon extends ItemEquipment
 {
-
     public ItemWeapon(String name) {
         super(name);
         this.maxStackSize = 1;
@@ -30,7 +29,7 @@ public abstract class ItemWeapon extends ItemEquipment
         return getEquipmentAttribute();
     }
 
-    public static List<Integer> getAttackDamage() {
+    public List<Integer> getAttackDamage() {
         List<Integer> attackList = new ArrayList<>();
         for (int i = 0; i <= 7; i++)
         {
@@ -41,7 +40,7 @@ public abstract class ItemWeapon extends ItemEquipment
     }
 
     //基础伤害
-    public static int getBaseDamage() {
+    public int getBaseDamage() {
         return 0;
     }
 

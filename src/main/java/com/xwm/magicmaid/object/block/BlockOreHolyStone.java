@@ -4,6 +4,7 @@ import com.xwm.magicmaid.Main;
 import com.xwm.magicmaid.init.BlockInit;
 import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.util.interfaces.IHasModel;
+import com.xwm.magicmaid.util.interfaces.IRegistrable;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -18,7 +19,7 @@ import java.util.Random;
 
 import static com.xwm.magicmaid.creativetab.CreativeTabMaid.CREATIVE_TAB_MAID;
 
-public class BlockOreHolyStone extends BlockOre implements IHasModel
+public class BlockOreHolyStone extends BlockOre implements IHasModel, IRegistrable
 {
     public BlockOreHolyStone(String name)
     {
@@ -30,8 +31,7 @@ public class BlockOreHolyStone extends BlockOre implements IHasModel
         setResistance(5.0f);
         setSoundType(SoundType.STONE);
 
-        BlockInit.BLOCKS.add(this);
-        ItemInit.ITEMS.add(new ItemBlock(this).setRegistryName(this.getRegistryName()));
+        doRegister();
     }
 
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
@@ -49,5 +49,11 @@ public class BlockOreHolyStone extends BlockOre implements IHasModel
     @Override
     public void registerModels() {
         Main.proxy.registerItemRenderer(Item.getItemFromBlock(this), 0, "inventory");
+    }
+
+    @Override
+    public void doRegister() {
+        BlockInit.BLOCKS.add(this);
+        ItemInit.ITEMS.add(new ItemBlock(this).setRegistryName(this.getRegistryName()));
     }
 }

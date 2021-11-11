@@ -15,6 +15,7 @@ import com.xwm.magicmaid.manager.IMagicBossManager;
 import com.xwm.magicmaid.manager.MagicCreatureUtils;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.particle.SPacketParticle;
+import com.xwm.magicmaid.object.item.equipment.EquipmentAttribute;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.util.Reference;
@@ -164,11 +165,12 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
         if (this.hasOwner() &&  this.getAttackTarget() != null && this.getOwnerID().equals(this.getAttackTarget().getUniqueID()))
             this.setAttackTarget(null);
 
-        if (hasWeapon() && !(this instanceof EntityMagicMaidRett)){
+        EquipmentAttribute attribute = MagicEquipmentRegistry.getAttribute(getWeaponType());
+        if (attribute != MagicEquipmentRegistry.NONE && !(this instanceof EntityMagicMaidRett)){
             if (weapon == null)
                 weapon = EntityMaidWeapon.getWeaponFromUUID(world, getWeaponID());
-            if (weapon == null || weapon.isDead){
-                getEquipment(MagicEquipmentRegistry.getAttribute(getWeaponType()).getEquipment());
+            if (weapon == null || weapon.isDead) {
+                getEquipment(attribute.getEquipment());
             }
         }
 
@@ -192,11 +194,6 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
                 PunishOperationHandler.punishPlayer((EntityPlayerMP) player, 9, "检测到血量上限被减少到0以下，尝试斩杀玩家");
             }
         }
-
-//        if (!this.isAddedToWorld() && this.getTrueMaxHealth() > 0) // add to world机制  如果被从世界移除，但是没死
-//        {
-//            this.onAddedToWorld();
-//        }
     }
 
     @Override
@@ -238,12 +235,28 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
 
     @Override
     public void getEquipment(ItemEquipment equipment) {
-
+        if (equipment == null)
+            return;
+        EquipmentAttribute attribute = equipment.getEquipmentAttribute();
+        if (attribute.getType() == EquipmentAttribute.EquipmentType.WEAPON) {
+            this.setWeaponType(attribute.getName());
+        }
+        else if (attribute.getType() == EquipmentAttribute.EquipmentType.ARMOR) {
+            this.setArmorType(attribute.getName());
+        }
     }
 
     @Override
     public void loseEquipment(ItemEquipment equipment) {
-
+        if (equipment == null)
+            return;
+        EquipmentAttribute attribute = equipment.getEquipmentAttribute();
+        if (attribute.getType() == EquipmentAttribute.EquipmentType.WEAPON) {
+            this.setWeaponType(MagicEquipmentRegistry.NONE.getName());
+        }
+        else if (attribute.getType() == EquipmentAttribute.EquipmentType.ARMOR) {
+            this.setArmorType(MagicEquipmentRegistry.NONE.getName());
+        }
     }
 
 

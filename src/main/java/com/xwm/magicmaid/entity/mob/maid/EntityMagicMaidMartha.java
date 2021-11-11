@@ -7,6 +7,7 @@ import com.xwm.magicmaid.entity.ai.martha.EntityAIRepantence;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeapon;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.object.item.equipment.*;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.util.handlers.LootTableHandler;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
 import net.minecraft.entity.Entity;
@@ -49,8 +50,6 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.setMaxHealthbarnum(10);
-        this.setHealthbarnum(10);
     }
 
     @Override
@@ -96,67 +95,61 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
 
     public void getEquipment(ItemEquipment equipment){
 
-        EquipmentAttribute attribute = equipment.getEquipmentAttribute();
-        if (attribute.getType() == EquipmentAttribute.EquipmentType.NONE)
-            return;
-        else if (attribute.getType() == EquipmentAttribute.EquipmentType.WEAPON)
-        {
-            Class<? extends Entity> clazz = attribute.getEntityClass();
-            try {
-                EntityMaidWeapon weapon = (EntityMaidWeapon) clazz.getConstructor(World.class).newInstance(world);
-                weapon.setMaid(this);
-                weapon.setPosition(posX, posY + height + 1, posZ);
-                this.setWeaponID(weapon.getUniqueID());
-                this.setWeaponType(attribute.getName());
-                this.setHasWeapon(true);
-                if (!this.world.isRemote)
-                    this.world.spawnEntity(weapon);
-                this.weapon = weapon;
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            }
-        }
-        else if (attribute.getType() == EquipmentAttribute.EquipmentType.ARMOR)
-        {
-            this.setHasArmor(true);
-            this.setMaxHealthbarnum(50);
-            this.setArmorType(attribute.getName());
-            if (this.isFirstGetArmor()) {
-                this.setHealthbarnum(50);
-                this.setFirstGetArmor(false);
+        super.getEquipment(equipment);
+        if (equipment != null) {
+            EquipmentAttribute attribute = equipment.getEquipmentAttribute();
+            if (attribute.getType() == EquipmentAttribute.EquipmentType.NONE)
+                return;
+            else if (attribute.getType() == EquipmentAttribute.EquipmentType.WEAPON) {
+                Class<? extends Entity> clazz = attribute.getEntityClass();
+                try {
+                    EntityMaidWeapon weapon = (EntityMaidWeapon) clazz.getConstructor(World.class).newInstance(world);
+                    weapon.setMaid(this);
+                    weapon.setPosition(posX, posY + height + 1, posZ);
+                    this.setWeaponID(weapon.getUniqueID());
+                    if (!this.world.isRemote)
+                        this.world.spawnEntity(weapon);
+                    this.weapon = weapon;
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                }
+            } else if (attribute.getType() == EquipmentAttribute.EquipmentType.ARMOR) {
+                this.setMaxHealthbarnum(40);
+                if (this.isFirstGetArmor()) {
+                    this.setHealthbarnum(40);
+                    this.setFirstGetArmor(false);
+                }
             }
         }
     }
 
     public void loseEquipment(ItemEquipment equipment) {
 
-        if (world.isRemote)
-            return;
+        super.loseEquipment(equipment);
+        if (equipment != null) {
 
-        if (equipment instanceof ItemWeapon){
-            try {
-                EntityMaidWeapon weapon1 = EntityMaidWeapon.getWeaponFromUUID(world, getWeaponID());
-                weapon1.setDead();
-                setWeaponID(null);
-                setWeaponType(NONE.getName());
-                setHasWeapon(false);
-                this.weapon = null;
-            } catch (Exception e){
-                ; //可能武器被其他模组杀死了
+            if (world.isRemote)
+                return;
+
+            if (equipment instanceof ItemWeapon) {
+                try {
+                    EntityMaidWeapon weapon1 = EntityMaidWeapon.getWeaponFromUUID(world, getWeaponID());
+                    weapon1.setDead();
+                    setWeaponID(null);
+                    this.weapon = null;
+                } catch (Exception e) {
+                    ; //可能武器被其他模组杀死了
+                }
+            } else {
+                this.setMaxHealthbarnum(10);
             }
         }
-        else {
-            this.setHasArmor(false);
-            this.setArmorType(NONE.getName());
-            this.setMaxHealthbarnum(10);
-        }
-
     }
 
     @Override
@@ -181,7 +174,7 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
     @Override
     public boolean attackEntityFrom(DamageSource source, float amount)
     {
-        if (this.getRank() >= 1 && hasArmor()) //回敬伤害 要注意有可能产生死循环，所以这里要判断
+        if (this.getRank() >= 1 && MagicEquipmentRegistry.getAttribute(getArmorType()) != NONE) //回敬伤害 要注意有可能产生死循环，所以这里要判断
         {
             try{
                 if (!(source.getTrueSource() instanceof EntityMagicMaid)
@@ -215,7 +208,7 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
     public boolean shouldAvoidDamage(int damage, DamageSource source)
     {
         //等级2时候不会受到过高伤害的攻击
-        if (!hasArmor())
+        if (MagicEquipmentRegistry.getAttribute(getArmorType()) == NONE)
             return false;
         if (getRank() < 2)
             return false;
@@ -246,7 +239,7 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
     @Override
     protected ResourceLocation getLootTable()
     {
-        if (getHealth() > 0) return null;
+        if (getTrueHealth() > 0) return null;
         return LootTableHandler.HOLY_FRUIT_MARTHA;
     }
 

@@ -42,6 +42,14 @@ import java.util.Map;
 
 public class GuiInstructionBook extends GuiScreen
 {
+    public static List<String> BOOK_REGISTRY = new ArrayList<String>(){{
+        add(Reference.MODID);
+    }};
+
+    public static List<String> BOOK_NAME = new ArrayList<String>(){{
+        add("第一章");
+    }};
+
     private static final ResourceLocation BOOK_GUI_TEXTURES = new ResourceLocation("minecraft:textures/gui/book.png");
     private final int bookImageWidth = 384;
     private final int bookImageHeight = 236;
@@ -53,12 +61,12 @@ public class GuiInstructionBook extends GuiScreen
     private List<InstructElement> cachedComponents;
     private GuiInstructionBook.NextPageButton buttonNextPage;
     private GuiInstructionBook.NextPageButton buttonPreviousPage;
+    private int curBook = 0;
 
     public GuiInstructionBook() {
         this.bookPages = new ArrayList<>();
         this.catalogIndexMap = new HashMap<>();
         this.catalogList = new ArrayList<>();
-
     }
 
     public void initGui()
@@ -73,6 +81,10 @@ public class GuiInstructionBook extends GuiScreen
         initContent();
         for (int t = 0; t < catalogList.size(); t++)
             this.addButton(new GuiButton(2+t, 20 + (this.width - this.bookImageWidth) / 2 - 40, 20 + t * 20, 40, 20, catalogList.get(t)));
+
+        for (int t = 0; t < BOOK_REGISTRY.size(); t++)
+            this.addButton(new GuiButton(2 + catalogList.size() + t, 20 + (this.width - this.bookImageWidth) / 2 + t * 40, 0, 40, 20, BOOK_NAME.get(t)));
+
         bookTotalPages = bookPages.size();
 
         this.updateScreen();
@@ -84,7 +96,7 @@ public class GuiInstructionBook extends GuiScreen
         String filename = "texts/instructions.json";
         Gson gson = new Gson();
         try {
-            iresource = mc.getResourceManager().getResource(new ResourceLocation(Reference.MODID, filename));
+            iresource = mc.getResourceManager().getResource(new ResourceLocation(BOOK_REGISTRY.get(curBook), filename));
             InputStream inputstream = iresource.getInputStream();
             BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(inputstream, StandardCharsets.UTF_8));
             StringBuilder s = new StringBuilder();
@@ -184,8 +196,12 @@ public class GuiInstructionBook extends GuiScreen
                     --this.currPage;
                 }
             }
-            else {
+            else if (button.id - 2 < catalogList.size()){
                 this.currPage = catalogIndexMap.get(catalogList.get(button.id - 2));
+            }
+            else {
+                this.curBook = button.id - 2 - catalogList.size();
+                initGui();
             }
         }
     }

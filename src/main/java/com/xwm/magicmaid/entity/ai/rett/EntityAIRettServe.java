@@ -3,10 +3,13 @@ package com.xwm.magicmaid.entity.ai.rett;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
 import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.init.PotionInit;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
+
+import static com.xwm.magicmaid.registry.MagicEquipmentRegistry.NONE;
 
 public class EntityAIRettServe extends EntityAIBase
 {
@@ -47,7 +50,7 @@ public class EntityAIRettServe extends EntityAIBase
             return;
 
         entityLivingBase.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 400, 1 + maid.getRank()));
-        if (maid.hasArmor()){
+        if (MagicEquipmentRegistry.getAttribute(maid.getArmorType()) != NONE){
             entityLivingBase.addPotionEffect(new PotionEffect(PotionInit.IMMORTAL_BLESS_EFFECT, 400 + maid.getRank() * 400, maid.getRank()));
         }
     }

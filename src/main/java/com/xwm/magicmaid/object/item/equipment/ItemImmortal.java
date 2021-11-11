@@ -1,6 +1,5 @@
 package com.xwm.magicmaid.object.item.equipment;
 
-import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
@@ -12,7 +11,6 @@ public class ItemImmortal extends ItemArmor
 {
     public ItemImmortal(String name) {
         super(name);
-        this.setEquipmentAttribute(MagicEquipmentRegistry.IMMORTAL);
     }
 
     @Override

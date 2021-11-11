@@ -6,6 +6,7 @@ import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.manager.IMagicBossManager;
 import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.RenderAreaPacket;
+import com.xwm.magicmaid.network.entity.SPacketMaidInventoryUpdate;
 import com.xwm.magicmaid.object.item.equipment.EquipmentAttribute;
 import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.registry.MagicRenderRegistry;
@@ -26,17 +27,19 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements IEntityBossCreature
 {
     private int factor = 1;
-
     private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenSky(false);
 
     public EntityMagicMaidMarthaBoss(World worldIn) {
         super(worldIn);
-        this.setMode(EnumMode.toInt(EnumMode.BOSS));
-        this.setRank(2);
-
         this.initFightManager(worldIn);
     }
 
+    @Override
+    protected void entityInit() {
+        super.entityInit();
+        this.setMode(EnumMode.toInt(EnumMode.BOSS));
+        this.setRank(2);
+    }
 
     @Override
     public boolean attackEntityFrom(DamageSource source, float amount)
@@ -63,12 +66,17 @@ public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements 
     {
         super.onLivingUpdate();
 
-        if (MagicEquipmentRegistry.getAttribute(this.getWeaponType()) == MagicEquipmentRegistry.NONE) {
+        if (MagicEquipmentRegistry.getAttribute(this.getWeaponType()) == MagicEquipmentRegistry.NONE && !world.isRemote) {
+            ItemStack stack = ItemStack.EMPTY;
             double f = rand.nextDouble();
             if (f < 0.5)
-                this.setInventorySlotContents(0, new ItemStack(ItemInit.ITEM_REPANTENCE));
+                stack = new ItemStack(ItemInit.ITEM_REPANTENCE);
             else
-                this.setInventorySlotContents(0, new ItemStack(ItemInit.ITEM_CONVICTION));
+                stack = new ItemStack(ItemInit.ITEM_CONVICTION);
+
+            this.setInventorySlotContents(0, stack);
+            SPacketMaidInventoryUpdate packet = new SPacketMaidInventoryUpdate(getEntityId(), dimension, 0, stack);
+            NetworkLoader.instance.sendToDimension(packet, dimension);
         }
         if (MagicEquipmentRegistry.getAttribute(this.getArmorType()) == MagicEquipmentRegistry.NONE){
             this.setInventorySlotContents(1, new ItemStack(ItemInit.ITEM_PROTECTOR));
@@ -87,18 +95,18 @@ public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements 
     public void onDeathUpdate()
     {
         super.onDeathUpdate();
-        if (this.deathTime == 20) {
-            if (fightManager != null) {
+        if (getMaxHealth() > 0 && getTrueHealth() <= 0 && fightManager != null) {
+            if (this.deathTime == 20) {
                 fightManager.setBossAlive(false); //boss真实死亡
-                fightManager.setBossKilled(true);
             }
+            fightManager.setBossKilled(true);
         }
     }
 
     @Override
     protected ResourceLocation getLootTable()
     {
-        if (getHealth() > 0) return null;
+        if (getTrueHealth() > 0) return null;
         EquipmentAttribute equipment = MagicEquipmentRegistry.getAttribute(getWeaponType());
         return equipment == MagicEquipmentRegistry.REPANTENCE ? LootTableHandler.REPANTENCE : LootTableHandler.CONVICTION;
     }

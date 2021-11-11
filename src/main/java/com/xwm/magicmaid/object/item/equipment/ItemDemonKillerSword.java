@@ -7,7 +7,6 @@ import com.xwm.magicmaid.network.NetworkLoader;
 import com.xwm.magicmaid.network.particle.SPacketSixParamParticle;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.player.capability.CapabilityLoader;
-import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
@@ -34,7 +33,6 @@ public class ItemDemonKillerSword extends ItemWeapon
     public ItemDemonKillerSword(String name) {
         super(name);
         this.setMaxDamage(1000);
-        this.setEquipmentAttribute(MagicEquipmentRegistry.DEMONKILLINGSWORD);
     }
 
     /**
@@ -158,7 +156,7 @@ public class ItemDemonKillerSword extends ItemWeapon
     }
 
     // 基础伤害
-    public static int getBaseDamage() {
+    public int getBaseDamage() {
         return 10;
     }
 

@@ -4,20 +4,15 @@ import com.xwm.magicmaid.Main;
 import com.xwm.magicmaid.creativetab.CreativeTabMaid;
 import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.util.interfaces.IHasModel;
+import com.xwm.magicmaid.util.interfaces.IRegistrable;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
 
-public class ItemBase extends Item implements IHasModel
+public class ItemBase extends Item implements IHasModel, IRegistrable
 {
     public ItemBase(String name)
     {
@@ -25,7 +20,7 @@ public class ItemBase extends Item implements IHasModel
         setRegistryName(name);
         setCreativeTab(CreativeTabMaid.CREATIVE_TAB_MAID);
 
-        ItemInit.ITEMS.add(this);
+        doRegister();
     }
 
     @Override
@@ -38,5 +33,10 @@ public class ItemBase extends Item implements IHasModel
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
     {
         return super.onItemRightClick(worldIn, playerIn, handIn);
+    }
+
+    @Override
+    public void doRegister() {
+        ItemInit.ITEMS.add(this);
     }
 }

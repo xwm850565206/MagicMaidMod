@@ -21,7 +21,7 @@ public class EquipmentAttribute
 
     public EquipmentAttribute()
     {
-        MagicEquipmentRegistry.ATTRIBUTES.add(this);
+        MagicEquipmentRegistry.ATTRIBUTES_LIST.add(this);
     }
 
     public String getName() {

@@ -7,7 +7,6 @@ import com.xwm.magicmaid.network.particle.SPacketParticle;
 import com.xwm.magicmaid.network.particle.SPacketThreeParamParticle;
 import com.xwm.magicmaid.particle.EnumCustomParticles;
 import com.xwm.magicmaid.particle.ParticleSpawner;
-import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -32,7 +31,6 @@ public class ItemRepantence extends ItemWeapon
 
     public ItemRepantence(String name) {
         super(name);
-        this.setEquipmentAttribute(MagicEquipmentRegistry.REPANTENCE);
     }
 
     /**
@@ -177,7 +175,7 @@ public class ItemRepantence extends ItemWeapon
     }
 
     //基础伤害
-    public static int getBaseDamage() {
+    public int getBaseDamage() {
         return 15;
     }
 }

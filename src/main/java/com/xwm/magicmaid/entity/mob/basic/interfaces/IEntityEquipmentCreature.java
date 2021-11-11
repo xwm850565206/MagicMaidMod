@@ -14,14 +14,6 @@ import java.util.UUID;
  */
 public interface IEntityEquipmentCreature extends IInventory
 {
-    void setHasWeapon(boolean hasWeapon);
-
-    boolean hasWeapon();
-
-    void setHasArmor(boolean hasArmor);
-
-    boolean hasArmor();
-
     boolean isFirstGetArmor();
 
     void setFirstGetArmor(boolean isFirstGetArmor);

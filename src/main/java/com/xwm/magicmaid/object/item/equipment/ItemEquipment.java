@@ -1,6 +1,7 @@
 package com.xwm.magicmaid.object.item.equipment;
 
 import com.xwm.magicmaid.object.item.ItemBase;
+import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -60,10 +61,10 @@ public class ItemEquipment extends ItemBase
     }
 
     public EquipmentAttribute getEquipmentAttribute() {
-        return equipmentAttribute;
+        return equipmentAttribute != null ? equipmentAttribute : MagicEquipmentRegistry.NONE;
     }
 
-    protected void setEquipmentAttribute(EquipmentAttribute equipmentAttribute)
+    public void setEquipmentAttribute(EquipmentAttribute equipmentAttribute)
     {
         this.equipmentAttribute = equipmentAttribute;
     }

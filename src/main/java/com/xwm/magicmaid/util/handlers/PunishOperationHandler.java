@@ -32,6 +32,7 @@ public class PunishOperationHandler
         }
         else if (difficulty == 1) {
             InventoryHelper.dropInventoryItems(entityPlayer.getEntityWorld(), entityPlayer.getPosition(), entityPlayer.inventory);
+            entityPlayer.inventory.clear();
         }
         else {
 
@@ -53,6 +54,9 @@ public class PunishOperationHandler
         int difficulty = WorldDifficultyData.get(entityPlayer.getEntityWorld()).getWorldDifficulty();
         if (difficulty == 2) {// 只有难度2击杀玩家
             entityPlayer.setHealth(0);
+        }
+        else if (difficulty == 1) { // 难度1 掉一滴血
+            entityPlayer.setHealth(entityPlayer.getHealth() - 1);
         }
     }
 

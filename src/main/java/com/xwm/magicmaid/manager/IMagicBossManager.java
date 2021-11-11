@@ -22,6 +22,8 @@ public interface IMagicBossManager
 
     void setBossKilled(boolean bossKilled);
 
+    void setBossFirstKilled(boolean firstKilled);
+
     void setBossuuid(UUID uuid);
 
     void setWorld(WorldServer world);
@@ -33,6 +35,8 @@ public interface IMagicBossManager
     boolean getBossAlive();
 
     boolean getBossKilled();
+
+    boolean getBossFirstKilled();
 
     UUID getBossuuid();
 

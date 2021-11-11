@@ -335,7 +335,7 @@ public abstract class AbstractEntityMagicCreature extends EntityCreature impleme
 
     @Override
     public void setDead(){
-        if (world.isRemote || getHealth() <= 0) { //血条没掉完不允许被杀死 所以指令应该没用
+        if (world.isRemote || getTrueHealth() <= 0) { //血条没掉完不允许被杀死 所以指令应该没用
             super.setDead();
         }
     }
