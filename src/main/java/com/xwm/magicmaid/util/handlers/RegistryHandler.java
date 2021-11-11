@@ -1,6 +1,5 @@
 package com.xwm.magicmaid.util.handlers;
 
-import com.xwm.magicmaid.gui.GuiShowMemory;
 import com.xwm.magicmaid.init.*;
 import com.xwm.magicmaid.player.capability.CapabilityLoader;
 import com.xwm.magicmaid.registry.MagicDimensionRegistry;
@@ -11,7 +10,6 @@ import com.xwm.magicmaid.util.interfaces.IHasModel;
 import com.xwm.magicmaid.world.gen.StructureChurchPieces;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.obj.OBJLoader;
@@ -88,10 +86,6 @@ public class RegistryHandler
         DimensionInit.registerDimensions();
         DimensionInit.registerWorldGenerators();
         PotionInit.registerPotions();
-
-        GuiShowMemory.MEMORY_POEM.put(0, new ResourceLocation(Reference.MODID, "texts/memory_martha.txt"));
-        GuiShowMemory.MEMORY_POEM.put(1, new ResourceLocation(Reference.MODID, "texts/memory_rett.txt"));
-        GuiShowMemory.MEMORY_POEM.put(2, new ResourceLocation(Reference.MODID, "texts/memory_selina.txt"));
     }
 
 }

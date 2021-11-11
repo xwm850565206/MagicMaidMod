@@ -2,15 +2,16 @@ package com.xwm.magicmaid.network.entity;
 
 import com.xwm.magicmaid.entity.mob.basic.EntityEquipmentCreature;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 
@@ -34,17 +35,26 @@ public class SPacketMaidInventoryUpdate implements IMessage
 
     public static class Handler implements IMessageHandler<SPacketMaidInventoryUpdate, IMessage> {
 
+
         @Override
         public IMessage onMessage(SPacketMaidInventoryUpdate message, MessageContext ctx) {
             if (ctx.side != Side.CLIENT)
                 return null;
 
-            World world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(message.dimension);
+            processMessage(message, ctx);
+
+            return null;
+        }
+
+        @SideOnly(Side.CLIENT)
+        private void processMessage(SPacketMaidInventoryUpdate message, MessageContext ctx)
+        {
+            World world = Minecraft.getMinecraft().world;
+//            World world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(message.dimension);
             Entity entity = world.getEntityByID(message.entityID);
             if (entity instanceof EntityEquipmentCreature) {
                 ((EntityEquipmentCreature) entity).setInventorySlotContents(message.slot, message.stack);
             }
-            return null;
         }
     }
 

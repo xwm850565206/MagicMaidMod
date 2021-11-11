@@ -1,13 +1,16 @@
 package com.xwm.magicmaid.proxy;
 
 import com.xwm.magicmaid.event.loader.ClientEventLoader;
+import com.xwm.magicmaid.gui.GuiShowMemory;
 import com.xwm.magicmaid.key.KeyLoader;
 import com.xwm.magicmaid.object.tileentity.TileEntityChurchPortal;
 import com.xwm.magicmaid.registry.MagicMenuElementRegistry;
 import com.xwm.magicmaid.render.portal.TileEntityChurchPortalRenderer;
+import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.handlers.RenderHandler;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -26,6 +29,10 @@ public class ClientProxy extends CommonProxy
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChurchPortal.class, new TileEntityChurchPortalRenderer());
         MagicMenuElementRegistry.registerAll();
         new KeyLoader();
+
+        GuiShowMemory.MEMORY_POEM.put(0, new ResourceLocation(Reference.MODID, "texts/memory_martha.txt"));
+        GuiShowMemory.MEMORY_POEM.put(1, new ResourceLocation(Reference.MODID, "texts/memory_rett.txt"));
+        GuiShowMemory.MEMORY_POEM.put(2, new ResourceLocation(Reference.MODID, "texts/memory_selina.txt"));
     }
 
     public void init(FMLInitializationEvent event){
