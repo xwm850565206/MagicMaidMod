@@ -14,4 +14,6 @@ public class LootTableHandler
     public static final ResourceLocation HOLY_FRUIT_MARTHA = LootTableList.register(new ResourceLocation(Reference.MODID, "holy_fruit_martha"));
     public static final ResourceLocation HOLY_FRUIT_RETT = LootTableList.register(new ResourceLocation(Reference.MODID, "holy_fruit_rett"));
     public static final ResourceLocation HOLY_FRUIT_SELINA = LootTableList.register(new ResourceLocation(Reference.MODID, "holy_fruit_selina"));
+    public static final ResourceLocation NUN = LootTableList.register(new ResourceLocation(Reference.MODID, "nun"));
+
 }

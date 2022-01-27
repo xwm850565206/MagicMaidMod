@@ -74,12 +74,12 @@ public class EntityMagicMaidMarthaBoss extends EntityMagicMaidMartha implements 
             else
                 stack = new ItemStack(ItemInit.ITEM_CONVICTION);
 
-            this.setInventorySlotContents(0, stack);
+            this.inventory.setInventorySlotContents(0, stack);
             SPacketMaidInventoryUpdate packet = new SPacketMaidInventoryUpdate(getEntityId(), dimension, 0, stack);
             NetworkLoader.instance.sendToDimension(packet, dimension);
         }
         if (MagicEquipmentRegistry.getAttribute(this.getArmorType()) == MagicEquipmentRegistry.NONE){
-            this.setInventorySlotContents(1, new ItemStack(ItemInit.ITEM_PROTECTOR));
+            this.inventory.setInventorySlotContents(1, new ItemStack(ItemInit.ITEM_PROTECTOR));
         }
 
         this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血量: " + getHealthBarNum()));

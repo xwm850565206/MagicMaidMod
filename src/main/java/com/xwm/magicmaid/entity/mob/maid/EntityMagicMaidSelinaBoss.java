@@ -76,11 +76,11 @@ public class EntityMagicMaidSelinaBoss extends EntityMagicMaidSelina implements 
             else
                 stack = new ItemStack(ItemInit.ITEM_WHISPER);
 
-            this.setInventorySlotContents(0, stack);
+            this.inventory.setInventorySlotContents(0, stack);
             SPacketMaidInventoryUpdate packet = new SPacketMaidInventoryUpdate(getEntityId(), dimension, 0, stack);
             NetworkLoader.instance.sendToDimension(packet, dimension);
 
-            this.setInventorySlotContents(1, new ItemStack(ItemInit.ITEM_WISE));
+            this.inventory.setInventorySlotContents(1, new ItemStack(ItemInit.ITEM_WISE));
         }
 
         this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));

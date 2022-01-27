@@ -55,10 +55,12 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
     @Override
     public int getAttackDamage(EquipmentAttribute type){
 
+        // note 9.5: 为了适应和其他模组之间的系数，如果不是boss，则要翻倍攻击力，这个可能还要推敲
+        int boss = (EnumMode.valueOf(this.getMode()) == EnumMode.BOSS ? 1 : 2);
         if (NONE.equals(type)) {
-            return 5 + 5 * this.getRank();
+            return 5 + 5 * this.getRank() * boss;
         } else if (REPANTENCE.equals(type)) {
-            return this.getRank() > 0 ? 10 : 15;
+            return this.getRank() > 0 ? 15 * boss : 10 * boss;
         } else if (CONVICTION.equals(type)) {
             return this.getRank() > 0 ? 0 : 1;
         }
@@ -117,6 +119,8 @@ public class EntityMagicMaidMartha extends EntityMagicMaid implements IRangedAtt
                 } catch (InvocationTargetException e) {
                     e.printStackTrace();
                 } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
             } else if (attribute.getType() == EquipmentAttribute.EquipmentType.ARMOR) {

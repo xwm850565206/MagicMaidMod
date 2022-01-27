@@ -76,6 +76,7 @@ entity.magic_maid_repentance.name=Repentance
 entity.magic_maid_conviction.name=Conviction
 entity.magic_maid_pandora.name=Pandora
 entity.magic_maid_whisper.name=Whisper
+entity.magic_maid_nun.name=Evil Nun
 
 death.attack.repantence_attack=Repanting in the hell
 

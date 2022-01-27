@@ -53,7 +53,7 @@ public class SPacketMaidInventoryUpdate implements IMessage
 //            World world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(message.dimension);
             Entity entity = world.getEntityByID(message.entityID);
             if (entity instanceof EntityEquipmentCreature) {
-                ((EntityEquipmentCreature) entity).setInventorySlotContents(message.slot, message.stack);
+                ((EntityEquipmentCreature) entity).getInventory().setInventorySlotContents(message.slot, message.stack);
             }
         }
     }

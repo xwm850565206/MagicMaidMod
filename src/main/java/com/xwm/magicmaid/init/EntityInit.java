@@ -1,5 +1,6 @@
 package com.xwm.magicmaid.init;
 
+import com.xwm.magicmaid.entity.mob.basic.EntityNun;
 import com.xwm.magicmaid.entity.mob.maid.*;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponConviction;
 import com.xwm.magicmaid.entity.mob.weapon.EntityMaidWeaponPandorasBox;
@@ -37,6 +38,8 @@ public class EntityInit
 
         registerEntityWithoutEgg(event, Reference.MODID + "_justice", EntityJusticeBall.class, Reference.ENTITY_JUSTICE_BALL, 50);
         registerEntityWithoutEgg(event, Reference.MODID + "_evil", EntityEvilBall.class, Reference.ENTITY_EVIL_BALL, 50);
+
+        registerEntity(event, Reference.MODID + "_num", EntityNun.class, Reference.ENTITY_NUN, 50, 0x000000, 0xffffff);
 
 //        registerEntityWithoutEgg(event, Reference.MODID + "_test", EffectThrowableBase.class, Reference.ENTITY_EFFECT_TEST, 50); // todo test
 //        registerEntity(event, Reference.MODID + "_effect_box", EffectBox.class, Reference.ENTITY_EFFECT_BOX, 50, 1, 1); // todo test

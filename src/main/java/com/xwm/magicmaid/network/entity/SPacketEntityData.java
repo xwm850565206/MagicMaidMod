@@ -147,7 +147,7 @@ public class SPacketEntityData implements IMessage {
                     switch (message.type) {
                         case 4:
                             if (entity instanceof IEntityEquipmentCreature) {
-                                NonNullList<ItemStack> inventory = NonNullList.<ItemStack>withSize(((IEntityEquipmentCreature) entity).getSizeInventory(), ItemStack.EMPTY);
+                                NonNullList<ItemStack> inventory = NonNullList.<ItemStack>withSize(((IEntityEquipmentCreature) entity).getInventory().getSizeInventory(), ItemStack.EMPTY);
                                 ItemStackHelper.loadAllItems(message.compound, inventory);
                                 ((IEntityEquipmentCreature) entity).setInventory(inventory);
                             }

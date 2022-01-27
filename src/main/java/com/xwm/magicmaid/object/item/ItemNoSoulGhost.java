@@ -13,21 +13,22 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class ItemNoSoulGhost extends ItemBase implements ICanGetSkillPoint
@@ -53,11 +54,10 @@ public class ItemNoSoulGhost extends ItemBase implements ICanGetSkillPoint
         {
             NBTTagCompound compound = stack.getTagCompound();
             NBTTagCompound compound1 = compound.getCompoundTag("soul");
-            ModContainer mc = Loader.instance().getIndexedModList().get(Reference.MODID);
+            String domain = compound1.getString("domain");
 
-            int entityId = compound1.getInteger("entity");
-            String name = "entity." + EntityRegistry.instance().lookupModSpawn(mc, entityId).getEntityName() + ".name";
-            String name1 = I18n.format(name);
+            String name = new ResourceLocation(domain).getResourcePath();
+            String name1 = I18n.format("entity." + name + ".name");
 
             int level = compound1.getInteger("level");
             tooltip.add(TextFormatting.YELLOW + "装着灵魂的魄");
@@ -109,9 +109,9 @@ public class ItemNoSoulGhost extends ItemBase implements ICanGetSkillPoint
                         return EnumActionResult.FAIL;
                     }
 
-                    ModContainer mc = Loader.instance().getIndexedModList().get(Reference.MODID);
-                    int entityId = compound1.getInteger("entity");
-                    Entity entity = EntityRegistry.instance().lookupModSpawn(mc, entityId).newInstance(worldIn);
+                    String domain = compound1.getString("domain");
+                    Class<? extends Entity> clazz = EntityList.getClass(new ResourceLocation(domain));
+                    Entity entity = clazz.getConstructor(World.class).newInstance(worldIn);
                     entity.readFromNBT(compound1);
                     entity.getEntityData().setBoolean(Reference.EFFECT_ABSORB, false);
 
@@ -119,7 +119,8 @@ public class ItemNoSoulGhost extends ItemBase implements ICanGetSkillPoint
                     worldIn.spawnEntity(entity);
                     compound.removeTag("soul");
                     return EnumActionResult.SUCCESS;
-                } catch (NullPointerException e) {
+
+                } catch (NullPointerException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
                     System.out.println("寻找生成实体失败");
                     return EnumActionResult.FAIL;
                 }
@@ -145,6 +146,10 @@ public class ItemNoSoulGhost extends ItemBase implements ICanGetSkillPoint
             if (!player.getEntityWorld().isRemote)
                 IMagicCreatureManagerImpl.getInstance().setDead((IEntityAvoidThingCreature) entity);
             compound.setInteger("cold", 0); //冷却
+            ResourceLocation domain = EntityList.getKey(entity);
+            if (domain == null)
+                domain = new ResourceLocation(Reference.MODID, "null");
+            compound.setString("domain", domain.toString());
             stack.setTagInfo("soul", compound);
             if (player.getEntityWorld().isRemote) {
                 for (int i = 0; i < 4; i++) {

@@ -62,8 +62,9 @@ public class EntityMagicMaidRett extends EntityMagicMaid
 
     @Override
     public int getAttackDamage(EquipmentAttribute type){
-
-        return 5 + 5 * getRank();
+        // note 9.5: 为了适应和其他模组之间的系数，如果不是boss，则要翻倍攻击力，这个可能还要推敲
+        int boss = (EnumMode.valueOf(this.getMode()) == EnumMode.BOSS ? 1 : 3);
+        return (5 + 5 * getRank()) * boss;
     }
 
     public void onUpdate()

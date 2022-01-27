@@ -22,14 +22,14 @@ public class ContainerMaidWindow extends Container
         this.player = inventory;
         this.maid = maid;
 
-        weaponSlot = new Slot(maid, 0, 8, 8){
+        weaponSlot = new Slot(maid.inventory, 0, 8, 8){
             @Override
             public boolean isItemValid(ItemStack stack) {
                 return stack != null && !stack.isEmpty() && stack.getItem() instanceof ItemWeapon;
             }
         };
 
-        armorSlot = new Slot(maid, 1, 9, 8 + 18){
+        armorSlot = new Slot(maid.inventory, 1, 9, 8 + 18){
             @Override
             public boolean isItemValid(ItemStack stack) {
                 return stack != null && !stack.isEmpty() && stack.getItem() instanceof ItemArmor;
@@ -51,38 +51,44 @@ public class ContainerMaidWindow extends Container
     }
 
 
-    @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int index)
+    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
     {
-//        System.out.println("transfer slot: " + index);
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = inventorySlots.get(index);
-
-        if (slot != null && slot.getHasStack()) {
+        Slot slot = this.inventorySlots.get(index);
+        if (slot != null && slot.getHasStack())
+        {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            int containerSlots = inventorySlots.size() - player.inventory.mainInventory.size();
-
-            if (index < containerSlots) {
-                if (!this.mergeItemStack(itemstack1, containerSlots, inventorySlots.size(), true)) {
+            if (index < 2)
+            {
+                if (!this.mergeItemStack(itemstack1, 2, this.inventorySlots.size(), true))
+                {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 0, containerSlots, false)) {
-                return ItemStack.EMPTY;
+            }
+            else if (weaponSlot.isItemValid(itemstack))
+            {
+                if (!this.mergeItemStack(itemstack1, 0, 1, false))
+                {
+                    return ItemStack.EMPTY;
+                }
+            }
+            else if (armorSlot.isItemValid(itemstack)) {
+                if (!this.mergeItemStack(itemstack1, 1, 2, false))
+                {
+                    return ItemStack.EMPTY;
+                }
             }
 
-            if (itemstack1.getCount() == 0) {
+            if (itemstack1.isEmpty())
+            {
                 slot.putStack(ItemStack.EMPTY);
-            } else {
+            }
+            else
+            {
                 slot.onSlotChanged();
             }
-
-            if (itemstack1.getCount() == itemstack.getCount()) {
-                return ItemStack.EMPTY;
-            }
-
-            slot.onTake(player, itemstack1);
         }
 
         return itemstack;

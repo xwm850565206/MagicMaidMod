@@ -46,7 +46,7 @@ public class PerformSkillBoost extends PerformSkillRareBase
 
         if (getLevel() >= 2)
         {
-            playerIn.addPotionEffect(new PotionEffect(MobEffects.HEALTH_BOOST, 120, 1 + getLevel()));
+            playerIn.addPotionEffect(new PotionEffect(MobEffects.ABSORPTION, 40, getLevel()));
         }
 
         if (getLevel() >= 3)

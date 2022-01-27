@@ -69,8 +69,8 @@ public class EntityMagicMaidRettBoss extends EntityMagicMaidRett implements IEnt
         super.onLivingUpdate();
 
         if (MagicEquipmentRegistry.getAttribute(this.getWeaponType()) == NONE) {
-            this.setInventorySlotContents(0, new ItemStack(ItemInit.ITEM_DEMON_KILLER_SWORD));
-            this.setInventorySlotContents(1, new ItemStack(ItemInit.ITEM_IMMORTAL));
+            this.inventory.setInventorySlotContents(0, new ItemStack(ItemInit.ITEM_DEMON_KILLER_SWORD));
+            this.inventory.setInventorySlotContents(1, new ItemStack(ItemInit.ITEM_IMMORTAL));
         }
 
         this.bossInfo.setName(this.getDisplayName().appendText(" 剩余血条: " + getHealthBarNum()));

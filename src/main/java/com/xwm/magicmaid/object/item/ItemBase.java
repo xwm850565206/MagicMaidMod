@@ -19,7 +19,6 @@ public class ItemBase extends Item implements IHasModel, IRegistrable
         setUnlocalizedName(name);
         setRegistryName(name);
         setCreativeTab(CreativeTabMaid.CREATIVE_TAB_MAID);
-
         doRegister();
     }
 

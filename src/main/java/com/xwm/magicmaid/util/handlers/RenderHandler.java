@@ -1,5 +1,6 @@
 package com.xwm.magicmaid.util.handlers;
 
+import com.xwm.magicmaid.entity.mob.basic.EntityNun;
 import com.xwm.magicmaid.entity.mob.maid.*;
 import com.xwm.magicmaid.entity.mob.weapon.*;
 import com.xwm.magicmaid.entity.model.Rett.ModelMagicMaidRett;
@@ -16,6 +17,7 @@ import com.xwm.magicmaid.registry.MagicModelRegistry;
 import com.xwm.magicmaid.render.entity.RenderBossBall;
 import com.xwm.magicmaid.render.entity.RenderMagicMaid;
 import com.xwm.magicmaid.render.entity.RenderMaidWeapon;
+import com.xwm.magicmaid.render.entity.RenderNun;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -112,6 +114,13 @@ public class RenderHandler
             @Override
             public Render<? super EntityEvilBall> createRenderFor(RenderManager manager) {
                 return new RenderBossBall(manager, ItemInit.ITEM_EVIL, Minecraft.getMinecraft().getRenderItem());
+            }
+        });
+
+        RenderingRegistry.registerEntityRenderingHandler(EntityNun.class, new IRenderFactory<EntityNun>() {
+            @Override
+            public Render<? super EntityNun> createRenderFor(RenderManager manager) {
+                return new RenderNun(manager);
             }
         });
 

@@ -174,7 +174,7 @@ public class ChunkGeneratorChurch implements IChunkGenerator
                 primer.setBlockState(i, 50, j, iblockstate);
                 primer.setBlockState(i, 49, j, iblockstate);
                 primer.setBlockState(i, 48, j, iblockstate);
-                if (chunkX == 2 && chunkZ == 2){
+                if (chunkX >= 1 && chunkX <= 4 && chunkZ >= 1 && chunkZ <= 4){
                     primer.setBlockState(i, 51, j, iblockstate);
                     primer.setBlockState(i, 52, j, iblockstate);
                     primer.setBlockState(i, 53, j, iblockstate);
@@ -403,7 +403,30 @@ public class ChunkGeneratorChurch implements IChunkGenerator
                 }
             }
 
+            for (int k = 0; k < 32; k++)
+                for (int j = 0; j < 32; j++)
+                    world.setBlockState(blockpos.add(k, 5,  j), Blocks.BARRIER.getDefaultState());
+
             net.minecraftforge.event.ForgeEventFactory.onChunkPopulate(false, this, this.world, this.rand, x, z, false);
+            BlockFalling.fallInstantly = false;
+        }
+
+        if (Math.abs(x-5) == 10  || Math.abs(z-5) == 10)
+        {
+            BlockFalling.fallInstantly = true;
+            net.minecraftforge.event.ForgeEventFactory.onChunkPopulate(true, this, this.world, this.rand, x, z, false);
+            BlockPos basePose = new BlockPos(x * 16, 0, z * 16);
+
+            for (int i = 0; i < 16; i++)
+            {
+                for (int j = 0; j < 16; j++)
+                {
+                    for (int k = 0; k < 256; k++)
+                    {
+                        world.setBlockState(basePose.add(i, k, j), Blocks.BARRIER.getDefaultState(), 3);
+                    }
+                }
+            }
             BlockFalling.fallInstantly = false;
         }
     }
@@ -413,7 +436,6 @@ public class ChunkGeneratorChurch implements IChunkGenerator
      */
     public boolean generateStructures(Chunk chunkIn, int x, int z)
     {
-
         return false;
     }
 
@@ -440,5 +462,6 @@ public class ChunkGeneratorChurch implements IChunkGenerator
      */
     public void recreateStructures(Chunk chunkIn, int x, int z)
     {
+
     }
 }

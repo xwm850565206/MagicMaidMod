@@ -64,13 +64,15 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
 
     @Override
     public int getAttackDamage(EquipmentAttribute type){
-
+        // note 9.5: 为了适应和其他模组之间的系数，如果不是boss，则要翻倍攻击力，这个可能还要推敲
+        int boss = (EnumMode.valueOf(this.getMode()) == EnumMode.BOSS ? 1 : 2);
+        int boss1 = (EnumMode.valueOf(this.getMode()) == EnumMode.BOSS ? 1 : 6);
         if (NONE.equals(type)) {
             return 10;
         } else if (PANDORA.equals(type)) {
-            return 1 + getRank();
+            return (1 + getRank()) * boss;
         } else if (WHISPER.equals(type)) {
-            return 10 + 10 * getRank();
+            return (10 + 10 * getRank()) * boss1;
         }
         return super.getAttackDamage(type);
     }
@@ -131,6 +133,8 @@ public class EntityMagicMaidSelina extends EntityMagicMaid implements IRangedAtt
                 } catch (InvocationTargetException e) {
                     e.printStackTrace();
                 } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
             } else if (attribute.getType() == EquipmentAttribute.EquipmentType.ARMOR) {
