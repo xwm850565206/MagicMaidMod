@@ -108,7 +108,10 @@ public class GuiSkillButton extends GuiButton
             if (this.hovered)
             {
                 color = 16777120;
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(0, 0, 100);
                 drawSkillDetail(mc, mouseX, mouseY, partialTicks);
+                GlStateManager.popMatrix();
             }
 
             this.drawCenteredString(mc.fontRenderer, "+", this.x + 59 + 19 / 2, this.y + 74 - 11  , color);
@@ -163,6 +166,7 @@ public class GuiSkillButton extends GuiButton
         for (int t = 0; t < detailLines.length; t++)
             mc.fontRenderer.drawString(detailLines[t], mouseX - bwidth + 2, mouseY - bheight + 20 + 10 * t + 2, 0xffffff);
         GlStateManager.disableBlend();
+        GlStateManager.enableTexture2D();
         GlStateManager.popMatrix();
     }
 

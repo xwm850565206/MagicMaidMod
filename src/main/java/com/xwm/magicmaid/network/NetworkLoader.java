@@ -7,6 +7,7 @@ import com.xwm.magicmaid.network.particle.SPacketNineParamParticle;
 import com.xwm.magicmaid.network.particle.SPacketParticle;
 import com.xwm.magicmaid.network.particle.SPacketSixParamParticle;
 import com.xwm.magicmaid.network.particle.SPacketThreeParamParticle;
+import com.xwm.magicmaid.network.skill.CPacketLearnSkill;
 import com.xwm.magicmaid.network.skill.CPacketSkill;
 import com.xwm.magicmaid.network.skill.CPacketSkillPoint;
 import com.xwm.magicmaid.util.Reference;
@@ -49,6 +50,7 @@ public class NetworkLoader
         registerMessage(CPacketSkillPoint.Handler.class, CPacketSkillPoint.class, Side.SERVER);
         registerMessage(CPacketCapabilityUpdate.Handler.class, CPacketCapabilityUpdate.class, Side.SERVER);
         registerMessage(CPacketChangeDifficulty.Handler.class, CPacketChangeDifficulty.class, Side.SERVER);
+        registerMessage(CPacketLearnSkill.Handler.class, CPacketLearnSkill.class, Side.SERVER);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, GuiHandler.maidWindowHandler);
     }

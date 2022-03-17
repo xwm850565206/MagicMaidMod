@@ -3,6 +3,7 @@ package com.xwm.magicmaid.registry;
 import com.xwm.magicmaid.Main;
 import com.xwm.magicmaid.gui.player.GuiPlayerMenuAttribute;
 import com.xwm.magicmaid.gui.player.GuiPlayerMenuSkill;
+import com.xwm.magicmaid.gui.player.GuiPlayerMenuWeapon;
 import net.minecraft.client.gui.GuiScreen;
 
 import javax.annotation.Nullable;
@@ -58,6 +59,6 @@ public class MagicMenuElementRegistry
         register(0, "主菜单", null); // container
         register(1, "属性", new GuiPlayerMenuAttribute());
         register(2, "技能", new GuiPlayerMenuSkill());
-        register(3, "武器", null); // 武器还没实装
+        register(3, "武器", new GuiPlayerMenuWeapon());
     }
 }

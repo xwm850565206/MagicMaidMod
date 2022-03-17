@@ -89,6 +89,11 @@ public class ContainerMaidWindow extends Container
             {
                 slot.onSlotChanged();
             }
+
+            if (itemstack1.getCount() == itemstack.getCount())
+            {
+                return ItemStack.EMPTY;
+            }
         }
 
         return itemstack;

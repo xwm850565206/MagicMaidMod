@@ -1,5 +1,6 @@
 package com.xwm.magicmaid.util.handlers;
 
+import com.xwm.magicmaid.entity.effect.EffectDemonKiller;
 import com.xwm.magicmaid.entity.mob.basic.EntityNun;
 import com.xwm.magicmaid.entity.mob.maid.*;
 import com.xwm.magicmaid.entity.mob.weapon.*;
@@ -14,6 +15,7 @@ import com.xwm.magicmaid.entity.throwable.EntityEvilBall;
 import com.xwm.magicmaid.entity.throwable.EntityJusticeBall;
 import com.xwm.magicmaid.init.ItemInit;
 import com.xwm.magicmaid.registry.MagicModelRegistry;
+import com.xwm.magicmaid.render.effect.RenderEffectDemonKiller;
 import com.xwm.magicmaid.render.entity.RenderBossBall;
 import com.xwm.magicmaid.render.entity.RenderMagicMaid;
 import com.xwm.magicmaid.render.entity.RenderMaidWeapon;
@@ -137,6 +139,13 @@ public class RenderHandler
 //                return new RenderEffect(manager, new ModelEffectBox(), 0.0f, new ResourceLocation(Reference.MODID + ":textures/effect/effect_box.png"));
 //            }
 //        });
+
+        RenderingRegistry.registerEntityRenderingHandler(EffectDemonKiller.class, new IRenderFactory<EffectDemonKiller>() {
+            @Override
+            public Render<? super EffectDemonKiller> createRenderFor(RenderManager manager) {
+                return new RenderEffectDemonKiller(manager);
+            }
+        });
 
         MagicModelRegistry.registerAll();
     }

@@ -15,9 +15,11 @@ import com.xwm.magicmaid.player.skill.perfomskill.rare.PerformSkillWitcherStorm;
 import com.xwm.magicmaid.player.skill.perfomskill.secret.PerformProcessSkillMercy;
 import com.xwm.magicmaid.player.skill.perfomskill.secret.PerformSkillFlash;
 import com.xwm.magicmaid.player.skill.perfomskill.secret.PerformSkillSteal;
-import com.xwm.magicmaid.player.skill.perfomskill.unreachable.PerformSkillWaterPrison;
+import com.xwm.magicmaid.player.skill.perfomskill.unreachable.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,6 +32,9 @@ public class MagicSkillRegistry
 
     /** 储存赠送技能的表，第一项是modid，第二项是技能名 **/
     public static final Map<String, String> GIFTED_MAP = new HashMap<>();
+
+    /** 储存武器专精技能的数组 **/
+    public static final List<String> WEAPON_SKILL_MAP = new ArrayList<>();
 
     public static final ISkill ATTRIBUTE_SKILL_NORMAL_DAMAGE_RATE = new AttributeSkillNormalDamageRate();
     public static final ISkill ATTRIBUTE_SKILL_SKILL_DAMAGE_RATE = new AttributeSkillSkillDamageRate();
@@ -55,6 +60,11 @@ public class MagicSkillRegistry
 
     public static final ISkill PERFORM_SKILL_WATER_PRISON = new PerformSkillWaterPrison();
 
+    public static final ISkill PERFORM_SKILL_DEMON_KILLER = new PerformSkillDemonKiller();
+    public static final ISkill PERFORM_SKILL_REPENTANCE = new PerformSkillRepentance();
+    public static final ISkill PERFORM_SKILL_PANDORA = new PerformSkillPandora();
+    public static final ISkill PERFORM_SKILL_CONVICTION = new PerformSkillConviction();
+    public static final ISkill PERFORM_SKILL_WHISPER = new PerformSkillWhisper();
 
     public static void register(String name, Class<? extends ISkill> skill)
     {
@@ -72,6 +82,16 @@ public class MagicSkillRegistry
         }
 
         GIFTED_MAP.put(modid, skillName);
+    }
+
+    public static void registerWeaponSkill(String name)
+    {
+        if (!SKILL_MAP.containsKey(name)) {
+            Main.logger.warn("Not registered skill in skill map! bad weapon skill");
+        }
+        else {
+            WEAPON_SKILL_MAP.add(name);
+        }
     }
 
     public static ISkill getSkill(String name)
@@ -113,10 +133,28 @@ public class MagicSkillRegistry
         register(PERFORM_SKILL_STEAL.getName(), PERFORM_SKILL_STEAL.getClass());
         register(PERFORM_SKILL_MERCY.getName(), PERFORM_SKILL_MERCY.getClass());
 
+        register(PERFORM_SKILL_DEMON_KILLER.getName(), PERFORM_SKILL_DEMON_KILLER.getClass());
+        register(PERFORM_SKILL_REPENTANCE.getName(), PERFORM_SKILL_REPENTANCE.getClass());
+        register(PERFORM_SKILL_PANDORA.getName(), PERFORM_SKILL_PANDORA.getClass());
+        register(PERFORM_SKILL_CONVICTION.getName(), PERFORM_SKILL_CONVICTION.getClass());
+        register(PERFORM_SKILL_WHISPER.getName(), PERFORM_SKILL_WHISPER.getClass());
+
         register(PERFORM_SKILL_WATER_PRISON.getName(), PERFORM_SKILL_WATER_PRISON.getClass());
+
 
         // gifted skill
         registerGiftedSkill("easy_building", PERFORM_SKILL_WATER_PRISON.getName());
+//        registerGiftedSkill("minecraft", PERFORM_SKILL_DEMON_KILLER.getName());
+//        registerGiftedSkill("minecraft", PERFORM_SKILL_REPENTANCE.getName());
+//        registerGiftedSkill("minecraft", PERFORM_SKILL_PANDORA.getName());
+//        registerGiftedSkill("minecraft", PERFORM_SKILL_WHISPER.getName());
+
+        // weapon skill
+        registerWeaponSkill(PERFORM_SKILL_DEMON_KILLER.getName());
+        registerWeaponSkill(PERFORM_SKILL_REPENTANCE.getName());
+        registerWeaponSkill(PERFORM_SKILL_PANDORA.getName());
+        registerWeaponSkill(PERFORM_SKILL_CONVICTION.getName());
+        registerWeaponSkill(PERFORM_SKILL_WHISPER.getName());
 
         // todo
 //        register(AttributeSkillNormalDamageRate.class);

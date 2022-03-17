@@ -18,11 +18,9 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.UUID;
 
-// todo 逻辑有问题，不应该传递技能的数据，而应该传递技能的序号等来控制技能事宜
 public class CPacketSkill implements IMessage
 {
     private UUID playerUUID;
-//    private ISkill iSkill;
     private String skillName;
     private int skillIndex;
     private int dimension;

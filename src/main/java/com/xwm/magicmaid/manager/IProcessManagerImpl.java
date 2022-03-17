@@ -29,7 +29,10 @@ public class IProcessManagerImpl implements IProcessManager {
     @Override
     public void worldTick() {
         for (ProcessTask task : processTaskQueue) {
-            task.update();
+            if (task.getTaskOwner() != null && task.getTaskOwner().isEntityAlive())
+                task.update();
+            else
+                task.setAge(task.getMaxAge());
         }
 
         updateTaskQueue();

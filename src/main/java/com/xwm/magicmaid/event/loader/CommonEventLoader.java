@@ -18,7 +18,6 @@ import com.xwm.magicmaid.registry.MagicSkillRegistry;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
@@ -101,8 +100,8 @@ public class CommonEventLoader
     {
         if (event.getHand() != EnumHand.MAIN_HAND)
             return;
-        if (event.getWorld().isRemote)
-            return;
+//        if (event.getWorld().isRemote)
+//            return;
 
         EntityPlayer player = event.getEntityPlayer();
         PotionEffect effect = player.getActivePotionEffect(PotionInit.PROTECT_BLESS_EFFECT);
@@ -111,7 +110,7 @@ public class CommonEventLoader
         {
             try {
                 ((EntityLivingBase) target).addPotionEffect(new PotionEffect(PotionInit.PROTECT_BLESS_EFFECT, 400 + effect.getAmplifier() * 400, effect.getAmplifier()));
-                ((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.HEALTH_BOOST, 200 + effect.getAmplifier() * 400, effect.getAmplifier()));
+                ((EntityLivingBase) target).addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200 + effect.getAmplifier() * 400, effect.getAmplifier()));
                 player.sendMessage(new TextComponentString(TextFormatting.YELLOW + "赐与其守护者的祝福"));
             } catch (Exception e){
                 ;
@@ -264,15 +263,27 @@ public class CommonEventLoader
     @SubscribeEvent
     public static void getExpEvent(LivingDeathEvent event)
     {
+        boolean flag = false;
         try{
             EntityLivingBase entityLivingBase = (EntityLivingBase) event.getSource().getImmediateSource();
             if (entityLivingBase instanceof EntityMagicMaid && !entityLivingBase.getEntityWorld().isRemote){
                 ((EntityMagicMaid) entityLivingBase).plusExp();
+                flag = true;
             }
         } catch (Exception e){
             ;
         }
 
+        if (!flag) {
+            try {
+                EntityLivingBase entityLivingBase = (EntityLivingBase) event.getSource().getTrueSource();
+                if (entityLivingBase instanceof EntityMagicMaid && !entityLivingBase.getEntityWorld().isRemote) {
+                    ((EntityMagicMaid) entityLivingBase).plusExp();
+                }
+            } catch (Exception e) {
+                ;
+            }
+        }
     }
 
     /**
