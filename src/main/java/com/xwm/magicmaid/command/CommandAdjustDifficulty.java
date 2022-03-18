@@ -34,8 +34,8 @@ public class CommandAdjustDifficulty extends CommandBase
 
         try {
             int factor = Integer.valueOf(args[0]);
-            if (factor < 0 || factor > 2){
-                sender.sendMessage(new TextComponentString("参数错误，只能是0，1，2"));
+            if (factor < 0 || factor > 6){
+                sender.sendMessage(new TextComponentString("参数错误，只能是0,1,2,3,4,5,6"));
                 return;
             }
             WorldDifficultyData.get(server.getEntityWorld()).setWorldDifficulty(factor);

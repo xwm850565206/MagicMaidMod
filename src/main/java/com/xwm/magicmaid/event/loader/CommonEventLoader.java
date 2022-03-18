@@ -3,6 +3,7 @@ package com.xwm.magicmaid.event.loader;
 
 import com.xwm.magicmaid.entity.mob.basic.AbstractEntityMagicCreature;
 import com.xwm.magicmaid.entity.mob.maid.EntityMagicMaid;
+import com.xwm.magicmaid.enumstorage.EnumMode;
 import com.xwm.magicmaid.event.SkillLevelUpEvent;
 import com.xwm.magicmaid.init.DimensionInit;
 import com.xwm.magicmaid.init.EntityInit;
@@ -11,16 +12,20 @@ import com.xwm.magicmaid.init.PotionInit;
 import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.manager.IProcessManagerImpl;
 import com.xwm.magicmaid.manager.ISkillManagerImpl;
+import com.xwm.magicmaid.network.NetworkLoader;
+import com.xwm.magicmaid.network.SPacketUpdateDifficult;
 import com.xwm.magicmaid.player.capability.*;
 import com.xwm.magicmaid.player.skill.IAttributeSkill;
 import com.xwm.magicmaid.player.skill.IPerformSkill;
 import com.xwm.magicmaid.registry.MagicSkillRegistry;
+import com.xwm.magicmaid.store.WorldDifficultyData;
 import com.xwm.magicmaid.util.Reference;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -174,6 +179,11 @@ public class CommonEventLoader
         }
         ISkillManagerImpl.getInstance().updateToClient(event.player);
         IMagicCreatureManagerImpl.getInstance().updateToClient(event.player);
+
+        if (!event.player.getEntityWorld().isRemote) {
+            SPacketUpdateDifficult packet = new SPacketUpdateDifficult(WorldDifficultyData.get(event.player.getEntityWorld()).getWorldDifficulty());
+            NetworkLoader.instance.sendTo(packet, (EntityPlayerMP) event.player);
+        }
     }
 
     /**
@@ -318,6 +328,9 @@ public class CommonEventLoader
 
             IMagicCreatureManagerImpl.getInstance().updateToClient(player);
             ISkillManagerImpl.getInstance().updateToClient(player);
+
+            SPacketUpdateDifficult packet = new SPacketUpdateDifficult(WorldDifficultyData.get(player.getEntityWorld()).getWorldDifficulty());
+            NetworkLoader.instance.sendTo(packet, (EntityPlayerMP) player);
         }
     }
 
@@ -333,6 +346,12 @@ public class CommonEventLoader
         if (player.hasCapability(CapabilityLoader.CREATURE_CAPABILITY, null))
         {
             IMagicCreatureManagerImpl.getInstance().updateToClient(player);
+        }
+
+        if (!player.getEntityWorld().isRemote)
+        {
+            SPacketUpdateDifficult packet = new SPacketUpdateDifficult(WorldDifficultyData.get(player.getEntityWorld()).getWorldDifficulty());
+            NetworkLoader.instance.sendTo(packet, (EntityPlayerMP) player);
         }
     }
 
@@ -378,4 +397,34 @@ public class CommonEventLoader
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onBossAttackedFromPlayer(LivingHurtEvent event) // 难度5，boss距离伤害来源超过5格该伤害无效(魔法女仆生物可以无视)
+    {
+        EntityLivingBase entityLivingBase = event.getEntityLiving();
+        int difficulty = WorldDifficultyData.get(entityLivingBase.world).getWorldDifficulty();
+        if (difficulty >= 5) {
+            if (entityLivingBase instanceof EntityMagicMaid) {
+                EntityMagicMaid maid = (EntityMagicMaid) entityLivingBase;
+                if (maid.getMode() == EnumMode.toInt(EnumMode.BOSS)) {
+                    boolean flag = false;
+                    for (EntityPlayer player : maid.getEntityWorld().playerEntities)
+                    {
+                        if (maid.getDistanceSq(player) <= 9)
+                            flag = true;
+
+                        if (flag)
+                            break;
+                    }
+
+                    if (!flag) {
+                        event.setCanceled(true);
+                        for (EntityPlayer player : maid.getEntityWorld().playerEntities)
+                        {
+                            player.sendMessage(new TextComponentString("当前难度" + difficulty + ", 玩家不在boss 9格以内，伤害无效。"));
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

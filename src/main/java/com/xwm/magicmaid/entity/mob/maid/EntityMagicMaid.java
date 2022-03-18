@@ -18,6 +18,7 @@ import com.xwm.magicmaid.network.particle.SPacketParticle;
 import com.xwm.magicmaid.object.item.equipment.EquipmentAttribute;
 import com.xwm.magicmaid.object.item.equipment.ItemEquipment;
 import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
+import com.xwm.magicmaid.store.WorldDifficultyData;
 import com.xwm.magicmaid.util.Reference;
 import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
 import net.minecraft.entity.EntityLivingBase;
@@ -75,6 +76,9 @@ public abstract class EntityMagicMaid extends EntityEquipmentCreature implements
         super.initEntityAI();
         this.tasks.addTask(3, new EntityAIMaidFollow(this, 1.5, 8, 3));
 
+        if (this.getMode() == EnumMode.toInt(EnumMode.BOSS) && WorldDifficultyData.get(world).getWorldDifficulty() >=6) { // 难度6boss主动攻击玩家
+            this.targetTasks.addTask(2, new EntityAINearestAttackableTargetAvoidOwner(this, EntityPlayer.class, true, new EnemySelect(this)));
+        }
         this.targetTasks.addTask(2, new EntityAINearestAttackableTargetAvoidOwner(this, EntityMob.class, true, new EnemySelect(this)));
         this.targetTasks.addTask(1, new EntityAIMagicCreatureOwnerHurtByTarget(this));
         this.targetTasks.addTask(2, new EntityAIMagicCreatureOwerHurtTarget(this));

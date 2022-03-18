@@ -7,6 +7,7 @@ import com.xwm.magicmaid.entity.mob.basic.interfaces.IEntityMultiHealthCreature;
 import com.xwm.magicmaid.manager.IMagicCreatureManagerImpl;
 import com.xwm.magicmaid.manager.MagicEquipmentUtils;
 import com.xwm.magicmaid.registry.MagicEquipmentRegistry;
+import com.xwm.magicmaid.store.WorldDifficultyData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
@@ -16,6 +17,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -93,6 +95,10 @@ public abstract class EntityBossBall extends EntityThrowable
         int camp;
         if (entity instanceof IEntityBossCreature)
         {
+            if (WorldDifficultyData.get(world).getWorldDifficulty() >= 6) {
+                this.thrower.sendMessage(new TextComponentString("当前难度6，boss不受正义影响"));
+                return;
+            }
             entity.attackEntityFrom(DamageSource.causeMobDamage(thrower), 1);
             camp = ((IEntityBossCreature) entity).getBossCamp();
             if (camp == getCamp())

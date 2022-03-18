@@ -31,7 +31,7 @@ public class IMagicBossManagerImpl implements IMagicBossManager
      */
     public static HashSet<String> whiteDomain = new HashSet<String>(){{
         add(Reference.MODID);
-        add("stoneage");
+//        add("stoneage");
         add("minecraft");
     }};
 

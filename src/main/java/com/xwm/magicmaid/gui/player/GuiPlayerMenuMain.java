@@ -33,7 +33,7 @@ import java.io.IOException;
 public class GuiPlayerMenuMain extends GuiContainer
 {
     public static final String NAME = "主菜单";
-    private static final String[] DIFFICULT = {"简单", "普通", "困难"};
+    private static final String[] DIFFICULT = {"简单", "普通", "困难", "神难", "噩梦", "地狱", "绝望"};
     private static final ResourceLocation BACKGROUND = new ResourceLocation(Reference.MODID, "textures/gui/player_menu_main.png");
     private final int imageWidth = 176;
     private final int imageHeight = 166;
@@ -73,8 +73,8 @@ public class GuiPlayerMenuMain extends GuiContainer
 
         this.addButton(new GuiButton(menuSize+3, i + 145, j + 49, 26, 11, "ON/OFF"));
 
-        backward.enabled = true;
-        forward.enabled = true;
+        backward.enabled = Minecraft.getMinecraft().player.canUseCommand(4, "magic_maid_diff");
+        forward.enabled = Minecraft.getMinecraft().player.canUseCommand(4, "magic_maid_diff");
 
         super.initGui();
     }

@@ -4,11 +4,15 @@ import com.xwm.magicmaid.init.BiomeInit;
 import com.xwm.magicmaid.init.DimensionInit;
 import com.xwm.magicmaid.manager.IMagicBossManager;
 import com.xwm.magicmaid.manager.IMagicBossManagerImpl;
+import com.xwm.magicmaid.store.WorldDifficultyData;
+import com.xwm.magicmaid.util.handlers.PunishOperationHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -21,6 +25,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class DimensionChurch extends WorldProvider
 {
@@ -162,12 +167,6 @@ public class DimensionChurch extends WorldProvider
         if (this.fightManager != null)
         {
             this.fightManager.tick();
-
-//            if (!this.fightManager.getBossFirstKilled() && this.fightManager.getBossKilled())
-//            {
-//                this.fightManager.setBossFirstKilled(true);
-//                generateNextWorldPortal(Blocks.GOLD_BLOCK.getDefaultState(), Blocks.DIAMOND_BLOCK.getDefaultState());
-//            }
         }
 
         if (this.getWorldTime() % 2000 == 0 && this.world.loadedEntityList.size() > 30) {
@@ -179,6 +178,54 @@ public class DimensionChurch extends WorldProvider
                 }
             }
         }
+
+        int difficulty = WorldDifficultyData.get(world).getWorldDifficulty();
+        if (this.getWorldTime() % 20 == 0 && difficulty >= 3)
+        {
+            for (EntityPlayer player : world.playerEntities)
+            {
+                if (player instanceof EntityPlayerMP)
+                {
+                    List<ItemStack> armors = player.inventory.armorInventory;
+                    for (ItemStack stack : armors) {
+                        try {
+                            String domain = stack.getItem().getRegistryName().getResourceDomain();
+                            if (IMagicBossManagerImpl.whiteDomain.contains(domain))
+                                continue;
+                        } catch (NullPointerException e) {
+                            continue;
+                        }
+
+                        PunishOperationHandler.punishPlayer((EntityPlayerMP) player, 16, "检测到玩家携带其他模组防具，尝试掉落防具");
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (this.getWorldTime() % 20 == 0 && difficulty >= 4)
+        {
+            for (EntityPlayer player : world.playerEntities)
+            {
+                if (player instanceof EntityPlayerMP)
+                {
+                    for (int i = 0; i < player.inventory.getSizeInventory(); i++)
+                    {
+                        ItemStack stack = player.inventory.getStackInSlot(i);
+                        try {
+                            String domain = stack.getItem().getRegistryName().getResourceDomain();
+                            if (IMagicBossManagerImpl.whiteDomain.contains(domain))
+                                continue;
+                        } catch (NullPointerException e) {
+                            continue;
+                        }
+                        PunishOperationHandler.punishPlayer((EntityPlayerMP) player, 32, "检测到玩家携带其他模组物品，尝试掉落整个背包物品");
+                        break;
+                    }
+                }
+            }
+        }
+
 
         super.onWorldUpdateEntities();
     }
